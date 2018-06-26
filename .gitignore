@@ -1,0 +1,11 @@
+/tmp
+/config
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+
+# System Files
+.DS_Store
+Thumbs.db
