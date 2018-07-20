@@ -1,0 +1,34 @@
+<?php
+
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Capsule\Manager as Capsule;
+
+class ComZeappsCrmOrderLineDetailsTable extends Migration
+{
+
+    public function up()
+    {
+       Capsule::schema()->create('com_zeapps_crm_order_line_details', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('id_order');
+            $table->integer('id_line');
+            $table->string('label', 255);
+            $table->text('description');
+            $table->decimal('qty', 8, 2);
+            $table->decimal('price_unit', 8, 2);
+            $table->integer('id_taxe');
+            $table->decimal('value_taxe', 8, 2);
+            $table->decimal('total_ht', 8, 2);
+            $table->decimal('total_ttc', 8, 2);
+            $table->timestamps();
+            $table->softDeletes();
+        });
+    }
+
+
+    public function down()
+    {
+        Capsule::schema()->dropIfExists('com_zeapps_crm_order_line_details');
+    }
+}
