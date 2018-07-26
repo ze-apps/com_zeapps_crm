@@ -557,9 +557,9 @@ app.config(["$provide",
 				if(force === undefined)
 					return zeHttp.post("/com_zeapps_crm/categories/delete/"+id);
 				else if(force)
-					return zeHttp.post("/com_zeapps_crm/categories/delete/"+id+"/true");
+					return zeHttp.post("/com_zeapps_crm/categories/delete_force/"+id+"/true");
 				else
-					return zeHttp.post("/com_zeapps_crm/categories/delete/"+id+"/false");
+					return zeHttp.post("/com_zeapps_crm/categories/delete_force/"+id+"/false");
 
 			}
 			function recursiveOpening(branch, id){
@@ -626,11 +626,14 @@ app.config(["$provide",
 
 			// ACCOUNTING NUMBERS
             function modal_accountingNumber(limit, offset, filters){
-                return zeHttp.post("/com_zeapps_crm/accounting_numbers/modal/" + limit + "/" + offset, filters)
+                return zeHttp.post("/com_zeapps_contact/accounting_numbers/modal/" + limit + "/" + offset, filters)
             }
             function save_accountingNumber(data){
-                return zeHttp.post("/com_zeapps_crm/accounting_numbers/save/", data)
+                return zeHttp.post("/com_zeapps_contact/accounting_numbers/save", data)
             }
+
+
+
 
             // ACTIVITY TYPES
 			function all_activityTypes(){
@@ -643,33 +646,35 @@ app.config(["$provide",
             }
 
 
+
+
 			// CONFIG
 			function get_invoice_numerotation(){
-				return zeHttp.get("/zeapps/config/get/crm_invoice_numerotation");
+				return zeHttp.get("/com_zeapps_crm/config/get/crm_invoice_numerotation");
 			}
 			function get_invoice_format(){
-				return zeHttp.get("/zeapps/config/get/crm_invoice_format");
+				return zeHttp.get("/com_zeapps_crm/config/get/crm_invoice_format");
 			}
 			function get_quote_numerotation(){
-				return zeHttp.get("/zeapps/config/get/crm_quote_numerotation");
+				return zeHttp.get("/com_zeapps_crm/config/get/crm_quote_numerotation");
 			}
 			function get_quote_format(){
-				return zeHttp.get("/zeapps/config/get/crm_quote_format");
+				return zeHttp.get("/com_zeapps_crm/config/get/crm_quote_format");
 			}
 			function get_order_numerotation(){
-				return zeHttp.get("/zeapps/config/get/crm_order_numerotation");
+				return zeHttp.get("/com_zeapps_crm/config/get/crm_order_numerotation");
 			}
 			function get_order_format(){
-				return zeHttp.get("/zeapps/config/get/crm_order_format");
+				return zeHttp.get("/com_zeapps_crm/config/get/crm_order_format");
 			}
 			function get_delivery_numerotation(){
-				return zeHttp.get("/zeapps/config/get/crm_delivery_numerotation");
+				return zeHttp.get("/com_zeapps_crm/config/get/crm_delivery_numerotation");
 			}
 			function get_delivery_format(){
-				return zeHttp.get("/zeapps/config/get/crm_delivery_format");
+				return zeHttp.get("/com_zeapps_crm/config/get/crm_delivery_format");
 			}
 			function get_product_attr(){
-				return zeHttp.get("/zeapps/config/get/crm_product_attributes");
+				return zeHttp.get("/com_zeapps_crm/config/get/crm_product_attributes");
 			}
 			function save_product_attr(data){
 				return zeHttp.config.save(angular.toJson({id: "crm_product_attributes", value: data}));
