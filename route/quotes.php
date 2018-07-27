@@ -8,6 +8,8 @@ use Zeapps\Core\Routeur ;
 Routeur::get("/com_zeapps_crm/quotes/lists", 'App\\com_zeapps_crm\\Controllers\\Quotes@lists');
 Routeur::get("/com_zeapps_crm/quotes/lists_partial", 'App\\com_zeapps_crm\\Controllers\\Quotes@lists_partial');
 Routeur::get("/com_zeapps_crm/quotes/form_modal", 'App\\com_zeapps_crm\\Controllers\\Quotes@form_modal');
+Routeur::get("/com_zeapps_crm/quotes/view", 'App\\com_zeapps_crm\\Controllers\\Quotes@view');
+Routeur::get("/com_zeapps_crm/quotes/form_line", 'App\\com_zeapps_crm\\Controllers\\Quotes@form_line');
 
 
 Routeur::post("/com_zeapps_crm/quotes/testFormat", 'App\\com_zeapps_crm\\Controllers\\Quotes@testFormat');
@@ -26,6 +28,15 @@ Routeur::post("/com_zeapps_crm/quotes/saveLineDetail", 'App\\com_zeapps_crm\\Con
 Routeur::post("/com_zeapps_crm/quotes/activity", 'App\\com_zeapps_crm\\Controllers\\Quotes@activity');
 Routeur::post("/com_zeapps_crm/quotes/del_activity/{id}", 'App\\com_zeapps_crm\\Controllers\\Quotes@del_activity');
 
+
+// TODO : implémenter le methode ci-dessous
+// TODO : implémenter le methode ci-dessous
+// TODO : implémenter le methode ci-dessous
+// TODO : implémenter le methode ci-dessous
+// TODO : implémenter le methode ci-dessous
+// TODO : implémenter le methode ci-dessous
+// TODO : implémenter le methode ci-dessous
+// TODO : implémenter le methode ci-dessous
 Routeur::get("/com_zeapps_crm/quotes/uploadDocuments/", 'App\\com_zeapps_crm\\Controllers\\Quotes@uploadDocuments');
 Routeur::post("/com_zeapps_crm/quotes/del_document/{id}", 'App\\com_zeapps_crm\\Controllers\\Quotes@del_document');
 

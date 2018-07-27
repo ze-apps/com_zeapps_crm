@@ -1,0 +1,58 @@
+[
+  {
+    "id": "1",
+    "label": "19,6 % PORT",
+    "value": "19.60",
+    "accounting_number": "44571100",
+    "active": "0"
+  },
+  {
+    "id": "2",
+    "label": "5.5 %",
+    "value": "5.50",
+    "accounting_number": "44570500",
+    "active": "1"
+  },
+  {
+    "id": "3",
+    "label": "2.10 %",
+    "value": "2.10",
+    "accounting_number": "44570200",
+    "active": "1"
+  },
+  {
+    "id": "4",
+    "label": "19,6 % Collectee",
+    "value": "19.60",
+    "accounting_number": "44572100",
+    "active": "0"
+  },
+  {
+    "id": "5",
+    "label": "0 %",
+    "value": "0.00",
+    "accounting_number": "",
+    "active": "1"
+  },
+  {
+    "id": "6",
+    "label": "7 %",
+    "value": "7.00",
+    "accounting_number": "44570700",
+    "active": "1"
+  },
+  {
+    "id": "7",
+    "label": "20 % PORT",
+    "value": "20.00",
+    "accounting_number": "44571200",
+    "active": "1"
+  },
+  {
+    "id": "8",
+    "label": "20 % Collectee",
+    "value": "20.00",
+    "accounting_number": "44572000",
+    "active": "1"
+  }
+]

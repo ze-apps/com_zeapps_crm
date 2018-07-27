@@ -10,10 +10,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             <div class="row">
                 <div class="col-md-2">
                     <div class="titleWell">
-                        Devis : {{ quote.libelle }}
+                        Devis : @{{ quote.libelle }}
                     </div>
                     <p class="small">
-                        n° {{ quote.numerotation }}
+                        n° @{{ quote.numerotation }}
                     </p>
                     <p>
                         <span class="form-group form-inline">
@@ -23,31 +23,31 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 <option>Perdu</option>
                             </select>
                         </span>
-                        ({{ quote.probability | number:2 }}%)
+                        (@{{ quote.probability | number:2 }}%)
                     </p>
                     <button type="button" class="btn btn-xs btn-info" ng-click="showDetailsEntreprise = !showDetailsEntreprise">
-                        {{ showDetailsEntreprise ? 'Masquer' : 'Voir' }} en cours
+                        @{{ showDetailsEntreprise ? 'Masquer' : 'Voir' }} en cours
                     </button>
                 </div>
 
                 <div class="col-md-3">
                     <strong>Adresse de facturation :</strong><br>
-                    {{ company.company_name }}<br ng-if="company.company_name">
-                    {{ contact.last_name + ' ' + contact.first_name }}<br ng-if="contact.last_name || contact.first_name">
-                    {{ quote.billing_address_1 }}<br ng-if="quote.billing_address_1">
-                    {{ quote.billing_address_2 }}<br ng-if="quote.billing_address_2">
-                    {{ quote.billing_address_3 }}<br ng-if="quote.billing_address_3">
-                    {{ quote.billing_zipcode + ' ' + quote.billing_city }}
+                    @{{ company.company_name }}<br ng-if="company.company_name">
+                    @{{ contact.last_name + ' ' + contact.first_name }}<br ng-if="contact.last_name || contact.first_name">
+                    @{{ quote.billing_address_1 }}<br ng-if="quote.billing_address_1">
+                    @{{ quote.billing_address_2 }}<br ng-if="quote.billing_address_2">
+                    @{{ quote.billing_address_3 }}<br ng-if="quote.billing_address_3">
+                    @{{ quote.billing_zipcode + ' ' + quote.billing_city }}
                 </div>
 
                 <div class="col-md-3">
                     <strong>Adresse de livraison :</strong><br>
-                    {{ company.company_name }}<br ng-if="company.company_name">
-                    {{ contact.last_name + ' ' + contact.first_name }}<br ng-if="contact.last_name && contact.first_name">
-                    {{ quote.delivery_address_1 }}<br ng-if="quote.delivery_address_1">
-                    {{ quote.delivery_address_2 }}<br ng-if="quote.delivery_address_2">
-                    {{ quote.delivery_address_3 }}<br ng-if="quote.delivery_address_3">
-                    {{ quote.delivery_zipcode + ' ' + quote.delivery_city }}
+                    @{{ company.company_name }}<br ng-if="company.company_name">
+                    @{{ contact.last_name + ' ' + contact.first_name }}<br ng-if="contact.last_name && contact.first_name">
+                    @{{ quote.delivery_address_1 }}<br ng-if="quote.delivery_address_1">
+                    @{{ quote.delivery_address_2 }}<br ng-if="quote.delivery_address_2">
+                    @{{ quote.delivery_address_3 }}<br ng-if="quote.delivery_address_3">
+                    @{{ quote.delivery_zipcode + ' ' + quote.delivery_city }}
                 </div>
 
                 <div class="col-md-4">
@@ -64,7 +64,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <div class="btn-group btn-group-xs" role="group" ng-if="nb_quotes > 0">
                             <button type="button" class="btn btn-default" ng-class="quote_first == 0 ? 'disabled' :''" ng-click="first_quote()"><span class="fa fa-fw fa-fast-backward"></span></button>
                             <button type="button" class="btn btn-default" ng-class="quote_previous == 0 ? 'disabled' :''" ng-click="previous_quote()"><span class="fa fa-fw fa-chevron-left"></span></button>
-                            <button type="button" class="btn btn-default disabled">{{quote_order}}/{{nb_quotes}}</button>
+                            <button type="button" class="btn btn-default disabled">@{{quote_order}}/@{{nb_quotes}}</button>
                             <button type="button" class="btn btn-default" ng-class="quote_next == 0 ? 'disabled' :''" ng-click="next_quote()"><span class="fa fa-fw fa-chevron-right"></span></button>
                             <button type="button" class="btn btn-default" ng-class="quote_last == 0 ? 'disabled' :''" ng-click="last_quote()"><span class="fa fa-fw fa-fast-forward"></span></button>
                         </div>
@@ -90,13 +90,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         </thead>
                         <tbody>
                         <tr ng-repeat="credit in credits">
-                            <td><a href="/ng/com_zeapps_crm/invoice/{{credit.id_invoice}}">{{ credit.numerotation }}</a></td>
-                            <td><a href="/ng/com_zeapps_contact/companies/{{credit.id_company}}">{{ credit.name_company }}</a></td>
-                            <td><a href="/ng/com_zeapps_contact/contacts/{{credit.id_contact}}">{{ credit.name_contact }}</a></td>
-                            <td class="text-right">{{ credit.total | currency:'€':2 }}</td>
-                            <td class="text-right">{{ credit.paid | currency:'€':2 }}</td>
-                            <td class="text-right">{{ credit.left_to_pay | currency:'€':2 }}</td>
-                            <td class="text-right">{{ credit.due_date | date:'dd/MM/yyyy' }}</td>
+                            <td><a href="/ng/com_zeapps_crm/invoice/@{{credit.id_invoice}}">@{{ credit.numerotation }}</a></td>
+                            <td><a href="/ng/com_zeapps_contact/companies/@{{credit.id_company}}">@{{ credit.name_company }}</a></td>
+                            <td><a href="/ng/com_zeapps_contact/contacts/@{{credit.id_contact}}">@{{ credit.name_contact }}</a></td>
+                            <td class="text-right">@{{ credit.total | currency:'€':2 }}</td>
+                            <td class="text-right">@{{ credit.paid | currency:'€':2 }}</td>
+                            <td class="text-right">@{{ credit.left_to_pay | currency:'€':2 }}</td>
+                            <td class="text-right">@{{ credit.due_date | date:'dd/MM/yyyy' }}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -147,39 +147,39 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             </tr>
                         </thead>
                         <tbody ui-sortable="sortable" class="sortableContainer" ng-model="lines">
-                            <tr ng-repeat="line in lines" ng-class="[line.type == 'subTotal' ? 'sous-total info' : '', line.type == 'comment' ? 'warning' : '']" data-id="{{ line.id }}">
+                            <tr ng-repeat="line in lines" ng-class="[line.type == 'subTotal' ? 'sous-total info' : '', line.type == 'comment' ? 'warning' : '']" data-id="@{{ line.id }}">
 
                                 <td ng-if="line.type != 'subTotal' && line.type != 'comment'">
-                                    {{ line.ref }}
+                                    @{{ line.ref }}
                                 </td>
 
                                 <td ng-if="line.type != 'subTotal' && line.type != 'comment'">
-                                    <strong>{{ line.designation_title }} <span ng-if="line.designation_desc">:</span></strong><br>
-                                    <span class="text-wrap">{{ line.designation_desc }}</span>
+                                    <strong>@{{ line.designation_title }} <span ng-if="line.designation_desc">:</span></strong><br>
+                                    <span class="text-wrap">@{{ line.designation_desc }}</span>
                                 </td>
 
                                 <td class="text-right" ng-if="line.type != 'subTotal' && line.type != 'comment'">
-                                    {{ line.qty | number }}
+                                    @{{ line.qty | number }}
                                 </td>
 
                                 <td class="text-right" ng-if="line.type != 'subTotal' && line.type != 'comment'">
-                                    {{ line.price_unit | currency }}
+                                    @{{ line.price_unit | currency }}
                                 </td>
 
                                 <td class="text-right" ng-if="line.type != 'subTotal' && line.type != 'comment'">
-                                    {{ line.id_taxe != 0 ? (line.value_taxe | currency:'%':2) : '' }}
+                                    @{{ line.id_taxe != 0 ? (line.value_taxe | currency:'%':2) : '' }}
                                 </td>
 
                                 <td class="text-right" ng-if="line.type != 'subTotal' && line.type != 'comment'">
-                                    {{ line.discount != 0 ? ((0-line.discount) | currency:'%':2) : ''}}
+                                    @{{ line.discount != 0 ? ((0-line.discount) | currency:'%':2) : ''}}
                                 </td>
 
                                 <td class="text-right" ng-if="line.type != 'subTotal' && line.type != 'comment'">
-                                    {{ line.total_ht | currency:'€':2 }}
+                                    @{{ line.total_ht | currency:'€':2 }}
                                 </td>
 
                                 <td class="text-right" ng-if="line.type != 'subTotal' && line.type != 'comment'">
-                                    {{ line.total_ttc | currency:'€':2 }}
+                                    @{{ line.total_ttc | currency:'€':2 }}
                                 </td>
 
                                 <td colspan="6" class="text-right" ng-if="line.type == 'subTotal'">
@@ -187,13 +187,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 </td>
 
                                 <td class="text-right" ng-if="line.type == 'subTotal'">
-                                    {{ subtotalHT($index) | currency:'€':2 }}
+                                    @{{ subtotalHT($index) | currency:'€':2 }}
                                 </td>
                                 <td class="text-right" ng-if="line.type == 'subTotal'">
-                                    {{ subtotalTTC($index) | currency:'€':2 }}
+                                    @{{ subtotalTTC($index) | currency:'€':2 }}
                                 </td>
 
-                                <td colspan="8" class="text-wrap" ng-if="line.type == 'comment'">{{ line.designation_desc }}</td>
+                                <td colspan="8" class="text-wrap" ng-if="line.type == 'comment'">@{{ line.designation_desc }}</td>
 
                                 <td class="text-right">
                                     <span ng-if="line.type === 'product'">
@@ -230,9 +230,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         </thead>
                         <tbody>
                         <tr ng-repeat="tva in tvas">
-                            <td>{{ tva.ht | currency:'€':2 }}</td>
-                            <td class="text-right">{{ tva.value_taxe | currency:'%':2 }}</td>
-                            <td class="text-right">{{ tva.value | currency:'€':2 }}</td>
+                            <td>@{{ tva.ht | currency:'€':2 }}</td>
+                            <td class="text-right">@{{ tva.value_taxe | currency:'%':2 }}</td>
+                            <td class="text-right">@{{ tva.value | currency:'€':2 }}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -245,7 +245,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     Total HT av remise
                                 </div>
                                 <div class="col-md-6 text-right">
-                                    {{ quote.total_prediscount_ht | currency:'€':2 }}
+                                    @{{ quote.total_prediscount_ht | currency:'€':2 }}
                                 </div>
                             </div>
                             <div class="row">
@@ -253,7 +253,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     Total TTC av remise
                                 </div>
                                 <div class="col-md-6 text-right">
-                                    {{ quote.total_prediscount_ttc | currency:'€':2 }}
+                                    @{{ quote.total_prediscount_ttc | currency:'€':2 }}
                                 </div>
                             </div>
                             <hr>
@@ -263,7 +263,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     Remise globale
                                 </div>
                                 <div class="col-md-6 text-right">
-                                    -{{ quote.global_discount | number:2 }}%
+                                    -@{{ quote.global_discount | number:2 }}%
                                 </div>
                             </div>
 
@@ -272,7 +272,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     Total remises HT
                                 </div>
                                 <div class="col-md-6 text-right">
-                                    {{ quote.total_discount | currency:'€':2 }}
+                                    @{{ quote.total_discount | currency:'€':2 }}
                                 </div>
                             </div>
 
@@ -284,7 +284,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 Total HT
                             </div>
                             <div class="col-md-6 text-right">
-                                {{ quote.total_ht | currency:'€':2 }}
+                                @{{ quote.total_ht | currency:'€':2 }}
                             </div>
                         </div>
 
@@ -293,7 +293,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 Total TVA
                             </div>
                             <div class="col-md-6 text-right">
-                                {{ quote.total_tva | currency:'€':2 }}
+                                @{{ quote.total_tva | currency:'€':2 }}
                             </div>
                         </div>
 
@@ -302,7 +302,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 Total TTC
                             </div>
                             <div class="col-md-6 text-right">
-                                {{ quote.total_ttc | currency:'€':2 }}
+                                @{{ quote.total_ttc | currency:'€':2 }}
                             </div>
                         </div>
                     </div>
@@ -313,19 +313,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
         <div ng-show="navigationState=='header'">
             <strong>Reference Client :</strong>
-            {{ quote.reference_client }}
+            @{{ quote.reference_client }}
             <br/>
             <strong>Date de création du devis :</strong>
-            {{ quote.date_creation || "-" | date:'dd/MM/yyyy' }}
+            @{{ quote.date_creation || "-" | date:'dd/MM/yyyy' }}
             <br/>
             <strong>Date de validité du devis :</strong>
-            {{ quote.date_limit || "-" | date:'dd/MM/yyyy' }}
+            @{{ quote.date_limit || "-" | date:'dd/MM/yyyy' }}
             <br/>
         </div>
 
         <div ng-show="navigationState=='condition'">
             <strong>Modalités de paiement :</strong>
-            {{ quote.label_modality }}
+            @{{ quote.label_modality }}
         </div>
 
         <div ng-show="navigationState=='activity'">
@@ -347,12 +347,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                         data-title="Modifier l'activité"></ze-btn>
                                 <ze-btn data-fa="trash" data-hint="Supprimer" data-direction="left" data-color="danger" ng-click="deleteActivity(activity)" ze-confirmation></ze-btn>
                             </div>
-                            <strong>{{ activity.label_type ? activity.label_type + " : " : "" }}{{ activity.libelle }}</strong><br>
-                            Date limite : {{ activity.deadline || "-" | date:'dd/MM/yyyy' }} - {{ activity.status }}
+                            <strong>@{{ activity.label_type ? activity.label_type + " : " : "" }}@{{ activity.libelle }}</strong><br>
+                            Date limite : @{{ activity.deadline || "-" | date:'dd/MM/yyyy' }} - @{{ activity.status }}
                         </div>
-                        <div class="card_document-body" ng-if="activity.description">{{ activity.description }}</div>
+                        <div class="card_document-body" ng-if="activity.description">@{{ activity.description }}</div>
                         <div class="card_document-footer text-muted">
-                            Créé par <strong>{{ activity.name_user }}</strong>
+                            Créé par <strong>@{{ activity.name_user }}</strong>
                         </div>
                     </div>
                 </div>
@@ -379,13 +379,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 <ze-btn data-fa="trash" data-hint="Supprimer" data-direction="left" data-color="danger" ng-click="deleteDocument(document)" ze-confirmation></ze-btn>
                             </div>
                             <i class="fa fa-fw fa-file"></i>
-                            <a ng-href="{{ document.path }}" class="text-primary" target="_blank">
-                                <strong>{{ document.label }}</strong>
+                            <a ng-href="@{{ document.path }}" class="text-primary" target="_blank">
+                                <strong>@{{ document.label }}</strong>
                             </a>
                         </div>
-                        <div class="card_document-body" ng-if="document.description">{{ document.description }}</div>
+                        <div class="card_document-body" ng-if="document.description">@{{ document.description }}</div>
                         <div class="card_document-footer text-muted">
-                            Envoyé par <strong>{{ document.name_user }}</strong> le <strong>{{ document.date | date:'dd/MM/yyyy' }}</strong> à <strong>{{ document.date || "-" | date:'HH:mm' }}</strong>
+                            Envoyé par <strong>@{{ document.name_user }}</strong> le <strong>@{{ document.date | date:'dd/MM/yyyy' }}</strong> à <strong>@{{ document.date || "-" | date:'HH:mm' }}</strong>
                         </div>
                     </div>
                 </div>

@@ -39,8 +39,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <div class="form-group">
             <label>Taxe</label>
             <select ng-model="form.id_taxe" class="form-control" ng-change="updateTaxe()">
-                <option ng-repeat="taxe in taxes | filter:{ active : 1 }" value="{{taxe.id}}">
-                    {{ taxe.label }}
+                <option ng-repeat="taxe in taxes | filter:{ active : 1 }" value="@{{taxe.id}}">
+                    @{{ taxe.label }}
                 </option>
             </select>
         </div>
