@@ -186,7 +186,7 @@ app.controller("ComZeappsCrmQuoteFormCtrl", ["$scope", "$routeParams", "$rootSco
 
         function updateModality(){
             angular.forEach($scope.modalities, function(modality){
-                if(modality.id === $scope.form.id_modality){
+                if((modality.id * 1) == ($scope.form.id_modality * 1)){
                     $scope.form.label_modality = modality.label;
                 }
             });
