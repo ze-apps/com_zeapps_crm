@@ -59,7 +59,6 @@ app.controller("ComZeappsCrmProductComposeFormCtrl", ["$scope", "$routeParams", 
 					$scope.tree.branches = response.data;
 					zhttp.crm.product.get($routeParams.id).then(function (response) {
 						if (response.status == 200) {
-							console.log(response.data);
 							$scope.form = response.data;
 							$scope.form.auto = !!parseInt($scope.form.auto);
 							$scope.form.value_taxe = parseFloat($scope.form.value_taxe);

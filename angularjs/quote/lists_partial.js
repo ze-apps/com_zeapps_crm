@@ -106,7 +106,7 @@ app.controller("ComZeappsCrmQuoteListsPartialCtrl", ["$scope", "$location", "$ro
 		$scope.delete = del;
 
 		$scope.$on("comZeappsContact_dataEntrepriseHook", function(event, data) {
-			if ($scope.id_company !== data.id_company){
+		    if ($scope.id_company !== data.id_company){
 				$scope.id_company = data.id_company;
 				src = "company";
                 src_id = data.id_company;
