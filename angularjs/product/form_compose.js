@@ -59,6 +59,7 @@ app.controller("ComZeappsCrmProductComposeFormCtrl", ["$scope", "$routeParams", 
 					$scope.tree.branches = response.data;
 					zhttp.crm.product.get($routeParams.id).then(function (response) {
 						if (response.status == 200) {
+							console.log(response.data);
 							$scope.form = response.data;
 							$scope.form.auto = !!parseInt($scope.form.auto);
 							$scope.form.value_taxe = parseFloat($scope.form.value_taxe);
@@ -165,10 +166,15 @@ app.controller("ComZeappsCrmProductComposeFormCtrl", ["$scope", "$routeParams", 
 				data.id = $routeParams.id;
 			}
 
+            if ($routeParams.category) {
+                data.id_cat = $routeParams.category;
+            } else {
+                data.id_cat = 0;
+            }
+
 			data.name = $scope.form.name;
 			data.ref = $scope.form.ref;
 			data.compose = 1;
-			data.id_cat = $scope.form.id_cat;
 			data.id_stock = $scope.form.id_stock;
 			data.description = $scope.form.description;
 			data.price_ttc = $scope.form.price_ttc;

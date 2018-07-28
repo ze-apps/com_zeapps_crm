@@ -14,6 +14,7 @@ app.controller("ComZeappsCrmProductFormCategoryCtrl", ["$scope", "$routeParams",
 		$scope.success = success;
 		$scope.cancel = cancel;
 
+
 		if ($routeParams.id && $routeParams.id > 0) {
 			loadCtxtEdit();
 		}
@@ -40,6 +41,8 @@ app.controller("ComZeappsCrmProductFormCategoryCtrl", ["$scope", "$routeParams",
 				}
 			});
 		}
+
+
 		function loadCtxtEdit(){
 			zhttp.crm.category.tree().then(function (response) {
 				if (response.status == 200) {
@@ -66,8 +69,11 @@ app.controller("ComZeappsCrmProductFormCategoryCtrl", ["$scope", "$routeParams",
 				data.id = $routeParams.id;
 			}
 
+            if ($routeParams.id_parent != 0) {
+                data.id_parent = $routeParams.id_parent;
+            }
+
 			data.name = $scope.form.name;
-			data.id_parent = $scope.form.id_parent;
 
 			var formatted_data = angular.toJson(data);
 

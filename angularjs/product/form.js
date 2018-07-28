@@ -127,7 +127,7 @@ app.controller("ComZeappsCrmProductFormCtrl", ["$scope", "$routeParams", "$locat
 
 		function updateTaxe(){
 			angular.forEach($rootScope.taxes, function(taxe){
-				if(taxe.id === $scope.form.id_taxe){
+				if(taxe.id == $scope.form.id_taxe){
 					$scope.form.value_taxe = taxe.value;
 				}
 			});
@@ -161,9 +161,14 @@ app.controller("ComZeappsCrmProductFormCtrl", ["$scope", "$routeParams", "$locat
 				data.id = $routeParams.id;
 			}
 
+            if ($routeParams.category) {
+                data.id_cat = $routeParams.category;
+            } else {
+                data.id_cat = 0;
+			}
+
 			data.ref = $scope.form.ref;
 			data.name = $scope.form.name;
-			data.id_cat = $scope.form.id_cat;
 			data.id_stock = $scope.form.id_stock;
 			data.description = $scope.form.description;
 			data.price_ht = $scope.form.price_ht;

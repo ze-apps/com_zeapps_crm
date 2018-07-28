@@ -44,7 +44,7 @@
                         <div class="form-group">
                             <label>TVA <span class="required">*</span></label>
                             <select ng-model="form.id_taxe" ng-change="updateTaxe();updatePrice('ttc')" class="form-control" ng-required="true">
-                                <option ng-repeat="taxe in taxes | filter:{ active : 1 }" value="@{{taxe.id}}">
+                                <option ng-repeat="taxe in taxes | filter:{ active : 1 }" ng-value="@{{taxe.id}}">
                                     @{{ taxe.label }}
                                 </option>
                             </select>
