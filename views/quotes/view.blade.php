@@ -330,29 +330,35 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
         <div ng-show="navigationState=='activity'">
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-12" style="margin-bottom: 15px;">
                     <div class="pull-right">
                         <ze-btn data-fa="plus" data-hint="Activité" always-on="true" data-color="success"
                                 ze-modalform="addActivity"
                                 data-template="quoteActivityTplUrl"
                                 data-title="Créer une activité"></ze-btn>
                     </div>
-                    <div class="card_document" ng-repeat="activity in activities | orderBy:['-date','-id']">
-                        <div class="card_document-head clearfix">
-                            <div class="pull-right">
-                                <ze-btn data-fa="pencil" data-hint="Editer" data-direction="left" data-color="info"
-                                        ze-modalform="editActivity"
-                                        data-edit="activity"
-                                        data-template="quoteActivityTplUrl"
-                                        data-title="Modifier l'activité"></ze-btn>
-                                <ze-btn data-fa="trash" data-hint="Supprimer" data-direction="left" data-color="danger" ng-click="deleteActivity(activity)" ze-confirmation></ze-btn>
+                </div>
+            </div>
+            <div class="card_document" ng-repeat="activity in activities | orderBy:['-date','-id']">
+                <div class="well">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card_document-head clearfix">
+                                <div class="pull-right">
+                                    <ze-btn data-fa="pencil" data-hint="Editer" data-direction="left" data-color="info"
+                                            ze-modalform="editActivity"
+                                            data-edit="activity"
+                                            data-template="quoteActivityTplUrl"
+                                            data-title="Modifier l'activité"></ze-btn>
+                                    <ze-btn data-fa="trash" data-hint="Supprimer" data-direction="left" data-color="danger" ng-click="deleteActivity(activity)" ze-confirmation></ze-btn>
+                                </div>
+                                <strong>@{{ activity.label_type ? activity.label_type + " : " : "" }}@{{ activity.libelle }}</strong><br>
+                                Date limite : @{{ activity.deadline || "-" | date:'dd/MM/yyyy' }} - @{{ activity.status }}
                             </div>
-                            <strong>@{{ activity.label_type ? activity.label_type + " : " : "" }}@{{ activity.libelle }}</strong><br>
-                            Date limite : @{{ activity.deadline || "-" | date:'dd/MM/yyyy' }} - @{{ activity.status }}
-                        </div>
-                        <div class="card_document-body" ng-if="activity.description">@{{ activity.description }}</div>
-                        <div class="card_document-footer text-muted">
-                            Créé par <strong>@{{ activity.name_user }}</strong>
+                            <div class="card_document-body" ng-if="activity.description">@{{ activity.description }}</div>
+                            <div class="card_document-footer text-muted">
+                                Créé par <strong>@{{ activity.name_user }}</strong>
+                            </div>
                         </div>
                     </div>
                 </div>

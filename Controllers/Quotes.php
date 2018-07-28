@@ -115,7 +115,7 @@ class Quotes extends Controller
             $filters = json_decode(file_get_contents('php://input'), true);
         }
 
-        if($id !== '0') {
+        if ($id != 0) {
             $filters['id_' . $type] = $id;
         }
 
@@ -326,6 +326,11 @@ class Quotes extends Controller
             foreach ($data as $key => $value) {
                 $quoteLine->$key = $value;
             }
+
+            if (!isset($quoteLine->accounting_number)) {
+                $quoteLine->accounting_number = "" ;
+            }
+
 
             $quoteLine->save();
         }

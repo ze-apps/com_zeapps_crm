@@ -229,6 +229,7 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
 			if($scope.codeProduct !== "") {
                 var code = $scope.codeProduct;
                 zhttp.crm.product.get_code(code).then(function (response) {
+                	console.log(response.data);
                     if (response.data && response.data != "false") {
                         var line = {
                             id_quote: $routeParams.id,
@@ -257,8 +258,7 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                                 updateQuote();
                             }
                         });
-                    }
-                    else {
+                    } else {
                         toasts("danger", "Aucun produit avec le code " + code + " trouvé dans la base de donnée.");
                     }
                 });

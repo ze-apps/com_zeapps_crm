@@ -120,8 +120,10 @@ class Product extends Controller
         return;
     }
 
-    public function get_code($code = NULL)
+    public function get_code(Request $request)
     {
+        $code = $request->input('code', NULL);
+
         if (isset($code)) {
             $product = ProductProducts::where("ref", $code)->first();
 
@@ -138,7 +140,11 @@ class Product extends Controller
                 }
             }
 
-            echo json_encode($product);
+            if ($product) {
+                echo json_encode($product);
+            } else {
+                echo json_encode(false);
+            }
         } else {
             echo json_encode(false);
         }

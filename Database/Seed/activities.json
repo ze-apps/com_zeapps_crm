@@ -1,0 +1,22 @@
+[
+  {
+    "id": "1",
+    "label": "Téléphone"
+  },
+  {
+    "id": "2",
+    "label": "Email"
+  },
+  {
+    "id": "3",
+    "label": "Réunion"
+  },
+  {
+    "id": "4",
+    "label": "SMS"
+  },
+  {
+    "id": "5",
+    "label": "Courrier"
+  }
+]
