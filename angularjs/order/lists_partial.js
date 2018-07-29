@@ -147,7 +147,6 @@ app.controller("ComZeappsCrmOrderListsPartialCtrl", ["$scope", "$location", "$ro
                         $scope.orders[i].date_creation = $scope.orders[i].date_creation !== "0000-00-00 00:00:00" ? new Date($scope.orders[i].date_creation) : 0;
                         $scope.orders[i].date_limit = $scope.orders[i].date_limit !== "0000-00-00 00:00:00" ? new Date($scope.orders[i].date_limit) : 0;
                         $scope.orders[i].global_discount = parseFloat($scope.orders[i].global_discount);
-                        $scope.orders[i].probability = parseFloat($scope.orders[i].probability);
                     }
 
                     $scope.total = response.data.total;

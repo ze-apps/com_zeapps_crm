@@ -117,13 +117,15 @@ class Deliveries extends Model {
 
     public static function get_numerotation($test = false){
         if($numerotation = Config::where("id", "crm_delivery_numerotation")->first()) {
+            $valueSend = $numerotation->value ;
             if(!$test) {
                 $numerotation->value++;
                 $numerotation->save();
             }
-            return $numerotation->value;
+            return $valueSend;
         } else{
             if(!$test) {
+                $numerotation = new Config() ;
                 $numerotation->id = 'crm_delivery_numerotation' ;
                 $numerotation->value = 2 ;
                 $numerotation->save() ;

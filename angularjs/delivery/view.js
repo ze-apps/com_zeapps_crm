@@ -65,8 +65,7 @@ app.controller("ComZeappsCrmDeliveryViewCtrl", ["$scope", "$routeParams", "$loca
 		if($rootScope.deliveries === undefined || $rootScope.deliveries.ids === undefined) {
             $rootScope.deliveries = {};
             $rootScope.deliveries.ids = [];
-		}
-		else{
+		}  else {
 			initNavigation();
 		}
 
@@ -94,7 +93,6 @@ app.controller("ComZeappsCrmDeliveryViewCtrl", ["$scope", "$routeParams", "$loca
                     });
 
                     $scope.delivery.global_discount = parseFloat($scope.delivery.global_discount);
-                    $scope.delivery.probability = parseFloat($scope.delivery.probability);
 					$scope.delivery.date_creation = new Date($scope.delivery.date_creation);
 
 					var i;

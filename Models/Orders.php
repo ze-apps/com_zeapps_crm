@@ -86,13 +86,15 @@ class Orders extends Model {
 
     public static function get_numerotation($test = false){
         if($numerotation = Config::where("id", "crm_order_numerotation")->first()) {
+            $valueSend = $numerotation->value ;
             if(!$test) {
                 $numerotation->value++;
                 $numerotation->save();
             }
-            return $numerotation->value;
-        } else{
+            return $valueSend;
+        } else {
             if(!$test) {
+                $numerotation = new Config() ;
                 $numerotation->id = 'crm_order_numerotation' ;
                 $numerotation->value = 2 ;
                 $numerotation->save() ;

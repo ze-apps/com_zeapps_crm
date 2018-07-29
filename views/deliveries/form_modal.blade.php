@@ -1,4 +1,4 @@
-<div ng-controller="ComZeappsCrmQuoteFormCtrl">
+<div ng-controller="ComZeappsCrmDeliveryFormCtrl">
     <form name="formRequired">
         <div ng-hide="true">@{{ form.zeapps_modal_form_isvalid = formRequired.$valid }}</div>
 
@@ -15,7 +15,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
-                    <label>Libellé du devis</label>
+                    <label>Libellé du bon de livraison</label>
                     <input type="text" ng-model="form.libelle" name="test" class="form-control">
                 </div>
             </div>
@@ -35,7 +35,7 @@
 
             <div class="col-md-6">
                 <div class="form-group">
-                    <label>Gestionnaire du devis <span class="required">*</span></label>
+                    <label>Gestionnaire du bon de livraison <span class="required">*</span></label>
                     <span ze-modalsearch="loadAccountManager"
                           data-http="accountManagerHttp"
                           data-model="form.name_user_account_manager"
@@ -50,21 +50,14 @@
                 <div class="form-group">
                     <label>Statut</label>
                     <select class="form-control" ng-model="form.status">
-
                         <option ng-repeat="stat in status" ng-value="@{{stat.id}}">
                             @{{ stat.label }}
                         </option>
-
                     </select>
                 </div>
             </div>
 
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>Probabilité</label>
-                    <input type="number" class="form-control" ng-model="form.probability">
-                </div>
-            </div>
+
         </div>
 
         <div class="row">
@@ -123,12 +116,7 @@
                 </div>
             </div>
 
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>Date de validité <span class="required">*</span></label>
-                    <input type="date" ng-model="form.date_limit" name="date_limit" class="form-control" ng-required="true">
-                </div>
-            </div>
+
         </div>
 
         <div class="row">

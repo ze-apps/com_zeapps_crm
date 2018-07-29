@@ -14,7 +14,7 @@ class ComZeappsCrmQuotesTable extends Migration
             $table->string('libelle', 255);
             $table->string('numerotation', 255);
             $table->integer('id_origin', false);
-            $table->string('status');
+            $table->integer('status', false);
             $table->float('probability', 5, 2);
             $table->string('final_pdf', 1023);
             $table->integer('id_user_account_manager');

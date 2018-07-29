@@ -5,6 +5,7 @@ namespace App\com_zeapps_crm\Models;
 use Illuminate\Database\Eloquent\Model ;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use Zeapps\Models\Config;
 use App\com_zeapps_crm\Models\InvoiceLines;
 use App\com_zeapps_crm\Models\InvoiceLineDetails;
 use App\com_zeapps_contact\Models\Modalities;
@@ -102,13 +103,15 @@ class Invoices extends Model {
 
     public static function get_numerotation($test = false){
         if($numerotation = Config::where("id", "crm_invoice_numerotation")->first()) {
+            $valueSend = $numerotation->value ;
             if(!$test) {
                 $numerotation->value++;
                 $numerotation->save();
             }
-            return $numerotation->value;
+            return $valueSend;
         } else{
             if(!$test) {
+                $numerotation = new Config() ;
                 $numerotation->id = 'crm_invoice_numerotation' ;
                 $numerotation->value = 2 ;
                 $numerotation->save() ;

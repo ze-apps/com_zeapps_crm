@@ -56,6 +56,8 @@ app.controller("ComZeappsCrmOrderFormCtrl", ["$scope", "$routeParams", "$rootSco
 			}
 		});
 
+        $scope.status = zhttp.crm.statuts.getAll() ;
+
 		function Initform(){
 			if($scope.form.id === undefined) {
                 $scope.form.id_user_account_manager = $rootScope.user.id;

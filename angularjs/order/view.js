@@ -97,7 +97,6 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                     });
 
                     $scope.order.global_discount = parseFloat($scope.order.global_discount);
-                    $scope.order.probability = parseFloat($scope.order.probability);
 					$scope.order.date_creation = new Date($scope.order.date_creation);
 					$scope.order.date_limit = new Date($scope.order.date_limit);
 

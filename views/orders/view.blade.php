@@ -1,4 +1,4 @@
-<div id="breadcrumb">Devis</div>
+<div id="breadcrumb">Commandes</div>
 <div id="content">
 
 
@@ -7,20 +7,20 @@
             <div class="row">
                 <div class="col-md-2">
                     <div class="titleWell">
-                        Devis : @{{ quote.libelle }}
+                        Commande : @{{ order.libelle }}
                     </div>
                     <p class="small">
-                        n° @{{ quote.numerotation }}
+                        n° @{{ order.numerotation }}
                     </p>
                     <p>
                         <span class="form-group form-inline">
-                            <select class="form-control input-sm" ng-model="quote.status" ng-change="updateStatus()">
+                            <select class="form-control input-sm" ng-model="order.status" ng-change="updateStatus()">
                                 <option>En cours</option>
                                 <option>Gagné</option>
                                 <option>Perdu</option>
                             </select>
                         </span>
-                        (@{{ quote.probability | number:2 }}%)
+                        (@{{ order.probability | number:2 }}%)
                     </p>
                     <button type="button" class="btn btn-xs btn-info" ng-click="showDetailsEntreprise = !showDetailsEntreprise">
                         @{{ showDetailsEntreprise ? 'Masquer' : 'Voir' }} en cours
@@ -31,39 +31,39 @@
                     <strong>Adresse de facturation :</strong><br>
                     @{{ company.company_name }}<br ng-if="company.company_name">
                     @{{ contact.last_name + ' ' + contact.first_name }}<br ng-if="contact.last_name || contact.first_name">
-                    @{{ quote.billing_address_1 }}<br ng-if="quote.billing_address_1">
-                    @{{ quote.billing_address_2 }}<br ng-if="quote.billing_address_2">
-                    @{{ quote.billing_address_3 }}<br ng-if="quote.billing_address_3">
-                    @{{ quote.billing_zipcode + ' ' + quote.billing_city }}
+                    @{{ order.billing_address_1 }}<br ng-if="order.billing_address_1">
+                    @{{ order.billing_address_2 }}<br ng-if="order.billing_address_2">
+                    @{{ order.billing_address_3 }}<br ng-if="order.billing_address_3">
+                    @{{ order.billing_zipcode + ' ' + order.billing_city }}
                 </div>
 
                 <div class="col-md-3">
                     <strong>Adresse de livraison :</strong><br>
                     @{{ company.company_name }}<br ng-if="company.company_name">
                     @{{ contact.last_name + ' ' + contact.first_name }}<br ng-if="contact.last_name && contact.first_name">
-                    @{{ quote.delivery_address_1 }}<br ng-if="quote.delivery_address_1">
-                    @{{ quote.delivery_address_2 }}<br ng-if="quote.delivery_address_2">
-                    @{{ quote.delivery_address_3 }}<br ng-if="quote.delivery_address_3">
-                    @{{ quote.delivery_zipcode + ' ' + quote.delivery_city }}
+                    @{{ order.delivery_address_1 }}<br ng-if="order.delivery_address_1">
+                    @{{ order.delivery_address_2 }}<br ng-if="order.delivery_address_2">
+                    @{{ order.delivery_address_3 }}<br ng-if="order.delivery_address_3">
+                    @{{ order.delivery_zipcode + ' ' + order.delivery_city }}
                 </div>
 
                 <div class="col-md-4">
                     <div class="pull-right">
                         <ze-btn fa="arrow-left" color="primary" hint="Retour" direction="left" ng-click="back()"></ze-btn>
                         <ze-btn fa="pencil" color="info" hint="Editer" direction="left"
-                                ze-modalform="updateQuote"
-                                data-edit="quote"
+                                ze-modalform="updateOrder"
+                                data-edit="order"
                                 data-template="templateEdit"
-                                data-title="Modifier le devis"></ze-btn>
+                                data-title="Modifier la commande"></ze-btn>
                         <ze-btn fa="download" color="primary" hint="PDF" direction="left" ng-click="print()"></ze-btn>
                         <ze-btn fa="files-o" color="success" hint="Dupliquer" direction="left" ng-click="transform()"></ze-btn>
 
-                        <div class="btn-group btn-group-xs" role="group" ng-if="nb_quotes > 0">
-                            <button type="button" class="btn btn-default" ng-class="quote_first == 0 ? 'disabled' :''" ng-click="first_quote()"><span class="fa fa-fw fa-fast-backward"></span></button>
-                            <button type="button" class="btn btn-default" ng-class="quote_previous == 0 ? 'disabled' :''" ng-click="previous_quote()"><span class="fa fa-fw fa-chevron-left"></span></button>
-                            <button type="button" class="btn btn-default disabled">@{{quote_order}}/@{{nb_quotes}}</button>
-                            <button type="button" class="btn btn-default" ng-class="quote_next == 0 ? 'disabled' :''" ng-click="next_quote()"><span class="fa fa-fw fa-chevron-right"></span></button>
-                            <button type="button" class="btn btn-default" ng-class="quote_last == 0 ? 'disabled' :''" ng-click="last_quote()"><span class="fa fa-fw fa-fast-forward"></span></button>
+                        <div class="btn-group btn-group-xs" role="group" ng-if="nb_orders > 0">
+                            <button type="button" class="btn btn-default" ng-class="order_first == 0 ? 'disabled' :''" ng-click="first_order()"><span class="fa fa-fw fa-fast-backward"></span></button>
+                            <button type="button" class="btn btn-default" ng-class="order_previous == 0 ? 'disabled' :''" ng-click="previous_order()"><span class="fa fa-fw fa-chevron-left"></span></button>
+                            <button type="button" class="btn btn-default disabled">@{{order_order}}/@{{nb_orders}}</button>
+                            <button type="button" class="btn btn-default" ng-class="order_next == 0 ? 'disabled' :''" ng-click="next_order()"><span class="fa fa-fw fa-chevron-right"></span></button>
+                            <button type="button" class="btn btn-default" ng-class="order_last == 0 ? 'disabled' :''" ng-click="last_order()"><span class="fa fa-fw fa-fast-forward"></span></button>
                         </div>
                     </div>
                 </div>
@@ -126,7 +126,7 @@
                     <ze-btn fa="commenting" color="warning" hint="commentaire" always-on="true"
                             ze-modalform="addComment"
                             data-title="Ajouter un commentaire"
-                            data-template="quoteCommentTplUrl"></ze-btn>
+                            data-template="orderCommentTplUrl"></ze-btn>
                 </div>
                 <div class="col-md-12">
                     <table class="table table-striped table-condensed table-responsive">
@@ -197,15 +197,15 @@
                                         <ze-btn fa="pencil" color="info" direction="left" hint="editer"
                                                 ze-modalform="editLine"
                                                 data-edit="line"
-                                                data-title="Editer la ligne du devis"
-                                                data-template="quoteLineTplUrl"></ze-btn>
+                                                data-title="Editer la ligne de commande"
+                                                data-template="orderLineTplUrl"></ze-btn>
                                     </span>
                                     <span ng-show="line.type === 'comment'">
                                         <ze-btn fa="pencil" color="info" direction="left" hint="editer"
                                                 ze-modalform="editComment"
                                                 data-edit="line"
                                                 data-title="Modifier un commentaire"
-                                                data-template="quoteCommentTplUrl"></ze-btn>
+                                                data-template="orderCommentTplUrl"></ze-btn>
                                     </span>
                                     <ze-btn fa="trash" color="danger" direction="left" hint="Supprimer" ng-click="deleteLine(line)" ze-confirmation  ng-if="line"></ze-btn>
                                 </td>
@@ -236,13 +236,13 @@
                 </div>
                 <div class="col-md-5 col-md-offset-2">
                     <div class="well well-sm">
-                        <div ng-if="quote.total_discount > 0">
+                        <div ng-if="order.total_discount > 0">
                             <div class="row">
                                 <div class="col-md-6">
                                     Total HT av remise
                                 </div>
                                 <div class="col-md-6 text-right">
-                                    @{{ quote.total_prediscount_ht | currency:'€':2 }}
+                                    @{{ order.total_prediscount_ht | currency:'€':2 }}
                                 </div>
                             </div>
                             <div class="row">
@@ -250,17 +250,17 @@
                                     Total TTC av remise
                                 </div>
                                 <div class="col-md-6 text-right">
-                                    @{{ quote.total_prediscount_ttc | currency:'€':2 }}
+                                    @{{ order.total_prediscount_ttc | currency:'€':2 }}
                                 </div>
                             </div>
                             <hr>
 
-                            <div class="row" ng-if="quote.global_discount > 0">
+                            <div class="row" ng-if="order.global_discount > 0">
                                 <div class="col-md-6">
                                     Remise globale
                                 </div>
                                 <div class="col-md-6 text-right">
-                                    -@{{ quote.global_discount | number:2 }}%
+                                    -@{{ order.global_discount | number:2 }}%
                                 </div>
                             </div>
 
@@ -269,7 +269,7 @@
                                     Total remises HT
                                 </div>
                                 <div class="col-md-6 text-right">
-                                    @{{ quote.total_discount | currency:'€':2 }}
+                                    @{{ order.total_discount | currency:'€':2 }}
                                 </div>
                             </div>
 
@@ -281,7 +281,7 @@
                                 Total HT
                             </div>
                             <div class="col-md-6 text-right">
-                                @{{ quote.total_ht | currency:'€':2 }}
+                                @{{ order.total_ht | currency:'€':2 }}
                             </div>
                         </div>
 
@@ -290,7 +290,7 @@
                                 Total TVA
                             </div>
                             <div class="col-md-6 text-right">
-                                @{{ quote.total_tva | currency:'€':2 }}
+                                @{{ order.total_tva | currency:'€':2 }}
                             </div>
                         </div>
 
@@ -299,7 +299,7 @@
                                 Total TTC
                             </div>
                             <div class="col-md-6 text-right">
-                                @{{ quote.total_ttc | currency:'€':2 }}
+                                @{{ order.total_ttc | currency:'€':2 }}
                             </div>
                         </div>
                     </div>
@@ -310,19 +310,19 @@
 
         <div ng-show="navigationState=='header'">
             <strong>Reference Client :</strong>
-            @{{ quote.reference_client }}
+            @{{ order.reference_client }}
             <br/>
-            <strong>Date de création du devis :</strong>
-            @{{ quote.date_creation || "-" | date:'dd/MM/yyyy' }}
+            <strong>Date de création de la commande :</strong>
+            @{{ order.date_creation || "-" | date:'dd/MM/yyyy' }}
             <br/>
-            <strong>Date de validité du devis :</strong>
-            @{{ quote.date_limit || "-" | date:'dd/MM/yyyy' }}
+            <strong>Date de validité de la commande :</strong>
+            @{{ order.date_limit || "-" | date:'dd/MM/yyyy' }}
             <br/>
         </div>
 
         <div ng-show="navigationState=='condition'">
             <strong>Modalités de paiement :</strong>
-            @{{ quote.label_modality }}
+            @{{ order.label_modality }}
         </div>
 
         <div ng-show="navigationState=='activity'">
@@ -331,7 +331,7 @@
                     <div class="pull-right">
                         <ze-btn data-fa="plus" data-hint="Activité" always-on="true" data-color="success"
                                 ze-modalform="addActivity"
-                                data-template="quoteActivityTplUrl"
+                                data-template="orderActivityTplUrl"
                                 data-title="Créer une activité"></ze-btn>
                     </div>
                 </div>
@@ -345,7 +345,7 @@
                                     <ze-btn data-fa="pencil" data-hint="Editer" data-direction="left" data-color="info"
                                             ze-modalform="editActivity"
                                             data-edit="activity"
-                                            data-template="quoteActivityTplUrl"
+                                            data-template="orderActivityTplUrl"
                                             data-title="Modifier l'activité"></ze-btn>
                                     <ze-btn data-fa="trash" data-hint="Supprimer" data-direction="left" data-color="danger" ng-click="deleteActivity(activity)" ze-confirmation></ze-btn>
                                 </div>
@@ -368,7 +368,7 @@
                     <div class="pull-right">
                         <ze-btn data-fa="plus" data-hint="Document" always-on="true" data-color="success"
                                 ze-modalform="addDocument"
-                                data-template="quoteDocumentTplUrl"
+                                data-template="orderDocumentTplUrl"
                                 data-title="Ajouter un document"></ze-btn>
                     </div>
                     <div class="card_document" ng-repeat="document in documents | orderBy:['-date','-id']">
@@ -377,7 +377,7 @@
                                 <ze-btn data-fa="pencil" data-hint="Editer" data-direction="left" data-color="info"
                                         ze-modalform="editDocument"
                                         data-edit="document"
-                                        data-template="quoteDocumentTplUrl"
+                                        data-template="orderDocumentTplUrl"
                                         data-title="Modifier le document"></ze-btn>
                                 <ze-btn data-fa="trash" data-hint="Supprimer" data-direction="left" data-color="danger" ng-click="deleteDocument(document)" ze-confirmation></ze-btn>
                             </div>

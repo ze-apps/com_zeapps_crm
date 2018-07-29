@@ -1,0 +1,8 @@
+[
+  {
+    "id": "1",
+    "label": "Principal",
+    "resupply_delay": "15",
+    "resupply_unit": "days"
+  }
+]

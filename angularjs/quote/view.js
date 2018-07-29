@@ -393,7 +393,7 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                         updateLine(line);
                     }
                     var formatted_data = angular.toJson(line);
-                    zhttp.crm.quote.line.save(formatted_data)
+                    zhttp.crm.quote.line.save(formatted_data);
 				});
 
                 angular.forEach($scope.line_details, function(line){
