@@ -102,10 +102,10 @@ class Quotes extends Controller
 
     public function getAll(Request $request) {
         $id = $request->input('id', 0);
-        $type = $request->input('id', 'company');
-        $limit = $request->input('id', 15);
-        $offset = $request->input('id', 0);
-        $context = $request->input('id', false);
+        $type = $request->input('type', 'company');
+        $limit = $request->input('limit', 15);
+        $offset = $request->input('offset', 0);
+        $context = $request->input('context', false);
 
 
         $filters = array() ;

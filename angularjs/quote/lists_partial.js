@@ -138,10 +138,12 @@ app.controller("ComZeappsCrmQuoteListsPartialCtrl", ["$scope", "$location", "$ro
             context = context || "";
             var offset = ($scope.page - 1) * $scope.pageSize;
             var formatted_filters = angular.toJson($scope.filter_model);
-
+console.log(src_id);
+console.log(src);
             zhttp.crm.quote.get_all(src_id, src, $scope.pageSize, offset, context, formatted_filters).then(function (response) {
                 if (response.data && response.data != "false") {
                     $scope.quotes = response.data.quotes;
+                    console.log($scope.quotes);
 
                     for (var i = 0; i < $scope.quotes.length; i++) {
                         $scope.quotes[i].date_creation = $scope.quotes[i].date_creation !== "0000-00-00 00:00:00" ? new Date($scope.quotes[i].date_creation) : 0;

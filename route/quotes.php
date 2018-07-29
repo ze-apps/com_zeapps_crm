@@ -14,7 +14,7 @@ Routeur::get("/com_zeapps_crm/quotes/form_line", 'App\\com_zeapps_crm\\Controlle
 
 Routeur::post("/com_zeapps_crm/quotes/testFormat", 'App\\com_zeapps_crm\\Controllers\\Quotes@testFormat');
 Routeur::get("/com_zeapps_crm/quotes/get/{id}", 'App\\com_zeapps_crm\\Controllers\\Quotes@get');
-Routeur::post("/com_zeapps_crm/quotes/getAll/{id_project}/{type}/{limit}/{offset}/{context}", 'App\\com_zeapps_crm\\Controllers\\Quotes@getAll');
+Routeur::post("/com_zeapps_crm/quotes/getAll/{id}/{type}/{limit}/{offset}/{context}", 'App\\com_zeapps_crm\\Controllers\\Quotes@getAll');
 Routeur::post("/com_zeapps_crm/quotes/modal/{limit}/{offset}", 'App\\com_zeapps_crm\\Controllers\\Quotes@modal');
 Routeur::post("/com_zeapps_crm/quotes/save", 'App\\com_zeapps_crm\\Controllers\\Quotes@save');
 Routeur::post("/com_zeapps_crm/quotes/delete/{id}", 'App\\com_zeapps_crm\\Controllers\\Quotes@delete');
