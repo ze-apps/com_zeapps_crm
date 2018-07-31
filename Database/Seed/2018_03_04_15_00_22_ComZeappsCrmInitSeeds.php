@@ -158,6 +158,7 @@ class ComZeappsCrmInitSeeds
             foreach ($data_json as $key => $value) {
                 $obj_data->$key = $value;
             }
+            $obj_data->numerotation = "" ;
 
             $obj_data->save();
         }
@@ -215,6 +216,7 @@ class ComZeappsCrmInitSeeds
             foreach ($data_json as $key => $value) {
                 $obj_data->$key = $value;
             }
+            $obj_data->numerotation = "" ;
 
             $obj_data->save();
         }
@@ -277,6 +279,7 @@ class ComZeappsCrmInitSeeds
             foreach ($data_json as $key => $value) {
                 $obj_data->$key = $value;
             }
+            $obj_data->numerotation = "" ;
 
             $obj_data->save();
         }
@@ -341,6 +344,7 @@ class ComZeappsCrmInitSeeds
             foreach ($data_json as $key => $value) {
                 $obj_data->$key = $value;
             }
+            $obj_data->numerotation = "" ;
 
             $obj_data->save();
         }

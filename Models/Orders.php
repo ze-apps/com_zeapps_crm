@@ -31,16 +31,16 @@ class Orders extends Model {
         unset($src->updated_at);
         unset($src->deleted_at);
 
-        $format = Config::where("id", "crm_order_format")->first()->value;
-        $num = self::get_numerotation();
-        $src->numerotation = self::parseFormat($format, $num);
+
         $src->date_creation = date('Y-m-d');
         $src->date_limit = date("Y-m-d", strtotime("+1 month", time()));
 
 
         $order = new Orders() ;
-        foreach ($src as $key => $value) {
-            $order->$key = $value ;
+        foreach (self::getSchema() as $key) {
+            if (isset($src->$key)) {
+                $order->$key = $src->$key;
+            }
         }
         $order->save();
         $id = $order->id ;
@@ -48,7 +48,7 @@ class Orders extends Model {
 
         $new_id_lines = [];
 
-        if(isset($src->lines) && is_array($src->lines)){
+        if(isset($src->lines)){
             foreach($src->lines as $line){
                 $old_id = $line->id;
 
@@ -57,19 +57,23 @@ class Orders extends Model {
                 unset($line->updated_at);
                 unset($line->deleted_at);
 
-                $line->id_order = $id;
+
 
 
                 $orderLine = new OrderLines() ;
-                foreach ($line as $key => $value) {
-                    $orderLine->$key = $value ;
+                foreach (OrderLines::getSchema() as $key) {
+                    if (isset($line->$key)) {
+                        $orderLine->$key = $line->$key;
+                    }
                 }
+                $orderLine->id_order = $id;
                 $orderLine->save();
+
                 $new_id_lines[$old_id] = $orderLine->id ;
             }
         }
 
-        if(isset($src->line_details) && is_array($src->line_details)){
+        if(isset($src->line_details)){
             foreach($src->line_details as $line){
                 unset($line->id);
                 unset($line->created_at);
@@ -81,8 +85,10 @@ class Orders extends Model {
 
 
                 $orderLineDetail = new OrderLineDetails() ;
-                foreach ($line as $key => $value) {
-                    $orderLineDetail->$key = $value ;
+                foreach (OrderLineDetails::getSchema() as $key) {
+                    if (isset($line->$key)) {
+                        $orderLineDetail->$key = $line->$key;
+                    }
                 }
                 $orderLineDetail->save();
             }

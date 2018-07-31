@@ -34,9 +34,6 @@ class Invoices extends Model {
         unset($src->updated_at);
         unset($src->deleted_at);
 
-        $src->date_creation = date('Y-m-d');
-        $src->finalized = 0;
-
         if (isset($src->id_modality)) {
             if ($modality = Modalities::where("id", $src->id_modality)->first()) {
                 if ($modality->settlement_type === '0') {
@@ -62,13 +59,15 @@ class Invoices extends Model {
                 $invoice->$key = $src->$key;
             }
         }
+        $invoice->date_creation = date('Y-m-d');
+        $invoice->finalized = 0;
         $invoice->save() ;
         $id = $invoice->id;
 
 
         $new_id_lines = [];
 
-        if(isset($src->lines) && is_array($src->lines)){
+        if(isset($src->lines)){
             foreach($src->lines as $line){
                 $old_id = $line->id;
 
@@ -77,33 +76,39 @@ class Invoices extends Model {
                 unset($line->updated_at);
                 unset($line->deleted_at);
 
-                $line->id_invoice = $id;
-
 
                 $invoiceLine = new InvoiceLines() ;
-                foreach ($line as $key => $value) {
-                    $invoiceLine->$key = $value ;
+                foreach (InvoiceLines::getSchema() as $key) {
+                    if (isset($line->$key)) {
+                        $invoiceLine->$key = $line->$key;
+                    }
                 }
+                $invoiceLine->id_invoice = $id;
                 $invoiceLine->save() ;
+
+
                 $new_id_lines[$old_id] = $invoiceLine->id;
             }
         }
 
-        if(isset($src->line_details) && is_array($src->line_details)){
-            foreach($src->line_details as $line){
+        if(isset($src->line_details)){
+            foreach($src->line_details as $line) {
                 unset($line->id);
                 unset($line->created_at);
                 unset($line->updated_at);
                 unset($line->deleted_at);
 
-                $line->id_invoice = $id;
-                $line->id_line = $new_id_lines[$line->id_line];
-
 
                 $invoiceLineDetail = new InvoiceLineDetails() ;
-                foreach ($line as $key => $value) {
-                    $invoiceLineDetail->$key = $value ;
+                foreach (InvoiceLineDetails::getSchema() as $key) {
+                    if (isset($line->$key)) {
+                        $invoiceLineDetail->$key = $line->$key;
+                    }
                 }
+
+                $invoiceLineDetail->id_invoice = $id;
+                $invoiceLineDetail->id_line = $new_id_lines[$line->id_line];
+
                 $invoiceLineDetail->save() ;
             }
         }

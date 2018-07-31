@@ -33,17 +33,15 @@ class Deliveries extends Model {
         unset($src->updated_at);
         unset($src->deleted_at);
 
-        $format = Config::where("id", "crm_delivery_format")->first()->value ;
-        $num = self::get_numerotation();
-        $src->numerotation = self::parseFormat($format, $num);
+
         $src->date_creation = date('Y-m-d');
 
         $delivery = new Deliveries ;
-
-        foreach ($src as $key => $value) {
-            $delivery->$key = $value ;
+        foreach (self::getSchema() as $key) {
+            if (isset($src->$key)) {
+                $delivery->$key = $src->$key;
+            }
         }
-
         $delivery->save();
         $id = $delivery->id ;
 
@@ -51,7 +49,7 @@ class Deliveries extends Model {
 
         $new_id_lines = [];
 
-        if(isset($src->lines) && is_array($src->lines)){
+        if(isset($src->lines)){
             foreach($src->lines as $line){
                 $old_id = $line->id;
 
@@ -60,14 +58,19 @@ class Deliveries extends Model {
                 unset($line->updated_at);
                 unset($line->deleted_at);
 
-                $line->id_delivery = $id;
+
 
 
                 $deliveryLine = new DeliveryLines() ;
-                foreach ($line as $key => $value) {
-                    $deliveryLine->$key = $value ;
+                foreach (DeliveryLines::getSchema() as $key) {
+                    if (isset($line->$key)) {
+                        $deliveryLine->$key = $line->$key;
+                    }
                 }
+                $deliveryLine->id_delivery = $id;
                 $deliveryLine->save();
+
+
                 $new_id_lines[$old_id] = $deliveryLine->id ;
 
                 if($line->type === 'product'){
@@ -78,7 +81,7 @@ class Deliveries extends Model {
                     $stockMovement->id_stock = $product->id_stock; // TODO : le stock ne doit pas être associé au produit mais ID Stock du document source
                     $stockMovement->label = "Bon de livraison n° " . $src->numerotation;
                     $stockMovement->qty = -1 * floatval($line->qty);
-                    $stockMovement->id_table = $src->id;
+                    $stockMovement->id_table = $id;
                     $stockMovement->name_table = "com_zeapps_crm_deliveries";
                     $stockMovement->date_mvt = $src->date_creation;
                     $stockMovement->ignored = 0;
@@ -87,30 +90,32 @@ class Deliveries extends Model {
             }
         }
 
-        if(isset($src->line_details) && is_array($src->line_details)){
+        if(isset($src->line_details)){
             foreach($src->line_details as $line){
                 unset($line->id);
                 unset($line->created_at);
                 unset($line->updated_at);
                 unset($line->deleted_at);
 
-                $line->id_delivery = $id;
-                $line->id_line = $new_id_lines[$line->id_line];
+
 
                 $deliveryLineDetail = new DeliveryLineDetails() ;
-                foreach ($line as $key => $value) {
-                    $deliveryLineDetail->$key = $value ;
+                foreach (DeliveryLineDetails::getSchema() as $key) {
+                    if (isset($line->$key)) {
+                        $deliveryLineDetail->$key = $line->$key;
+                    }
                 }
+                $deliveryLineDetail->id_delivery = $id;
+                $deliveryLineDetail->id_line = $new_id_lines[$line->id_line];
                 $deliveryLineDetail->save();
 
                 if($line->type === 'product'){
-
                     $stockMovement = new StockMovements() ;
                     $stockMovement->id_warehouse = $src->id_warehouse;
                     $stockMovement->id_stock = $product->id_stock; // TODO : le stock ne doit pas être associé au produit mais ID Stock du document source
                     $stockMovement->label = "Bon de livraison n° " . $src->numerotation;
                     $stockMovement->qty = -1 * floatval($line->qty);
-                    $stockMovement->id_table = $src->id;
+                    $stockMovement->id_table = $id;
                     $stockMovement->name_table = "com_zeapps_crm_deliveries";
                     $stockMovement->date_mvt = $src->date_creation;
                     $stockMovement->ignored = 0;

@@ -34,22 +34,23 @@ class Quotes extends Model
         unset($src->updated_at);
         unset($src->deleted_at);
 
-        $format = Config::where('id', "crm_quote_format")->first()->value;
-        $num = self::get_numerotation();
-        $src->numerotation = self::parseFormat($format, $num);
-        $src->date_creation = date('Y-m-d');
-        $src->date_limit = date("Y-m-d", strtotime("+1 month", time()));
+
+
 
         $quotes = new Quotes();
-        foreach ($src as $key => $value) {
-            $quotes->$key = $value;
+        foreach (self::getSchema() as $key) {
+            if (isset($src->$key)) {
+                $quotes->$key = $src->$key;
+            }
         }
+        $quotes->date_creation = date('Y-m-d');
+        $quotes->date_limit = date("Y-m-d", strtotime("+1 month", time()));
         $quotes->save();
         $id = $quotes->id;
 
         $new_id_lines = [];
 
-        if (isset($src->lines) && is_array($src->lines)) {
+        if (isset($src->lines)) {
             foreach ($src->lines as $line) {
                 $old_id = $line->id;
 
@@ -58,33 +59,38 @@ class Quotes extends Model
                 unset($line->updated_at);
                 unset($line->deleted_at);
 
-                $line->id_quote = $id;
+
 
 
                 $quote_line = new QuoteLines();
-                foreach ($line as $key => $value) {
-                    $quote_line->$key = $value;
+                foreach (QuoteLines::getSchema() as $key) {
+                    if (isset($line->$key)) {
+                        $quote_line->$key = $line->$key;
+                    }
                 }
+                $quote_line->id_quote = $id;
                 $quote_line->save();
+
+
                 $new_id_lines[$old_id] = $quote_line->id;
             }
         }
 
-        if (isset($src->line_details) && is_array($src->line_details)) {
+        if (isset($src->line_details)) {
             foreach ($src->line_details as $line) {
                 unset($line->id);
                 unset($line->created_at);
                 unset($line->updated_at);
                 unset($line->deleted_at);
 
-                $line->id_quote = $id;
-                $line->id_line = $new_id_lines[$line->id_line];
-
-
                 $quote_line_details = new QuoteLineDetails();
-                foreach ($line as $key => $value) {
-                    $quote_line_details->$key = $value;
+                foreach (QuoteLineDetails::getSchema() as $key) {
+                    if (isset($line->$key)) {
+                        $quote_line_details->$key = $line->$key;
+                    }
                 }
+                $quote_line_details->id_quote = $id;
+                $quote_line_details->id_line = $new_id_lines[$line->id_line];
                 $quote_line_details->save();
             }
         }
