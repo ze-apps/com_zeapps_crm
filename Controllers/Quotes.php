@@ -214,23 +214,13 @@ class Quotes extends Controller
 
 
         $quote = new QuotesModel() ;
-        $createNumber = true ;
 
         if (isset($data["id"]) && is_numeric($data["id"])) {
             $quote = QuotesModel::where('id', $data["id"])->first() ;
-            if ($quote) {
-                $createNumber = false ;
-            }
         }
 
         foreach ($data as $key =>$value) {
             $quote->$key = $value ;
-        }
-
-        if ($createNumber) {
-            $format = Config::where('id', 'crm_quote_format')->first()->value ;
-            $num = QuotesModel::get_numerotation();
-            $quote->numerotation = QuotesModel::parseFormat($format, $num);
         }
 
         $quote->save() ;

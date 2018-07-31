@@ -214,23 +214,13 @@ class Orders extends Controller
 
 
         $order = new OrdersModel() ;
-        $createNumber = true ;
 
         if (isset($data["id"]) && is_numeric($data["id"])) {
             $order = OrdersModel::where('id', $data["id"])->first() ;
-            if ($order) {
-                $createNumber = false ;
-            }
         }
 
         foreach ($data as $key =>$value) {
             $order->$key = $value ;
-        }
-
-        if ($createNumber) {
-            $format = Config::where('id', 'crm_order_format')->first()->value ;
-            $num = OrdersModel::get_numerotation();
-            $order->numerotation = OrdersModel::parseFormat($format, $num);
         }
 
         $order->save() ;

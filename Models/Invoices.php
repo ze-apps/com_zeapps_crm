@@ -10,12 +10,24 @@ use App\com_zeapps_crm\Models\InvoiceLines;
 use App\com_zeapps_crm\Models\InvoiceLineDetails;
 use App\com_zeapps_contact\Models\Modalities;
 
+use Illuminate\Database\Capsule\Manager as Capsule;
+
 class Invoices extends Model {
     use SoftDeletes;
 
-    protected $table = 'com_zeapps_crm_invoices';
+    static protected $_table = 'com_zeapps_crm_invoices';
+    protected $table ;
 
-    public function createFrom($src){
+
+    public function __construct(array $attributes = [])
+    {
+        $this->table = self::$_table;
+
+        parent::__construct($attributes);
+    }
+
+
+    public static function createFrom($src){
         unset($src->id);
         unset($src->numerotation);
         unset($src->created_at);
@@ -44,13 +56,14 @@ class Invoices extends Model {
         }
 
 
-        $invoice = Invoices() ;
-        foreach ($src as $key => $value) {
-            $invoice->$key = $value ;
+        $invoice = new Invoices() ;
+        foreach (self::getSchema() as $key) {
+            if (isset($src->$key)) {
+                $invoice->$key = $src->$key;
+            }
         }
         $invoice->save() ;
         $id = $invoice->id;
-
 
 
         $new_id_lines = [];
@@ -67,7 +80,7 @@ class Invoices extends Model {
                 $line->id_invoice = $id;
 
 
-                $invoiceLine = InvoiceLines() ;
+                $invoiceLine = new InvoiceLines() ;
                 foreach ($line as $key => $value) {
                     $invoiceLine->$key = $value ;
                 }
@@ -87,7 +100,7 @@ class Invoices extends Model {
                 $line->id_line = $new_id_lines[$line->id_line];
 
 
-                $invoiceLineDetail = InvoiceLineDetails() ;
+                $invoiceLineDetail = new InvoiceLineDetails() ;
                 foreach ($line as $key => $value) {
                     $invoiceLineDetail->$key = $value ;
                 }
@@ -155,5 +168,38 @@ class Invoices extends Model {
             return $result;
         }
         return false;
+    }
+
+
+
+    public static function getSchema() {
+        return $schema = Capsule::schema()->getColumnListing(self::$_table) ;
+    }
+
+    public function save(array $options = []) {
+
+
+        /**** set a document number ****/
+        if (!isset($this->numerotation) || !$this->numerotation || $this->numerotation == "") {
+            $format = Config::where('id', 'crm_invoice_format')->first()->value;
+            $num = self::get_numerotation();
+            $this->numerotation = self::parseFormat($format, $num);
+        }
+
+
+
+
+
+        /**** to delete unwanted field ****/
+        $schema = self::getSchema();
+        foreach ($this->getAttributes() as $key => $value) {
+            if (!in_array($key, $schema)) {
+                //echo $key . "\n" ;
+                unset($this->$key);
+            }
+        }
+        /**** end to delete unwanted field ****/
+
+        return parent::save($options);
     }
 }

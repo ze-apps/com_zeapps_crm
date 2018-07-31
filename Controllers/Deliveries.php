@@ -214,24 +214,15 @@ class Deliveries extends Controller
 
 
         $deliverie = new DeliveriesModel() ;
-        $createNumber = true ;
 
         if (isset($data["id"]) && is_numeric($data["id"])) {
             $deliverie = DeliveriesModel::where('id', $data["id"])->first() ;
-            if ($deliverie) {
-                $createNumber = false ;
-            }
         }
 
         foreach ($data as $key =>$value) {
             $deliverie->$key = $value ;
         }
 
-        if ($createNumber) {
-            $format = Config::where('id', 'crm_delivery_format')->first()->value ;
-            $num = DeliveriesModel::get_numerotation();
-            $deliverie->numerotation = DeliveriesModel::parseFormat($format, $num);
-        }
 
         $deliverie->save() ;
 

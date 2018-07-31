@@ -8,15 +8,25 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\com_zeapps_crm\Models\QuoteLines;
 use App\com_zeapps_crm\Models\QuoteLineDetails;
 
+use Illuminate\Database\Capsule\Manager as Capsule;
+
 use Zeapps\Models\Config;
 
 class Quotes extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'com_zeapps_crm_quotes';
+    static protected $_table = 'com_zeapps_crm_quotes';
+    protected $table ;
 
-    public function createFrom($src)
+    public function __construct(array $attributes = [])
+    {
+        $this->table = self::$_table;
+
+        parent::__construct($attributes);
+    }
+
+    public static function createFrom($src)
     {
         unset($src->id);
         unset($src->numerotation);
@@ -140,5 +150,40 @@ class Quotes extends Model
             return $result;
         }
         return false;
+    }
+
+
+
+
+
+    public static function getSchema() {
+        return $schema = Capsule::schema()->getColumnListing(self::$_table) ;
+    }
+
+    public function save(array $options = []) {
+
+
+        /**** set a document number ****/
+        if (!isset($this->numerotation) || !$this->numerotation || $this->numerotation == "") {
+            $format = Config::where('id', 'crm_quote_format')->first()->value ;
+            $num = self::get_numerotation();
+            $this->numerotation = self::parseFormat($format, $num);
+        }
+
+
+
+
+
+        /**** to delete unwanted field ****/
+        $schema = self::getSchema();
+        foreach ($this->getAttributes() as $key => $value) {
+            if (!in_array($key, $schema)) {
+                //echo $key . "\n" ;
+                unset($this->$key);
+            }
+        }
+        /**** end to delete unwanted field ****/
+
+        return parent::save($options);
     }
 }

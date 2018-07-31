@@ -11,12 +11,22 @@ use App\com_zeapps_crm\Models\StockMovements;
 use App\com_zeapps_crm\Models\ProductProducts as Product ;
 use Zeapps\Models\Config;
 
+use Illuminate\Database\Capsule\Manager as Capsule;
+
 class Deliveries extends Model {
     use SoftDeletes;
 
-    protected $table = 'com_zeapps_crm_deliveries';
+    static protected $_table = 'com_zeapps_crm_deliveries';
+    protected $table ;
 
-    public function createFrom($src){
+    public function __construct(array $attributes = [])
+    {
+        $this->table = self::$_table;
+
+        parent::__construct($attributes);
+    }
+
+    public static function createFrom($src){
         unset($src->id);
         unset($src->numerotation);
         unset($src->created_at);
@@ -53,7 +63,7 @@ class Deliveries extends Model {
                 $line->id_delivery = $id;
 
 
-                $deliveryLine = DeliveryLines() ;
+                $deliveryLine = new DeliveryLines() ;
                 foreach ($line as $key => $value) {
                     $deliveryLine->$key = $value ;
                 }
@@ -63,7 +73,7 @@ class Deliveries extends Model {
                 if($line->type === 'product'){
                     $product = Product::where("id", $line->id_product)->first() ;
 
-                    $stockMovement = StockMovements() ;
+                    $stockMovement = new StockMovements() ;
                     $stockMovement->id_warehouse = $src->id_warehouse;
                     $stockMovement->id_stock = $product->id_stock; // TODO : le stock ne doit pas être associé au produit mais ID Stock du document source
                     $stockMovement->label = "Bon de livraison n° " . $src->numerotation;
@@ -87,7 +97,7 @@ class Deliveries extends Model {
                 $line->id_delivery = $id;
                 $line->id_line = $new_id_lines[$line->id_line];
 
-                $deliveryLineDetail = DeliveryLineDetails() ;
+                $deliveryLineDetail = new DeliveryLineDetails() ;
                 foreach ($line as $key => $value) {
                     $deliveryLineDetail->$key = $value ;
                 }
@@ -95,7 +105,7 @@ class Deliveries extends Model {
 
                 if($line->type === 'product'){
 
-                    $stockMovement = StockMovements() ;
+                    $stockMovement = new StockMovements() ;
                     $stockMovement->id_warehouse = $src->id_warehouse;
                     $stockMovement->id_stock = $product->id_stock; // TODO : le stock ne doit pas être associé au produit mais ID Stock du document source
                     $stockMovement->label = "Bon de livraison n° " . $src->numerotation;
@@ -169,5 +179,38 @@ class Deliveries extends Model {
             return $result;
         }
         return false;
+    }
+
+
+
+    public static function getSchema() {
+        return $schema = Capsule::schema()->getColumnListing(self::$_table) ;
+    }
+
+    public function save(array $options = []) {
+
+
+        /**** set a document number ****/
+        if (!isset($this->numerotation) || !$this->numerotation || $this->numerotation == "") {
+            $format = Config::where('id', 'crm_delivery_format')->first()->value ;
+            $num = self::get_numerotation();
+            $this->numerotation = self::parseFormat($format, $num);
+        }
+
+
+
+
+
+        /**** to delete unwanted field ****/
+        $schema = self::getSchema();
+        foreach ($this->getAttributes() as $key => $value) {
+            if (!in_array($key, $schema)) {
+                //echo $key . "\n" ;
+                unset($this->$key);
+            }
+        }
+        /**** end to delete unwanted field ****/
+
+        return parent::save($options);
     }
 }

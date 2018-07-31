@@ -227,12 +227,6 @@ class Invoices extends Controller
             $invoice->$key = $value ;
         }
 
-        if ($createNumber) {
-            $format = Config::where('id', 'crm_invoice_format')->first()->value ;
-            $num = InvoicesModel::get_numerotation();
-            $invoice->numerotation = InvoicesModel::parseFormat($format, $num);
-        }
-
         $invoice->save() ;
 
         echo json_encode($invoice->id);

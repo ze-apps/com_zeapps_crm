@@ -11,7 +11,35 @@ class QuoteLines extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'com_zeapps_crm_quote_lines';
+    static protected $_table = 'com_zeapps_crm_quote_lines';
+    protected $table ;
+
+
+    public function __construct(array $attributes = [])
+    {
+        $this->table = self::$_table;
+
+        parent::__construct($attributes);
+    }
+
+    public static function getSchema() {
+        return $schema = Capsule::schema()->getColumnListing(self::$_table) ;
+    }
+
+    public function save(array $options = []) {
+
+        /**** to delete unwanted field ****/
+        $schema = self::getSchema();
+        foreach ($this->getAttributes() as $key => $value) {
+            if (!in_array($key, $schema)) {
+                //echo $key . "\n" ;
+                unset($this->$key);
+            }
+        }
+        /**** end to delete unwanted field ****/
+
+        return parent::save($options);
+    }
 
     public static function updateOldTable($id_quote, $sort)
     {

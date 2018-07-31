@@ -9,12 +9,22 @@ use Zeapps\Models\Config;
 use App\com_zeapps_crm\Models\OrderLines;
 use App\com_zeapps_crm\Models\OrderLineDetails;
 
+use Illuminate\Database\Capsule\Manager as Capsule;
+
 class Orders extends Model {
     use SoftDeletes;
 
-    protected $table = 'com_zeapps_crm_orders';
+    static protected $_table = 'com_zeapps_crm_orders';
+    protected $table ;
 
-    public function createFrom($src){
+    public function __construct(array $attributes = [])
+    {
+        $this->table = self::$_table;
+
+        parent::__construct($attributes);
+    }
+
+    public static function createFrom($src){
         unset($src->id);
         unset($src->numerotation);
         unset($src->created_at);
@@ -138,6 +148,39 @@ class Orders extends Model {
             return $result;
         }
         return false;
+    }
+
+
+
+    public static function getSchema() {
+        return $schema = Capsule::schema()->getColumnListing(self::$_table) ;
+    }
+
+    public function save(array $options = []) {
+
+
+        /**** set a document number ****/
+        if (!isset($this->numerotation) || !$this->numerotation || $this->numerotation == "") {
+            $format = Config::where('id', 'crm_order_format')->first()->value ;
+            $num = self::get_numerotation();
+            $this->numerotation = self::parseFormat($format, $num);
+        }
+
+
+
+
+
+        /**** to delete unwanted field ****/
+        $schema = self::getSchema();
+        foreach ($this->getAttributes() as $key => $value) {
+            if (!in_array($key, $schema)) {
+                //echo $key . "\n" ;
+                unset($this->$key);
+            }
+        }
+        /**** end to delete unwanted field ****/
+
+        return parent::save($options);
     }
 
 }
