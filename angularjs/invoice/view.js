@@ -81,7 +81,7 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
 				if(response.data && response.data != "false"){
 					$scope.invoice = response.data.invoice;
 
-					if($scope.invoice.finalized === '1'){
+					if(parseInt($scope.invoice.finalized, 10) == 1){
 						$scope.sortable.disabled = true;
 					}
 
@@ -237,7 +237,7 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
         }
 
 		function addFromCode(){
-			if($scope.codeProduct !== "" && $scope.invoice.finalized === '0') {
+			if($scope.codeProduct !== "" && parseInt($scope.invoice.finalized, 10) == 0) {
                 var code = $scope.codeProduct;
                 zhttp.crm.product.get_code(code).then(function (response) {
                     if (response.data && response.data != "false") {
@@ -277,7 +277,7 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
 		}
 
 		function addLine(){
-			if($scope.invoice.finalized === '0') {
+			if(parseInt($scope.invoice.finalized, 10) == 0) {
                 // charge la modal de la liste de produit
                 zeapps_modal.loadModule("com_zeapps_crm", "search_product", {}, function (objReturn) {
                     if (objReturn) {
@@ -312,7 +312,7 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
 		}
 
 		function addSubTotal(){
-            if($scope.invoice.finalized === '0') {
+            if(parseInt($scope.invoice.finalized, 10) == 0) {
                 var subTotal = {
                     id_invoice: $routeParams.id,
                     type: "subTotal",
@@ -331,7 +331,7 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
 		}
 
         function addComment(comment){
-            if($scope.invoice.finalized === '0') {
+            if(parseInt($scope.invoice.finalized, 10) == 0) {
                 if (comment.designation_desc !== "") {
                     var comment = {
                         id_invoice: $routeParams.id,
@@ -352,20 +352,20 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
         }
 
         function editComment(comment){
-            if($scope.invoice.finalized === '0') {
+            if(parseInt($scope.invoice.finalized, 10) == 0) {
                 var formatted_data = angular.toJson(comment);
                 zhttp.crm.invoice.line.save(formatted_data);
             }
         }
 
         function editLine(){
-            if($scope.invoice.finalized === '0') {
+            if(parseInt($scope.invoice.finalized, 10) == 0) {
                 updateInvoice();
             }
         }
 
         function updateLine(line){
-            if($scope.invoice.finalized === '0') {
+            if(parseInt($scope.invoice.finalized, 10) == 0) {
                 $rootScope.$broadcast("comZeappsCrm_invoiceEditTrigger",
                     {
                         line: line
@@ -375,7 +375,7 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
         }
 
 		function deleteLine(line){
-            if($scope.invoice.finalized === '0') {
+            if(parseInt($scope.invoice.finalized, 10) == 0) {
                 if ($scope.lines.indexOf(line) > -1) {
                     zhttp.crm.invoice.line.del(line.id).then(function (response) {
                         if (response.data && response.data != "false") {
@@ -410,7 +410,7 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
 		}
 
         function editInvoice(invoice){
-            if($scope.invoice.finalized === '0') {
+            if(parseInt($scope.invoice.finalized, 10) == 0) {
                 angular.forEach($scope.invoice, function (value, key) {
                     if (invoice[key])
                         $scope.invoice[key] = invoice[key];
@@ -421,7 +421,7 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
         }
 
 		function updateInvoice(){
-            if($scope.invoice.finalized === '0') {
+            if(parseInt($scope.invoice.finalized, 10) == 0) {
                 if ($scope.invoice) {
                     $scope.invoice.global_discount = $scope.invoice.global_discount || 0;
 
@@ -627,7 +627,7 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
 		}
 
 		function sortableStop( event, ui ) {
-            if($scope.invoice.finalized === '0') {
+            if(parseInt($scope.invoice.finalized, 10) == 0) {
                 var data = {};
                 var pushedLine = false;
                 data.id = $(ui.item[0]).attr("data-id");

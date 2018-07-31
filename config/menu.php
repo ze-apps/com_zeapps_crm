@@ -125,7 +125,7 @@ $tabMenu["access"] = "com_zeapps_crm_read" ;
 $tabMenu["order"] = 6 ;
 $menuLeft[] = $tabMenu ;
 
-$tabMenu = array () ;
+/*$tabMenu = array () ;
 $tabMenu["id"] = "com_zeapps_crm_credit_balance" ;
 $tabMenu["space"] = "com_ze_apps_sales" ;
 $tabMenu["label"] = "Règlement à venir" ;
@@ -133,7 +133,7 @@ $tabMenu["fa-icon"] = "money" ;
 $tabMenu["url"] = "/ng/com_zeapps_crm/credit_balances" ;
 $tabMenu["access"] = "com_zeapps_crm_read" ;
 $tabMenu["order"] = 7 ;
-$menuLeft[] = $tabMenu ;
+$menuLeft[] = $tabMenu ;*/
 
 $tabMenu = array () ;
 $tabMenu["id"] = "com_zeapps_crm_contract" ;
@@ -185,7 +185,7 @@ $tabMenu["access"] = "com_zeapps_crm_read" ;
 $tabMenu["order"] = 11 ;
 $menuLeft[] = $tabMenu ;
 
-$tabMenu = array () ;
+/*$tabMenu = array () ;
 $tabMenu["id"] = "com_zeapps_crm_potential_orders" ;
 $tabMenu["space"] = "com_ze_apps_sales" ;
 $tabMenu["label"] = "Commandes probables" ;
@@ -193,7 +193,7 @@ $tabMenu["fa-icon"] = "question-circle" ;
 $tabMenu["url"] = "/ng/com_zeapps_crm/potential_orders" ;
 $tabMenu["access"] = "com_zeapps_crm_read" ;
 $tabMenu["order"] = 50 ;
-$menuLeft[] = $tabMenu ;
+$menuLeft[] = $tabMenu ;*/
 
 
 $tabMenu = array () ;
@@ -247,14 +247,14 @@ $tabMenu["access"] = "com_zeapps_crm_read" ;
 $tabMenu["order"] = 5 ;
 $menuHeader[] = $tabMenu ;
 
-$tabMenu = array () ;
+/*$tabMenu = array () ;
 $tabMenu["id"] = "com_zeapps_crm_credit_balance" ;
 $tabMenu["space"] = "com_ze_apps_sales" ;
 $tabMenu["label"] = "Règlement à venir" ;
 $tabMenu["url"] = "/ng/com_zeapps_crm/credit_balances" ;
 $tabMenu["access"] = "com_zeapps_crm_read" ;
 $tabMenu["order"] = 6 ;
-$menuHeader[] = $tabMenu ;
+$menuHeader[] = $tabMenu ;*/
 
 $tabMenu = array () ;
 $tabMenu["id"] = "com_zeapps_crm_contract" ;

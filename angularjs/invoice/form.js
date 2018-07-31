@@ -28,7 +28,7 @@ app.controller("ComZeappsCrmInvoiceFormCtrl", ["$scope", "$routeParams", "$rootS
         ];
 
         $scope.accountingNumberHttp = zhttp.crm.accounting_number;
-        $scope.accountingNumberTplNew = '/com_zeapps_crm/accounting_numbers/form_modal/';
+        $scope.accountingNumberTplNew = '/com_zeapps_contact/accounting_numbers/form_modal';
         $scope.accountingNumberFields = [
             {label:'Numero',key:'number'},
             {label:'Libelle',key:'label'},

@@ -7,6 +7,7 @@ app.controller("ComZeappsCrmProductFormCategoryCtrl", ["$scope", "$routeParams",
 		$scope.tree = {
 			branches: []
 		};
+        $scope.tree_select = [] ;
 		$scope.form = [];
 		$scope.error = "";
 
@@ -28,10 +29,54 @@ app.controller("ComZeappsCrmProductFormCategoryCtrl", ["$scope", "$routeParams",
             $scope.form.id_parent = branch.id;
 		}
 
+        function strRepeat(car, nbRepeat) {
+            var strReturn = "" ;
+            for(var i = 1 ; i <= nbRepeat ; i++) {
+                strReturn += car ;
+            }
+            return strReturn ;
+        }
+
+        function updateTreeSelect(niveau, branchesContent) {
+            if (niveau == 0) {
+                $scope.tree_select = [] ;
+            }
+
+            var id_categorieEdit = -9999 ;
+
+            if ($routeParams.id != 0) {
+                id_categorieEdit = $routeParams.id ;
+            }
+
+            var tree = [] ;
+
+
+            angular.forEach(branchesContent, function(branche){
+            	if (branche.id != id_categorieEdit) {
+                    tree.push({id: branche.id, name: strRepeat("&nbsp;", 5 * niveau) + branche.name});
+
+                    if (branche.branches) {
+                        var sousBranche = updateTreeSelect(niveau + 1, branche.branches);
+                        tree = tree.concat(sousBranche);
+                    }
+                }
+            });
+
+
+            if (niveau == 0) {
+                $scope.tree_select = tree ;
+            }
+
+            return tree ;
+
+        }
+
 		function loadCtxtNew(){
 			zhttp.crm.category.tree().then(function (response) {
 				if (response.status == 200) {
 					$scope.tree.branches = response.data;
+                    updateTreeSelect(0, $scope.tree.branches);
+
 					zhttp.crm.category.openTree($scope.tree, $routeParams.id_parent);
 					zhttp.crm.category.get($routeParams.id_parent).then(function (response) {
 						if (response.status == 200) {
@@ -47,9 +92,12 @@ app.controller("ComZeappsCrmProductFormCategoryCtrl", ["$scope", "$routeParams",
 			zhttp.crm.category.tree().then(function (response) {
 				if (response.status == 200) {
 					$scope.tree.branches = response.data;
+                    updateTreeSelect(0, $scope.tree.branches);
+
 					zhttp.crm.category.get($routeParams.id).then(function (response) {
 						if (response.status == 200) {
 							$scope.form = response.data;
+
 							zhttp.crm.category.get($scope.form.id_parent).then(function (response) {
 								if (response.status == 200) {
                                     $scope.currentBranch = response.data;
@@ -69,10 +117,7 @@ app.controller("ComZeappsCrmProductFormCategoryCtrl", ["$scope", "$routeParams",
 				data.id = $routeParams.id;
 			}
 
-            if ($routeParams.id_parent != 0) {
-                data.id_parent = $routeParams.id_parent;
-            }
-
+			data.id_parent = $scope.form.id_parent;
 			data.name = $scope.form.name;
 
 			var formatted_data = angular.toJson(data);

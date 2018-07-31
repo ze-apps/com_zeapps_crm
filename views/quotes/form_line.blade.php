@@ -1,6 +1,3 @@
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-?>
 <div class="row" ng-controller="ComZeappsCrmQuoteFormLineCtrl">
     <div class="col-md-4">
         <div class="form-group">

@@ -10,7 +10,7 @@
                         Facture : @{{ invoice.libelle }}
                     </div>
                     <p class="small">
-                        n° @{{ invoice.numerotation }}
+                        n° @{{ invoice.numerotation }} / @{{ invoice.finalized }}
                     </p>
                     <p>
                         <span class="form-group form-inline">

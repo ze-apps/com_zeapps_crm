@@ -25,6 +25,19 @@
                         </div>
                     </div>
                 </div>
+
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>Catégorie <span class="required">*</span></label>
+
+                            <select ng-model="form.id_parent" ng-change="" class="form-control">
+                                <option ng-repeat="tree in tree_select" ng-value="@{{tree.id}}" ng-bind-html="tree.name | trusted" />
+                            </select>
+                        </div>
+                    </div>
+                </div>
             </div>
 
 
