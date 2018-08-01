@@ -210,13 +210,14 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
 		}
 
 		function finalize(){
-		    if($scope.invoice.id_modality !== '0') {
+
+
+		    if(($scope.invoice.accounting_number && $scope.invoice.accounting_number != "") && ($scope.invoice.id_modality || parseInt($scope.invoice.id_modality, 10) != 0) && (($scope.invoice.id_company && parseInt($scope.invoice.id_company, 10) != 0) || ($scope.invoice.id_contact && parseInt($scope.invoice.id_contact, 10) != 0))) {
                 zhttp.crm.invoice.finalize($scope.invoice.id).then(function (response) {
                     if (response.data && response.data !== "false") {
                         if(response.data.error){
                             toasts('danger', response.data.error);
-                        }
-                        else {
+                        } else {
                             $scope.invoice.numerotation = response.data.numerotation;
                             $scope.invoice.final_pdf = response.data.final_pdf;
                             $scope.invoice.finalized = '1';
@@ -224,9 +225,36 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
                         }
                     }
                 });
-            }
-            else{
-		        toasts('warning', "Vous devez renseigner un moyen de paiement pour pouvoir clôturer une facture");
+            } else {
+
+		        var msg_toast = "" ;
+
+                if(!$scope.invoice.accounting_number || $scope.invoice.accounting_number == "") {
+                    if (msg_toast != "") {
+                        msg_toast += ", " ;
+                    }
+                    msg_toast += "un compte comptable" ;
+                }
+
+                if(!$scope.invoice.id_modality || parseInt($scope.invoice.id_modality, 10) == 0) {
+                    if (msg_toast != "") {
+                        msg_toast += ", " ;
+                    }
+                    msg_toast += "un moyen de paiement";
+                }
+
+                if (!$scope.invoice.id_company && parseInt($scope.invoice.id_company, 10) == 0 || !$scope.invoice.id_contact || parseInt($scope.invoice.id_contact, 10) == 0) {
+                    if (msg_toast != "") {
+                        msg_toast += ", " ;
+                    }
+                    msg_toast += "une société ou un contact";
+                }
+
+
+                msg_toast = "Vous devez renseigner (" + msg_toast + ") pour pouvoir clôturer une facture" ;
+
+
+                toasts('warning', msg_toast);
             }
 		}
 

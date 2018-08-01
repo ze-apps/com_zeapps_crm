@@ -11,15 +11,15 @@ class ComZeappsCrmStocksTable extends Migration
     {
        Capsule::schema()->create('com_zeapps_crm_stocks', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('id_stock', false);
-            $table->string('label', 255);
-            $table->string('ref', 255);
-            $table->decimal('value_ht', 9, 2);
-            $table->integer('id_warehouse', false);
-            $table->string('warehouse');
-            $table->integer('resupply_delay');
-            $table->integer('resupply_unit');
-            $table->decimal('total', 9, 2);
+            $table->integer('id_stock', false)->default(0);
+            $table->string('label', 255)->default("");
+            $table->string('ref', 255)->default("");
+            $table->decimal('value_ht', 9, 2)->default(0);
+            $table->integer('id_warehouse', false)->default(0);
+            $table->string('warehouse')->default("");
+            $table->integer('resupply_delay')->default(0);
+            $table->integer('resupply_unit')->default(0);
+            $table->decimal('total', 9, 2)->default(0);
 
             $table->timestamps();
             $table->softDeletes();

@@ -11,11 +11,11 @@ class ComZeappsCrmProductCategoriesTable extends Migration
     {
        Capsule::schema()->create('com_zeapps_crm_product_categories', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('id_parent');
-            $table->string('name', 255);
-            $table->integer('nb_products');
-            $table->integer('nb_products_r');
-            $table->integer('sort');
+            $table->integer('id_parent')->default(0);
+            $table->string('name', 255)->default("");
+            $table->integer('nb_products')->default(0);
+            $table->integer('nb_products_r')->default(0);
+            $table->integer('sort')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

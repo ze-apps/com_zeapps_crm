@@ -20,6 +20,14 @@ Routeur::post("/com_zeapps_crm/invoices/save", 'App\\com_zeapps_crm\\Controllers
 Routeur::post("/com_zeapps_crm/invoices/delete/{id}", 'App\\com_zeapps_crm\\Controllers\\Invoices@delete');
 Routeur::post("/com_zeapps_crm/invoices/transform/{id}", 'App\\com_zeapps_crm\\Controllers\\Invoices@transform');
 
+
+
+
+Routeur::post("/com_zeapps_crm/invoices/finalize/{id}", 'App\\com_zeapps_crm\\Controllers\\Invoices@finalize');
+
+
+
+
 Routeur::post("/com_zeapps_crm/invoices/saveLine", 'App\\com_zeapps_crm\\Controllers\\Invoices@saveLine');
 Routeur::post("/com_zeapps_crm/invoices/updateLinePosition/", 'App\\com_zeapps_crm\\Controllers\\Invoices@updateLinePosition');
 Routeur::post("/com_zeapps_crm/invoices/deleteLine/{id}", 'App\\com_zeapps_crm\\Controllers\\Invoices@deleteLine');

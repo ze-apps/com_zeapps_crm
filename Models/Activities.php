@@ -7,16 +7,27 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 
+use Zeapps\Core\ModelHelper;
+
 class Activities extends Model {
     use SoftDeletes;
 
     static protected $_table = 'com_zeapps_crm_activities';
     protected $table ;
 
+    protected $fieldModelInfo ;
+
 
     public function __construct(array $attributes = [])
     {
         $this->table = self::$_table;
+
+        // stock la liste des champs
+        $this->fieldModelInfo = new ModelHelper();
+        $this->fieldModelInfoincrements('id');
+        $this->fieldModelInfostring('label')->default("");
+        $this->fieldModelInfotimestamps();
+        $this->fieldModelInfosoftDeletes();
 
         parent::__construct($attributes);
     }

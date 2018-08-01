@@ -12,12 +12,19 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 
 use Zeapps\Models\Config;
 
+use Zeapps\Core\ModelHelper;
+
 class Quotes extends Model
 {
     use SoftDeletes;
 
     static protected $_table = 'com_zeapps_crm_quotes';
     protected $table ;
+
+    protected $fieldModelInfo ;
+
+
+
 
     public function __construct(array $attributes = [])
     {
@@ -169,12 +176,30 @@ class Quotes extends Model
     public function save(array $options = []) {
 
 
+
+        /******** special date field **********/
+        if ($this->date_creation && $this->date_creation != "") {
+            $this->date_creation = str_replace("T", " ", $this->date_creation);
+            $this->date_creation = str_replace("Z", "", $this->date_creation);
+        }
+
+        if ($this->date_limit && $this->date_limit != "") {
+            $this->date_limit = str_replace("T", " ", $this->date_limit);
+            $this->date_limit = str_replace("Z", "", $this->date_limit);
+        }
+
+
+
+
+
         /**** set a document number ****/
         if (!isset($this->numerotation) || !$this->numerotation || $this->numerotation == "") {
             $format = Config::where('id', 'crm_quote_format')->first()->value ;
             $num = self::get_numerotation();
             $this->numerotation = self::parseFormat($format, $num);
         }
+
+
 
 
 

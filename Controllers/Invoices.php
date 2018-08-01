@@ -2,6 +2,7 @@
 
 namespace App\com_zeapps_crm\Controllers;
 
+use App\com_zeapps_crm\Models\AccountingEntries;
 use Zeapps\Core\Controller;
 use Zeapps\Core\Request;
 use Zeapps\Core\Session;
@@ -13,6 +14,7 @@ use App\com_zeapps_crm\Models\InvoiceDocuments;
 use App\com_zeapps_crm\Models\InvoiceActivities;
 use App\com_zeapps_crm\Models\CreditBalances;
 use App\com_zeapps_crm\Models\CreditBalanceDetails;
+use App\com_zeapps_contact\Models\Modalities;
 
 use App\com_zeapps_crm\Models\Orders as OrdersModel ;
 use App\com_zeapps_crm\Models\Quotes as QuotesModel ;
@@ -300,6 +302,32 @@ class Invoices extends Controller
     }
 
 
+    public function finalize(Request $request) {
+        $id = $request->input('id', 0);
+
+        if($id) {
+            if($invoice = InvoicesModel::where("id", $id)->first()){
+                if($invoice->id_modality === '0'){
+                    echo json_encode(array('error' => 'Modalité de paiement non renseignée'));
+                    return;
+                }
+
+                $invoice->finalized = 1 ;
+                $invoice->save() ;
+
+                echo json_encode(array(
+                    'numerotation' => $invoice->numerotation,
+                    'final_pdf' => $invoice->final_pdf
+                ));
+            } else {
+                echo json_encode(false);
+            }
+        } else {
+            echo json_encode(false);
+        }
+    }
+
+
     public function saveLine(){
         // constitution du tableau
         $data = array() ;
@@ -428,4 +456,6 @@ class Invoices extends Controller
 
         echo json_encode(InvoiceActivities::where("id", $id)->delete());
     }
+
+
 }

@@ -11,10 +11,11 @@ class ComZeappsCrmTaxesTable extends Migration
     {
        Capsule::schema()->create('com_zeapps_crm_taxes', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('label', 255);
-            $table->decimal('value', 8, 2);
-            $table->string('accounting_number', 255);
-            $table->tinyInteger('active');
+            $table->string('label', 255)->default("");
+            $table->decimal('value', 8, 2)->default(0);
+            $table->string('accounting_number', 255)->default("");
+            $table->tinyInteger('active')->default(0);
+
             $table->timestamps();
             $table->softDeletes();
         });

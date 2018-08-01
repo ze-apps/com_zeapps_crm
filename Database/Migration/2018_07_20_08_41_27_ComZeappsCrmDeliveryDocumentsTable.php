@@ -11,9 +11,9 @@ class ComZeappsCrmDeliveryDocumentsTable extends Migration
     {
        Capsule::schema()->create('com_zeapps_crm_delivery_documents', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('id_delivery');
-            $table->string('name', 255);
-            $table->string('path', 255);
+            $table->integer('id_delivery')->default(0);
+            $table->string('name', 255)->default("");
+            $table->string('path', 255)->default("");
             $table->timestamps();
             $table->softDeletes();
         });

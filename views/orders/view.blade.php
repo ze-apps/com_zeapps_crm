@@ -12,16 +12,7 @@
                     <p class="small">
                         n° @{{ order.numerotation }}
                     </p>
-                    <p>
-                        <span class="form-group form-inline">
-                            <select class="form-control input-sm" ng-model="order.status" ng-change="updateStatus()">
-                                <option>En cours</option>
-                                <option>Gagné</option>
-                                <option>Perdu</option>
-                            </select>
-                        </span>
-                        (@{{ order.probability | number:2 }}%)
-                    </p>
+
                     <button type="button" class="btn btn-xs btn-info" ng-click="showDetailsEntreprise = !showDetailsEntreprise">
                         @{{ showDetailsEntreprise ? 'Masquer' : 'Voir' }} en cours
                     </button>

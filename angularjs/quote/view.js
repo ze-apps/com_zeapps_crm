@@ -61,6 +61,9 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
 		$scope.print = print;
 
 
+        $scope.status = zhttp.crm.statuts.getAll() ;
+
+
 		//////////////////// INIT ////////////////////
 		if($rootScope.quotes === undefined || $rootScope.quotes.ids === undefined) {
             $rootScope.quotes = {};

@@ -7,16 +7,36 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 
+use Zeapps\Core\ModelHelper;
+
 class Accounting extends Model {
     use SoftDeletes;
 
     static protected $_table = 'com_zeapps_crm_accounting';
     protected $table ;
 
+    protected $fieldModelInfo ;
+
 
     public function __construct(array $attributes = [])
     {
         $this->table = self::$_table;
+
+
+        // stock la liste des champs
+        $this->fieldModelInfo = new ModelHelper();
+        $this->fieldModelInfoincrements('id');
+        $this->fieldModelInfointeger('id_invoice')->default(0);
+        $this->fieldModelInfostring('accounting_number', 255)->default("");
+        $this->fieldModelInfostring('label', 1023)->default("");
+        $this->fieldModelInfostring('invoice_num', 255)->default("");
+        $this->fieldModelInfodecimal('debit', 8, 2)->default(0);
+        $this->fieldModelInfodecimal('credit', 8, 2)->default(0);
+        $this->fieldModelInfostring('journal', 32)->default("");
+        $this->fieldModelInfotimestamp('date_invoice')->nullable();
+        $this->fieldModelInfotimestamps();
+        
+        
 
         parent::__construct($attributes);
     }

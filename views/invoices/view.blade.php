@@ -10,18 +10,9 @@
                         Facture : @{{ invoice.libelle }}
                     </div>
                     <p class="small">
-                        n° @{{ invoice.numerotation }} / @{{ invoice.finalized }}
+                        n° @{{ invoice.numerotation }}
                     </p>
-                    <p>
-                        <span class="form-group form-inline">
-                            <select class="form-control input-sm" ng-model="invoice.status" ng-change="updateStatus()">
-                                <option>En cours</option>
-                                <option>Gagné</option>
-                                <option>Perdu</option>
-                            </select>
-                        </span>
-                        (@{{ invoice.probability | number:2 }}%)
-                    </p>
+
                     <button type="button" class="btn btn-xs btn-info" ng-click="showDetailsEntreprise = !showDetailsEntreprise">
                         @{{ showDetailsEntreprise ? 'Masquer' : 'Voir' }} en cours
                     </button>
@@ -57,6 +48,7 @@
                                 data-title="Modifier la facture"></ze-btn>
                         <ze-btn fa="download" color="primary" hint="PDF" direction="left" ng-click="print()"></ze-btn>
                         <ze-btn fa="files-o" color="success" hint="Dupliquer" direction="left" ng-click="transform()"></ze-btn>
+                        <ze-btn fa="lock" color="danger" hint="Clôturer" direction="left" ng-click="finalize()"></ze-btn>
 
                         <div class="btn-group btn-group-xs" role="group" ng-if="nb_invoices > 0">
                             <button type="button" class="btn btn-default" ng-class="invoice_first == 0 ? 'disabled' :''" ng-click="first_invoice()"><span class="fa fa-fw fa-fast-backward"></span></button>

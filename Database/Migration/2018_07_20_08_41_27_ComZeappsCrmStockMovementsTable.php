@@ -11,14 +11,15 @@ class ComZeappsCrmStockMovementsTable extends Migration
     {
        Capsule::schema()->create('com_zeapps_crm_stock_movements', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('id_warehouse');
-            $table->integer('id_stock');
-            $table->string('label', 255);
-            $table->decimal('qty', 8, 2);
-            $table->string('id_table', 255);
-            $table->string('name_table', 255);
-            $table->timestamp('date_mvt');
-            $table->tinyInteger('ignored');
+            $table->integer('id_warehouse')->default(0);
+            $table->integer('id_stock')->default(0);
+            $table->string('label', 255)->default("");
+            $table->decimal('qty', 8, 2)->default(0);
+            $table->string('id_table', 255)->default("");
+            $table->string('name_table', 255)->default("");
+            $table->timestamp('date_mvt')->nullable();
+            $table->tinyInteger('ignored')->default(0);
+
             $table->timestamps();
             $table->softDeletes();
         });

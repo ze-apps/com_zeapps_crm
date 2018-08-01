@@ -124,7 +124,7 @@
                 <div class="form-group">
                     <label>Modalités de règlement</label>
                     <select ng-model="form.id_modality" class="form-control" ng-change="updateModality()">
-                        <option ng-repeat="modality in modalities" ng-value="@{{modality.id}}">
+                        <option ng-repeat="modality in modalities" value="@{{modality.id}}" ng-selected="form.id_modality == modality.id">
                             @{{ modality.label }}
                         </option>
                     </select>

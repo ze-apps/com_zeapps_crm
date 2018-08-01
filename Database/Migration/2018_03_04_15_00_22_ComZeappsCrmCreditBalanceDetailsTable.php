@@ -12,9 +12,9 @@ class ComZeappsCrmCreditBalanceDetailsTable
             $table->increments('id');
             $table->integer('id_invoice', false)->default(0);
             $table->float('paid', 9, 2)->default(0.0);
-            $table->integer('id_modality', false);
-            $table->string('label_modality');
-            $table->timestamp('date_payment');
+            $table->integer('id_modality', false)->default(0);
+            $table->string('label_modality')->default("");
+            $table->timestamp('date_payment')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

@@ -11,9 +11,10 @@ class ComZeappsCrmWarehousesTable extends Migration
     {
        Capsule::schema()->create('com_zeapps_crm_warehouses', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('label', 255);
-            $table->integer('resupply_delay');
-            $table->string('resupply_unit', 63);
+            $table->string('label', 255)->default("");
+            $table->integer('resupply_delay')->default(0);
+            $table->string('resupply_unit', 63)->default("");
+
             $table->timestamps();
             $table->softDeletes();
         });

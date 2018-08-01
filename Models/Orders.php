@@ -11,11 +11,15 @@ use App\com_zeapps_crm\Models\OrderLineDetails;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 
+use Zeapps\Core\ModelHelper;
+
 class Orders extends Model {
     use SoftDeletes;
 
     static protected $_table = 'com_zeapps_crm_orders';
     protected $table ;
+
+    protected $fieldModelInfo ;
 
     public function __construct(array $attributes = [])
     {
@@ -163,6 +167,19 @@ class Orders extends Model {
     }
 
     public function save(array $options = []) {
+
+
+        /******** special date field **********/
+        if ($this->date_creation && $this->date_creation != "") {
+            $this->date_creation = str_replace("T", " ", $this->date_creation);
+            $this->date_creation = str_replace("Z", "", $this->date_creation);
+        }
+
+        if ($this->date_limit && $this->date_limit != "") {
+            $this->date_limit = str_replace("T", " ", $this->date_limit);
+            $this->date_limit = str_replace("Z", "", $this->date_limit);
+        }
+
 
 
         /**** set a document number ****/

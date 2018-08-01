@@ -11,9 +11,9 @@ class ComZeappsCrmProductStocksTable extends Migration
     {
        Capsule::schema()->create('com_zeapps_crm_product_stocks', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('ref', 255);
-            $table->string('label', 255);
-            $table->decimal('value_ht', 8, 2);
+            $table->string('ref', 255)->default("");
+            $table->string('label', 255)->default("");
+            $table->decimal('value_ht', 8, 2)->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

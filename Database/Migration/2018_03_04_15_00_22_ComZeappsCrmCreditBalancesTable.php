@@ -10,16 +10,16 @@ class ComZeappsCrmCreditBalancesTable
     {
        Capsule::schema()->create('com_zeapps_crm_credit_balances', function (Blueprint $table) {
             $table->increments('id');
-            $table->tinyInteger('id_invoice', false);
-            $table->tinyInteger('numerotation', false);
-            $table->tinyInteger('id_company', false);
-            $table->tinyInteger('name_company', false);
-            $table->tinyInteger('id_contact', false);
-            $table->tinyInteger('name_contact', false);
-            $table->tinyInteger('due_date', false);
-            $table->tinyInteger('total', false);
-            $table->tinyInteger('paid', false);
-            $table->tinyInteger('left_to_pay', false);
+            $table->tinyInteger('id_invoice', false)->default(0);
+            $table->tinyInteger('numerotation', false)->default(0);
+            $table->tinyInteger('id_company', false)->default(0);
+            $table->tinyInteger('name_company', false)->default(0);
+            $table->tinyInteger('id_contact', false)->default(0);
+            $table->tinyInteger('name_contact', false)->default(0);
+            $table->tinyInteger('due_date', false)->default(0);
+            $table->tinyInteger('total', false)->default(0);
+            $table->tinyInteger('paid', false)->default(0);
+            $table->tinyInteger('left_to_pay', false)->default(0);
 
             $table->timestamps();
             $table->softDeletes();

@@ -11,11 +11,11 @@ class ComZeappsCrmProductLinesTable extends Migration
     {
        Capsule::schema()->create('com_zeapps_crm_product_lines', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('id_product');
-            $table->integer('id_part');
-            $table->decimal('quantite', 8, 2);
-            $table->decimal('prorata', 8, 2);
-            $table->tinyInteger('auto');
+            $table->integer('id_product')->default(0);
+            $table->integer('id_part')->default(0);
+            $table->decimal('quantite', 8, 2)->default(0);
+            $table->decimal('prorata', 8, 2)->default(0);
+            $table->tinyInteger('auto')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

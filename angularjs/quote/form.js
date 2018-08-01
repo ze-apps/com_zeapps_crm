@@ -65,7 +65,7 @@ app.controller("ComZeappsCrmQuoteFormCtrl", ["$scope", "$routeParams", "$rootSco
                 $scope.form.id_user_account_manager = $rootScope.user.id;
                 $scope.form.name_user_account_manager = $rootScope.user.firstname + " " + $rootScope.user.lastname;
                 $scope.form.id_warehouse = $rootScope.user.id_warehouse;
-                $scope.form.status = "En cours";
+                $scope.form.status = 0;
                 $scope.form.date_creation = new Date();
                 $scope.form.date_limit = new Date();
                 $scope.form.date_limit.setDate($scope.form.date_limit.getDate() + 30);

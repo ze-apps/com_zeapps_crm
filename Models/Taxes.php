@@ -7,11 +7,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 
+use Zeapps\Core\ModelHelper;
+
 class Taxes extends Model {
     use SoftDeletes;
 
     static protected $_table = 'com_zeapps_crm_taxes';
     protected $table ;
+
+    protected $fieldModelInfo ;
 
 
     public function __construct(array $attributes = [])

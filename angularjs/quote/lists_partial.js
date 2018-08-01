@@ -1,11 +1,11 @@
 app.controller("ComZeappsCrmQuoteListsPartialCtrl", ["$scope", "$location", "$rootScope", "zeHttp", "$timeout", "toasts",
-	function ($scope, $location, $rootScope, zhttp, $timeout, toasts) {
+    function ($scope, $location, $rootScope, zhttp, $timeout, toasts) {
 
-		if(!$rootScope.quotes) {
+        if (!$rootScope.quotes) {
             $rootScope.quotes = {};
         }
-		$scope.id_company = 0;
-		$scope.filters = {
+        $scope.id_company = 0;
+        $scope.filters = {
             main: [
                 {
                     format: 'input',
@@ -102,35 +102,35 @@ app.controller("ComZeappsCrmQuoteListsPartialCtrl", ["$scope", "$location", "$ro
 
         $scope.loadList = loadList;
         $scope.goTo = goTo;
-		$scope.add = add;
-		$scope.edit = edit;
-		$scope.delete = del;
+        $scope.add = add;
+        $scope.edit = edit;
+        $scope.delete = del;
 
-		$scope.$on("comZeappsContact_dataEntrepriseHook", function(event, data) {
-		    if ($scope.id_company !== data.id_company){
-				$scope.id_company = data.id_company;
-				src = "company";
+        $scope.$on("comZeappsContact_dataEntrepriseHook", function (event, data) {
+            if ($scope.id_company !== data.id_company) {
+                $scope.id_company = data.id_company;
+                src = "company";
                 src_id = data.id_company;
 
-                loadList(true) ;
-			}
-		});
-		$scope.$emit("comZeappsContact_triggerEntrepriseHook", {});
+                loadList(true);
+            }
+        });
+        $scope.$emit("comZeappsContact_triggerEntrepriseHook", {});
 
-		$scope.$on("comZeappsContact_dataContactHook", function(event, data) {
-			if ($scope.id_contact !== data.id_contact){
-				$scope.id_contact = data.id_contact;
-				$scope.id_company = data.id_company;
+        $scope.$on("comZeappsContact_dataContactHook", function (event, data) {
+            if ($scope.id_contact !== data.id_contact) {
+                $scope.id_contact = data.id_contact;
+                $scope.id_company = data.id_company;
                 src = "contact";
                 src_id = data.id_contact;
 
-                loadList(true) ;
-			}
-		});
-		$scope.$emit("comZeappsContact_triggerContactHook", {});
+                loadList(true);
+            }
+        });
+        $scope.$emit("comZeappsContact_triggerContactHook", {});
 
-        $timeout(function(){ // Making sure the default call is only triggered after the potential broadcast from a hook
-        	if(src_id === 0) {
+        $timeout(function () { // Making sure the default call is only triggered after the potential broadcast from a hook
+            if (src_id === 0) {
                 loadList(true);
             }
         }, 0);
@@ -160,32 +160,30 @@ app.controller("ComZeappsCrmQuoteListsPartialCtrl", ["$scope", "$location", "$ro
             });
         }
 
-        function goTo(id){
-            $location.url('/ng/com_zeapps_crm/quote/'+id);
+        function goTo(id) {
+            $location.url('/ng/com_zeapps_crm/quote/' + id);
         }
 
         function add(quote) {
             var data = quote;
 
-            if(data.date_creation) {
+            if (data.date_creation) {
                 var y = data.date_creation.getFullYear();
                 var M = data.date_creation.getMonth();
                 var d = data.date_creation.getDate();
 
                 data.date_creation = new Date(Date.UTC(y, M, d));
-            }
-            else{
+            } else {
                 data.date_creation = 0;
             }
 
-            if(data.date_limit) {
+            if (data.date_limit) {
                 var y = data.date_limit.getFullYear();
                 var M = data.date_limit.getMonth();
                 var d = data.date_limit.getDate();
 
                 data.date_limit = new Date(Date.UTC(y, M, d));
-            }
-            else{
+            } else {
                 data.date_limit = 0;
             }
 
@@ -198,51 +196,46 @@ app.controller("ComZeappsCrmQuoteListsPartialCtrl", ["$scope", "$location", "$ro
             });
         }
 
-        function edit(quote){
+        function edit(quote) {
             var data = quote;
 
-            if(data.date_creation) {
+            if (data.date_creation) {
                 var y = data.date_creation.getFullYear();
                 var M = data.date_creation.getMonth();
                 var d = data.date_creation.getDate();
 
                 data.date_creation = new Date(Date.UTC(y, M, d));
-            }
-            else{
+            } else {
                 data.date_creation = 0;
             }
 
-            if(data.date_limit) {
+            if (data.date_limit) {
                 var y = data.date_limit.getFullYear();
                 var M = data.date_limit.getMonth();
                 var d = data.date_limit.getDate();
 
                 data.date_limit = new Date(Date.UTC(y, M, d));
-            }
-            else{
+            } else {
                 data.date_limit = 0;
             }
 
             var formatted_data = angular.toJson(data);
 
-            zhttp.crm.quote.save(formatted_data).then(function(response){
-                if(response.data && response.data != "false"){
+            zhttp.crm.quote.save(formatted_data).then(function (response) {
+                if (response.data && response.data != "false") {
                     toasts('success', "Les informations du devis ont bien été mises a jour");
-                }
-                else{
+                } else {
                     toasts('danger', "Il y a eu une erreur lors de la mise a jour des informations du devis");
                 }
             });
         }
 
-		function del(quote){
-			zhttp.crm.quote.del(quote.id).then(function(response){
-				if(response.data && response.data != "false"){
+        function del(quote) {
+            zhttp.crm.quote.del(quote.id).then(function (response) {
+                if (response.data && response.data != "false") {
                     $scope.quotes.splice($scope.quotes.indexOf(quote), 1);
                     $rootScope.quotes.ids.splice($rootScope.quotes.ids.indexOf(quote.id), 1);
-				}
-			});
-		}
-
-
-	}]);
+                }
+            });
+        }
+    }]);

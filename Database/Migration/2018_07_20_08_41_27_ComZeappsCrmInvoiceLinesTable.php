@@ -17,7 +17,7 @@ class ComZeappsCrmInvoiceLinesTable extends Migration
             $table->integer('id_product')->default(0);
             $table->string('ref', 255)->default("");
             $table->string('designation_title', 255);
-            $table->text('designation_desc')->default("");
+            $table->text('designation_desc');
             $table->decimal('qty', 8, 2)->default(0);
             $table->decimal('discount', 8, 2)->default(0);
             $table->decimal('price_unit', 8, 2)->default(0);
