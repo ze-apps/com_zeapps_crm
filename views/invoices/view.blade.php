@@ -45,10 +45,11 @@
                                 ze-modalform="updateInvoice"
                                 data-edit="invoice"
                                 data-template="templateEdit"
-                                data-title="Modifier la facture"></ze-btn>
+                                data-title="Modifier la facture"
+                                ng-hide="invoice.finalized"></ze-btn>
                         <ze-btn fa="download" color="primary" hint="PDF" direction="left" ng-click="print()"></ze-btn>
                         <ze-btn fa="files-o" color="success" hint="Dupliquer" direction="left" ng-click="transform()"></ze-btn>
-                        <ze-btn fa="lock" color="danger" hint="Clôturer" direction="left" ng-click="finalize()"></ze-btn>
+                        <ze-btn fa="lock" color="danger" hint="Clôturer" direction="left" ng-click="finalize()" ng-hide="invoice.finalized"></ze-btn>
 
                         <div class="btn-group btn-group-xs" role="group" ng-if="nb_invoices > 0">
                             <button type="button" class="btn btn-default" ng-class="invoice_first == 0 ? 'disabled' :''" ng-click="first_invoice()"><span class="fa fa-fw fa-fast-backward"></span></button>
@@ -103,7 +104,7 @@
 
         <div ng-show="navigationState =='body'">
             <div class="row">
-                <div class="col-md-12 text-right">
+                <div class="col-md-12 text-right" ng-hide="invoice.finalized">
                     <span class="form-inline">
                         <label>Code produit :</label>
                         <span class="input-group">
@@ -184,9 +185,12 @@
 
                                 <td colspan="8" class="text-wrap" ng-if="line.type == 'comment'">@{{ line.designation_desc }}</td>
 
+
+
                                 <td class="text-right">
                                     <span ng-if="line.type === 'product'">
                                         <ze-btn fa="pencil" color="info" direction="left" hint="editer"
+                                                ng-init="line.zeapps_modal_hide_save_btn = invoice.finalized"
                                                 ze-modalform="editLine"
                                                 data-edit="line"
                                                 data-title="Editer la ligne de facture"
@@ -197,9 +201,10 @@
                                                 ze-modalform="editComment"
                                                 data-edit="line"
                                                 data-title="Modifier un commentaire"
-                                                data-template="invoiceCommentTplUrl"></ze-btn>
+                                                data-template="invoiceCommentTplUrl"
+                                                ng-hide="invoice.finalized"></ze-btn>
                                     </span>
-                                    <ze-btn fa="trash" color="danger" direction="left" hint="Supprimer" ng-click="deleteLine(line)" ze-confirmation  ng-if="line"></ze-btn>
+                                    <ze-btn fa="trash" color="danger" direction="left" hint="Supprimer" ng-click="deleteLine(line)" ze-confirmation  ng-if="line && !invoice.finalized"></ze-btn>
                                 </td>
                             </tr>
                         </tbody>

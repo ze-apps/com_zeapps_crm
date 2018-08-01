@@ -9,6 +9,8 @@ app.controller("ComZeappsCrmInvoiceFormLineCtrl", ["$scope", "zeHttp",
             {label:'Type',key:'type_label'}
         ];
 
+
+
         $scope.updateTaxe = updateTaxe;
         $scope.loadAccountingNumber = loadAccountingNumber;
 
