@@ -22,6 +22,15 @@ class DeliveryDocuments extends Model {
     {
         $this->table = self::$_table;
 
+        // stock la liste des champs
+        $this->fieldModelInfo = new ModelHelper();
+        $this->fieldModelInfo->increments('id');
+        $this->fieldModelInfo->integer('id_delivery')->default(0);
+        $this->fieldModelInfo->string('name', 255)->default("");
+        $this->fieldModelInfo->string('path', 255)->default("");
+        $this->fieldModelInfo->timestamps();
+        $this->fieldModelInfo->softDeletes();
+
         parent::__construct($attributes);
     }
 
@@ -31,15 +40,12 @@ class DeliveryDocuments extends Model {
 
     public function save(array $options = []) {
 
+        /******** clean data **********/
+        $this->fieldModelInfo->cleanData($this) ;
+
+
         /**** to delete unwanted field ****/
-        $schema = self::getSchema();
-        foreach ($this->getAttributes() as $key => $value) {
-            if (!in_array($key, $schema)) {
-                //echo $key . "\n" ;
-                unset($this->$key);
-            }
-        }
-        /**** end to delete unwanted field ****/
+        $this->fieldModelInfo->removeFieldUnwanted($this) ;
 
         return parent::save($options);
     }

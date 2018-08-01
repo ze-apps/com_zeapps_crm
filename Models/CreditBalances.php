@@ -22,6 +22,22 @@ class CreditBalances extends Model {
     {
         $this->table = self::$_table;
 
+        // stock la liste des champs
+        $this->fieldModelInfo = new ModelHelper();
+        $this->fieldModelInfo->increments('id');
+        $this->fieldModelInfo->tinyInteger('id_invoice', false)->default(0);
+        $this->fieldModelInfo->tinyInteger('numerotation', false)->default(0);
+        $this->fieldModelInfo->tinyInteger('id_company', false)->default(0);
+        $this->fieldModelInfo->tinyInteger('name_company', false)->default(0);
+        $this->fieldModelInfo->tinyInteger('id_contact', false)->default(0);
+        $this->fieldModelInfo->tinyInteger('name_contact', false)->default(0);
+        $this->fieldModelInfo->tinyInteger('due_date', false)->default(0);
+        $this->fieldModelInfo->tinyInteger('total', false)->default(0);
+        $this->fieldModelInfo->tinyInteger('paid', false)->default(0);
+        $this->fieldModelInfo->tinyInteger('left_to_pay', false)->default(0);
+        $this->fieldModelInfo->timestamps();
+        $this->fieldModelInfo->softDeletes();
+
         parent::__construct($attributes);
     }
 
@@ -31,15 +47,12 @@ class CreditBalances extends Model {
 
     public function save(array $options = []) {
 
+        /******** clean data **********/
+        $this->fieldModelInfo->cleanData($this) ;
+
+
         /**** to delete unwanted field ****/
-        $schema = self::getSchema();
-        foreach ($this->getAttributes() as $key => $value) {
-            if (!in_array($key, $schema)) {
-                //echo $key . "\n" ;
-                unset($this->$key);
-            }
-        }
-        /**** end to delete unwanted field ****/
+        $this->fieldModelInfo->removeFieldUnwanted($this) ;
 
         return parent::save($options);
     }

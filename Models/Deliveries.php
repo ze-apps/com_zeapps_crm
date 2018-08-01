@@ -27,6 +27,54 @@ class Deliveries extends Model {
     {
         $this->table = self::$_table;
 
+        // stock la liste des champs
+        $this->fieldModelInfo = new ModelHelper();
+        $this->fieldModelInfo->increments('id');
+        $this->fieldModelInfo->string('libelle', 255)->default("");
+        $this->fieldModelInfo->string('numerotation', 255)->default("");
+        $this->fieldModelInfo->integer('id_origin', false)->default(0);
+        $this->fieldModelInfo->integer('status', false)->default(0);
+        $this->fieldModelInfo->tinyInteger('finalized')->default(0);
+        $this->fieldModelInfo->string('final_pdf', 1023)->default("");
+        $this->fieldModelInfo->integer('id_user_account_manager')->default(0);
+        $this->fieldModelInfo->string('name_user_account_manager')->default("");
+        $this->fieldModelInfo->integer('id_warehouse')->default(0);
+        $this->fieldModelInfo->integer('id_company')->default(0);
+        $this->fieldModelInfo->string('name_company')->default("");
+        $this->fieldModelInfo->integer('id_contact')->default(0);
+        $this->fieldModelInfo->string('name_contact')->default("");
+        $this->fieldModelInfo->string('billing_address_1', 100)->default("");
+        $this->fieldModelInfo->string('billing_address_2', 100)->default("");
+        $this->fieldModelInfo->string('billing_address_3', 100)->default("");
+        $this->fieldModelInfo->string('billing_city', 100)->default("");
+        $this->fieldModelInfo->string('billing_zipcode', 50)->default("");
+        $this->fieldModelInfo->string('billing_state', 100)->default("");
+        $this->fieldModelInfo->integer('billing_country_id')->default(0);
+        $this->fieldModelInfo->string('billing_country_name', 100)->default("");
+        $this->fieldModelInfo->string('delivery_address_1', 100)->default("");
+        $this->fieldModelInfo->string('delivery_address_2', 100)->default("");
+        $this->fieldModelInfo->string('delivery_address_3', 100)->default("");
+        $this->fieldModelInfo->string('delivery_city', 100)->default("");
+        $this->fieldModelInfo->string('delivery_zipcode', 50)->default("");
+        $this->fieldModelInfo->string('delivery_state', 100)->default("");
+        $this->fieldModelInfo->integer('delivery_country_id')->default(0);
+        $this->fieldModelInfo->string('delivery_country_name', 100)->default("");
+        $this->fieldModelInfo->string('accounting_number', 255)->default("");
+        $this->fieldModelInfo->decimal('global_discount', 8, 2)->default(0);
+        $this->fieldModelInfo->decimal('total_prediscount_ht', 8, 2)->default(0);
+        $this->fieldModelInfo->decimal('total_prediscount_ttc', 8, 2)->default(0);
+        $this->fieldModelInfo->decimal('total_discount', 8, 2)->default(0);
+        $this->fieldModelInfo->decimal('total_ht', 9, 2)->default(0);
+        $this->fieldModelInfo->decimal('total_tva', 9, 2)->default(0);
+        $this->fieldModelInfo->decimal('total_ttc', 9, 2)->default(0);
+        $this->fieldModelInfo->timestamp('date_creation')->nullable();
+        $this->fieldModelInfo->timestamp('date_limit')->nullable();
+        $this->fieldModelInfo->string('id_modality', 255)->default("");
+        $this->fieldModelInfo->string('label_modality', 255)->default("");
+        $this->fieldModelInfo->string('reference_client', 255)->default("");
+        $this->fieldModelInfo->timestamps();
+        $this->fieldModelInfo->softDeletes();
+
         parent::__construct($attributes);
     }
 
@@ -196,19 +244,19 @@ class Deliveries extends Model {
         return $schema = Capsule::schema()->getColumnListing(self::$_table) ;
     }
 
+
+
+
+
+
     public function save(array $options = []) {
 
 
-        /******** special date field **********/
-        if ($this->date_creation && $this->date_creation != "") {
-            $this->date_creation = str_replace("T", " ", $this->date_creation);
-            $this->date_creation = str_replace("Z", "", $this->date_creation);
-        }
+        /******** clean data **********/
+        $this->fieldModelInfo->cleanData($this) ;
 
-        if ($this->date_limit && $this->date_limit != "") {
-            $this->date_limit = str_replace("T", " ", $this->date_limit);
-            $this->date_limit = str_replace("Z", "", $this->date_limit);
-        }
+
+
 
         /**** set a document number ****/
         if (!isset($this->numerotation) || !$this->numerotation || $this->numerotation == "") {
@@ -219,17 +267,8 @@ class Deliveries extends Model {
 
 
 
-
-
         /**** to delete unwanted field ****/
-        $schema = self::getSchema();
-        foreach ($this->getAttributes() as $key => $value) {
-            if (!in_array($key, $schema)) {
-                //echo $key . "\n" ;
-                unset($this->$key);
-            }
-        }
-        /**** end to delete unwanted field ****/
+        $this->fieldModelInfo->removeFieldUnwanted($this) ;
 
         return parent::save($options);
     }

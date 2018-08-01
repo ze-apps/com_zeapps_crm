@@ -24,16 +24,16 @@ class AccountingEntries extends Model {
 
         // stock la liste des champs
         $this->fieldModelInfo = new ModelHelper();
-        $this->fieldModelInfoincrements('id');
-        $this->fieldModelInfointeger('id_invoice', false)->default(0);
-        $this->fieldModelInfostring('accounting_number')->default("");
-        $this->fieldModelInfostring('number_document')->default("");
-        $this->fieldModelInfostring('label')->default("");
-        $this->fieldModelInfofloat('debit', 9, 2)->default(0.0);
-        $this->fieldModelInfofloat('credit', 9, 2)->default(0.0);
-        $this->fieldModelInfostring('code_journal')->default("");
-        $this->fieldModelInfotimestamp('date_writing');
-        $this->fieldModelInfotimestamp('date_limit');
+        $this->fieldModelInfo->increments('id');
+        $this->fieldModelInfo->integer('id_invoice', false)->default(0);
+        $this->fieldModelInfo->string('accounting_number')->default("");
+        $this->fieldModelInfo->string('number_document')->default("");
+        $this->fieldModelInfo->string('label')->default("");
+        $this->fieldModelInfo->float('debit', 9, 2)->default(0.0);
+        $this->fieldModelInfo->float('credit', 9, 2)->default(0.0);
+        $this->fieldModelInfo->string('code_journal')->default("");
+        $this->fieldModelInfo->timestamp('date_writing');
+        $this->fieldModelInfo->timestamp('date_limit');
         
 
         parent::__construct($attributes);
@@ -45,15 +45,12 @@ class AccountingEntries extends Model {
 
     public function save(array $options = []) {
 
+        /******** clean data **********/
+        $this->fieldModelInfo->cleanData($this) ;
+
+
         /**** to delete unwanted field ****/
-        $schema = self::getSchema();
-        foreach ($this->getAttributes() as $key => $value) {
-            if (!in_array($key, $schema)) {
-                //echo $key . "\n" ;
-                unset($this->$key);
-            }
-        }
-        /**** end to delete unwanted field ****/
+        $this->fieldModelInfo->removeFieldUnwanted($this) ;
 
         return parent::save($options);
     }

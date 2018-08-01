@@ -22,6 +22,25 @@ class ProductProducts extends Model {
     {
         $this->table = self::$_table;
 
+        // stock la liste des champs
+        $this->fieldModelInfo = new ModelHelper();
+        $this->fieldModelInfo->increments('id');
+        $this->fieldModelInfo->integer('id_cat')->default(0);
+        $this->fieldModelInfo->integer('id_stock')->default(0);
+        $this->fieldModelInfo->tinyInteger('compose')->default(0);
+        $this->fieldModelInfo->string('ref', 255)->default("");
+        $this->fieldModelInfo->string('name', 255)->default("");
+        $this->fieldModelInfo->text('description');
+        $this->fieldModelInfo->decimal('price_ht', 8, 2)->default(0);
+        $this->fieldModelInfo->decimal('price_ttc', 8, 2)->default(0);
+        $this->fieldModelInfo->tinyInteger('auto')->default(0);
+        $this->fieldModelInfo->integer('id_taxe')->default(0);
+        $this->fieldModelInfo->decimal('value_taxe', 8, 2)->default(0);
+        $this->fieldModelInfo->string('accounting_number', 255)->default("");
+        $this->fieldModelInfo->mediumtext('extra');
+        $this->fieldModelInfo->timestamps();
+        $this->fieldModelInfo->softDeletes();
+
         parent::__construct($attributes);
     }
 
@@ -31,15 +50,12 @@ class ProductProducts extends Model {
 
     public function save(array $options = []) {
 
+        /******** clean data **********/
+        $this->fieldModelInfo->cleanData($this) ;
+
+
         /**** to delete unwanted field ****/
-        $schema = self::getSchema();
-        foreach ($this->getAttributes() as $key => $value) {
-            if (!in_array($key, $schema)) {
-                //echo $key . "\n" ;
-                unset($this->$key);
-            }
-        }
-        /**** end to delete unwanted field ****/
+        $this->fieldModelInfo->removeFieldUnwanted($this) ;
 
         return parent::save($options);
     }

@@ -23,6 +23,15 @@ class ProductStocks extends Model
     {
         $this->table = self::$_table;
 
+        // stock la liste des champs
+        $this->fieldModelInfo = new ModelHelper();
+        $this->fieldModelInfo->increments('id');
+        $this->fieldModelInfo->string('ref', 255)->default("");
+        $this->fieldModelInfo->string('label', 255)->default("");
+        $this->fieldModelInfo->decimal('value_ht', 8, 2)->default(0);
+        $this->fieldModelInfo->timestamps();
+        $this->fieldModelInfo->softDeletes();
+
         parent::__construct($attributes);
     }
 
@@ -32,15 +41,12 @@ class ProductStocks extends Model
 
     public function save(array $options = []) {
 
+        /******** clean data **********/
+        $this->fieldModelInfo->cleanData($this) ;
+
+
         /**** to delete unwanted field ****/
-        $schema = self::getSchema();
-        foreach ($this->getAttributes() as $key => $value) {
-            if (!in_array($key, $schema)) {
-                //echo $key . "\n" ;
-                unset($this->$key);
-            }
-        }
-        /**** end to delete unwanted field ****/
+        $this->fieldModelInfo->removeFieldUnwanted($this) ;
 
         return parent::save($options);
     }

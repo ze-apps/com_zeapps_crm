@@ -22,6 +22,23 @@ class InvoiceLineDetails extends Model {
     {
         $this->table = self::$_table;
 
+        // stock la liste des champs
+        $this->fieldModelInfo = new ModelHelper();
+        $this->fieldModelInfo->increments('id');
+        $this->fieldModelInfo->integer('id_invoice')->default(0);
+        $this->fieldModelInfo->integer('id_line')->default(0);
+        $this->fieldModelInfo->integer('id_product')->default(0);
+        $this->fieldModelInfo->string('label', 255)->default("");
+        $this->fieldModelInfo->text('description');
+        $this->fieldModelInfo->decimal('qty', 8, 2)->default(0);
+        $this->fieldModelInfo->decimal('price_unit', 8, 2)->default(0);
+        $this->fieldModelInfo->integer('id_taxe')->default(0);
+        $this->fieldModelInfo->decimal('value_taxe', 8, 2)->default(0);
+        $this->fieldModelInfo->decimal('total_ht', 8, 2)->default(0);
+        $this->fieldModelInfo->decimal('total_ttc', 8, 2)->default(0);
+        $this->fieldModelInfo->timestamps();
+        $this->fieldModelInfo->softDeletes();
+
         parent::__construct($attributes);
     }
 
@@ -31,15 +48,12 @@ class InvoiceLineDetails extends Model {
 
     public function save(array $options = []) {
 
+        /******** clean data **********/
+        $this->fieldModelInfo->cleanData($this) ;
+
+
         /**** to delete unwanted field ****/
-        $schema = self::getSchema();
-        foreach ($this->getAttributes() as $key => $value) {
-            if (!in_array($key, $schema)) {
-                //echo $key . "\n" ;
-                unset($this->$key);
-            }
-        }
-        /**** end to delete unwanted field ****/
+        $this->fieldModelInfo->removeFieldUnwanted($this) ;
 
         return parent::save($options);
     }
