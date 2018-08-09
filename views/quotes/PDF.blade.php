@@ -1,6 +1,16 @@
 <html>
 <header>
     <style>
+        @page {
+            size: 210mm 297mm;
+            margin-top: 8cm;
+            margin-bottom: 1cm;
+            header: html_MyHeader1;
+            footer: html_MyFooter1;
+        }
+
+
+
         body {
             font-family: Verdana;
             font-size: 12px;
@@ -55,62 +65,78 @@
         }
     </style>
 </header>
+
+
+
 <body>
-<table class="root">
-    <tr>
-        <td id="logo" colspan="2">
-            <img src="/assets/images/quiltmania.jpg" width="190">
-        </td>
-    </tr>
-    <tr>
-        <td id="delivery_address">
-            <b>Adresse de livraison</b><br>
-            <?php
-            echo $quote->name_company . '<br>';
-            echo $quote->last_name . '<br>';
-            echo $quote->delivery_address_1;
-            echo $quote->delivery_address_2 ? '<br>' : '';
-            echo $quote->delivery_address_2;
-            echo $quote->delivery_address_3 ? '<br>' : '';
-            echo $quote->delivery_address_3;
-            echo '<br>';
-            echo $quote->delivery_zipcode . ' ' . $quote->delivery_city;
-            ?>
-        </td>
-        <td id="billing_address">
-            <b>Adresse de facturation</b><br>
-            <?php
-            echo $quote->name_company . '<br>';
-            echo $quote->last_name . '<br>';
-            echo $quote->billing_address_1;
-            echo $quote->billing_address_2 ? '<br>' : '';
-            echo $quote->billing_address_2;
-            echo $quote->billing_address_3 ? '<br>' : '';
-            echo $quote->billing_address_3;
-            echo '<br>';
-            echo $quote->billing_zipcode . ' ' . $quote->billing_city;
-            ?>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2" class="object">
-            <strong>Objet : <?php echo $quote->libelle; ?></strong>
-        </td>
-    </tr>
-    <tr>
-        <?php if($quote->modalities !== ""){ ?>
-        <td class="border">
-            <strong>Mode de reglement</strong><br>
-            <?php echo $quote->modalities; ?>
-        </td>
-        <?php } ?>
-        <?php if($quote->date_limit !== "0000-00-00 00:00:00"){ ?>
-        <td class="border">
-            <strong>Date de validité</strong><br>
-            <?php  echo date('d/m/Y', strtotime($quote->date_limit)); ?>
-        </td>
-        <?php } ?>
-    </tr>
+
+<htmlpageheader name="MyHeader1">
+    <table>
+        <tr>
+            <td id="logo" colspan="2">
+                <img src="/user/logo.jpg" style="max-width: 190px; height: auto">
+            </td>
+        </tr>
+        <tr>
+            <td id="delivery_address">
+                <b>Adresse de livraison</b><br>
+                <?php
+                echo $quote->name_company . '<br>';
+                echo $quote->last_name . '<br>';
+                echo $quote->delivery_address_1;
+                echo $quote->delivery_address_2 ? '<br>' : '';
+                echo $quote->delivery_address_2;
+                echo $quote->delivery_address_3 ? '<br>' : '';
+                echo $quote->delivery_address_3;
+                echo '<br>';
+                echo $quote->delivery_zipcode . ' ' . $quote->delivery_city;
+                ?>
+            </td>
+            <td id="billing_address">
+                <b>Adresse de facturation</b><br>
+                <?php
+                echo $quote->name_company . '<br>';
+                echo $quote->last_name . '<br>';
+                echo $quote->billing_address_1;
+                echo $quote->billing_address_2 ? '<br>' : '';
+                echo $quote->billing_address_2;
+                echo $quote->billing_address_3 ? '<br>' : '';
+                echo $quote->billing_address_3;
+                echo '<br>';
+                echo $quote->billing_zipcode . ' ' . $quote->billing_city;
+                ?>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="object">
+                <strong>Objet : <?php echo $quote->libelle; ?></strong>
+            </td>
+        </tr>
+        <tr>
+            <?php if($quote->modalities !== ""){ ?>
+            <td class="border">
+                <strong>Mode de reglement</strong><br>
+                <?php echo $quote->modalities; ?>
+            </td>
+            <?php } ?>
+            <?php if($quote->date_limit !== "0000-00-00 00:00:00"){ ?>
+            <td class="border">
+                <strong>Date de validité</strong><br>
+                <?php  echo date('d/m/Y', strtotime($quote->date_limit)); ?>
+            </td>
+            <?php } ?>
+        </tr>
+    </table>
+</htmlpageheader>
+
+<htmlpagefooter name="MyFooter1">
+    <div class="text-right" style="border-top: 1px solid #000000;">{PAGENO}/{nbpg}</div>
+</htmlpagefooter>
+
+
+
+
+<table>
     <tr>
         <td colspan="2">
             <table class="lines">
@@ -276,5 +302,9 @@
         </td>
     </tr>
 </table>
+
+
+
+
 </body>
 </html>

@@ -530,7 +530,7 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
 		function print(){
 			zhttp.crm.quote.pdf.make($scope.quote.id).then(function(response){
 				if(response.data && response.data != "false"){
-					window.document.location.href = zhttp.crm.quote.pdf.get() + angular.fromJson(response.data);
+					window.document.location.href = "/" + angular.fromJson(response.data);
 				}
 			});
 		}
