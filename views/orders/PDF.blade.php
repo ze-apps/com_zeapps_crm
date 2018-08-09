@@ -1,6 +1,15 @@
 <html>
 <header>
     <style>
+        @page {
+            size: 210mm 297mm;
+            margin-top: 8cm;
+            margin-bottom: 2.5cm;
+            header: html_MyHeader1;
+            footer: html_MyFooter1;
+        }
+
+
         body {
             font-family: Verdana;
             font-size: 12px;
@@ -53,64 +62,93 @@
         .object{
             padding: 10px 0;
         }
+
+        .number_document {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        .mention_pied_page {
+            font-size: 7pt;
+        }
     </style>
 </header>
 <body>
-<table class="root">
-    <tr>
-        <td id="logo" colspan="2">
-            <img src="/assets/images/quiltmania.jpg" width="190">
-        </td>
-    </tr>
-    <tr>
-        <td id="delivery_address">
-            <b>Adresse de livraison</b><br>
-            <?php
-            echo $order->name_company . '<br>';
-            echo $order->last_name . '<br>';
-            echo $order->delivery_address_1;
-            echo $order->delivery_address_2 ? '<br>' : '';
-            echo $order->delivery_address_2;
-            echo $order->delivery_address_3 ? '<br>' : '';
-            echo $order->delivery_address_3;
-            echo '<br>';
-            echo $order->delivery_zipcode . ' ' . $order->delivery_city;
-            ?>
-        </td>
-        <td id="billing_address">
-            <b>Adresse de facturation</b><br>
-            <?php
-            echo $order->name_company . '<br>';
-            echo $order->last_name . '<br>';
-            echo $order->billing_address_1;
-            echo $order->billing_address_2 ? '<br>' : '';
-            echo $order->billing_address_2;
-            echo $order->billing_address_3 ? '<br>' : '';
-            echo $order->billing_address_3;
-            echo '<br>';
-            echo $order->billing_zipcode . ' ' . $order->billing_city;
-            ?>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2" class="object">
-            <strong>Objet : <?php echo $order->libelle; ?></strong>
-        </td>
-    </tr>
-    <tr>
-        <?php if($order->modalities !== ""){ ?>
-        <td class="border">
-            <strong>Mode de reglement</strong><br>
-            <?php echo $order->modalities; ?>
-        </td>
-        <?php } ?>
-        <?php if($order->date_limit !== "0000-00-00 00:00:00"){ ?>
-        <td class="border">
-            <strong>Date de validité</strong><br>
-            <?php  echo date('d/m/Y', strtotime($order->date_limit)); ?>
-        </td>
-        <?php } ?>
-    </tr>
+
+
+<htmlpageheader name="MyHeader1">
+    <table>
+        <tr>
+            <td id="logo" width="50%">
+                <img src="/user/logo.jpg" style="max-width: 190px; height: auto">
+            </td>
+            <td class="text-right" width="50%">
+                <span class="number_document">Commande n° {{ $order->numerotation }}</span><br>
+                Date : {{ date("d/m/Y", strtotime($order->date_creation)) }}
+            </td>
+        </tr>
+        <tr>
+            <td id="delivery_address">
+                <b>Adresse de livraison</b><br>
+                <?php
+                echo $order->name_company . '<br>';
+                echo $order->last_name . '<br>';
+                echo $order->delivery_address_1;
+                echo $order->delivery_address_2 ? '<br>' : '';
+                echo $order->delivery_address_2;
+                echo $order->delivery_address_3 ? '<br>' : '';
+                echo $order->delivery_address_3;
+                echo '<br>';
+                echo $order->delivery_zipcode . ' ' . $order->delivery_city;
+                ?>
+            </td>
+            <td id="billing_address">
+                <b>Adresse de facturation</b><br>
+                <?php
+                echo $order->name_company . '<br>';
+                echo $order->last_name . '<br>';
+                echo $order->billing_address_1;
+                echo $order->billing_address_2 ? '<br>' : '';
+                echo $order->billing_address_2;
+                echo $order->billing_address_3 ? '<br>' : '';
+                echo $order->billing_address_3;
+                echo '<br>';
+                echo $order->billing_zipcode . ' ' . $order->billing_city;
+                ?>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="object">
+                <strong>Objet : <?php echo $order->libelle; ?></strong>
+            </td>
+        </tr>
+        <tr>
+            <?php if($order->modalities !== ""){ ?>
+            <td class="border">
+                <strong>Mode de reglement</strong><br>
+                <?php echo $order->modalities; ?>
+            </td>
+            <?php } ?>
+            <?php if($order->date_limit !== "0000-00-00 00:00:00"){ ?>
+            <td class="border">
+                <strong>Date de validité</strong><br>
+                <?php  echo date('d/m/Y', strtotime($order->date_limit)); ?>
+            </td>
+            <?php } ?>
+        </tr>
+    </table>
+</htmlpageheader>
+
+<htmlpagefooter name="MyFooter1">
+
+    <div class="mention_pied_page">
+        En cas de retard de paiement, il sera appliqué des pénalités à un taux égal à 12% sans que celui-ci ne puisse être inférieur à une fois et demi le taux d'intérêt légal en vigueur en France. Pas d'escompte en cas de paiement anticipé. Une indemnité forfaitaire de 40 € pour frais de recouvrement sera appliquée en cas de retard de paiement conformément aux articles L441-3 et L441-6 du Code de commerce.
+    </div>
+
+    <div class="text-right" style="border-top: 1px solid #000000;">{PAGENO}/{nbpg}</div>
+</htmlpagefooter>
+
+
+<table>
     <tr>
         <td colspan="2">
             <table class="lines">

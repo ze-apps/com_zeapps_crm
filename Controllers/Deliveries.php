@@ -6,6 +6,9 @@ use Zeapps\Core\Controller;
 use Zeapps\Core\Request;
 use Zeapps\Core\Session;
 
+use Zeapps\Core\Storage;
+use Mpdf\Mpdf;
+
 use App\com_zeapps_crm\Models\Deliveries as DeliveriesModel ;
 use App\com_zeapps_crm\Models\DeliveryLines;
 use App\com_zeapps_crm\Models\DeliveryLineDetails;
@@ -424,5 +427,73 @@ class Deliveries extends Controller
         $id = $request->input('id', 0);
 
         echo json_encode(DeliveryActivities::where("id", $id)->delete());
+    }
+
+    public function makePDF(Request $request){
+        $id = $request->input('id', 0);
+        $echo = $request->input('echo', true);
+
+        $data = [];
+
+        $data['delivery'] = DeliveriesModel::where("id", $id)->first();
+        $data['lines'] = DeliveryLines::where("id_delivery", $id)->orderBy("sort")->get();
+        $line_details = DeliveryLineDetails::where("id_delivery", $id)->get();
+
+        $data['showDiscount'] = false;
+        $data['tvas'] = [];
+        foreach($data['lines'] as $line){
+            if(floatval($line->discount) > 0)
+                $data['showDiscount'] = true;
+
+            if($line->id_taxe !== '0'){
+                if(!isset($data['tvas'][$line->id_taxe])){
+                    $data['tvas'][$line->id_taxe] = array(
+                        'ht' => 0,
+                        'value_taxe' => floatval($line->value_taxe)
+                    );
+                }
+
+                $data['tvas'][$line->id_taxe]['ht'] += floatval($line->total_ht);
+                $data['tvas'][$line->id_taxe]['value'] = round(floatval($data['tvas'][$line->id_taxe]['ht']) * ($data['tvas'][$line->id_taxe]['value_taxe'] / 100), 2);
+            }
+        }
+        foreach($line_details as $line){
+            if($line->id_taxe !== '0'){
+                if(!isset($data['tvas'][$line->id_taxe])){
+                    $data['tvas'][$line->id_taxe] = array(
+                        'ht' => 0,
+                        'value_taxe' => floatval($line->value_taxe)
+                    );
+                }
+
+                $data['tvas'][$line->id_taxe]['ht'] += floatval($line->total_ht);
+                $data['tvas'][$line->id_taxe]['value'] = round(floatval($data['tvas'][$line->id_taxe]['ht']) * ($data['tvas'][$line->id_taxe]['value_taxe'] / 100), 2);
+            }
+        }
+
+        //load the view and saved it into $html variable
+        $html = view("deliveries/PDF", $data, BASEPATH . 'App/com_zeapps_crm/views/')->getContent();
+
+        $nomPDF = $data['delivery']->name_company.'_'.$data['delivery']->numerotation.'_'.$data['delivery']->libelle;
+        $nomPDF = preg_replace('/\W+/', '_', $nomPDF);
+        $nomPDF = trim($nomPDF, '_');
+
+        //this the the PDF filename that user will get to download
+        $pdfFilePath = Storage::getTempFolder() . $nomPDF . '.pdf';
+
+        //set the PDF
+        $mpdf = new Mpdf();
+
+        //generate the PDF from the given html
+        $mpdf->WriteHTML($html);
+
+        //download it.
+        $mpdf->Output(BASEPATH . $pdfFilePath, "F");
+
+        if($echo) {
+            echo json_encode($pdfFilePath);
+        }
+
+        return $pdfFilePath;
     }
 }

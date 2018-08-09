@@ -10,6 +10,7 @@ Routeur::get("/com_zeapps_crm/quotes/lists_partial", 'App\\com_zeapps_crm\\Contr
 Routeur::get("/com_zeapps_crm/quotes/form_modal", 'App\\com_zeapps_crm\\Controllers\\Quotes@form_modal');
 Routeur::get("/com_zeapps_crm/quotes/view", 'App\\com_zeapps_crm\\Controllers\\Quotes@view');
 Routeur::get("/com_zeapps_crm/quotes/form_line", 'App\\com_zeapps_crm\\Controllers\\Quotes@form_line');
+Routeur::get("/com_zeapps_crm/quotes/send_email", 'App\\com_zeapps_crm\\Controllers\\Quotes@sendEmail');
 
 
 Routeur::post("/com_zeapps_crm/quotes/testFormat", 'App\\com_zeapps_crm\\Controllers\\Quotes@testFormat');
@@ -30,6 +31,7 @@ Routeur::post("/com_zeapps_crm/quotes/del_activity/{id}", 'App\\com_zeapps_crm\\
 
 
 Routeur::post("/com_zeapps_crm/quotes/makePDF/{id}", 'App\\com_zeapps_crm\\Controllers\\Quotes@makePDF');
+Routeur::post("/com_zeapps_crm/quotes/send_email_post", 'App\\com_zeapps_crm\\Controllers\\Quotes@sendEmailPost');
 
 
 

@@ -1,6 +1,14 @@
 <html>
 <header>
     <style>
+        @page {
+            size: 210mm 297mm;
+            margin-top: 8cm;
+            margin-bottom: 2.5cm;
+            header: html_MyHeader1;
+            footer: html_MyFooter1;
+        }
+
         body {
             font-family: Verdana;
             font-size: 12px;
@@ -10,7 +18,7 @@
             width: 100%;
             margin: 10px 0;
             background-color: #ffffff;
-            binvoice-collapse: collapse;
+            border-collapse: collapse;
         }
         td{
             vertical-align: top;
@@ -29,8 +37,8 @@
         .taxes td,
         .total th,
         .total td,
-        .binvoice{
-            binvoice: solid 1px #000000;
+        .border{
+            border: solid 1px #000000;
             padding: 5px 8px;
             vertical-align: middle;
         }
@@ -53,64 +61,101 @@
         .object{
             padding: 10px 0;
         }
+
+        .number_document {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        .mention_pied_page {
+            font-size: 7pt;
+        }
     </style>
 </header>
 <body>
-<table class="root">
-    <tr>
-        <td id="logo" colspan="2">
-            <img src="/assets/images/quiltmania.jpg" width="190">
-        </td>
-    </tr>
-    <tr>
-        <td id="delivery_address">
-            <b>Adresse de livraison</b><br>
-            <?php
-            echo $invoice->name_company . '<br>';
-            echo $invoice->last_name . '<br>';
-            echo $invoice->delivery_address_1;
-            echo $invoice->delivery_address_2 ? '<br>' : '';
-            echo $invoice->delivery_address_2;
-            echo $invoice->delivery_address_3 ? '<br>' : '';
-            echo $invoice->delivery_address_3;
-            echo '<br>';
-            echo $invoice->delivery_zipcode . ' ' . $invoice->delivery_city;
-            ?>
-        </td>
-        <td id="billing_address">
-            <b>Adresse de facturation</b><br>
-            <?php
-            echo $invoice->name_company . '<br>';
-            echo $invoice->last_name . '<br>';
-            echo $invoice->billing_address_1;
-            echo $invoice->billing_address_2 ? '<br>' : '';
-            echo $invoice->billing_address_2;
-            echo $invoice->billing_address_3 ? '<br>' : '';
-            echo $invoice->billing_address_3;
-            echo '<br>';
-            echo $invoice->billing_zipcode . ' ' . $invoice->billing_city;
-            ?>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2" class="object">
-            <strong>Objet : <?php echo $invoice->libelle; ?></strong>
-        </td>
-    </tr>
-    <tr>
-        <?php if($invoice->modalities !== ""){ ?>
-        <td class="binvoice">
-            <strong>Mode de reglement</strong><br>
-            <?php echo $invoice->modalities; ?>
-        </td>
-        <?php } ?>
-        <?php if($invoice->date_limit !== "0000-00-00 00:00:00"){ ?>
-        <td class="binvoice">
-            <strong>Date de validité</strong><br>
-            <?php  echo date('d/m/Y', strtotime($invoice->date_limit)); ?>
-        </td>
-        <?php } ?>
-    </tr>
+
+
+<htmlpageheader name="MyHeader1">
+    <table>
+        <tr>
+            <td id="logo" width="50%">
+                <img src="/user/logo.jpg" style="max-width: 190px; height: auto">
+            </td>
+            <td class="text-right" width="50%">
+                <span class="number_document">
+                    @if (!$invoice->numerotation || $invoice->numerotation == "")
+                        <div style="background-color: #dd0000; color:#ffffff; padding: 0.3mm">
+                            Projet de facture :<br>Facture non clôturée
+                        </div>
+                    @else
+                        <div>Facture n° {{ $invoice->numerotation }}</div>
+                    @endif
+                    </span>
+                Date : {{ date("d/m/Y", strtotime($invoice->date_creation)) }}
+            </td>
+        </tr>
+        <tr>
+            <td id="delivery_address">
+                <b>Adresse de livraison</b><br>
+                <?php
+                echo $invoice->name_company . '<br>';
+                echo $invoice->last_name . '<br>';
+                echo $invoice->delivery_address_1;
+                echo $invoice->delivery_address_2 ? '<br>' : '';
+                echo $invoice->delivery_address_2;
+                echo $invoice->delivery_address_3 ? '<br>' : '';
+                echo $invoice->delivery_address_3;
+                echo '<br>';
+                echo $invoice->delivery_zipcode . ' ' . $invoice->delivery_city;
+                ?>
+            </td>
+            <td id="billing_address">
+                <b>Adresse de facturation</b><br>
+                <?php
+                echo $invoice->name_company . '<br>';
+                echo $invoice->last_name . '<br>';
+                echo $invoice->billing_address_1;
+                echo $invoice->billing_address_2 ? '<br>' : '';
+                echo $invoice->billing_address_2;
+                echo $invoice->billing_address_3 ? '<br>' : '';
+                echo $invoice->billing_address_3;
+                echo '<br>';
+                echo $invoice->billing_zipcode . ' ' . $invoice->billing_city;
+                ?>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="object">
+                <strong>Objet : <?php echo $invoice->libelle; ?></strong>
+            </td>
+        </tr>
+        <tr>
+            <?php if($invoice->modalities !== ""){ ?>
+            <td class="border">
+                <strong>Mode de reglement</strong><br>
+                <?php echo $invoice->modalities; ?>
+            </td>
+            <?php } ?>
+            <?php if($invoice->date_limit !== "0000-00-00 00:00:00"){ ?>
+            <td class="border">
+                <strong>Date de limite de paiement</strong><br>
+                <?php  echo date('d/m/Y', strtotime($invoice->date_limit)); ?>
+            </td>
+            <?php } ?>
+        </tr>
+    </table>
+</htmlpageheader>
+
+<htmlpagefooter name="MyFooter1">
+
+    <div class="mention_pied_page">
+        En cas de retard de paiement, il sera appliqué des pénalités à un taux égal à 12% sans que celui-ci ne puisse être inférieur à une fois et demi le taux d'intérêt légal en vigueur en France. Pas d'escompte en cas de paiement anticipé. Une indemnité forfaitaire de 40 € pour frais de recouvrement sera appliquée en cas de retard de paiement conformément aux articles L441-3 et L441-6 du Code de commerce.
+    </div>
+
+    <div class="text-right" style="border-top: 1px solid #000000;">{PAGENO}/{nbpg}</div>
+</htmlpagefooter>
+
+
+<table>
     <tr>
         <td colspan="2">
             <table class="lines">

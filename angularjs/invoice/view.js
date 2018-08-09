@@ -592,16 +592,11 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
 		}
 
 		function print(){
-			if($scope.invoice.final_pdf === "") {
-                zhttp.crm.invoice.pdf.make($scope.invoice.id).then(function (response) {
-                    if (response.data && response.data != "false") {
-                        window.document.location.href = zhttp.crm.invoice.pdf.get() + angular.fromJson(response.data);
-                    }
-                });
-            }
-            else{
-                window.document.location.href = zhttp.crm.invoice.pdf.get() + $scope.invoice.final_pdf;
-			}
+            zhttp.crm.invoice.pdf.make($scope.invoice.id).then(function (response) {
+                if (response.data && response.data != "false") {
+                    window.document.location.href = "/" + angular.fromJson(response.data);
+                }
+            });
 		}
 
 		function initNavigation() {

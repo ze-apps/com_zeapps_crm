@@ -558,7 +558,7 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
 		function print(){
 			zhttp.crm.order.pdf.make($scope.order.id).then(function(response){
 				if(response.data && response.data != "false"){
-					window.document.location.href = zhttp.crm.order.pdf.get() + angular.fromJson(response.data);
+					window.document.location.href = "/" + angular.fromJson(response.data);
 				}
 			});
 		}

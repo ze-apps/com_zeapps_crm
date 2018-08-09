@@ -38,6 +38,10 @@ app.config(["$routeProvider",
 				templateUrl: "/com_zeapps_crm/quotes/config",
 				controller: "ComZeappsCrmQuoteConfigCtrl"
 			})
+            .when("/ng/com_zeapps/quote_send_email/:id", {
+                templateUrl: "/com_zeapps_crm/quotes/send_email",
+                controller: "ComZeappsCrmQuoteSendEmailCtrl"
+            })
 
 		// ORDER
 			.when("/ng/com_zeapps_crm/order", {

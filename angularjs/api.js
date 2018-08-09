@@ -118,6 +118,7 @@ app.config(["$provide",
                     del: del_quote,
                     transform: transform_quote,
                     test: test_quote,
+                    send_email: send_email,
                     line: {
                         save: save_line_quote,
                         position: update_linepos_quote,
@@ -548,6 +549,11 @@ app.config(["$provide",
             function post_quote(data) {
                 return zeHttp.post("/com_zeapps_crm/quotes/save", data);
             }
+
+            function send_email(data) {
+                return zeHttp.post("/com_zeapps_crm/quotes/send_email_post", data);
+            }
+
 
             function del_quote(id) {
                 return zeHttp.delete("/com_zeapps_crm/quotes/delete/" + id);

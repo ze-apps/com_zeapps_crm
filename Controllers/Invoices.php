@@ -7,7 +7,8 @@ use Zeapps\Core\Controller;
 use Zeapps\Core\Request;
 use Zeapps\Core\Session;
 
-use App\com_zeapps_crm\Models\Invoices as InvoicesModel ;
+
+use App\com_zeapps_crm\Models\Invoices as InvoicesModel;
 use App\com_zeapps_crm\Models\InvoiceLines;
 use App\com_zeapps_crm\Models\InvoiceLineDetails;
 use App\com_zeapps_crm\Models\InvoiceDocuments;
@@ -16,43 +17,49 @@ use App\com_zeapps_crm\Models\CreditBalances;
 use App\com_zeapps_crm\Models\CreditBalanceDetails;
 use App\com_zeapps_contact\Models\Modalities;
 
-use App\com_zeapps_crm\Models\Orders as OrdersModel ;
-use App\com_zeapps_crm\Models\Quotes as QuotesModel ;
-use App\com_zeapps_crm\Models\Deliveries as DeliveriesModel ;
+use App\com_zeapps_crm\Models\Orders as OrdersModel;
+use App\com_zeapps_crm\Models\Quotes as QuotesModel;
+use App\com_zeapps_crm\Models\Deliveries as DeliveriesModel;
 
 use Zeapps\Models\Config;
 
 class Invoices extends Controller
 {
-    public function lists(){
+    public function lists()
+    {
         $data = array();
         return view("invoices/lists", $data, BASEPATH . 'App/com_zeapps_crm/views/');
     }
 
-    public function view(){
+    public function view()
+    {
         $data = array();
         return view("invoices/view", $data, BASEPATH . 'App/com_zeapps_crm/views/');
     }
 
-    public function form_line(){
+    public function form_line()
+    {
         $data = array();
         return view("invoices/form_line", $data, BASEPATH . 'App/com_zeapps_crm/views/');
     }
 
-    public function lists_partial(){
+    public function lists_partial()
+    {
         $data = array();
         return view("invoices/lists_partial", $data, BASEPATH . 'App/com_zeapps_crm/views/');
     }
 
-    public function form_modal(){
+    public function form_modal()
+    {
         $data = array();
         return view("invoices/form_modal", $data, BASEPATH . 'App/com_zeapps_crm/views/');
     }
 
 
-    public function testFormat(){
+    public function testFormat()
+    {
         // constitution du tableau
-        $data = array() ;
+        $data = array();
 
         if (strcasecmp($_SERVER['REQUEST_METHOD'], 'post') === 0 && stripos($_SERVER['CONTENT_TYPE'], 'application/json') !== FALSE) {
             // POST is actually in json format, do an internal translation
@@ -68,7 +75,8 @@ class Invoices extends Controller
     }
 
 
-    public function get(Request $request) {
+    public function get(Request $request)
+    {
 
         $id = $request->input('id', 0);
 
@@ -79,14 +87,13 @@ class Invoices extends Controller
         $documents = InvoiceDocuments::where('id_invoice', $id)->get();
         $activities = InvoiceActivities::where('id_invoice', $id)->get();
 
-        if($invoice->id_company) {
+        if ($invoice->id_company) {
             $credits = CreditBalances::where('id_company', $invoice->id_company)
-                ->where('left_to_pay', '>=',  0.01)
+                ->where('left_to_pay', '>=', 0.01)
                 ->get();
-        }
-        else {
+        } else {
             $credits = CreditBalances::where('id_contact', $invoice->id_contact)
-                ->where('left_to_pay', '>=',  0.01)
+                ->where('left_to_pay', '>=', 0.01)
                 ->get();
         }
 
@@ -101,8 +108,8 @@ class Invoices extends Controller
     }
 
 
-
-    public function getAll(Request $request) {
+    public function getAll(Request $request)
+    {
         $id = $request->input('id', 0);
         $type = $request->input('type', 'company');
         $limit = $request->input('limit', 15);
@@ -110,7 +117,7 @@ class Invoices extends Controller
         $context = $request->input('context', false);
 
 
-        $filters = array() ;
+        $filters = array();
 
         if (strcasecmp($_SERVER['REQUEST_METHOD'], 'post') === 0 && stripos($_SERVER['CONTENT_TYPE'], 'application/json') !== FALSE) {
             // POST is actually in json format, do an internal translation
@@ -122,32 +129,29 @@ class Invoices extends Controller
         }
 
 
-
-
-
-        $invoices_rs = InvoicesModel::orderBy('date_creation', 'DESC')->orderBy('id', 'DESC') ;
+        $invoices_rs = InvoicesModel::orderBy('date_creation', 'DESC')->orderBy('id', 'DESC');
         foreach ($filters as $key => $value) {
             if (strpos($key, " LIKE")) {
                 $key = str_replace(" LIKE", "", $key);
-                $invoices_rs = $invoices_rs->where($key, 'like', '%' . $value . '%') ;
+                $invoices_rs = $invoices_rs->where($key, 'like', '%' . $value . '%');
             } else {
-                $invoices_rs = $invoices_rs->where($key, $value) ;
+                $invoices_rs = $invoices_rs->where($key, $value);
             }
         }
 
         $total = $invoices_rs->count();
-        $invoices_rs_id = $invoices_rs ;
+        $invoices_rs_id = $invoices_rs;
 
         $invoices = $invoices_rs->limit($limit)->offset($offset)->get();;
 
 
-        if(!$invoices){
+        if (!$invoices) {
             $invoices = [];
         }
 
 
         $ids = [];
-        if($total < 500) {
+        if ($total < 500) {
             $rows = $invoices_rs_id->select(array("id"))->get();
             foreach ($rows as $row) {
                 array_push($ids, $row->id);
@@ -163,13 +167,13 @@ class Invoices extends Controller
     }
 
 
-    public function modal(Request $request) {
+    public function modal(Request $request)
+    {
         $limit = $request->input('limit', 15);
         $offset = $request->input('offset', 0);
 
 
-
-        $filters = array() ;
+        $filters = array();
 
         if (strcasecmp($_SERVER['REQUEST_METHOD'], 'post') === 0 && stripos($_SERVER['CONTENT_TYPE'], 'application/json') !== FALSE) {
             // POST is actually in json format, do an internal translation
@@ -177,23 +181,23 @@ class Invoices extends Controller
         }
 
 
-        $invoices_rs = InvoicesModel::orderBy('date_creation', 'DESC')->orderBy('id', 'DESC') ;
+        $invoices_rs = InvoicesModel::orderBy('date_creation', 'DESC')->orderBy('id', 'DESC');
         foreach ($filters as $key => $value) {
             if (strpos($key, " LIKE")) {
                 $key = str_replace(" LIKE", "", $key);
-                $invoices_rs = $invoices_rs->where($key, 'like', '%' . $value . '%') ;
+                $invoices_rs = $invoices_rs->where($key, 'like', '%' . $value . '%');
             } else {
-                $invoices_rs = $invoices_rs->where($key, $value) ;
+                $invoices_rs = $invoices_rs->where($key, $value);
             }
         }
 
         $total = $invoices_rs->count();
-        $invoices_rs_id = $invoices_rs ;
+        $invoices_rs_id = $invoices_rs;
 
         $invoices = $invoices_rs->limit($limit)->offset($offset)->get();;
 
 
-        if(!$invoices){
+        if (!$invoices) {
             $invoices = [];
         }
 
@@ -204,9 +208,10 @@ class Invoices extends Controller
 
     }
 
-    public function save() {
+    public function save()
+    {
         // constitution du tableau
-        $data = array() ;
+        $data = array();
 
         if (strcasecmp($_SERVER['REQUEST_METHOD'], 'post') === 0 && stripos($_SERVER['CONTENT_TYPE'], 'application/json') !== FALSE) {
             // POST is actually in json format, do an internal translation
@@ -214,30 +219,30 @@ class Invoices extends Controller
         }
 
 
-
-        $invoice = new InvoicesModel() ;
-        $createNumber = true ;
+        $invoice = new InvoicesModel();
+        $createNumber = true;
 
         if (isset($data["id"]) && is_numeric($data["id"])) {
-            $invoice = InvoicesModel::where('id', $data["id"])->first() ;
+            $invoice = InvoicesModel::where('id', $data["id"])->first();
             if ($invoice) {
-                $createNumber = false ;
+                $createNumber = false;
             }
         }
 
-        foreach ($data as $key =>$value) {
-            $invoice->$key = $value ;
+        foreach ($data as $key => $value) {
+            $invoice->$key = $value;
         }
 
-        $invoice->save() ;
+        $invoice->save();
 
         echo json_encode($invoice->id);
     }
 
-    public function delete(Request $request) {
+    public function delete(Request $request)
+    {
         $id = $request->input('id', 0);
 
-        if($id) {
+        if ($id) {
             InvoiceLines::where('id_invoice', $id)->delete();
             InvoiceLineDetails::where('id_invoice', $id)->delete();
 
@@ -259,12 +264,13 @@ class Invoices extends Controller
         }
     }
 
-    public function transform(Request $request) {
+    public function transform(Request $request)
+    {
         $id = $request->input('id', 0);
 
-        if($id) {
+        if ($id) {
             // constitution du tableau
-            $data = array() ;
+            $data = array();
 
             if (strcasecmp($_SERVER['REQUEST_METHOD'], 'post') === 0 && stripos($_SERVER['CONTENT_TYPE'], 'application/json') !== FALSE) {
                 // POST is actually in json format, do an internal translation
@@ -273,21 +279,21 @@ class Invoices extends Controller
 
             $return = [];
 
-            if($src = InvoicesModel::where("id", $id)->first()){
-                $src->lines = InvoiceLines::where('id_invoice', $id)->get() ;
+            if ($src = InvoicesModel::where("id", $id)->first()) {
+                $src->lines = InvoiceLines::where('id_invoice', $id)->get();
                 $src->line_details = InvoiceLineDetails::where('id_invoice', $id)->get();
 
-                if($data){
-                    foreach($data as $document => $value){
-                        if($value == 'true'){
+                if ($data) {
+                    foreach ($data as $document => $value) {
+                        if ($value == 'true') {
                             if ($document == "quotes") {
-                                QuotesModel::createFrom($src) ;
+                                QuotesModel::createFrom($src);
                             } elseif ($document == "orders") {
-                                OrdersModel::createFrom($src) ;
+                                OrdersModel::createFrom($src);
                             } elseif ($document == "invoices") {
-                                InvoicesModel::createFrom($src) ;
+                                InvoicesModel::createFrom($src);
                             } elseif ($document == "deliveries") {
-                                DeliveriesModel::createFrom($src) ;
+                                DeliveriesModel::createFrom($src);
                             }
                         }
                     }
@@ -295,25 +301,25 @@ class Invoices extends Controller
             }
 
             echo json_encode($return);
-        }
-        else{
+        } else {
             echo json_encode(false);
         }
     }
 
 
-    public function finalize(Request $request) {
+    public function finalize(Request $request)
+    {
         $id = $request->input('id', 0);
 
-        if($id) {
-            if($invoice = InvoicesModel::where("id", $id)->first()){
-                if($invoice->id_modality === '0'){
+        if ($id) {
+            if ($invoice = InvoicesModel::where("id", $id)->first()) {
+                if ($invoice->id_modality === '0') {
                     echo json_encode(array('error' => 'Modalité de paiement non renseignée'));
                     return;
                 }
 
-                $invoice->finalized = 1 ;
-                $invoice->save() ;
+                $invoice->finalized = 1;
+                $invoice->save();
 
                 echo json_encode(array(
                     'numerotation' => $invoice->numerotation,
@@ -328,9 +334,10 @@ class Invoices extends Controller
     }
 
 
-    public function saveLine(){
+    public function saveLine()
+    {
         // constitution du tableau
-        $data = array() ;
+        $data = array();
 
         if (strcasecmp($_SERVER['REQUEST_METHOD'], 'post') === 0 && stripos($_SERVER['CONTENT_TYPE'], 'application/json') !== FALSE) {
             // POST is actually in json format, do an internal translation
@@ -350,7 +357,7 @@ class Invoices extends Controller
             }
 
             if (!isset($invoiceLine->accounting_number)) {
-                $invoiceLine->accounting_number = "" ;
+                $invoiceLine->accounting_number = "";
             }
 
 
@@ -360,9 +367,10 @@ class Invoices extends Controller
         echo json_encode($invoiceLine->id);
     }
 
-    public function updateLinePosition(){
+    public function updateLinePosition()
+    {
         // constitution du tableau
-        $data = array() ;
+        $data = array();
 
         if (strcasecmp($_SERVER['REQUEST_METHOD'], 'post') === 0 && stripos($_SERVER['CONTENT_TYPE'], 'application/json') !== FALSE) {
             // POST is actually in json format, do an internal translation
@@ -370,14 +378,14 @@ class Invoices extends Controller
         }
 
         if (isset($data)) {
-            $line = InvoiceLines::where("id", $data['id'])->first() ;
+            $line = InvoiceLines::where("id", $data['id'])->first();
 
             InvoiceLines::updateOldTable($line->id_invoice, $data['oldSort']);
             InvoiceLines::updateNewTable($line->id_invoice, $data['sort']);
 
             $InvoiceLine = InvoiceLines::where("id", $data["id"])->first();
             if ($InvoiceLine) {
-                $InvoiceLine->sort = $data['sort'] ;
+                $InvoiceLine->sort = $data['sort'];
             }
             $InvoiceLine->save();
         }
@@ -385,10 +393,11 @@ class Invoices extends Controller
         echo json_encode($data['id']);
     }
 
-    public function deleteLine(Request $request){
+    public function deleteLine(Request $request)
+    {
         $id = $request->input('id', 0);
 
-        if($id){
+        if ($id) {
             $line = InvoiceLines::where("id", $id)->first();
             InvoiceLines::updateOldTable($line->id_invoice, $line->sort);
             InvoiceLineDetails::where("id_line", $id)->delete();
@@ -398,9 +407,10 @@ class Invoices extends Controller
         }
     }
 
-    public function saveLineDetail(){
+    public function saveLineDetail()
+    {
         // constitution du tableau
-        $data = array() ;
+        $data = array();
 
         if (strcasecmp($_SERVER['REQUEST_METHOD'], 'post') === 0 && stripos($_SERVER['CONTENT_TYPE'], 'application/json') !== FALSE) {
             // POST is actually in json format, do an internal translation
@@ -425,9 +435,10 @@ class Invoices extends Controller
         }
     }
 
-    public function activity(){
+    public function activity()
+    {
         // constitution du tableau
-        $data = array() ;
+        $data = array();
 
         if (strcasecmp($_SERVER['REQUEST_METHOD'], 'post') === 0 && stripos($_SERVER['CONTENT_TYPE'], 'application/json') !== FALSE) {
             // POST is actually in json format, do an internal translation
@@ -451,10 +462,27 @@ class Invoices extends Controller
         }
     }
 
-    public function del_activity(Request $request){
+    public function del_activity(Request $request)
+    {
         $id = $request->input('id', 0);
 
         echo json_encode(InvoiceActivities::where("id", $id)->delete());
+    }
+
+
+    public function makePDF(Request $request)
+    {
+        $id = $request->input('id', 0);
+        $echo = $request->input('echo', true);
+
+
+        $pdfFilePath = InvoicesModel::makePDF($id, $echo);
+
+        if ($echo) {
+            echo json_encode($pdfFilePath);
+        }
+
+        return $pdfFilePath;
     }
 
 

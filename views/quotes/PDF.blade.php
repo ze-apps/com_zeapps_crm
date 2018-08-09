@@ -4,12 +4,10 @@
         @page {
             size: 210mm 297mm;
             margin-top: 8cm;
-            margin-bottom: 1cm;
+            margin-bottom: 2.5cm;
             header: html_MyHeader1;
             footer: html_MyFooter1;
         }
-
-
 
         body {
             font-family: Verdana;
@@ -63,6 +61,14 @@
         .object{
             padding: 10px 0;
         }
+
+        .number_document {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        .mention_pied_page {
+            font-size: 7pt;
+        }
     </style>
 </header>
 
@@ -73,8 +79,12 @@
 <htmlpageheader name="MyHeader1">
     <table>
         <tr>
-            <td id="logo" colspan="2">
+            <td id="logo" width="50%">
                 <img src="/user/logo.jpg" style="max-width: 190px; height: auto">
+            </td>
+            <td class="text-right" width="50%">
+                <span class="number_document">Devis n° {{ $quote->numerotation }}</span><br>
+                Date : {{ date("d/m/Y", strtotime($quote->date_creation)) }}
             </td>
         </tr>
         <tr>
@@ -130,6 +140,11 @@
 </htmlpageheader>
 
 <htmlpagefooter name="MyFooter1">
+
+    <div class="mention_pied_page">
+        En cas de retard de paiement, il sera appliqué des pénalités à un taux égal à 12% sans que celui-ci ne puisse être inférieur à une fois et demi le taux d'intérêt légal en vigueur en France. Pas d'escompte en cas de paiement anticipé. Une indemnité forfaitaire de 40 € pour frais de recouvrement sera appliquée en cas de retard de paiement conformément aux articles L441-3 et L441-6 du Code de commerce.
+    </div>
+
     <div class="text-right" style="border-top: 1px solid #000000;">{PAGENO}/{nbpg}</div>
 </htmlpagefooter>
 

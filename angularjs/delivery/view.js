@@ -519,7 +519,7 @@ app.controller("ComZeappsCrmDeliveryViewCtrl", ["$scope", "$routeParams", "$loca
 		function print(){
 			zhttp.crm.delivery.pdf.make($scope.delivery.id).then(function(response){
 				if(response.data && response.data != "false"){
-					window.document.location.href = zhttp.crm.delivery.pdf.get() + angular.fromJson(response.data);
+					window.document.location.href = "/" + angular.fromJson(response.data);
 				}
 			});
 		}

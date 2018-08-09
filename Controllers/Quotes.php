@@ -23,6 +23,8 @@ use App\com_zeapps_crm\Models\Deliveries as DeliveriesModel;
 
 use Zeapps\Models\Config;
 
+use Zeapps\Core\Mail;
+
 class Quotes extends Controller
 {
     public function lists()
@@ -30,6 +32,93 @@ class Quotes extends Controller
         $data = array();
         return view("quotes/lists", $data, BASEPATH . 'App/com_zeapps_crm/views/');
     }
+
+
+    public function sendEmail() {
+        $data = array();
+        return view("quotes/send_email", $data, BASEPATH . 'App/com_zeapps_crm/views/');
+    }
+
+    public function sendEmailPost() {
+        // constitution du tableau
+        $data = array();
+
+        if (strcasecmp($_SERVER['REQUEST_METHOD'], 'post') === 0 && stripos($_SERVER['CONTENT_TYPE'], 'application/json') !== FALSE) {
+            // POST is actually in json format, do an internal translation
+            $data = json_decode(file_get_contents('php://input'), true);
+        }
+
+
+
+
+
+        $html = "<html><body>" . nl2br($data["content"]) . "</body></html>";
+        $text = $data["content"];
+        $sender = array() ;//array("name" => "Nicolas Ramel", "email" => "nicolas.ramel@preview-communication.fr");
+
+
+        $data["to"] = str_replace(";", ",", $data["to"]);
+        $tos = explode(",", $data["to"]);
+
+
+        $to = array() ;//array(array("name" => "Nicolas Ramel", "email" => "nicolas.ramel@preview-communication.fr"));
+        foreach ($tos as $to_data) {
+            $to_data = trim($to_data) ;
+            if (filter_var($to_data, FILTER_VALIDATE_EMAIL)) {
+                $to[] = array("email" => $to_data) ;
+            }
+        }
+
+
+        $cc = array();
+        $bcc = array();
+
+
+
+        $attachment = array();
+        if (isset($data["attachments"]) && is_array($data["attachments"])) {
+            foreach ($data["attachments"] as $attach) {
+                $attachment[] = array(
+                    'content' => Storage::getFileBase64($attach["file"]),
+                    'name' => $attach["name"]
+                );
+            }
+        }
+
+
+        $quote = QuotesModel::where("id", $data["id"])->first();
+
+
+
+        $emailModule = array();
+        if ($quote->id_contact) {
+            $emailModule[] = array("module" => "com_zeapps_contact", "id" => "contacts_" . $quote->id_contact);
+        }
+
+        if ($quote->id_company) {
+            $emailModule[] = array("module" => "com_zeapps_contact", "id" => "compagnies_" . $quote->id_company);
+        }
+
+        $emailModule[] = array("module" => "com_zeapps_crm", "id" => "quotes_" . $data["id"]) ;
+
+
+        Mail::send($data["subject"],
+            $html,
+            $text,
+            $sender,
+            $to,
+            $bcc, // Bcc
+            $cc, // Cc
+            $attachment, // Attachment
+            -1, // $id_user_account
+            $emailModule
+        );
+
+        echo json_encode("ok");
+    }
+
+
+
 
     public function view()
     {
@@ -491,19 +580,12 @@ class Quotes extends Controller
         $nomPDF = preg_replace('/\W+/', '_', $nomPDF);
         $nomPDF = trim($nomPDF, '_');
 
-        recursive_mkdir(FCPATH . 'tmp/com_zeapps_crm/quotes/');
 
         //this the the PDF filename that user will get to download
         $pdfFilePath = Storage::getTempFolder() . $nomPDF . '.pdf';
 
-        //set the PDF header
-        //$mpdf = new Mpdf(array('setAutoTopMargin'=>'false'));
+        //set the PDF
         $mpdf = new Mpdf();
-
-        //$mpdf->SetHeader('Devis n° : ' . $data['quote']->numerotation . '|C. Compta : ' . $data['quote']->accounting_number . '|{DATE d/m/Y}');
-
-        //set the PDF footer
-        //$mpdf->SetFooter('{PAGENO}/{nb}');
 
         //generate the PDF from the given html
         $mpdf->WriteHTML($html);

@@ -5,6 +5,9 @@ namespace App\com_zeapps_crm\Models;
 use Illuminate\Database\Eloquent\Model ;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use Zeapps\Core\Storage;
+use Mpdf\Mpdf;
+
 use Zeapps\Models\Config;
 use App\com_zeapps_crm\Models\InvoiceLines;
 use App\com_zeapps_crm\Models\InvoiceLineDetails;
@@ -291,10 +294,9 @@ class Invoices extends Model {
     }
 
     private function finalize() {
-        $pdf = $this->makePDF($this->id, false);
+        $pdf = self::makePDF($this->id, false);
 
-        $this->final_pdf = $pdf ;
-        $this->save() ;
+
 
         $lines = InvoiceLines::where("id_invoice", $this->id)->orderBy("sort")->get();
         $line_details = InvoiceLineDetails::where("id_invoice", $this->id)->get();
@@ -406,80 +408,81 @@ class Invoices extends Model {
     }
 
 
-    public function makePDF($id, $echo = true){
-        /*$this->load->model("Zeapps_invoices", "invoices");
-        $this->load->model("Zeapps_invoice_lines", "invoice_lines");
-        $this->load->model("Zeapps_invoice_line_details", "invoice_line_details");
-
+    public static function makePDF($id, $echo = true){
         $data = [];
 
-        $data['invoice'] = $this->invoices->get($id);
-        $data['lines'] = $this->invoice_lines->order_by('sort')->all(array('id_invoice'=>$id));
-        $line_details = $this->invoice_line_details->all(array('id_order'=>$id));
+        $data['invoice'] = self::where("id", $id)->first();
 
-        $data['showDiscount'] = false;
-        $data['tvas'] = [];
-        foreach($data['lines'] as $line){
-            if(floatval($line->discount) > 0)
-                $data['showDiscount'] = true;
+        if ($data['invoice']->finalized == 1 && $data['invoice']->final_pdf != "" && Storage::isFileExists($data['invoice']->final_pdf)) {
+            $pdfFilePath = $data['invoice']->final_pdf ;
+        } else {
+            $data['lines'] = InvoiceLines::where("id_invoice", $id)->orderBy("sort")->get();
+            $line_details = InvoiceLineDetails::where("id_invoice", $id)->get();
 
-            if($line->id_taxe !== '0'){
-                if(!isset($data['tvas'][$line->id_taxe])){
-                    $data['tvas'][$line->id_taxe] = array(
-                        'ht' => 0,
-                        'value_taxe' => floatval($line->value_taxe)
-                    );
+            $data['showDiscount'] = false;
+            $data['tvas'] = [];
+            foreach ($data['lines'] as $line) {
+                if (floatval($line->discount) > 0)
+                    $data['showDiscount'] = true;
+
+                if ($line->id_taxe !== '0') {
+                    if (!isset($data['tvas'][$line->id_taxe])) {
+                        $data['tvas'][$line->id_taxe] = array(
+                            'ht' => 0,
+                            'value_taxe' => floatval($line->value_taxe)
+                        );
+                    }
+
+                    $data['tvas'][$line->id_taxe]['ht'] += floatval($line->total_ht);
+                    $data['tvas'][$line->id_taxe]['value'] = round(floatval($data['tvas'][$line->id_taxe]['ht']) * ($data['tvas'][$line->id_taxe]['value_taxe'] / 100), 2);
                 }
+            }
+            foreach ($line_details as $line) {
+                if ($line->id_taxe !== '0') {
+                    if (!isset($data['tvas'][$line->id_taxe])) {
+                        $data['tvas'][$line->id_taxe] = array(
+                            'ht' => 0,
+                            'value_taxe' => floatval($line->value_taxe)
+                        );
+                    }
 
-                $data['tvas'][$line->id_taxe]['ht'] += floatval($line->total_ht);
-                $data['tvas'][$line->id_taxe]['value'] = round(floatval($data['tvas'][$line->id_taxe]['ht']) * ($data['tvas'][$line->id_taxe]['value_taxe'] / 100), 2);
+                    $data['tvas'][$line->id_taxe]['ht'] += floatval($line->total_ht);
+                    $data['tvas'][$line->id_taxe]['value'] = round(floatval($data['tvas'][$line->id_taxe]['ht']) * ($data['tvas'][$line->id_taxe]['value_taxe'] / 100), 2);
+                }
+            }
+
+            //load the view and saved it into $html variable
+            $html = view("invoices/PDF", $data, BASEPATH . 'App/com_zeapps_crm/views/')->getContent();
+
+            $nomPDF = $data['invoice']->name_company . '_' . $data['invoice']->numerotation . '_' . $data['invoice']->libelle;
+            $nomPDF = preg_replace('/\W+/', '_', $nomPDF);
+            $nomPDF = trim($nomPDF, '_');
+
+
+            //this the the PDF filename that user will get to download
+            if ($data['invoice']->finalized == 1) {
+                $pdfFilePath = Storage::getFolder("crm_invoice") . $nomPDF . '.pdf';
+            } else {
+                $pdfFilePath = Storage::getTempFolder() . $nomPDF . '.pdf';
+            }
+
+
+            //set the PDF header
+            $mpdf = new Mpdf();
+
+            //generate the PDF from the given html
+            $mpdf->WriteHTML($html);
+
+            //download it.
+            $mpdf->Output(BASEPATH . $pdfFilePath, "F");
+
+            if ($data['invoice']->finalized == 1) {
+                $data['invoice']->final_pdf = $pdfFilePath ;
+                $data['invoice']->save() ;
             }
         }
-        foreach($line_details as $line){
-            if($line->id_taxe !== '0'){
-                if(!isset($data['tvas'][$line->id_taxe])){
-                    $data['tvas'][$line->id_taxe] = array(
-                        'ht' => 0,
-                        'value_taxe' => floatval($line->value_taxe)
-                    );
-                }
-
-                $data['tvas'][$line->id_taxe]['ht'] += floatval($line->total_ht);
-                $data['tvas'][$line->id_taxe]['value'] = round(floatval($data['tvas'][$line->id_taxe]['ht']) * ($data['tvas'][$line->id_taxe]['value_taxe'] / 100), 2);
-            }
-        }
-
-        //load the view and saved it into $html variable
-        $html = $this->load->view('invoices/PDF', $data, true);
-
-        $nomPDF = $data['invoice']->name_company.'_'.$data['invoice']->numerotation.'_'.$data['invoice']->libelle;
-        $nomPDF = preg_replace('/\W+/', '_', $nomPDF);
-        $nomPDF = trim($nomPDF, '_');
-
-        recursive_mkdir(FCPATH . 'tmp/com_zeapps_crm/invoices/');
-
-        //this the the PDF filename that user will get to download
-        $pdfFilePath = FCPATH . 'tmp/com_zeapps_crm/invoices/'.$nomPDF.'.pdf';
-
-        //set the PDF header
-        $this->M_pdf->pdf->SetHeader('Facture €<br>n° : '.$data['invoice']->numerotation.'|C. Compta : '.$data['invoice']->accounting_number.'|{DATE d/m/Y}');
-
-        //set the PDF footer
-        $this->M_pdf->pdf->SetFooter('{PAGENO}/{nb}');
-
-        //generate the PDF from the given html
-        $this->M_pdf->pdf->WriteHTML($html);
-
-        //download it.
-        $this->M_pdf->pdf->Output($pdfFilePath, "F");
-
-        if($echo) {
-            echo json_encode($nomPDF);
-        }*/
 
 
-        $nomPDF = "test.pdf" ;
-
-        return $nomPDF;
+        return $pdfFilePath;
     }
 }

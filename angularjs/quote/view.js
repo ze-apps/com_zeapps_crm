@@ -59,6 +59,7 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
 		$scope.deleteDocument = deleteDocument;
 
 		$scope.print = print;
+		$scope.sendByMail = sendByMail;
 
 
         $scope.status = zhttp.crm.statuts.getAll() ;
@@ -526,6 +527,13 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                 }
             });
 		}
+
+
+
+		function sendByMail() {
+            $location.path("/ng/com_zeapps/quote_send_email/" + $routeParams.id);
+		}
+
 
 		function print(){
 			zhttp.crm.quote.pdf.make($scope.quote.id).then(function(response){
