@@ -531,7 +531,46 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
 
 
 		function sendByMail() {
-            $location.path("/ng/com_zeapps/quote_send_email/" + $routeParams.id);
+
+			var options = {} ;
+
+            options.subject = "Devis : " + $scope.quote.numerotation ;
+
+            options.content = "Bonjour,\n"
+                + "\n"
+                + "veuillez trouver ci-joint notre devis n° " + $scope.quote.numerotation
+                + "\n"
+                + "Cordialement\n"
+                + $scope.user.firstname + " " + $scope.user.lastname
+            ;
+
+            options.modules = [] ;
+            options.modules.push({module:"com_zeapps_crm", id:"quotes_" + $scope.quote.id}) ;
+
+            if ($scope.quote.id_contact) {
+                options.modules.push({module:"com_zeapps_contact", id:"contacts_" + $scope.quote.id_contact}) ;
+            }
+
+            if ($scope.quote.id_company) {
+                options.modules.push({module:"com_zeapps_contact", id:"compagnies_" + $scope.quote.id_company}) ;
+            }
+
+
+
+            options.attachments = [];
+            zhttp.crm.quote.pdf.make($scope.quote.id).then(function (response) {
+                if (response.data && response.data != "false") {
+                    var url_file = angular.fromJson(response.data);
+                    options.attachments.push({file: url_file, url: "/" + url_file, name: "quote.pdf"});
+
+
+                    zeapps_modal.loadModule("zeapps", "email_writer", options, function (objReturn) {
+                        if (objReturn) {
+
+                        }
+                    });
+                }
+            });
 		}
 
 
