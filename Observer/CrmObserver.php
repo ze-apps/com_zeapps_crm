@@ -3,6 +3,7 @@
 namespace App\com_zeapps_crm\Observer;
 
 use Zeapps\Core\iObserver ;
+use Zeapps\Models\CronModel;
 
 class CrmObserver implements iObserver
 {
@@ -14,6 +15,8 @@ class CrmObserver implements iObserver
             $callBack('super utile pour envoyer des onglets dans les vues') ;
         }
     }
+
+
 
 
     public static function getHook() {
@@ -117,6 +120,13 @@ class CrmObserver implements iObserver
 
 
 
+
+        return $retour ;
+    }
+
+
+    public static function getCron() {
+        $retour = array();
 
         return $retour ;
     }
