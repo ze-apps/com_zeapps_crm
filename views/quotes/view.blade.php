@@ -1,10 +1,4 @@
-<div id="breadcrumb">Devis
-    <div class="pull-right">
-        <button type="button" type="button" class="btn btn-primary btn-sm" ng-click="sendByMail()">
-            Envoyer par email
-        </button>
-    </div>
-</div>
+<div id="breadcrumb">Devis</div>
 
 
 <div id="content">
@@ -66,6 +60,12 @@
                                 data-template="templateEdit"
                                 data-title="Modifier le devis"></ze-btn>
                         <ze-btn fa="download" color="primary" hint="PDF" direction="left" ng-click="print()"></ze-btn>
+
+
+
+                        <ze-btn fa="envelope" color="primary" hint="Envoyer par email" direction="left" ng-click="sendByMail()"></ze-btn>
+
+
                         <ze-btn fa="files-o" color="success" hint="Dupliquer" direction="left"
                                 ng-click="transform()"></ze-btn>
 
@@ -131,6 +131,7 @@
             </li>
             <li ng-class="navigationState =='document' ? 'active' : ''"><a href="#" ng-click="setTab('document')">Documents</a>
             </li>
+            <li ng-class="navigationState =='email' ? 'active' : ''"><a href="#" ng-click="setTab('email')">Email</a></li>
         </ul>
 
         <div ng-show="navigationState =='body'">
@@ -432,6 +433,11 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+
+        <div ng-if="navigationState=='email'">
+            <div ng-include="'/zeapps/email/list_partial'" ng-init="module = 'com_zeapps_crm'; id = 'quotes_' + quote.id"></div>
         </div>
 
     </form>

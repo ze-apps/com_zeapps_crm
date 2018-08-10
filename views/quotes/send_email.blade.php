@@ -29,7 +29,7 @@
             <div class="col-md-12">
                 <div class="form-group">
                     <label>Message</label>
-                    <textarea class="form-control" ng-model="form.content" row="10"></textarea>
+                    <textarea class="form-control" ng-model="form.content" rows="10"></textarea>
                 </div>
             </div>
 

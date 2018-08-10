@@ -98,6 +98,7 @@
             <li ng-class="navigationState =='condition' ? 'active' : ''"><a href="#" ng-click="setTab('condition')">Conditions</a></li>
             <li ng-class="navigationState =='activity' ? 'active' : ''"><a href="#" ng-click="setTab('activity')">Activité</a></li>
             <li ng-class="navigationState =='document' ? 'active' : ''"><a href="#" ng-click="setTab('document')">Documents</a></li>
+            <li ng-class="navigationState =='email' ? 'active' : ''"><a href="#" ng-click="setTab('email')">Email</a></li>
         </ul>
 
         <div ng-show="navigationState =='body'">
@@ -381,6 +382,11 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+
+        <div ng-if="navigationState=='email'">
+            <div ng-include="'/zeapps/email/list_partial'" ng-init="module = 'com_zeapps_crm'; id = 'deliveries_' + delivery.id"></div>
         </div>
 
     </form>

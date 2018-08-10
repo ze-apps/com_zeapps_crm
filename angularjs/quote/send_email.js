@@ -3,12 +3,27 @@ app.controller("ComZeappsCrmQuoteSendEmailCtrl", ["$scope", "$routeParams", "$ro
 
         $scope.attachments = [];
 
+        $scope.form = {};
+
+
         if ($routeParams.id !== undefined && $routeParams.id !== 0) {
             // demande le chemin vers le PDF du document
 
             zhttp.crm.quote.get($routeParams.id).then(function (response) {
                 if (response.data && response.data != "false") {
                     $scope.quote = response.data.quote;
+
+
+
+                    $scope.form.subject = "Devis : " + $scope.quote.numerotation ;
+                    $scope.form.content = "Bonjour,\n"
+                        + "\n"
+                        + "veuillez trouver ci-joint notre devis n° " + $scope.quote.numerotation
+                        + "\n"
+                        + "Cordialement\n"
+                        + $scope.user.firstname + " " + $scope.user.lastname
+                    ;
+
 
                     $scope.attachments = [];
                     zhttp.crm.quote.pdf.make($scope.quote.id).then(function (response) {
