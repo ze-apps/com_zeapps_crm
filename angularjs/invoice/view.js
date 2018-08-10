@@ -59,6 +59,7 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
 		$scope.deleteDocument = deleteDocument;
 
 		$scope.print = print;
+        $scope.sendByMail = sendByMail;
 
 
 		//////////////////// INIT ////////////////////
@@ -590,6 +591,50 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
                 }
             });
 		}
+
+
+        function sendByMail() {
+
+            var options = {} ;
+
+            options.subject = "Facture : " + $scope.invoice.numerotation ;
+
+            options.content = "Bonjour,\n"
+                + "\n"
+                + "veuillez trouver ci-joint notre facture n° " + $scope.invoice.numerotation
+                + "\n"
+                + "Cordialement\n"
+                + $scope.user.firstname + " " + $scope.user.lastname
+            ;
+
+            options.modules = [] ;
+            options.modules.push({module:"com_zeapps_crm", id:"invoices_" + $scope.invoice.id}) ;
+
+            if ($scope.invoice.id_contact) {
+                options.modules.push({module:"com_zeapps_contact", id:"contacts_" + $scope.invoice.id_contact}) ;
+            }
+
+            if ($scope.invoice.id_company) {
+                options.modules.push({module:"com_zeapps_contact", id:"compagnies_" + $scope.invoice.id_company}) ;
+            }
+
+
+
+            options.attachments = [];
+            zhttp.crm.invoice.pdf.make($scope.invoice.id).then(function (response) {
+                if (response.data && response.data != "false") {
+                    var url_file = angular.fromJson(response.data);
+                    options.attachments.push({file: url_file, url: "/" + url_file, name: "invoice.pdf"});
+
+
+                    zeapps_modal.loadModule("zeapps", "email_writer", options, function (objReturn) {
+                        if (objReturn) {
+
+                        }
+                    });
+                }
+            });
+        }
 
 		function print(){
             zhttp.crm.invoice.pdf.make($scope.invoice.id).then(function (response) {

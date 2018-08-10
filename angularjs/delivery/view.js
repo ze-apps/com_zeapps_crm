@@ -59,6 +59,7 @@ app.controller("ComZeappsCrmDeliveryViewCtrl", ["$scope", "$routeParams", "$loca
 		$scope.deleteDocument = deleteDocument;
 
 		$scope.print = print;
+        $scope.sendByMail = sendByMail;
 
 
 		//////////////////// INIT ////////////////////
@@ -515,6 +516,50 @@ app.controller("ComZeappsCrmDeliveryViewCtrl", ["$scope", "$routeParams", "$loca
                 }
             });
 		}
+
+
+        function sendByMail() {
+
+            var options = {} ;
+
+            options.subject = "Bon de livraison : " + $scope.delivery.numerotation ;
+
+            options.content = "Bonjour,\n"
+                + "\n"
+                + "veuillez trouver ci-joint notre bon de livraison n° " + $scope.delivery.numerotation
+                + "\n"
+                + "Cordialement\n"
+                + $scope.user.firstname + " " + $scope.user.lastname
+            ;
+
+            options.modules = [] ;
+            options.modules.push({module:"com_zeapps_crm", id:"deliveries_" + $scope.delivery.id}) ;
+
+            if ($scope.delivery.id_contact) {
+                options.modules.push({module:"com_zeapps_contact", id:"contacts_" + $scope.delivery.id_contact}) ;
+            }
+
+            if ($scope.delivery.id_company) {
+                options.modules.push({module:"com_zeapps_contact", id:"compagnies_" + $scope.delivery.id_company}) ;
+            }
+
+
+
+            options.attachments = [];
+            zhttp.crm.delivery.pdf.make($scope.delivery.id).then(function (response) {
+                if (response.data && response.data != "false") {
+                    var url_file = angular.fromJson(response.data);
+                    options.attachments.push({file: url_file, url: "/" + url_file, name: "delivery.pdf"});
+
+
+                    zeapps_modal.loadModule("zeapps", "email_writer", options, function (objReturn) {
+                        if (objReturn) {
+
+                        }
+                    });
+                }
+            });
+        }
 
 		function print(){
 			zhttp.crm.delivery.pdf.make($scope.delivery.id).then(function(response){
