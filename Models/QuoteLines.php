@@ -27,8 +27,8 @@ class QuoteLines extends Model
         $this->fieldModelInfo = new ModelHelper();
         $this->fieldModelInfo->increments('id');
         $this->fieldModelInfo->integer('id_quote')->default(0);
+        $this->fieldModelInfo->integer('id_parent')->default(0);
         $this->fieldModelInfo->string('type', 255)->default("");
-        $this->fieldModelInfo->tinyInteger('has_detail', false)->default(0);
         $this->fieldModelInfo->integer('id_product')->default(0);
         $this->fieldModelInfo->string('ref', 255)->default("");
         $this->fieldModelInfo->string('designation_title', 255)->default("");
@@ -41,6 +41,7 @@ class QuoteLines extends Model
         $this->fieldModelInfo->string('accounting_number')->default("");
         $this->fieldModelInfo->decimal('total_ht', 8, 2)->default(0);
         $this->fieldModelInfo->decimal('total_ttc', 8, 2)->default(0);
+        $this->fieldModelInfo->tinyInteger('update_price_from_subline', false)->default(0);
         $this->fieldModelInfo->integer('sort')->default(0);
         $this->fieldModelInfo->timestamps();
         $this->fieldModelInfo->softDeletes();

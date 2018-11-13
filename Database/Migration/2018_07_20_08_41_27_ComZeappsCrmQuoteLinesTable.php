@@ -9,11 +9,11 @@ class ComZeappsCrmQuoteLinesTable extends Migration
 
     public function up()
     {
-       Capsule::schema()->create('com_zeapps_crm_quote_lines', function (Blueprint $table) {
+        Capsule::schema()->create('com_zeapps_crm_quote_lines', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('id_quote')->default(0);
+            $table->integer('id_parent')->default(0);
             $table->string('type', 255)->default("");
-            $table->tinyInteger('has_detail', false)->default(0);
             $table->integer('id_product')->default(0);
             $table->string('ref', 255)->default("");
             $table->string('designation_title', 255)->default("");
@@ -26,6 +26,7 @@ class ComZeappsCrmQuoteLinesTable extends Migration
             $table->string('accounting_number')->default("");
             $table->decimal('total_ht', 8, 2)->default(0);
             $table->decimal('total_ttc', 8, 2)->default(0);
+            $table->tinyInteger('update_price_from_subline', false)->default(0);
             $table->integer('sort')->default(0);
             $table->timestamps();
             $table->softDeletes();
