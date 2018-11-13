@@ -42,6 +42,7 @@ class QuoteLines extends Model
         $this->fieldModelInfo->decimal('total_ht', 8, 2)->default(0);
         $this->fieldModelInfo->decimal('total_ttc', 8, 2)->default(0);
         $this->fieldModelInfo->tinyInteger('update_price_from_subline', false)->default(0);
+        $this->fieldModelInfo->tinyInteger('show_subline', false)->default(0);
         $this->fieldModelInfo->integer('sort')->default(0);
         $this->fieldModelInfo->timestamps();
         $this->fieldModelInfo->softDeletes();

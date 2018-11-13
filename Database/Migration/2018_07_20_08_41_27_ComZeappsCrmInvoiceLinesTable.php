@@ -27,6 +27,7 @@ class ComZeappsCrmInvoiceLinesTable extends Migration
             $table->decimal('total_ht', 8, 2)->default(0);
             $table->decimal('total_ttc', 8, 2)->default(0);
             $table->tinyInteger('update_price_from_subline', false)->default(0);
+            $table->tinyInteger('show_subline', false)->default(0);
             $table->integer('sort')->default(0);
 
             $table->timestamps();
