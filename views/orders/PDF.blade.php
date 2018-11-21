@@ -256,14 +256,6 @@
                             <?php echo number_format(floatval($order->total_prediscount_ht), 2, ',', ' '); ?>
                         </td>
                     </tr>
-                    <tr>
-                        <td class="text-left">
-                            Total TTC av remise
-                        </td>
-                        <td class="text-right">
-                            <?php echo number_format(floatval($order->total_prediscount_ttc), 2, ',', ' '); ?>
-                        </td>
-                    </tr>
                     <?php if(floatval($order->global_discount) > 0){ ?>
                     <tr>
                         <td class="text-left">

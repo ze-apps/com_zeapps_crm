@@ -2,7 +2,7 @@
 
 namespace App\com_zeapps_crm\Models;
 
-use Illuminate\Database\Eloquent\Model ;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use Zeapps\Core\Storage;
@@ -10,7 +10,6 @@ use Mpdf\Mpdf;
 
 use Zeapps\Models\Config;
 use App\com_zeapps_crm\Models\InvoiceLines;
-use App\com_zeapps_crm\Models\InvoiceLineDetails;
 use App\com_zeapps_contact\Models\Modalities;
 use App\com_zeapps_crm\Models\CreditBalanceDetails;
 use App\com_zeapps_crm\Models\AccountingEntries;
@@ -20,22 +19,20 @@ use Zeapps\Core\ModelHelper;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 
-class Invoices extends Model {
+class Invoices extends Model
+{
     use SoftDeletes;
 
     static protected $_table = 'com_zeapps_crm_invoices';
-    protected $table ;
+    protected $table;
 
 
-    protected $fieldModelInfo ;
-
-
+    protected $fieldModelInfo;
 
 
     public function __construct(array $attributes = [])
     {
         $this->table = self::$_table;
-
 
 
         // stock la liste des champs
@@ -86,13 +83,12 @@ class Invoices extends Model {
         $this->fieldModelInfo->string('reference_client', 255)->default("");
 
 
-
-
         parent::__construct($attributes);
     }
 
 
-    public static function createFrom($src){
+    public static function createFrom($src)
+    {
         unset($src->id);
         unset($src->numerotation);
         unset($src->created_at);
@@ -118,7 +114,7 @@ class Invoices extends Model {
         }
 
 
-        $invoice = new Invoices() ;
+        $invoice = new Invoices();
         foreach (self::getSchema() as $key) {
             if (isset($src->$key)) {
                 $invoice->$key = $src->$key;
@@ -126,15 +122,30 @@ class Invoices extends Model {
         }
         $invoice->date_creation = date('Y-m-d');
         $invoice->finalized = 0;
-        $invoice->save() ;
+        $invoice->save();
         $id = $invoice->id;
 
 
-        $new_id_lines = [];
+        if (isset($src->lines) && $src->lines) {
+            self::createFromLine($src->lines, $id, 0);
+        }
 
-        if(isset($src->lines)){
-            foreach($src->lines as $line){
-                $old_id = $line->id;
+        return array(
+            "id" => $id,
+            "numerotation" => $src->numerotation
+        );
+    }
+
+    private static function createFromLine($lines, $idDocument, $idParent)
+    {
+        if ($lines) {
+            foreach ($lines as $line) {
+                //$old_id = $line->id;
+                if (isset($line->sublines)) {
+                    $sublines = $line->sublines;
+                } else {
+                    $sublines = false;
+                }
 
                 unset($line->id);
                 unset($line->created_at);
@@ -142,62 +153,39 @@ class Invoices extends Model {
                 unset($line->deleted_at);
 
 
-                $invoiceLine = new InvoiceLines() ;
+                $invoiceLine = new InvoiceLines();
                 foreach (InvoiceLines::getSchema() as $key) {
                     if (isset($line->$key)) {
                         $invoiceLine->$key = $line->$key;
                     }
                 }
-                $invoiceLine->id_invoice = $id;
-                $invoiceLine->save() ;
+                $invoiceLine->id_invoice = $idDocument;
+                $invoiceLine->id_parent = $idParent;
+                $invoiceLine->save();
 
-
-                $new_id_lines[$old_id] = $invoiceLine->id;
-            }
-        }
-
-        if(isset($src->line_details)){
-            foreach($src->line_details as $line) {
-                unset($line->id);
-                unset($line->created_at);
-                unset($line->updated_at);
-                unset($line->deleted_at);
-
-
-                $invoiceLineDetail = new InvoiceLineDetails() ;
-                foreach (InvoiceLineDetails::getSchema() as $key) {
-                    if (isset($line->$key)) {
-                        $invoiceLineDetail->$key = $line->$key;
-                    }
+                if (is_array($sublines)) {
+                    self::createFromLine($sublines, $idDocument, $invoiceLine->id);
                 }
-
-                $invoiceLineDetail->id_invoice = $id;
-                $invoiceLineDetail->id_line = $new_id_lines[$line->id_line];
-
-                $invoiceLineDetail->save() ;
             }
         }
-
-        return array(
-            "id" =>$id,
-            "numerotation" => $src->numerotation
-        );
     }
 
-    public static function get_numerotation($test = false){
-        if($numerotation = Config::where("id", "crm_invoice_numerotation")->first()) {
-            $valueSend = $numerotation->value ;
-            if(!$test) {
+
+    public static function get_numerotation($test = false)
+    {
+        if ($numerotation = Config::where("id", "crm_invoice_numerotation")->first()) {
+            $valueSend = $numerotation->value;
+            if (!$test) {
                 $numerotation->value++;
                 $numerotation->save();
             }
             return $valueSend;
-        } else{
-            if(!$test) {
-                $numerotation = new Config() ;
-                $numerotation->id = 'crm_invoice_numerotation' ;
-                $numerotation->value = 2 ;
-                $numerotation->save() ;
+        } else {
+            if (!$test) {
+                $numerotation = new Config();
+                $numerotation->id = 'crm_invoice_numerotation';
+                $numerotation->value = 2;
+                $numerotation->save();
             }
             return 1;
         }
@@ -205,7 +193,7 @@ class Invoices extends Model {
 
     public static function parseFormat($result = null, $num = null)
     {
-        if ($result && $num){
+        if ($result && $num) {
             $result = preg_replace_callback('/[[dDjzmMnyYgGhH\-_]*(x+)[dDjzmMnyYgGhH\-_]*]/',
                 function ($matches) use ($num) {
                     return str_replace($matches[1], substr($num, -strlen($matches[1])), $matches[0]);
@@ -241,24 +229,20 @@ class Invoices extends Model {
     }
 
 
-
-    public static function getSchema() {
-        return $schema = Capsule::schema()->getColumnListing(self::$_table) ;
+    public static function getSchema()
+    {
+        return $schema = Capsule::schema()->getColumnListing(self::$_table);
     }
 
-    public function save(array $options = []) {
+    public function save(array $options = [])
+    {
 
 
-        $finalized_orignal = $this->getOriginal("finalized") ;
-
+        $finalized_orignal = $this->getOriginal("finalized");
 
 
         /******** clean data **********/
-        $this->fieldModelInfo->cleanData($this) ;
-
-
-
-
+        $this->fieldModelInfo->cleanData($this);
 
 
         /**** set a document number ****/
@@ -268,11 +252,10 @@ class Invoices extends Model {
             $this->numerotation = self::parseFormat($format, $num);
 
             /**** to delete unwanted field ****/
-            $this->fieldModelInfo->removeFieldUnwanted($this) ;
+            $this->fieldModelInfo->removeFieldUnwanted($this);
             /**** end to delete unwanted field ****/
             parent::save($options);
         }
-
 
 
         if ($this->finalized == 1 && $finalized_orignal != 1) {
@@ -280,35 +263,28 @@ class Invoices extends Model {
         }
 
 
-
-
-
-
-
-
         /**** to delete unwanted field ****/
-        $this->fieldModelInfo->removeFieldUnwanted($this) ;
+        $this->fieldModelInfo->removeFieldUnwanted($this);
         /**** end to delete unwanted field ****/
 
         return parent::save($options);
     }
 
-    private function finalize() {
+    private function finalize()
+    {
         $pdf = self::makePDF($this->id, false);
 
 
-
         $lines = InvoiceLines::where("id_invoice", $this->id)->orderBy("sort")->get();
-        $line_details = InvoiceLineDetails::where("id_invoice", $this->id)->get();
 
-        if(($modality = Modalities::get($this->id_modality)) && ((int) $modality->situation !== 0)){
-            $creditBalanceDetails = new CreditBalanceDetails() ;
-            $creditBalanceDetails->id_invoice = $this->id ;
-            $creditBalanceDetails->paid = $this->total_ttc ;
-            $creditBalanceDetails->id_modality = $this->id_modality ;
-            $creditBalanceDetails->label_modality = $this->label_modality ;
-            $creditBalanceDetails->date_payment = date('Y-m-d')." 00:00:00" ;
-            $creditBalanceDetails->save() ;
+        if (($modality = Modalities::get($this->id_modality)) && ((int)$modality->situation !== 0)) {
+            $creditBalanceDetails = new CreditBalanceDetails();
+            $creditBalanceDetails->id_invoice = $this->id;
+            $creditBalanceDetails->paid = $this->total_ttc;
+            $creditBalanceDetails->id_modality = $this->id_modality;
+            $creditBalanceDetails->label_modality = $this->label_modality;
+            $creditBalanceDetails->date_payment = date('Y-m-d') . " 00:00:00";
+            $creditBalanceDetails->save();
         }
 
 
@@ -317,7 +293,7 @@ class Invoices extends Model {
         $entries = [];
         $tvas = [];
         foreach ($lines as $line) {
-            if ((int) $line->has_detail === 0) {
+            if ((int)$line->has_detail === 0) {
                 if (!isset($entries[$line->accounting_number])) {
                     $entries[$line->accounting_number] = 0;
                 }
@@ -337,25 +313,6 @@ class Invoices extends Model {
                 }
             }
         }
-        foreach ($line_details as $line) {
-            if (!isset($entries[$line->accounting_number])) {
-                $entries[$line->accounting_number] = 0;
-            }
-
-            $entries[$line->accounting_number] += floatval($line->total_ht);
-
-            if ($line->id_taxe !== '0') {
-                if (!isset($tvas[$line->id_taxe])) {
-                    $tvas[$line->id_taxe] = array(
-                        'ht' => 0,
-                        'value_taxe' => floatval($line->value_taxe)
-                    );
-                }
-
-                $tvas[$line->id_taxe]['ht'] += floatval($line->total_ht);
-                $tvas[$line->id_taxe]['value'] = round(floatval($tvas[$line->id_taxe]['ht']) * ($tvas[$line->id_taxe]['value_taxe'] / 100), 2);
-            }
-        }
 
         foreach ($tvas as $id_taxe => $tva) {
             $taxe = Taxes::where("id", $id_taxe)->first();
@@ -370,54 +327,54 @@ class Invoices extends Model {
         foreach ($entries as $accounting_number => $sum) {
 
             $accountingEntries = new AccountingEntries();
-            $accountingEntries->id_invoice = $this->id ;
-            $accountingEntries->accounting_number = $accounting_number ;
-            $accountingEntries->number_document = $this->numerotation ;
-            $accountingEntries->label = $label_entry ;
+            $accountingEntries->id_invoice = $this->id;
+            $accountingEntries->accounting_number = $accounting_number;
+            $accountingEntries->number_document = $this->numerotation;
+            $accountingEntries->label = $label_entry;
             if ($sum >= 0) {
-                $accountingEntries->credit = $sum ;
-                $accountingEntries->debit = 0 ;
+                $accountingEntries->credit = $sum;
+                $accountingEntries->debit = 0;
             } else {
-                $accountingEntries->credit = 0 ;
-                $accountingEntries->debit = $sum * -1 ;
+                $accountingEntries->credit = 0;
+                $accountingEntries->debit = $sum * -1;
             }
 
-            $accountingEntries->code_journal = 'VE' ;
-            $accountingEntries->date_writing = $this->date_creation ;
-            $accountingEntries->date_limit = $this->date_limit ;
-            $accountingEntries->save() ;
+            $accountingEntries->code_journal = 'VE';
+            $accountingEntries->date_writing = $this->date_creation;
+            $accountingEntries->date_limit = $this->date_limit;
+            $accountingEntries->save();
         }
 
         $accountingEntries = new AccountingEntries();
-        $accountingEntries->id_invoice = $this->id ;
-        $accountingEntries->accounting_number = $this->accounting_number ;
-        $accountingEntries->number_document = $this->numerotation ;
-        $accountingEntries->label = $label_entry ;
+        $accountingEntries->id_invoice = $this->id;
+        $accountingEntries->accounting_number = $this->accounting_number;
+        $accountingEntries->number_document = $this->numerotation;
+        $accountingEntries->label = $label_entry;
         if ($this->total_ttc >= 0) {
-            $accountingEntries->credit = 0 ;
-            $accountingEntries->debit = $this->total_ttc ;
+            $accountingEntries->credit = 0;
+            $accountingEntries->debit = $this->total_ttc;
         } else {
-            $accountingEntries->credit = $this->total_ttc * -1 ;
-            $accountingEntries->debit = 0 ;
+            $accountingEntries->credit = $this->total_ttc * -1;
+            $accountingEntries->debit = 0;
         }
 
-        $accountingEntries->code_journal = 'VE' ;
-        $accountingEntries->date_writing = $this->date_creation ;
-        $accountingEntries->date_limit = $this->date_limit ;
-        $accountingEntries->save() ;
+        $accountingEntries->code_journal = 'VE';
+        $accountingEntries->date_writing = $this->date_creation;
+        $accountingEntries->date_limit = $this->date_limit;
+        $accountingEntries->save();
     }
 
 
-    public static function makePDF($id, $echo = true){
+    public static function makePDF($id, $echo = true)
+    {
         $data = [];
 
         $data['invoice'] = self::where("id", $id)->first();
 
         if ($data['invoice']->finalized == 1 && $data['invoice']->final_pdf != "" && Storage::isFileExists($data['invoice']->final_pdf)) {
-            $pdfFilePath = $data['invoice']->final_pdf ;
+            $pdfFilePath = $data['invoice']->final_pdf;
         } else {
             $data['lines'] = InvoiceLines::where("id_invoice", $id)->orderBy("sort")->get();
-            $line_details = InvoiceLineDetails::where("id_invoice", $id)->get();
 
             $data['showDiscount'] = false;
             $data['tvas'] = [];
@@ -425,19 +382,6 @@ class Invoices extends Model {
                 if (floatval($line->discount) > 0)
                     $data['showDiscount'] = true;
 
-                if ($line->id_taxe !== '0') {
-                    if (!isset($data['tvas'][$line->id_taxe])) {
-                        $data['tvas'][$line->id_taxe] = array(
-                            'ht' => 0,
-                            'value_taxe' => floatval($line->value_taxe)
-                        );
-                    }
-
-                    $data['tvas'][$line->id_taxe]['ht'] += floatval($line->total_ht);
-                    $data['tvas'][$line->id_taxe]['value'] = round(floatval($data['tvas'][$line->id_taxe]['ht']) * ($data['tvas'][$line->id_taxe]['value_taxe'] / 100), 2);
-                }
-            }
-            foreach ($line_details as $line) {
                 if ($line->id_taxe !== '0') {
                     if (!isset($data['tvas'][$line->id_taxe])) {
                         $data['tvas'][$line->id_taxe] = array(
@@ -477,8 +421,8 @@ class Invoices extends Model {
             $mpdf->Output(BASEPATH . $pdfFilePath, "F");
 
             if ($data['invoice']->finalized == 1) {
-                $data['invoice']->final_pdf = $pdfFilePath ;
-                $data['invoice']->save() ;
+                $data['invoice']->final_pdf = $pdfFilePath;
+                $data['invoice']->save();
             }
         }
 

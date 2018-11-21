@@ -42,12 +42,34 @@ class OrderLines extends Model {
         $this->fieldModelInfo->decimal('total_ttc', 8, 2)->default(0);
         $this->fieldModelInfo->tinyInteger('update_price_from_subline', false)->default(0);
         $this->fieldModelInfo->tinyInteger('show_subline', false)->default(0);
+        $this->fieldModelInfo->decimal('price_unit_ttc_subline', 8, 2)->default(0);
         $this->fieldModelInfo->integer('sort')->default(0);
 
         $this->fieldModelInfo->timestamps();
         $this->fieldModelInfo->softDeletes();
 
         parent::__construct($attributes);
+    }
+
+
+    public static function getFromOrder($id_order) {
+        $lines = OrderLines::where('id_order', $id_order)->get() ;
+
+        foreach ($lines as &$line) {
+            $line->sublines = self::getSubLine($line->id) ;
+        }
+
+        return $lines ;
+    }
+
+    public static function getSubLine($idLine) {
+        $sublines = OrderLines::where("id_parent", $idLine)->orderBy("sort")->get() ;
+
+        foreach ($sublines as &$subline) {
+            $subline->sublines = self::getSubLine($subline->id) ;
+        }
+
+        return $sublines ;
     }
 
     public static function getSchema() {

@@ -12,8 +12,10 @@ class ComZeappsCrmProductProductsTable extends Migration
        Capsule::schema()->create('com_zeapps_crm_product_products', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('id_cat')->default(0);
+            $table->integer('id_parent')->default(0);
             $table->integer('id_stock')->default(0);
-            $table->tinyInteger('compose')->default(0);
+            $table->string('type_product', 255)->default("");
+            $table->tinyInteger('compose')->default(0); // TODO : à supprimer (contrôler que ce n'est pas utilisé)
             $table->string('ref', 255)->default("");
             $table->string('name', 255)->default("");
             $table->text('description');
@@ -23,6 +25,10 @@ class ComZeappsCrmProductProductsTable extends Migration
             $table->integer('id_taxe')->default(0);
             $table->decimal('value_taxe', 8, 2)->default(0);
             $table->string('accounting_number', 255)->default("");
+            $table->tinyInteger('update_price_from_subline', false)->default(0);
+            $table->tinyInteger('show_subline', false)->default(0);
+            $table->decimal('price_unit_ttc_subline', 8, 2)->default(0);
+            $table->integer('sort')->default(0);
             $table->mediumtext('extra');
             $table->timestamps();
             $table->softDeletes();

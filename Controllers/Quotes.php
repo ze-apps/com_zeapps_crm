@@ -11,7 +11,6 @@ use Mpdf\Mpdf;
 
 use App\com_zeapps_crm\Models\Quotes as QuotesModel;
 use App\com_zeapps_crm\Models\QuoteLines;
-use App\com_zeapps_crm\Models\QuoteLineDetails;
 use App\com_zeapps_crm\Models\QuoteDocuments;
 use App\com_zeapps_crm\Models\QuoteActivities;
 use App\com_zeapps_crm\Models\CreditBalances;
@@ -79,13 +78,11 @@ class Quotes extends Controller
 
     public function get(Request $request)
     {
-
         $id = $request->input('id', 0);
 
         $quote = QuotesModel::where('id', $id)->first();
 
-        $lines = QuoteLines::orderBy('sort')->where('id_quote', $id)->get();
-        $line_details = QuoteLineDetails::where('id_quote', $id)->get();
+        $lines = QuoteLines::getFromQuote($id);
         $documents = QuoteDocuments::where('id_quote', $id)->get();
         $activities = QuoteActivities::where('id_quote', $id)->get();
 
@@ -102,7 +99,6 @@ class Quotes extends Controller
         echo json_encode(array(
             'quote' => $quote,
             'lines' => $lines,
-            'line_details' => $line_details,
             'documents' => $documents,
             'activities' => $activities,
             'credits' => $credits
@@ -242,7 +238,6 @@ class Quotes extends Controller
 
         if ($id) {
             QuoteLines::where('id_quote', $id)->delete();
-            QuoteLineDetails::where('id_quote', $id)->delete();
 
             $documents = QuoteDocuments::where('id_quote', $id)->get();
 
@@ -278,8 +273,7 @@ class Quotes extends Controller
             $return = [];
 
             if ($src = QuotesModel::where("id", $id)->first()) {
-                $src->lines = QuoteLines::where('id_quote', $id)->get();
-                $src->line_details = QuoteLineDetails::where('id_quote', $id)->get();
+                $src->lines = QuoteLines::getFromQuote($id) ;
 
                 if ($data) {
                     foreach ($data as $document => $value) {
@@ -371,38 +365,9 @@ class Quotes extends Controller
         if ($id) {
             $line = QuoteLines::where("id", $id)->first();
             QuoteLines::updateOldTable($line->id_quote, $line->sort);
-            QuoteLineDetails::where("id_line", $id)->delete();
 
             echo json_encode($line->delete());
 
-        }
-    }
-
-    public function saveLineDetail()
-    {
-        // constitution du tableau
-        $data = array();
-
-        if (strcasecmp($_SERVER['REQUEST_METHOD'], 'post') === 0 && stripos($_SERVER['CONTENT_TYPE'], 'application/json') !== FALSE) {
-            // POST is actually in json format, do an internal translation
-            $data = json_decode(file_get_contents('php://input'), true);
-        }
-
-
-        if (isset($data)) {
-            $quoteLineDetail = new QuoteLineDetails();
-
-            if (isset($data["id"]) && is_numeric($data["id"])) {
-                $quoteLineDetail = QuoteLineDetails::where('id', $data["id"])->first();
-            }
-
-            foreach ($data as $key => $value) {
-                $quoteLineDetail->$key = $value;
-            }
-
-            $quoteLineDetail->save();
-
-            echo json_encode($quoteLineDetail->id);
         }
     }
 
@@ -451,7 +416,6 @@ class Quotes extends Controller
 
         $data['quote'] = QuotesModel::where("id", $id)->first();
         $data['lines'] = QuoteLines::where("id_quote", $id)->orderBy("sort")->get();
-        $line_details = QuoteLineDetails::where("id_quote", $id)->get();
 
         $data['showDiscount'] = false;
         $data['tvas'] = [];
@@ -460,19 +424,6 @@ class Quotes extends Controller
                 $data['showDiscount'] = true;
             }
 
-            if ($line->id_taxe !== '0') {
-                if (!isset($data['tvas'][$line->id_taxe])) {
-                    $data['tvas'][$line->id_taxe] = array(
-                        'ht' => 0,
-                        'value_taxe' => floatval($line->value_taxe)
-                    );
-                }
-
-                $data['tvas'][$line->id_taxe]['ht'] += floatval($line->total_ht);
-                $data['tvas'][$line->id_taxe]['value'] = round(floatval($data['tvas'][$line->id_taxe]['ht']) * ($data['tvas'][$line->id_taxe]['value_taxe'] / 100), 2);
-            }
-        }
-        foreach ($line_details as $line) {
             if ($line->id_taxe !== '0') {
                 if (!isset($data['tvas'][$line->id_taxe])) {
                     $data['tvas'][$line->id_taxe] = array(

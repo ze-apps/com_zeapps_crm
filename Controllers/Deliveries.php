@@ -11,7 +11,6 @@ use Mpdf\Mpdf;
 
 use App\com_zeapps_crm\Models\Deliveries as DeliveriesModel ;
 use App\com_zeapps_crm\Models\DeliveryLines;
-use App\com_zeapps_crm\Models\DeliveryLineDetails;
 use App\com_zeapps_crm\Models\DeliveryDocuments;
 use App\com_zeapps_crm\Models\DeliveryActivities;
 use App\com_zeapps_crm\Models\CreditBalances;
@@ -75,8 +74,7 @@ class Deliveries extends Controller
 
         $deliverie = DeliveriesModel::where('id', $id)->first();
 
-        $lines = DeliveryLines::orderBy('sort')->where('id_delivery', $id)->get();
-        $line_details = DeliveryLineDetails::where('id_delivery', $id)->get();
+        $lines = DeliveryLines::getFromDelivery($id);
         $documents = DeliveryDocuments::where('id_delivery', $id)->get();
         $activities = DeliveryActivities::where('id_delivery', $id)->get();
 
@@ -94,7 +92,6 @@ class Deliveries extends Controller
         echo json_encode(array(
             'delivery' => $deliverie,
             'lines' => $lines,
-            'line_details' => $line_details,
             'documents' => $documents,
             'activities' => $activities,
             'credits' => $credits
@@ -237,7 +234,6 @@ class Deliveries extends Controller
 
         if($id) {
             DeliveryLines::where('id_delivery', $id)->delete();
-            DeliveryLineDetails::where('id_delivery', $id)->delete();
 
             $documents = DeliveryDocuments::where('id_delivery', $id)->get();
 
@@ -272,8 +268,7 @@ class Deliveries extends Controller
             $return = [];
 
             if($src = DeliveriesModel::where("id", $id)->first()){
-                $src->lines = DeliveryLines::where('id_delivery', $id)->get() ;
-                $src->line_details = DeliveryLineDetails::where('id_delivery', $id)->get();
+                $src->lines = DeliveryLines::getFromDelivery($id) ;
 
                 if($data){
                     foreach($data as $document => $value){
@@ -363,37 +358,9 @@ class Deliveries extends Controller
         if($id){
             $line = DeliveryLines::where("id", $id)->first();
             DeliveryLines::updateOldTable($line->id_delivery, $line->sort);
-            DeliveryLineDetails::where("id_line", $id)->delete();
 
             echo json_encode($line->delete());
 
-        }
-    }
-
-    public function saveLineDetail(){
-        // constitution du tableau
-        $data = array() ;
-
-        if (strcasecmp($_SERVER['REQUEST_METHOD'], 'post') === 0 && stripos($_SERVER['CONTENT_TYPE'], 'application/json') !== FALSE) {
-            // POST is actually in json format, do an internal translation
-            $data = json_decode(file_get_contents('php://input'), true);
-        }
-
-
-        if (isset($data)) {
-            $deliverieLineDetail = new DeliveryLineDetails();
-
-            if (isset($data["id"]) && is_numeric($data["id"])) {
-                $deliverieLineDetail = DeliveryLineDetails::where('id', $data["id"])->first();
-            }
-
-            foreach ($data as $key => $value) {
-                $deliverieLineDetail->$key = $value;
-            }
-
-            $deliverieLineDetail->save();
-
-            echo json_encode($deliverieLineDetail->id);
         }
     }
 
@@ -437,27 +404,14 @@ class Deliveries extends Controller
 
         $data['delivery'] = DeliveriesModel::where("id", $id)->first();
         $data['lines'] = DeliveryLines::where("id_delivery", $id)->orderBy("sort")->get();
-        $line_details = DeliveryLineDetails::where("id_delivery", $id)->get();
 
         $data['showDiscount'] = false;
         $data['tvas'] = [];
+
         foreach($data['lines'] as $line){
             if(floatval($line->discount) > 0)
                 $data['showDiscount'] = true;
 
-            if($line->id_taxe !== '0'){
-                if(!isset($data['tvas'][$line->id_taxe])){
-                    $data['tvas'][$line->id_taxe] = array(
-                        'ht' => 0,
-                        'value_taxe' => floatval($line->value_taxe)
-                    );
-                }
-
-                $data['tvas'][$line->id_taxe]['ht'] += floatval($line->total_ht);
-                $data['tvas'][$line->id_taxe]['value'] = round(floatval($data['tvas'][$line->id_taxe]['ht']) * ($data['tvas'][$line->id_taxe]['value_taxe'] / 100), 2);
-            }
-        }
-        foreach($line_details as $line){
             if($line->id_taxe !== '0'){
                 if(!isset($data['tvas'][$line->id_taxe])){
                     $data['tvas'][$line->id_taxe] = array(

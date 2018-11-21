@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\com_zeapps_crm\Models\QuoteLines;
-use App\com_zeapps_crm\Models\QuoteLineDetails;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 
@@ -103,18 +102,31 @@ class Quotes extends Model
         $quotes->save();
         $id = $quotes->id;
 
-        $new_id_lines = [];
-
         if (isset($src->lines)) {
-            foreach ($src->lines as $line) {
-                $old_id = $line->id;
+            self::createFromLine($src->lines, $id, 0) ;
+        }
+
+        return array(
+            "id" => $id,
+            "numerotation" => $src->numerotation
+        );
+    }
+
+    private static function createFromLine($lines, $idDocument, $idParent)
+    {
+        if ($lines) {
+            foreach ($lines as $line) {
+                //$old_id = $line->id;
+                if (isset($line->sublines)) {
+                    $sublines = $line->sublines;
+                } else {
+                    $sublines = false ;
+                }
 
                 unset($line->id);
                 unset($line->created_at);
                 unset($line->updated_at);
                 unset($line->deleted_at);
-
-
 
 
                 $quote_line = new QuoteLines();
@@ -123,38 +135,18 @@ class Quotes extends Model
                         $quote_line->$key = $line->$key;
                     }
                 }
-                $quote_line->id_quote = $id;
+                $quote_line->id_invoice = $idDocument;
+                $quote_line->id_parent = $idParent;
                 $quote_line->save();
 
-
-                $new_id_lines[$old_id] = $quote_line->id;
-            }
-        }
-
-        if (isset($src->line_details)) {
-            foreach ($src->line_details as $line) {
-                unset($line->id);
-                unset($line->created_at);
-                unset($line->updated_at);
-                unset($line->deleted_at);
-
-                $quote_line_details = new QuoteLineDetails();
-                foreach (QuoteLineDetails::getSchema() as $key) {
-                    if (isset($line->$key)) {
-                        $quote_line_details->$key = $line->$key;
-                    }
+                if (is_array($sublines)) {
+                    self::createFromLine($sublines, $idDocument, $quote_line->id);
                 }
-                $quote_line_details->id_quote = $id;
-                $quote_line_details->id_line = $new_id_lines[$line->id_line];
-                $quote_line_details->save();
             }
         }
-
-        return array(
-            "id" => $id,
-            "numerotation" => $src->numerotation
-        );
     }
+
+
 
     public static function get_numerotation($test = false)
     {

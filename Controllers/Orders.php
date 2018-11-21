@@ -11,7 +11,6 @@ use Mpdf\Mpdf;
 
 use App\com_zeapps_crm\Models\Orders as OrdersModel ;
 use App\com_zeapps_crm\Models\OrderLines;
-use App\com_zeapps_crm\Models\OrderLineDetails;
 use App\com_zeapps_crm\Models\OrderDocuments;
 use App\com_zeapps_crm\Models\OrderActivities;
 use App\com_zeapps_crm\Models\CreditBalances;
@@ -75,8 +74,7 @@ class Orders extends Controller
 
         $order = OrdersModel::where('id', $id)->first();
 
-        $lines = OrderLines::orderBy('sort')->where('id_order', $id)->get();
-        $line_details = OrderLineDetails::where('id_order', $id)->get();
+        $lines = OrderLines::getFromOrder($id);
         $documents = OrderDocuments::where('id_order', $id)->get();
         $activities = OrderActivities::where('id_order', $id)->get();
 
@@ -94,7 +92,6 @@ class Orders extends Controller
         echo json_encode(array(
             'order' => $order,
             'lines' => $lines,
-            'line_details' => $line_details,
             'documents' => $documents,
             'activities' => $activities,
             'credits' => $credits
@@ -236,7 +233,6 @@ class Orders extends Controller
 
         if($id) {
             OrderLines::where('id_order', $id)->delete();
-            OrderLineDetails::where('id_order', $id)->delete();
 
             $documents = OrderDocuments::where('id_order', $id)->get();
 
@@ -271,8 +267,7 @@ class Orders extends Controller
             $return = [];
 
             if($src = OrdersModel::where("id", $id)->first()){
-                $src->lines = OrderLines::where('id_order', $id)->get() ;
-                $src->line_details = OrderLineDetails::where('id_order', $id)->get();
+                $src->lines = OrderLines::getFromOrder($id) ;
 
                 if($data){
                     foreach($data as $document => $value){
@@ -362,37 +357,9 @@ class Orders extends Controller
         if($id){
             $line = OrderLines::where("id", $id)->first();
             OrderLines::updateOldTable($line->id_order, $line->sort);
-            OrderLineDetails::where("id_line", $id)->delete();
 
             echo json_encode($line->delete());
 
-        }
-    }
-
-    public function saveLineDetail(){
-        // constitution du tableau
-        $data = array() ;
-
-        if (strcasecmp($_SERVER['REQUEST_METHOD'], 'post') === 0 && stripos($_SERVER['CONTENT_TYPE'], 'application/json') !== FALSE) {
-            // POST is actually in json format, do an internal translation
-            $data = json_decode(file_get_contents('php://input'), true);
-        }
-
-
-        if (isset($data)) {
-            $orderLineDetail = new OrderLineDetails();
-
-            if (isset($data["id"]) && is_numeric($data["id"])) {
-                $orderLineDetail = OrderLineDetails::where('id', $data["id"])->first();
-            }
-
-            foreach ($data as $key => $value) {
-                $orderLineDetail->$key = $value;
-            }
-
-            $orderLineDetail->save();
-
-            echo json_encode($orderLineDetail->id);
         }
     }
 
@@ -437,7 +404,6 @@ class Orders extends Controller
 
         $data['order'] = OrdersModel::where("id", $id)->first();
         $data['lines'] = OrderLines::where("id_order", $id)->orderBy("sort")->get();
-        $line_details = OrderLineDetails::where("id_order", $id)->get();
 
         $data['showDiscount'] = false;
         $data['tvas'] = [];
@@ -445,19 +411,6 @@ class Orders extends Controller
             if(floatval($line->discount) > 0)
                 $data['showDiscount'] = true;
 
-            if($line->id_taxe !== '0'){
-                if(!isset($data['tvas'][$line->id_taxe])){
-                    $data['tvas'][$line->id_taxe] = array(
-                        'ht' => 0,
-                        'value_taxe' => floatval($line->value_taxe)
-                    );
-                }
-
-                $data['tvas'][$line->id_taxe]['ht'] += floatval($line->total_ht);
-                $data['tvas'][$line->id_taxe]['value'] = round(floatval($data['tvas'][$line->id_taxe]['ht']) * ($data['tvas'][$line->id_taxe]['value_taxe'] / 100), 2);
-            }
-        }
-        foreach($line_details as $line){
             if($line->id_taxe !== '0'){
                 if(!isset($data['tvas'][$line->id_taxe])){
                     $data['tvas'][$line->id_taxe] = array(

@@ -2,26 +2,26 @@
 
 namespace App\com_zeapps_crm\Models;
 
-use Illuminate\Database\Eloquent\Model ;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\com_zeapps_crm\Models\DeliveryLines;
-use App\com_zeapps_crm\Models\DeliveryLineDetails;
 use App\com_zeapps_crm\Models\StockMovements;
-use App\com_zeapps_crm\Models\ProductProducts as Product ;
+use App\com_zeapps_crm\Models\ProductProducts as Product;
 use Zeapps\Models\Config;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 use Zeapps\Core\ModelHelper;
 
-class Deliveries extends Model {
+class Deliveries extends Model
+{
     use SoftDeletes;
 
     static protected $_table = 'com_zeapps_crm_deliveries';
-    protected $table ;
+    protected $table;
 
-    protected $fieldModelInfo ;
+    protected $fieldModelInfo;
 
     public function __construct(array $attributes = [])
     {
@@ -78,7 +78,8 @@ class Deliveries extends Model {
         parent::__construct($attributes);
     }
 
-    public static function createFrom($src){
+    public static function createFrom($src)
+    {
         unset($src->id);
         unset($src->numerotation);
         unset($src->created_at);
@@ -88,22 +89,39 @@ class Deliveries extends Model {
 
         $src->date_creation = date('Y-m-d');
 
-        $delivery = new Deliveries ;
+        $delivery = new Deliveries;
         foreach (self::getSchema() as $key) {
             if (isset($src->$key)) {
                 $delivery->$key = $src->$key;
             }
         }
         $delivery->save();
-        $id = $delivery->id ;
-
+        $id = $delivery->id;
 
 
         $new_id_lines = [];
 
-        if(isset($src->lines)){
-            foreach($src->lines as $line){
+        if (isset($src->lines)) {
+            self::createFromLine($src->lines, $id, 0, $src->id_warehouse, $src->numerotation, $src->date_creation);
+        }
+
+        return array(
+            "id" => $id,
+            "numerotation" => $src->numerotation
+        );
+    }
+
+    private static function createFromLine($lines, $idDocument, $idParent, $id_warehouse, $delivery_number, $mvt_date)
+    {
+        if ($lines) {
+            foreach ($lines as $line) {
                 $old_id = $line->id;
+
+                if (isset($line->sublines)) {
+                    $sublines = $line->sublines;
+                } else {
+                    $sublines = false;
+                }
 
                 unset($line->id);
                 unset($line->created_at);
@@ -111,91 +129,57 @@ class Deliveries extends Model {
                 unset($line->deleted_at);
 
 
-
-
-                $deliveryLine = new DeliveryLines() ;
+                $deliveryLine = new DeliveryLines();
                 foreach (DeliveryLines::getSchema() as $key) {
                     if (isset($line->$key)) {
                         $deliveryLine->$key = $line->$key;
                     }
                 }
-                $deliveryLine->id_delivery = $id;
+                $deliveryLine->id_delivery = $idDocument;
+                $deliveryLine->id_parent = $idParent;
                 $deliveryLine->save();
 
 
-                $new_id_lines[$old_id] = $deliveryLine->id ;
+                $new_id_lines[$old_id] = $deliveryLine->id;
 
-                if($line->type === 'product'){
-                    $product = Product::where("id", $line->id_product)->first() ;
+                if ($line->type === 'product') {
+                    $product = Product::where("id", $line->id_product)->first();
 
-                    $stockMovement = new StockMovements() ;
-                    $stockMovement->id_warehouse = $src->id_warehouse;
+                    $stockMovement = new StockMovements();
+                    $stockMovement->id_warehouse = $id_warehouse;
                     $stockMovement->id_stock = $product->id_stock; // TODO : le stock ne doit pas être associé au produit mais ID Stock du document source
-                    $stockMovement->label = "Bon de livraison n° " . $src->numerotation;
+                    $stockMovement->label = "Bon de livraison n° " . $delivery_number;
                     $stockMovement->qty = -1 * floatval($line->qty);
-                    $stockMovement->id_table = $id;
+                    $stockMovement->id_table = $idDocument;
                     $stockMovement->name_table = "com_zeapps_crm_deliveries";
-                    $stockMovement->date_mvt = $src->date_creation;
+                    $stockMovement->date_mvt = $mvt_date;
                     $stockMovement->ignored = 0;
                     $stockMovement->save();
                 }
-            }
-        }
 
-        if(isset($src->line_details)){
-            foreach($src->line_details as $line){
-                unset($line->id);
-                unset($line->created_at);
-                unset($line->updated_at);
-                unset($line->deleted_at);
-
-
-
-                $deliveryLineDetail = new DeliveryLineDetails() ;
-                foreach (DeliveryLineDetails::getSchema() as $key) {
-                    if (isset($line->$key)) {
-                        $deliveryLineDetail->$key = $line->$key;
-                    }
-                }
-                $deliveryLineDetail->id_delivery = $id;
-                $deliveryLineDetail->id_line = $new_id_lines[$line->id_line];
-                $deliveryLineDetail->save();
-
-                if($line->type === 'product'){
-                    $stockMovement = new StockMovements() ;
-                    $stockMovement->id_warehouse = $src->id_warehouse;
-                    $stockMovement->id_stock = $product->id_stock; // TODO : le stock ne doit pas être associé au produit mais ID Stock du document source
-                    $stockMovement->label = "Bon de livraison n° " . $src->numerotation;
-                    $stockMovement->qty = -1 * floatval($line->qty);
-                    $stockMovement->id_table = $id;
-                    $stockMovement->name_table = "com_zeapps_crm_deliveries";
-                    $stockMovement->date_mvt = $src->date_creation;
-                    $stockMovement->ignored = 0;
-                    $stockMovement->save();
+                if (is_array($sublines)) {
+                    self::createFromLine($sublines, $idDocument, $deliveryLine->id);
                 }
             }
         }
-
-        return array(
-            "id" =>$id,
-            "numerotation" => $src->numerotation
-        );
     }
 
-    public static function get_numerotation($test = false){
-        if($numerotation = Config::where("id", "crm_delivery_numerotation")->first()) {
-            $valueSend = $numerotation->value ;
-            if(!$test) {
+
+    public static function get_numerotation($test = false)
+    {
+        if ($numerotation = Config::where("id", "crm_delivery_numerotation")->first()) {
+            $valueSend = $numerotation->value;
+            if (!$test) {
                 $numerotation->value++;
                 $numerotation->save();
             }
             return $valueSend;
-        } else{
-            if(!$test) {
-                $numerotation = new Config() ;
-                $numerotation->id = 'crm_delivery_numerotation' ;
-                $numerotation->value = 2 ;
-                $numerotation->save() ;
+        } else {
+            if (!$test) {
+                $numerotation = new Config();
+                $numerotation->id = 'crm_delivery_numerotation';
+                $numerotation->value = 2;
+                $numerotation->save();
             }
             return 1;
         }
@@ -203,7 +187,7 @@ class Deliveries extends Model {
 
     public static function parseFormat($result = null, $num = null)
     {
-        if ($result && $num){
+        if ($result && $num) {
             $result = preg_replace_callback('/[[dDjzmMnyYgGhH\-_]*(x+)[dDjzmMnyYgGhH\-_]*]/',
                 function ($matches) use ($num) {
                     return str_replace($matches[1], substr($num, -strlen($matches[1])), $matches[0]);
@@ -239,36 +223,30 @@ class Deliveries extends Model {
     }
 
 
-
-    public static function getSchema() {
-        return $schema = Capsule::schema()->getColumnListing(self::$_table) ;
+    public static function getSchema()
+    {
+        return $schema = Capsule::schema()->getColumnListing(self::$_table);
     }
 
 
-
-
-
-
-    public function save(array $options = []) {
+    public function save(array $options = [])
+    {
 
 
         /******** clean data **********/
-        $this->fieldModelInfo->cleanData($this) ;
-
-
+        $this->fieldModelInfo->cleanData($this);
 
 
         /**** set a document number ****/
         if (!isset($this->numerotation) || !$this->numerotation || $this->numerotation == "") {
-            $format = Config::where('id', 'crm_delivery_format')->first()->value ;
+            $format = Config::where('id', 'crm_delivery_format')->first()->value;
             $num = self::get_numerotation();
             $this->numerotation = self::parseFormat($format, $num);
         }
 
 
-
         /**** to delete unwanted field ****/
-        $this->fieldModelInfo->removeFieldUnwanted($this) ;
+        $this->fieldModelInfo->removeFieldUnwanted($this);
 
         return parent::save($options);
     }

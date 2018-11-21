@@ -26,8 +26,10 @@ class ProductProducts extends Model {
         $this->fieldModelInfo = new ModelHelper();
         $this->fieldModelInfo->increments('id');
         $this->fieldModelInfo->integer('id_cat')->default(0);
+        $this->fieldModelInfo->integer('id_parent')->default(0);
         $this->fieldModelInfo->integer('id_stock')->default(0);
-        $this->fieldModelInfo->tinyInteger('compose')->default(0);
+        $this->fieldModelInfo->string('type_product', 255)->default("");
+        $this->fieldModelInfo->tinyInteger('compose')->default(0); // TODO : à supprimer (contrôler que ce n'est pas utilisé)
         $this->fieldModelInfo->string('ref', 255)->default("");
         $this->fieldModelInfo->string('name', 255)->default("");
         $this->fieldModelInfo->text('description');
@@ -37,6 +39,10 @@ class ProductProducts extends Model {
         $this->fieldModelInfo->integer('id_taxe')->default(0);
         $this->fieldModelInfo->decimal('value_taxe', 8, 2)->default(0);
         $this->fieldModelInfo->string('accounting_number', 255)->default("");
+        $this->fieldModelInfo->tinyInteger('update_price_from_subline', false)->default(0);
+        $this->fieldModelInfo->tinyInteger('show_subline', false)->default(0);
+        $this->fieldModelInfo->decimal('price_unit_ttc_subline', 8, 2)->default(0);
+        $this->fieldModelInfo->integer('sort')->default(0);
         $this->fieldModelInfo->mediumtext('extra');
         $this->fieldModelInfo->timestamps();
         $this->fieldModelInfo->softDeletes();

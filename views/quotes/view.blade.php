@@ -139,9 +139,9 @@
                 <div class="col-md-12 text-right">
                     <span class="form-inline">
                         <label>Code produit :</label>
-                        <span class="input-group">
-                            <input type="text" class="form-control input-sm" ng-model="codeProduct"
-                                   ng-keypress="keyEventaddFromCode($event)">
+                        <span class="input-group" ng-keyup>
+                            <input type="text" class="form-control input-sm inputCodeProduct" ng-model="codeProduct"
+                                   ng-keydown="keyEventaddFromCode($event)">
                             <span class="input-group-addon" ng-click="addFromCode()">
                                 <i class="fa fa-fw fa-plus text-success"></i>
                             </span>
@@ -275,14 +275,6 @@
                                 </div>
                                 <div class="col-md-6 text-right">
                                     @{{ quote.total_prediscount_ht | currency:'€':2 }}
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    Total TTC av remise
-                                </div>
-                                <div class="col-md-6 text-right">
-                                    @{{ quote.total_prediscount_ttc | currency:'€':2 }}
                                 </div>
                             </div>
                             <hr>

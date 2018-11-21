@@ -10,7 +10,6 @@ use Zeapps\Core\Session;
 
 use App\com_zeapps_crm\Models\Invoices as InvoicesModel;
 use App\com_zeapps_crm\Models\InvoiceLines;
-use App\com_zeapps_crm\Models\InvoiceLineDetails;
 use App\com_zeapps_crm\Models\InvoiceDocuments;
 use App\com_zeapps_crm\Models\InvoiceActivities;
 use App\com_zeapps_crm\Models\CreditBalances;
@@ -82,8 +81,7 @@ class Invoices extends Controller
 
         $invoice = InvoicesModel::where('id', $id)->first();
 
-        $lines = InvoiceLines::orderBy('sort')->where('id_invoice', $id)->get();
-        $line_details = InvoiceLineDetails::where('id_invoice', $id)->get();
+        $lines = InvoiceLines::getFromInvoice($id);
         $documents = InvoiceDocuments::where('id_invoice', $id)->get();
         $activities = InvoiceActivities::where('id_invoice', $id)->get();
 
@@ -100,7 +98,6 @@ class Invoices extends Controller
         echo json_encode(array(
             'invoice' => $invoice,
             'lines' => $lines,
-            'line_details' => $line_details,
             'documents' => $documents,
             'activities' => $activities,
             'credits' => $credits
@@ -244,7 +241,6 @@ class Invoices extends Controller
 
         if ($id) {
             InvoiceLines::where('id_invoice', $id)->delete();
-            InvoiceLineDetails::where('id_invoice', $id)->delete();
 
             $documents = InvoiceDocuments::where('id_invoice', $id)->get();
 
@@ -280,8 +276,7 @@ class Invoices extends Controller
             $return = [];
 
             if ($src = InvoicesModel::where("id", $id)->first()) {
-                $src->lines = InvoiceLines::where('id_invoice', $id)->get();
-                $src->line_details = InvoiceLineDetails::where('id_invoice', $id)->get();
+                $src->lines = InvoiceLines::getFromInvoice($id) ;
 
                 if ($data) {
                     foreach ($data as $document => $value) {
@@ -400,38 +395,9 @@ class Invoices extends Controller
         if ($id) {
             $line = InvoiceLines::where("id", $id)->first();
             InvoiceLines::updateOldTable($line->id_invoice, $line->sort);
-            InvoiceLineDetails::where("id_line", $id)->delete();
 
             echo json_encode($line->delete());
 
-        }
-    }
-
-    public function saveLineDetail()
-    {
-        // constitution du tableau
-        $data = array();
-
-        if (strcasecmp($_SERVER['REQUEST_METHOD'], 'post') === 0 && stripos($_SERVER['CONTENT_TYPE'], 'application/json') !== FALSE) {
-            // POST is actually in json format, do an internal translation
-            $data = json_decode(file_get_contents('php://input'), true);
-        }
-
-
-        if (isset($data)) {
-            $invoiceLineDetail = new InvoiceLineDetails();
-
-            if (isset($data["id"]) && is_numeric($data["id"])) {
-                $invoiceLineDetail = InvoiceLineDetails::where('id', $data["id"])->first();
-            }
-
-            foreach ($data as $key => $value) {
-                $invoiceLineDetail->$key = $value;
-            }
-
-            $invoiceLineDetail->save();
-
-            echo json_encode($invoiceLineDetail->id);
         }
     }
 

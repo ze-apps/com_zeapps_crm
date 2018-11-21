@@ -28,6 +28,7 @@ class ComZeappsCrmOrderLinesTable extends Migration
             $table->decimal('total_ttc', 8, 2)->default(0);
             $table->tinyInteger('update_price_from_subline', false)->default(0);
             $table->tinyInteger('show_subline', false)->default(0);
+            $table->decimal('price_unit_ttc_subline', 8, 2)->default(0);
             $table->integer('sort')->default(0);
 
             $table->timestamps();

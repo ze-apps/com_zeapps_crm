@@ -244,14 +244,6 @@
                                     @{{ invoice.total_prediscount_ht | currency:'€':2 }}
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    Total TTC av remise
-                                </div>
-                                <div class="col-md-6 text-right">
-                                    @{{ invoice.total_prediscount_ttc | currency:'€':2 }}
-                                </div>
-                            </div>
                             <hr>
 
                             <div class="row" ng-if="invoice.global_discount > 0">

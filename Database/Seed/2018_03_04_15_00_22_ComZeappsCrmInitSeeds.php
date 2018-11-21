@@ -14,22 +14,18 @@ use App\com_zeapps_crm\Models\ProductStocks;
 
 use App\com_zeapps_crm\Models\Quotes;
 use App\com_zeapps_crm\Models\QuoteLines;
-use App\com_zeapps_crm\Models\QuoteLineDetails;
 use App\com_zeapps_crm\Models\QuoteActivities;
 
 use App\com_zeapps_crm\Models\Orders;
 use App\com_zeapps_crm\Models\OrderLines;
-use App\com_zeapps_crm\Models\OrderLineDetails;
 use App\com_zeapps_crm\Models\OrderActivities;
 
 use App\com_zeapps_crm\Models\Invoices;
 use App\com_zeapps_crm\Models\InvoiceLines;
-use App\com_zeapps_crm\Models\InvoiceLineDetails;
 use App\com_zeapps_crm\Models\InvoiceActivities;
 
 use App\com_zeapps_crm\Models\Deliveries;
 use App\com_zeapps_crm\Models\DeliveryLines;
-use App\com_zeapps_crm\Models\DeliveryLineDetails;
 use App\com_zeapps_crm\Models\DeliveryActivities;
 
 
@@ -178,20 +174,6 @@ class ComZeappsCrmInitSeeds
         }
 
 
-        // import de QuoteLineDetails
-        Capsule::table('com_zeapps_crm_quote_line_details')->truncate();
-        $json_content = json_decode(file_get_contents(dirname(__FILE__) . "/QuoteLineDetails.json"));
-        foreach ($json_content as $data_json) {
-            $obj_data = new QuoteLineDetails();
-
-            foreach ($data_json as $key => $value) {
-                $obj_data->$key = $value;
-            }
-
-            $obj_data->save();
-        }
-
-
         // import de QuoteActivities
         Capsule::table('com_zeapps_crm_quote_activities')->truncate();
         $json_content = json_decode(file_get_contents(dirname(__FILE__) . "/QuoteActivities.json"));
@@ -238,18 +220,6 @@ class ComZeappsCrmInitSeeds
 
 
 
-        // import de OrderLineDetails
-        Capsule::table('com_zeapps_crm_order_line_details')->truncate();
-        $json_content = json_decode(file_get_contents(dirname(__FILE__) . "/OrderLineDetails.json"));
-        foreach ($json_content as $data_json) {
-            $obj_data = new OrderLineDetails();
-
-            foreach ($data_json as $key => $value) {
-                $obj_data->$key = $value;
-            }
-
-            $obj_data->save();
-        }
 
 
 
@@ -301,18 +271,6 @@ class ComZeappsCrmInitSeeds
 
 
 
-        // import de InvoiceLineDetails
-        Capsule::table('com_zeapps_crm_invoice_line_details')->truncate();
-        $json_content = json_decode(file_get_contents(dirname(__FILE__) . "/InvoiceLineDetails.json"));
-        foreach ($json_content as $data_json) {
-            $obj_data = new InvoiceLineDetails();
-
-            foreach ($data_json as $key => $value) {
-                $obj_data->$key = $value;
-            }
-
-            $obj_data->save();
-        }
 
 
 
@@ -368,18 +326,6 @@ class ComZeappsCrmInitSeeds
 
 
 
-        // import de DeliveryLineDetails
-        Capsule::table('com_zeapps_crm_delivery_line_details')->truncate();
-        $json_content = json_decode(file_get_contents(dirname(__FILE__) . "/DeliveryLineDetails.json"));
-        foreach ($json_content as $data_json) {
-            $obj_data = new DeliveryLineDetails();
-
-            foreach ($data_json as $key => $value) {
-                $obj_data->$key = $value;
-            }
-
-            $obj_data->save();
-        }
 
 
 
