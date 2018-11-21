@@ -84,15 +84,21 @@ app.factory("crmTotal", [function () {
                 dataPrice.priceUnitTTC = line.price_unit_ttc_subline * 1;
                 var ratio = dataPrice.priceUnitTTC / montantTTC;
                 montantHT = 0;
+                var montantHTRemise = 0;
                 for (var i_data = 0; i_data < dataPrice.data.length; i_data++) {
                     dataPrice.data[i_data].price_total_ttc = dataPrice.data[i_data].price_total_ttc * ratio;
                     dataPrice.data[i_data].price_total_ht = dataPrice.data[i_data].price_total_ht * ratio;
 
                     montantHT += dataPrice.data[i_data].price_total_ht ;
+
+
+                    dataPrice.data[i_data].price_total_ht = dataPrice.data[i_data].price_total_ht * remiseLigne ;
+                    dataPrice.data[i_data].price_total_ttc = dataPrice.data[i_data].price_total_ttc * remiseLigne ;
+                    montantHTRemise += dataPrice.data[i_data].price_total_ht ;
                 }
 
                 dataPrice.priceUnitHT = montantHT;
-                dataPrice.priceTotalHT = montantHT * line.qty * remiseLigne ;
+                dataPrice.priceTotalHT = montantHTRemise * line.qty ;
                 dataPrice.priceTotalTTC = dataPrice.priceUnitTTC * line.qty * remiseLigne ;
 
                 line.price_unit = dataPrice.priceUnitHT ;
@@ -148,9 +154,12 @@ app.factory("crmTotal", [function () {
                 var dataPriceSubline = getPriceLine(line, doc.global_discount);
 
 
-                var remiseLigne = (1 - (parseFloat(line.discount) / 100)) ;
-                if (doc.global_discount && !isNaN(doc.global_discount)) {
-                    remiseLigne = remiseLigne * (1 - (parseFloat(doc.global_discount) / 100)) ;
+                var remiseLigne = 1;
+                if (line.sublines && line.sublines.length) {
+                    remiseLigne = (1 - (parseFloat(line.discount) / 100)) ;
+                    if (doc.global_discount && !isNaN(doc.global_discount)) {
+                        remiseLigne = remiseLigne * (1 - (parseFloat(doc.global_discount) / 100)) ;
+                    }
                 }
 
                 for (var i_data = 0; i_data < dataPriceSubline.data.length; i_data++) {
@@ -172,8 +181,6 @@ app.factory("crmTotal", [function () {
             tmp[data[i_data].id_taxe].ht += round2(parseFloat(data[i_data].price_total_ht));
             tmp[data[i_data].id_taxe].value = round2(parseFloat(tmp[data[i_data].id_taxe].ht) * (parseFloat(tmp[data[i_data].id_taxe].value_taxe) / 100));
         }
-
-        console.log(tmp);
 
         service.get.tvas = tmp;
     }
