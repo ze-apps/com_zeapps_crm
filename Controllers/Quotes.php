@@ -303,6 +303,7 @@ class Quotes extends Controller
     {
         // constitution du tableau
         $data = array();
+        $id_quote_line = 0 ;
 
         if (strcasecmp($_SERVER['REQUEST_METHOD'], 'post') === 0 && stripos($_SERVER['CONTENT_TYPE'], 'application/json') !== FALSE) {
             // POST is actually in json format, do an internal translation
@@ -311,26 +312,80 @@ class Quotes extends Controller
 
 
         if (isset($data)) {
-            $quoteLine = new QuoteLines();
-
-            if (isset($data["id"]) && is_numeric($data["id"])) {
-                $quoteLine = QuoteLines::where('id', $data["id"])->first();
-            }
-
-            foreach ($data as $key => $value) {
-                $quoteLine->$key = $value;
-            }
-
-            if (!isset($quoteLine->accounting_number)) {
-                $quoteLine->accounting_number = "";
-            }
-
-
-            $quoteLine->save();
+            $id_quote_line = $this->saveLineData($data, $data["id_quote"], 0) ;
         }
 
-        echo json_encode($quoteLine->id);
+        echo json_encode($id_quote_line);
     }
+
+    private function saveLineData($data, $id_quote, $id_parent) {
+
+        $idSublineToDelete = array() ;
+
+
+        $quoteLine = new QuoteLines();
+
+        if (isset($data["id"]) && is_numeric($data["id"])) {
+            // load subline to check if need to delete
+            $sublines = QuoteLines::where("id_parent", $data["id"])->get() ;
+
+            foreach ($sublines as $subline) {
+                $idSublineToDelete[] = $subline->id ;
+            }
+
+
+            // load line
+            $quoteLine = QuoteLines::where('id', $data["id"])->first();
+        }
+
+        if (!isset($data["id_quote"])) {
+            $data["id_quote"] = $id_quote ;
+        }
+
+
+        foreach ($data as $key => $value) {
+            $quoteLine->$key = $value;
+        }
+
+
+        // set id parent line
+        $quoteLine->id_parent = $id_parent ;
+
+
+
+        if (!isset($quoteLine->accounting_number)) {
+            $quoteLine->accounting_number = "";
+        }
+
+
+        $quoteLine->save();
+
+
+        if (isset($data["sublines"]) && count($data["sublines"])) {
+            foreach ($data["sublines"] as $dataSubline) {
+
+                if (isset($dataSubline["id"])) {
+                    $key = array_search($dataSubline["id"], $idSublineToDelete);
+                    if ($key !== false) {
+                        unset($idSublineToDelete[$key]);
+                    }
+                }
+
+                $this->saveLineData($dataSubline, $data["id_quote"], $quoteLine->id);
+            }
+        }
+
+        if (count($idSublineToDelete)) {
+            foreach ($idSublineToDelete as $idToDelete) {
+                QuoteLines::deleteLine($idToDelete);
+            }
+        }
+
+
+        return $quoteLine->id ;
+    }
+
+
 
     public function updateLinePosition()
     {

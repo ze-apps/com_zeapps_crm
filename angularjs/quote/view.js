@@ -79,8 +79,10 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
             $scope.navigationState = $rootScope.comZeappsCrmLastShowTabQuote;
         }
 
-        if ($routeParams.id && $routeParams.id > 0) {
-            zhttp.crm.quote.get($routeParams.id).then(function (response) {
+
+
+        var loadDocument = function(idDocument, next) {
+            zhttp.crm.quote.get(idDocument).then(function (response) {
                 if (response.data && response.data != "false") {
                     $scope.quote = response.data.quote;
 
@@ -128,8 +130,18 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                     $scope.quote.total_ht = totals.total_ht;
                     $scope.quote.total_tva = totals.total_tva;
                     $scope.quote.total_ttc = totals.total_ttc;
+
+
+                    // call Callback
+                    if (next) {
+                        next() ;
+                    }
                 }
             });
+        };
+
+        if ($routeParams.id && $routeParams.id > 0) {
+            loadDocument($routeParams.id) ;
         }
 
         //////////////////// FUNCTIONS ////////////////////
@@ -394,7 +406,9 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                     zhttp.crm.quote.line.save(formatted_data);
                 });
 
-                crmTotal.init($scope.quote, $scope.lines);
+
+
+                /*crmTotal.init($scope.quote, $scope.lines);
                 $scope.tvas = crmTotal.get.tvas;
                 var totals = crmTotal.get.totals;
                 $scope.quote.total_prediscount_ht = totals.total_prediscount_ht;
@@ -402,37 +416,35 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                 $scope.quote.total_discount = totals.total_discount;
                 $scope.quote.total_ht = totals.total_ht;
                 $scope.quote.total_tva = totals.total_tva;
-                $scope.quote.total_ttc = totals.total_ttc;
+                $scope.quote.total_ttc = totals.total_ttc;*/
 
 
+                // reaload document
+                loadDocument($routeParams.id, function () {
+                    var data = $scope.quote;
 
+                    var y = data.date_creation.getFullYear();
+                    var M = data.date_creation.getMonth();
+                    var d = data.date_creation.getDate();
 
+                    data.date_creation = new Date(Date.UTC(y, M, d));
 
+                    var y = data.date_limit.getFullYear();
+                    var M = data.date_limit.getMonth();
+                    var d = data.date_limit.getDate();
 
+                    data.date_limit = new Date(Date.UTC(y, M, d));
 
-                var data = $scope.quote;
-
-                var y = data.date_creation.getFullYear();
-                var M = data.date_creation.getMonth();
-                var d = data.date_creation.getDate();
-
-                data.date_creation = new Date(Date.UTC(y, M, d));
-
-                var y = data.date_limit.getFullYear();
-                var M = data.date_limit.getMonth();
-                var d = data.date_limit.getDate();
-
-                data.date_limit = new Date(Date.UTC(y, M, d));
-
-                var formatted_data = angular.toJson(data);
-                zhttp.crm.quote.save(formatted_data).then(function (response) {
-                    if (response.data && response.data != "false") {
-                        toasts('success', "Les informations du devis ont bien été mises a jour");
-                    }
-                    else {
-                        toasts('danger', "Il y a eu une erreur lors de la mise a jour des informations du devis");
-                    }
-                });
+                    var formatted_data = angular.toJson(data);
+                    zhttp.crm.quote.save(formatted_data).then(function (response) {
+                        if (response.data && response.data != "false") {
+                            toasts('success', "Les informations du devis ont bien été mises a jour");
+                        }
+                        else {
+                            toasts('danger', "Il y a eu une erreur lors de la mise a jour des informations du devis");
+                        }
+                    });
+                }) ;
             }
         }
 

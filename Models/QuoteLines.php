@@ -52,7 +52,9 @@ class QuoteLines extends Model
     }
 
     public static function getFromQuote($id_quote) {
-        $lines = QuoteLines::where('id_quote', $id_quote)->orderBy("sort")->get() ;
+        $lines = QuoteLines::where('id_quote', $id_quote)
+            ->where("id_parent", 0)
+            ->orderBy("sort")->get() ;
 
         foreach ($lines as &$line) {
             $line->sublines = self::getSubLine($line->id) ;
@@ -95,5 +97,16 @@ class QuoteLines extends Model
     public static function updateNewTable($id_quote, $sort)
     {
         Capsule::statement('UPDATE com_zeapps_crm_quote_lines SET sort = (sort+1) WHERE id_quote = ' . $id_quote . ' AND sort >= ' . $sort);
+    }
+
+
+    public static function deleteLine($id) {
+        $sublines = QuoteLines::where("id_parent", $id)->get() ;
+
+        foreach ($sublines as $subline) {
+            self::deleteLine($subline->id);
+        }
+
+        QuoteLines::where("id", $id)->delete() ;
     }
 }

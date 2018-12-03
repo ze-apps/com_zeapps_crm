@@ -1,5 +1,10 @@
 app.controller("ComZeappsCrmQuoteFormLineCtrl", ["$scope", "zeHttp", "zeapps_modal", "crmTotal",
     function ($scope, zhttp, zeapps_modal, crmTotal) {
+        $scope.form.price_unit = $scope.form.price_unit * 1 ;
+        $scope.form.price_unit_ttc_subline = $scope.form.price_unit_ttc_subline * 1 ;
+        $scope.form.qty = $scope.form.qty * 1 ;
+        $scope.form.discount = $scope.form.discount * 1 ;
+        $scope.form.value_taxe = $scope.form.value_taxe * 1 ;
 
         $scope.navigationState = "body";
 
@@ -181,8 +186,6 @@ app.controller("ComZeappsCrmQuoteFormLineCtrl", ["$scope", "zeHttp", "zeapps_mod
         // Update price TTC with subline
         var updatePrice = function () {
             var dataPrice = crmTotal.getPriceLine($scope.form) ;
-
-            console.log(dataPrice);
 
             $scope.form.price_unit_ht_indicated = dataPrice.priceUnitHT.toFixed(2);
             $scope.form.price_unit_ttc_subline = dataPrice.priceUnitTTC.toFixed(2);
