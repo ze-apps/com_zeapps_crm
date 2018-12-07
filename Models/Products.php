@@ -9,10 +9,10 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 
 use Zeapps\Core\ModelHelper;
 
-class ProductProducts extends Model {
+class Products extends Model {
     use SoftDeletes;
 
-    static protected $_table = 'com_zeapps_crm_product_products';
+    static protected $_table = 'com_zeapps_crm_products';
     protected $table ;
 
     protected $fieldModelInfo ;
@@ -35,6 +35,7 @@ class ProductProducts extends Model {
         $this->fieldModelInfo->text('description');
         $this->fieldModelInfo->decimal('price_ht', 8, 2)->default(0);
         $this->fieldModelInfo->decimal('price_ttc', 8, 2)->default(0);
+        $this->fieldModelInfo->decimal('quantite', 8, 2)->default(0);
         $this->fieldModelInfo->tinyInteger('auto')->default(0);
         $this->fieldModelInfo->integer('id_taxe')->default(0);
         $this->fieldModelInfo->decimal('value_taxe', 8, 2)->default(0);

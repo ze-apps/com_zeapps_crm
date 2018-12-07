@@ -6,7 +6,7 @@ use Zeapps\Core\Controller;
 use Zeapps\Core\Request;
 use Zeapps\Core\Session;
 
-use App\com_zeapps_crm\Models\ProductProducts;
+use App\com_zeapps_crm\Models\Products;
 use App\com_zeapps_crm\Models\ProductLines;
 use App\com_zeapps_crm\Models\ProductCategories;
 
@@ -69,7 +69,7 @@ class Product extends Controller
         }
 
 
-        $products_rs = ProductProducts::orderBy('name', 'ASC');
+        $products_rs = Products::orderBy('name', 'ASC');
         foreach ($filters as $key => $value) {
             if (strpos($key, " LIKE")) {
                 $key = str_replace(" LIKE", "", $key);
@@ -97,20 +97,22 @@ class Product extends Controller
         $id = $request->input('id', 0);
 
         if (isset($id)) {
-            $product = ProductProducts::where("id", $id)->first();
+            $product = Products::where("id", $id)->first();
 
             if ($product && $product->compose == 1) {
                 $lines_array = array();
 
-                $lines = ProductLines::where("id_product", $id)->get();
+
+                // TODO : mettre en place la lecture des produits associés
+                /*$lines = ProductLines::where("id_product", $id)->get();
                 if ($lines) {
                     foreach ($lines as $line) {
-                        if ($part = ProductProducts::where("id", $line->id_part)->first()) {
+                        if ($part = Products::where("id", $line->id_part)->first()) {
                             $line->product = $part;
                             $lines_array[] = $line;
                         }
                     }
-                }
+                }*/
 
                 $product->lines = $lines_array ;
             }
@@ -125,20 +127,22 @@ class Product extends Controller
         $code = $request->input('code', NULL);
 
         if (isset($code)) {
-            $product = ProductProducts::where("ref", $code)->first();
+            $product = Products::where("ref", $code)->first();
 
-            if ($product && $product->compose == 1) {
+
+            // TODO : traiter les lignes composées
+            /*if ($product && $product->compose == 1) {
                 $lines = ProductLines::where("id_product", $product->id)->get();
                 $product->lines = [];
                 if ($lines && is_array($lines)) {
                     foreach ($lines as $line) {
-                        if ($part = ProductProducts::where("id", $line->id_part)->fisrt()) {
+                        if ($part = Products::where("id", $line->id_part)->fisrt()) {
                             $line->product = $part;
                         }
                         array_push($product->lines, $line);
                     }
                 }
-            }
+            }*/
 
             if ($product) {
                 echo json_encode($product);
@@ -152,7 +156,7 @@ class Product extends Controller
 
     public function getAll()
     {
-        echo json_encode(ProductProducts::get());
+        echo json_encode(Products::get());
     }
 
     public function save()
@@ -172,10 +176,10 @@ class Product extends Controller
             }
 
 
-            $product = new ProductProducts();
+            $product = new Products();
 
             if (isset($data["id"]) && is_numeric($data["id"])) {
-                $product = ProductProducts::where('id', $data["id"])->first();
+                $product = Products::where('id', $data["id"])->first();
             }
 
             foreach ($data as $key => $value) {
@@ -227,7 +231,7 @@ class Product extends Controller
         $id = $request->input('id', 0);
 
         if (isset($id)) {
-            $product = ProductProducts::where("id", $id)->first() ;
+            $product = Products::where("id", $id)->first() ;
 
             if ($product->compose) {
                 ProductLines::where("id_product", $id)->delete();
@@ -252,12 +256,12 @@ class Product extends Controller
                 $price_ht = 0;
                 $price_ttc = 0;
                 foreach ($lines as $line) {
-                    $part = ProductProducts::where("id", $line->id_part)->first() ;
+                    $part = Products::where("id", $line->id_part)->first() ;
                     $price_ht += (floatval($part->price_ttc) * floatval($line->quantite));
                     $price_ttc += (floatval($part->price_ttc) * floatval($line->quantite));
                 }
 
-                ProductProducts::where("id", $id)->update(array('price_ht' => $price_ht, 'price_ttc' => $price_ttc));
+                Products::where("id", $id)->update(array('price_ht' => $price_ht, 'price_ttc' => $price_ttc));
             }
         }
     }

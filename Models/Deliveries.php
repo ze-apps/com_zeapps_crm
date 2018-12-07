@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\com_zeapps_crm\Models\DeliveryLines;
 use App\com_zeapps_crm\Models\StockMovements;
-use App\com_zeapps_crm\Models\ProductProducts as Product;
+use App\com_zeapps_crm\Models\Products;
 use Zeapps\Models\Config;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
@@ -143,7 +143,7 @@ class Deliveries extends Model
                 $new_id_lines[$old_id] = $deliveryLine->id;
 
                 if ($line->type === 'product') {
-                    $product = Product::where("id", $line->id_product)->first();
+                    $product = Products::where("id", $line->id_product)->first();
 
                     $stockMovement = new StockMovements();
                     $stockMovement->id_warehouse = $id_warehouse;
