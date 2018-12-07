@@ -68,7 +68,7 @@ app.factory("crmTotal", [function () {
                 dataPrice.priceUnitHT = montantHT;
                 dataPrice.priceUnitTTC = montantTTC;
                 dataPrice.priceTotalHT = montantHT * line.qty * remiseLigne ;
-                dataPrice.priceTotalTTC = montantTTC * ((line.value_taxe / 100) + 1) * line.qty * remiseLigne ;
+                dataPrice.priceTotalTTC = montantHT * ((line.value_taxe / 100) + 1) * line.qty * remiseLigne ;
 
                 line.price_unit = dataPrice.priceUnitHT ;
                 line.total_ht = dataPrice.priceTotalHT ;
