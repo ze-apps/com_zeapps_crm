@@ -13,7 +13,7 @@ class ComZeappsCrmProductsTable extends Migration
             $table->increments('id');
             $table->integer('id_cat')->default(0);
             $table->integer('id_parent')->default(0);
-            $table->integer('id_stock')->default(0);
+            $table->integer('id_product')->default(0);
             $table->string('type_product', 255)->default("");
             $table->tinyInteger('compose')->default(0); // TODO : à supprimer (contrôler que ce n'est pas utilisé)
             $table->string('ref', 255)->default("");

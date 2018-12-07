@@ -103,7 +103,7 @@ class ComZeappsCrmInitSeeds
 
 
         // import de Products
-        Capsule::table('com_zeapps_crm_product_products')->truncate();
+        Capsule::table('com_zeapps_crm_products')->truncate();
         $json_content = json_decode(file_get_contents(dirname(__FILE__) . "/Products.json"));
         foreach ($json_content as $data_json) {
             $obj_data = new Products();

@@ -3,12 +3,29 @@
     <div class="row">
         <div class="col-md-3">
             <div class="root">
-                <zeapps-happylittletree data-tree="tree.branches" data-update="update"</zeapps-happylittletree>
+                <zeapps-happylittletree data-tree="tree.branches" data-update="update"
+                </zeapps-happylittletree>
             </div>
         </div>
 
         <form name="newProduct" class="col-md-9">
             <div class="well">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>Type de produit <span class="required">*</span></label>
+                            <select ng-model="form.type_product" class="form-control"
+                                    ng-required="true">
+                                <option ng-repeat="type_product in type_products" value="@{{type_product.id}}">
+                                    @{{ type_product.label }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+
                 <div class="row">
                     <div class="col-md-2">
                         <div class="form-group">
@@ -16,32 +33,13 @@
                             <input type="text" ng-model="form.ref" class="form-control">
                         </div>
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-10">
                         <div class="form-group">
                             <label>Nom du produit <span class="required">*</span></label>
                             <input type="text" ng-model="form.name" class="form-control" ng-required="true">
                         </div>
                     </div>
-                    <div class="col-md-5">
-                        <div class="form-group">
-                            <label>Produit Stocké</label>
-                            <div class="input-group">
-                                <input type="text" ng-model="form.name_stock" class="form-control" disabled>
-
-                                <span class="input-group-btn">
-                                    <button class="btn btn-default" type="button" ng-click="removeProductStock()"
-                                            ng-show="form.id_stock != 0 && form.name_stock != undefined">x
-                                    </button>
-                                    <button class="btn btn-default" type="button" ng-click="loadProductStock()">...</button>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
                 </div>
-
-
-
-
 
 
                 <div class="row">
@@ -50,21 +48,20 @@
                             <label>Catégorie <span class="required">*</span></label>
 
                             <select ng-model="form.id_cat" ng-change="" class="form-control">
-                                <option ng-repeat="tree in tree_select" ng-value="@{{tree.id}}" ng-bind-html="tree.name | trusted" />
+                                <option ng-repeat="tree in tree_select" ng-value="@{{tree.id}}"
+                                        ng-bind-html="tree.name | trusted"/>
                             </select>
                         </div>
                     </div>
                 </div>
 
 
-
-
-
-                <div class="row">
+                <div class="row" ng-hide="form.type_product=='pack'">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>TVA <span class="required">*</span></label>
-                            <select ng-model="form.id_taxe" ng-change="updateTaxe();updatePrice('ttc')" class="form-control" ng-required="true">
+                            <select ng-model="form.id_taxe" ng-change="updateTaxe();updatePrice('ttc')"
+                                    class="form-control" ng-required="true">
                                 <option ng-repeat="taxe in taxes | filter:{ active : 1 }" ng-value="@{{taxe.id}}">
                                     @{{ taxe.label }}
                                 </option>
@@ -74,12 +71,12 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Compte Comptable</label>
-                            <span   ze-modalsearch="loadAccountingNumber"
-                                    data-http="accountingNumberHttp"
-                                    data-model="form.accounting_number"
-                                    data-fields="accountingNumberFields"
-                                    data-template-new="accountingNumberTplNew"
-                                    data-title="Choisir un compte comptable"></span>
+                            <span ze-modalsearch="loadAccountingNumber"
+                                  data-http="accountingNumberHttp"
+                                  data-model="form.accounting_number"
+                                  data-fields="accountingNumberFields"
+                                  data-template-new="accountingNumberTplNew"
+                                  data-title="Choisir un compte comptable"></span>
                         </div>
                     </div>
                 </div>
@@ -89,7 +86,8 @@
                         <div class="form-group">
                             <label>Prix HT <span class="required">*</span></label>
                             <div class="input-group">
-                                <input type="number" min="0" step="0.01" ng-model="form.price_ht" class="form-control" ng-change="updatePrice('ttc')" ng-required="true">
+                                <input type="number" min="0" step="0.01" string-to-number ng-model="form.price_ht" class="form-control"
+                                       ng-change="updatePrice('ttc')" ng-required="true" ng-disabled="form.type_product=='pack' && form.update_price_from_subline">
                                 <span class="input-group-addon">€</span>
                             </div>
                         </div>
@@ -98,24 +96,53 @@
                         <div class="form-group">
                             <label>Prix TTC <span class="required">*</span></label>
                             <div class="input-group">
-                                <input type="number" min="0" step="0.01" ng-model="form.price_ttc" class="form-control" ng-change="updatePrice('ht')" ng-required="true">
+                                <input type="number" min="0" step="0.01" string-to-number ng-model="form.price_ttc" class="form-control"
+                                       ng-change="updatePrice('ht')"
+                                       ng-required="true"
+                                       ng-disabled="form.type_product=='pack' && form.update_price_from_subline">
                                 <span class="input-group-addon">€</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
+                <div class="row" ng-show="form.type_product=='pack'">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox"
+                                           ng-model="form.update_price_from_subline"
+                                           ng-true-value="1"
+                                           ng-false-value="0"
+                                           ng-checked="form.update_price_from_subline*1"
+                                           ng-change="updatePriceSubLine()"> Calculer automatiquement le prix de vente
+                                </label>
+                            </div>
+
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" ng-model="form.show_subline"> Afficher le detail dans le document
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
                             <label>Description</label>
-                            <input type="text" ng-model="form.description" class="form-control">
+                            <textarea type="text" ng-model="form.description" class="form-control" rows="7"></textarea>
                         </div>
                     </div>
                 </div>
             </div>
-
-
 
 
             <div class="well" ng-show="attributes.length">
@@ -123,8 +150,11 @@
 
                     <div class="form-group" ng-repeat="attribute in attributes">
                         <label>@{{ attribute.name }} <span class="required" ng-if="attribute.required">*</span></label>
-                        <input type="@{{ attribute.type }}" ng-model="form.extra[attribute.name]" ng-class="attribute.type != 'checkbox' ? 'form-control' : ''" ng-required="attribute.required" ng-if="attribute.type != 'textarea'">
-                        <textarea ng-model="form.extra[attribute.name]" class="form-control" rows="3" ng-required="attribute.required" ng-if="attribute.type == 'textarea'"></textarea>
+                        <input type="@{{ attribute.type }}" ng-model="form.extra[attribute.name]"
+                               ng-class="attribute.type != 'checkbox' ? 'form-control' : ''"
+                               ng-required="attribute.required" ng-if="attribute.type != 'textarea'">
+                        <textarea ng-model="form.extra[attribute.name]" class="form-control" rows="3"
+                                  ng-required="attribute.required" ng-if="attribute.type == 'textarea'"></textarea>
                     </div>
 
                 </div>
@@ -136,6 +166,74 @@
                     <span class="required">*</span> champs obligatoires
                 </div>
             </div>
+
+
+            <!-- Article composant le pack -->
+            <div class="well" ng-show="form.type_product=='pack'">
+                <h3>Articles composants le pack</h3>
+
+                <div class="row">
+                    <div class="col-md-12 text-right">
+                    <span class="form-inline">
+                        <label>Code produit :</label>
+                        <span class="input-group">
+                            <input type="text" class="form-control input-sm inputCodeProduct" ng-model="codeProduct"
+                                   ng-keydown="keyEventaddFromCode($event)">
+                            <span class="input-group-addon" ng-click="addFromCode()">
+                                <i class="fa fa-fw fa-plus text-success"></i>
+                            </span>
+                        </span>
+                    </span>
+                        <ze-btn fa="tags" color="success" hint="produit" always-on="true" ng-click="addLine()"></ze-btn>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-striped table-condensed table-responsive">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Désignation</th>
+                                <th class="text-right">Qte</th>
+                                <th class="text-right">P. Unit. HT</th>
+                                <th class="text-right">Taxe</th>
+                                <th class="text-right">Montant HT</th>
+                                <th class="text-right">Montant TTC</th>
+                                <th class="text-right">Type</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody ui-sortable="sortable" class="sortableContainer">
+                            <tr ng-repeat="line in form.sublines" data-serialId="@{{ line.serialId }}">
+                                <td>@{{ line.ref }}</td>
+                                <td>
+                                    <strong>@{{ line.designation_title }} <span
+                                                ng-if="line.designation_desc">:</span></strong><br>
+                                    <span class="text-wrap">@{{ line.designation_desc }}</span>
+                                </td>
+                                <td class="text-right"><input type="text" ng-model="line.qty" ng-value="line.qty | number" ng-change="updatePrice()"></td>
+                                <td class="text-right">@{{ line.price_unit | currency }}</td>
+                                <td class="text-right">@{{ line.id_taxe != 0 ? (line.value_taxe | currency:'%':2) : ''
+                                    }}
+                                </td>
+                                <td class="text-right">@{{ line.total_ht | currency:'€':2 }}</td>
+                                <td class="text-right">@{{ line.total_ttc | currency:'€':2 }}</td>
+                                <td class="text-right">@{{ line.type }}</td>
+
+                                <td class="text-right">
+                                    <ze-btn fa="trash" color="danger" direction="left" hint="Supprimer"
+                                            ng-click="deleteLine(line)" ze-confirmation ng-if="line"></ze-btn>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+            </div>
+
 
             <form-buttons></form-buttons>
         </form>

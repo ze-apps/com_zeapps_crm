@@ -69,7 +69,7 @@ class Product extends Controller
         }
 
 
-        $products_rs = Products::orderBy('name', 'ASC');
+        $products_rs = Products::where("id_parent", 0)->orderBy('name', 'ASC');
         foreach ($filters as $key => $value) {
             if (strpos($key, " LIKE")) {
                 $key = str_replace(" LIKE", "", $key);

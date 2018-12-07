@@ -1,5 +1,5 @@
-app.controller("ComZeappsCrmQuoteFormLineCtrl", ["$scope", "zeHttp", "zeapps_modal", "crmTotal",
-    function ($scope, zhttp, zeapps_modal, crmTotal) {
+app.controller("ComZeappsCrmQuoteFormLineCtrl", ["$scope", "zeHttp", "zeapps_modal", "crmTotal", "toasts",
+    function ($scope, zhttp, zeapps_modal, crmTotal, toasts) {
 
         $scope.form.price_unit = $scope.form.price_unit * 1;
         $scope.form.price_unit_ttc_subline = $scope.form.price_unit_ttc_subline * 1;

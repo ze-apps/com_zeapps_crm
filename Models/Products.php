@@ -27,7 +27,7 @@ class Products extends Model {
         $this->fieldModelInfo->increments('id');
         $this->fieldModelInfo->integer('id_cat')->default(0);
         $this->fieldModelInfo->integer('id_parent')->default(0);
-        $this->fieldModelInfo->integer('id_stock')->default(0);
+        $this->fieldModelInfo->integer('id_product')->default(0);
         $this->fieldModelInfo->string('type_product', 255)->default("");
         $this->fieldModelInfo->tinyInteger('compose')->default(0); // TODO : à supprimer (contrôler que ce n'est pas utilisé)
         $this->fieldModelInfo->string('ref', 255)->default("");
