@@ -6,6 +6,7 @@
                 composé</a>
         </li>
     </ul>
+
     <div ng-show="navigationState =='body'">
         <div class="row">
             <div class="col-md-4">
@@ -173,6 +174,6 @@
                 </table>
             </div>
         </div>
-
     </div>
+
 </div>

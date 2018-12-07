@@ -53,7 +53,9 @@ class OrderLines extends Model {
 
 
     public static function getFromOrder($id_order) {
-        $lines = OrderLines::where('id_order', $id_order)->get() ;
+        $lines = OrderLines::where('id_order', $id_order)
+            ->where("id_parent", 0)
+            ->get() ;
 
         foreach ($lines as &$line) {
             $line->sublines = self::getSubLine($line->id) ;
@@ -88,13 +90,23 @@ class OrderLines extends Model {
         return parent::save($options);
     }
 
-    public static function updateOldTable($id_quote, $sort)
+    public static function updateOldTable($id_order, $sort)
     {
-        Capsule::statement('UPDATE com_zeapps_crm_order_lines SET sort = (sort-1) WHERE id_quote = ' . $id_quote . ' AND sort > ' . $sort);
+        Capsule::statement('UPDATE com_zeapps_crm_order_lines SET sort = (sort-1) WHERE id_order = ' . $id_order . ' AND sort > ' . $sort);
     }
 
-    public static function updateNewTable($id_quote, $sort)
+    public static function updateNewTable($id_order, $sort)
     {
-        Capsule::statement('UPDATE com_zeapps_crm_order_lines SET sort = (sort+1) WHERE id_quote = ' . $id_quote . ' AND sort >= ' . $sort);
+        Capsule::statement('UPDATE com_zeapps_crm_order_lines SET sort = (sort+1) WHERE id_order = ' . $id_order . ' AND sort >= ' . $sort);
+    }
+
+    public static function deleteLine($id) {
+        $sublines = OrderLines::where("id_parent", $id)->get() ;
+
+        foreach ($sublines as $subline) {
+            self::deleteLine($subline->id);
+        }
+
+        OrderLines::where("id", $id)->delete() ;
     }
 }

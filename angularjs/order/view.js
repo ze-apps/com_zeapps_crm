@@ -80,44 +80,49 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
 			$scope.navigationState = $rootScope.comZeappsCrmLastShowTabOrder ;
 		}
 
-		if($routeParams.id && $routeParams.id > 0){
-			zhttp.crm.order.get($routeParams.id).then(function(response){
-				if(response.data && response.data != "false"){
-					$scope.order = response.data.order;
+
+
+
+
+        var loadDocument = function(idDocument, next) {
+            zhttp.crm.order.get(idDocument).then(function (response) {
+                if (response.data && response.data != "false") {
+                    $scope.order = response.data.order;
 
                     $scope.credits = response.data.credits;
 
-                    $scope.activities = response.data.activities || [];
-					angular.forEach($scope.activities, function(activity){
-						activity.deadline = new Date(activity.deadline);
-					});
+                    $scope.activities = response.data.activities || [];
+                    angular.forEach($scope.activities, function (activity) {
+                        activity.deadline = new Date(activity.deadline);
+                    });
 
-					$scope.documents = response.data.documents || [];
-                    angular.forEach($scope.documents, function(document){
+                    $scope.documents = response.data.documents || [];
+                    angular.forEach($scope.documents, function (document) {
                         document.date = new Date(document.date);
                     });
 
                     $scope.order.global_discount = parseFloat($scope.order.global_discount);
-					$scope.order.date_creation = new Date($scope.order.date_creation);
-					$scope.order.date_limit = new Date($scope.order.date_limit);
+                    $scope.order.probability = parseFloat($scope.order.probability);
+                    $scope.order.date_creation = new Date($scope.order.date_creation);
+                    $scope.order.date_limit = new Date($scope.order.date_limit);
 
-					var i;
+                    var i;
 
-					for(i=0;i<$scope.activities.length;i++){
-						$scope.activities[i].reminder = new Date($scope.activities[i].reminder);
-					}
+                    for (i = 0; i < $scope.activities.length; i++) {
+                        $scope.activities[i].reminder = new Date($scope.activities[i].reminder);
+                    }
 
-					for(i=0;i<$scope.documents.length;i++){
-						$scope.documents[i].created_at = new Date($scope.documents[i].created_at);
-					}
+                    for (i = 0; i < $scope.documents.length; i++) {
+                        $scope.documents[i].created_at = new Date($scope.documents[i].created_at);
+                    }
 
-					var lines = response.data.lines || [];
-					angular.forEach(lines, function(line){
-						line.price_unit = parseFloat(line.price_unit);
-						line.qty = parseFloat(line.qty);
-						line.discount = parseFloat(line.discount);
-					});
-					$scope.lines = lines;
+                    var lines = response.data.lines || [];
+                    angular.forEach(lines, function (line) {
+                        line.price_unit = parseFloat(line.price_unit);
+                        line.qty = parseFloat(line.qty);
+                        line.discount = parseFloat(line.discount);
+                    });
+                    $scope.lines = lines;
 
                     crmTotal.init($scope.order, $scope.lines);
                     $scope.tvas = crmTotal.get.tvas;
@@ -128,35 +133,47 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                     $scope.order.total_ht = totals.total_ht;
                     $scope.order.total_tva = totals.total_tva;
                     $scope.order.total_ttc = totals.total_ttc;
-				}
-			});
+
+
+                    // call Callback
+                    if (next) {
+                        next() ;
+                    }
+                }
+            });
+        };
+
+
+
+
+
+
+		if($routeParams.id && $routeParams.id > 0){
+            loadDocument($routeParams.id) ;
 		}
 
 		//////////////////// FUNCTIONS ////////////////////
 
-		function broadcast(event, data){
-			if(data.received){
+        function broadcast(event, data) {
+            if (data.received) {
                 code_exists++;
-			}
-			else if(data.found !== undefined && code_exists > 0){
-				if(data.found){
-					code_exists = 0;
-				}
-				else{
-					code_exists--;
-					if(code_exists === 0){
-                        toasts("danger", "Aucun produit avec le code " + code + " trouvé dans la base de donnée.");
-					}
-				}
-			}
-			else {
+            } else if (data.found !== undefined && code_exists > 0) {
+                if (data.found) {
+                    code_exists = 0;
+                } else {
+                    code_exists--;
+                    if (code_exists === 0) {
+                        toasts("danger", "Aucun produit avec le code " + code + " trouvé dans la base de données.");
+                    }
+                }
+            } else {
                 $rootScope.$broadcast("comZeappsCrm_dataOrderHook",
                     {
                         order: $scope.order
                     }
                 );
             }
-		}
+        }
 		function broadcast_code(code){
 			$rootScope.$broadcast("comZeappsCrm_dataOrderHook",
 				{
@@ -240,12 +257,22 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
         function keyEventaddFromCode(){
             if($event.which === 13){
                 addFromCode();
+                setFocus($event.currentTarget);
+            } else if ($event.which === 9) {
+                addFromCode();
+                setFocus($event.currentTarget);
             }
         }
 
-		function addFromCode(){
-			if($scope.codeProduct !== "") {
-                code = $scope.codeProduct;
+        function setFocus(element) {
+            setTimeout(function () {
+                jQuery(element).focus();
+            }, 500);
+        }
+
+        function addFromCode() {
+            if ($scope.codeProduct !== "") {
+                var code = $scope.codeProduct;
                 zhttp.crm.product.get_code(code).then(function (response) {
                     if (response.data && response.data != "false") {
                         var line = {
@@ -258,9 +285,9 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                             qty: 1,
                             discount: 0.00,
                             price_unit: parseFloat(response.data.price_ht) || parseFloat(response.data.price_ttc),
-                            id_taxe: response.data.id_taxe,
+                            id_taxe: parseFloat(response.data.id_taxe),
                             value_taxe: parseFloat(response.data.value_taxe),
-                            accounting_number: parseFloat(response.data.accounting_number),
+                            accounting_number: response.data.accounting_number,
                             sort: $scope.lines.length
                         };
                         crmTotal.line.update(line);
@@ -275,18 +302,16 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                                 updateOrder();
                             }
                         });
-                    }
-                    else {
-                    	if($scope.hooks.length > 0) {
+                    } else {
+                        if ($scope.hooks.length > 0) {
                             broadcast_code($scope.codeProduct);
+                        } else {
+                            toasts("danger", "Aucun produit avec le code " + code + " trouvé dans la base de données.");
                         }
-                        else{
-                            toasts("danger", "Aucun produit avec le code " + code + " trouvé dans la base de donnée.");
-						}
                     }
                 });
             }
-		}
+        }
 
 		function addLine(){
 			// charge la modal de la liste de produit
@@ -400,54 +425,47 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
 			return crmTotal.sub.TTC($scope.lines, index);
 		}
 
-		function updateOrder(){
-			if($scope.order) {
-                $scope.order.global_discount = $scope.order.global_discount || 0;
+        function updateOrder() {
+            if ($scope.order) {
+                $scope.order.global_discount = $scope.order.global_discount || 0;
 
-				angular.forEach($scope.lines, function(line){
+                angular.forEach($scope.lines, function (line) {
                     crmTotal.line.update(line);
-                    if(line.id){
+                    if (line.id) {
                         updateLine(line);
                     }
                     var formatted_data = angular.toJson(line);
                     zhttp.crm.order.line.save(formatted_data)
-				});
-
-                crmTotal.init($scope.order, $scope.lines);
-                $scope.tvas = crmTotal.get.tvas;
-                var totals = crmTotal.get.totals;
-				$scope.order.total_prediscount_ht = totals.total_prediscount_ht;
-				$scope.order.total_prediscount_ttc = totals.total_prediscount_ttc;
-				$scope.order.total_discount = totals.total_discount;
-				$scope.order.total_ht = totals.total_ht;
-				$scope.order.total_tva = totals.total_tva;
-				$scope.order.total_ttc = totals.total_ttc;
-
-                var data = $scope.order;
-
-                var y = data.date_creation.getFullYear();
-                var M = data.date_creation.getMonth();
-                var d = data.date_creation.getDate();
-
-                data.date_creation = new Date(Date.UTC(y, M, d));
-
-                var y = data.date_limit.getFullYear();
-                var M = data.date_limit.getMonth();
-                var d = data.date_limit.getDate();
-
-                data.date_limit = new Date(Date.UTC(y, M, d));
-
-                var formatted_data = angular.toJson(data);
-                zhttp.crm.order.save(formatted_data).then(function(response){
-                    if(response.data && response.data != "false"){
-                        toasts('success', "Les informations du devis ont bien été mises a jour");
-                    }
-                    else{
-                        toasts('danger', "Il y a eu une erreur lors de la mise a jour des informations du devis");
-                    }
                 });
-			}
-		}
+
+                // reaload document
+                loadDocument($routeParams.id, function () {
+                    var data = $scope.order;
+
+                    var y = data.date_creation.getFullYear();
+                    var M = data.date_creation.getMonth();
+                    var d = data.date_creation.getDate();
+
+                    data.date_creation = new Date(Date.UTC(y, M, d));
+
+                    var y = data.date_limit.getFullYear();
+                    var M = data.date_limit.getMonth();
+                    var d = data.date_limit.getDate();
+
+                    data.date_limit = new Date(Date.UTC(y, M, d));
+
+                    var formatted_data = angular.toJson(data);
+                    zhttp.crm.order.save(formatted_data).then(function (response) {
+                        if (response.data && response.data != "false") {
+                            toasts('success', "Les informations de la commande ont bien été mises a jour");
+                        }
+                        else {
+                            toasts('danger', "Il y a eu une erreur lors de la mise a jour des informations de la commande");
+                        }
+                    });
+                }) ;
+            }
+        }
 
 		function addActivity(activity){
             var y = activity.deadline.getFullYear();

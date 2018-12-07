@@ -1,10 +1,11 @@
 app.controller("ComZeappsCrmQuoteFormLineCtrl", ["$scope", "zeHttp", "zeapps_modal", "crmTotal",
     function ($scope, zhttp, zeapps_modal, crmTotal) {
-        $scope.form.price_unit = $scope.form.price_unit * 1 ;
-        $scope.form.price_unit_ttc_subline = $scope.form.price_unit_ttc_subline * 1 ;
-        $scope.form.qty = $scope.form.qty * 1 ;
-        $scope.form.discount = $scope.form.discount * 1 ;
-        $scope.form.value_taxe = $scope.form.value_taxe * 1 ;
+
+        $scope.form.price_unit = $scope.form.price_unit * 1;
+        $scope.form.price_unit_ttc_subline = $scope.form.price_unit_ttc_subline * 1;
+        $scope.form.qty = $scope.form.qty * 1;
+        $scope.form.discount = $scope.form.discount * 1;
+        $scope.form.value_taxe = $scope.form.value_taxe * 1;
 
         $scope.navigationState = "body";
 
@@ -21,22 +22,22 @@ app.controller("ComZeappsCrmQuoteFormLineCtrl", ["$scope", "zeHttp", "zeapps_mod
 
 
         $scope.editLine = function () {
-            // TODO : traiter lors de la validation d'une sous ligne
-            updatePrice() ;
+            updatePrice();
         };
 
         $scope.updatePriceSubLine = function () {
-            updatePrice() ;
+            updatePrice();
         };
 
         $scope.updatePriceSubLineKeyUp = function () {
             delay(function (e) {
-                updatePrice() ;
+                updatePrice();
                 $scope.$apply();
             }, 1000);
         };
 
         var timer = 0;
+
         function delay(callback, ms) {
             var context = this, args = arguments;
             clearTimeout(timer);
@@ -46,14 +47,13 @@ app.controller("ComZeappsCrmQuoteFormLineCtrl", ["$scope", "zeHttp", "zeapps_mod
         }
 
 
-
         // définition du tableau des sous ligne
         if ($scope.form.sublines == undefined) {
             $scope.form.sublines = [];
         }
 
         for (var i = 0; i < $scope.form.sublines; i++) {
-            $scope.form.sublines.serialId = i + 1 ;
+            $scope.form.sublines.serialId = i + 1;
         }
         var nbElementSubLine = $scope.form.sublines.length + 1;
 
@@ -68,16 +68,16 @@ app.controller("ComZeappsCrmQuoteFormLineCtrl", ["$scope", "zeHttp", "zeapps_mod
             disabled: false,
             axis: "y",
             stop: function (event, ui) {
-                var indexSort = 0 ;
+                var indexSort = 0;
                 $("tr", $(ui.item[0]).parent()).each(function () {
                     indexSort++;
 
                     for (var i = 0; i < $scope.form.sublines.length; i++) {
                         if ($scope.form.sublines[i].serialId == $(this).attr("data-serialId")) {
-                            $scope.form.sublines[i].sort = indexSort ;
+                            $scope.form.sublines[i].sort = indexSort;
                         }
                     }
-                }) ;
+                });
             }
         };
 
@@ -100,12 +100,12 @@ app.controller("ComZeappsCrmQuoteFormLineCtrl", ["$scope", "zeHttp", "zeapps_mod
                         id_taxe: parseFloat(objReturn.id_taxe),
                         value_taxe: parseFloat(objReturn.value_taxe),
                         accounting_number: parseFloat(objReturn.accounting_number),
-                        sort: $scope.form.sublines.length+1,
+                        sort: $scope.form.sublines.length + 1,
                         serialId: nbElementSubLine,
                     };
                     $scope.form.sublines.push(line);
 
-                    updatePrice() ;
+                    updatePrice();
                 }
             });
         };
@@ -121,12 +121,9 @@ app.controller("ComZeappsCrmQuoteFormLineCtrl", ["$scope", "zeHttp", "zeapps_mod
 
                 $scope.form.sublines.splice($scope.form.sublines.indexOf(line), 1);
 
-                updatePrice() ;
+                updatePrice();
             }
         };
-
-
-
 
 
         $scope.addFromCode = addFromCode;
@@ -165,38 +162,30 @@ app.controller("ComZeappsCrmQuoteFormLineCtrl", ["$scope", "zeHttp", "zeapps_mod
                             id_taxe: parseFloat(response.data.id_taxe),
                             value_taxe: parseFloat(response.data.value_taxe),
                             accounting_number: parseFloat(response.data.accounting_number),
-                            sort: $scope.form.sublines.length+1,
+                            sort: $scope.form.sublines.length + 1,
                             serialId: nbElementSubLine,
                         };
                         $scope.form.sublines.push(line);
 
-                        updatePrice() ;
+                        updatePrice();
 
-                        $scope.codeProduct = "" ;
+                        $scope.codeProduct = "";
 
                     } else {
-                        toasts("danger", "Aucun produit avec le code " + code + " trouvé dans la base de donnée.");
+                        toasts("danger", "Aucun produit avec le code " + code + " trouvé dans la base de données.");
                     }
                 });
             }
         }
 
 
-
         // Update price TTC with subline
         var updatePrice = function () {
-            var dataPrice = crmTotal.getPriceLine($scope.form) ;
+            var dataPrice = crmTotal.getPriceLine($scope.form);
 
             $scope.form.price_unit_ht_indicated = dataPrice.priceUnitHT.toFixed(2);
             $scope.form.price_unit_ttc_subline = dataPrice.priceUnitTTC.toFixed(2);
-
-            //$scope.form.total_ht = dataPrice.priceTotalHT.toFixed(2) ;
-            //$scope.form.total_ttc = dataPrice.priceTotalTTC.toFixed(2) ;
         };
-
-
-
-
 
 
         $scope.updateTaxe = updateTaxe;

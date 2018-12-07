@@ -100,11 +100,12 @@ class Orders extends Model
 
 
         if (isset($src->lines)) {
+            self::createFromLine($src->lines, $id, 0) ;
         }
 
         return array(
             "id" => $id,
-            "numerotation" => $src->numerotation
+            "numerotation" => $order->numerotation
         );
     }
 
@@ -135,7 +136,7 @@ class Orders extends Model
                 $orderLine->id_parent = $idParent;
                 $orderLine->save();
 
-                if (is_array($sublines)) {
+                if ($sublines) {
                     self::createFromLine($sublines, $idDocument, $orderLine->id);
                 }
             }

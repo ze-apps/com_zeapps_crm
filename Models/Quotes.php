@@ -88,9 +88,6 @@ class Quotes extends Model
         unset($src->updated_at);
         unset($src->deleted_at);
 
-
-
-
         $quotes = new Quotes();
         foreach (self::getSchema() as $key) {
             if (isset($src->$key)) {
@@ -108,7 +105,7 @@ class Quotes extends Model
 
         return array(
             "id" => $id,
-            "numerotation" => $src->numerotation
+            "numerotation" => $quotes->numerotation
         );
     }
 
@@ -116,7 +113,6 @@ class Quotes extends Model
     {
         if ($lines) {
             foreach ($lines as $line) {
-                //$old_id = $line->id;
                 if (isset($line->sublines)) {
                     $sublines = $line->sublines;
                 } else {
@@ -135,11 +131,12 @@ class Quotes extends Model
                         $quote_line->$key = $line->$key;
                     }
                 }
-                $quote_line->id_invoice = $idDocument;
+                $quote_line->id_quote = $idDocument;
                 $quote_line->id_parent = $idParent;
                 $quote_line->save();
 
-                if (is_array($sublines)) {
+
+                if ($sublines) {
                     self::createFromLine($sublines, $idDocument, $quote_line->id);
                 }
             }

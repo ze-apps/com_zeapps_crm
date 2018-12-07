@@ -27,7 +27,7 @@
                     <th class="text-right">Total HT</th>
                     <th class="text-right">Total TTC</th>
                     <th>Date de création</th>
-                    <th>Date limite</th>
+                    <!--<th>Date limite</th>-->
                     <th>Responsable</th>
                     <th class="text-right">%</th>
                     <th>Statut</th>
@@ -48,7 +48,7 @@
                     <td ng-click="goTo(delivery.id)" class="text-right">@{{delivery.total_ht | currency:'€':2}}</td>
                     <td ng-click="goTo(delivery.id)" class="text-right">@{{delivery.total_ttc | currency:'€':2}}</td>
                     <td ng-click="goTo(delivery.id)">@{{delivery.date_creation || "-" | date:'dd/MM/yyyy'}}</td>
-                    <td ng-click="goTo(delivery.id)">@{{delivery.date_limit || "-" | date:'dd/MM/yyyy'}}</td>
+                    <!--<td ng-click="goTo(delivery.id)">@{{delivery.date_limit || "-" | date:'dd/MM/yyyy'}}</td>-->
                     <td ng-click="goTo(delivery.id)">@{{delivery.name_user_account_manager}}</td>
                     <td ng-click="goTo(delivery.id)" class="text-right">@{{delivery.probability | number:2}}</td>
                     <td ng-click="goTo(delivery.id)">@{{delivery.status}}</td>

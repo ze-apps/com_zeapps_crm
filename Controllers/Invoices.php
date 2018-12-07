@@ -333,6 +333,7 @@ class Invoices extends Controller
     {
         // constitution du tableau
         $data = array();
+        $id_invoice_line = 0;
 
         if (strcasecmp($_SERVER['REQUEST_METHOD'], 'post') === 0 && stripos($_SERVER['CONTENT_TYPE'], 'application/json') !== FALSE) {
             // POST is actually in json format, do an internal translation
@@ -341,25 +342,77 @@ class Invoices extends Controller
 
 
         if (isset($data)) {
-            $invoiceLine = new InvoiceLines();
-
-            if (isset($data["id"]) && is_numeric($data["id"])) {
-                $invoiceLine = InvoiceLines::where('id', $data["id"])->first();
-            }
-
-            foreach ($data as $key => $value) {
-                $invoiceLine->$key = $value;
-            }
-
-            if (!isset($invoiceLine->accounting_number)) {
-                $invoiceLine->accounting_number = "";
-            }
-
-
-            $invoiceLine->save();
+            $id_invoice_line = $this->saveLineData($data, $data["id_invoice"], 0);
         }
 
-        echo json_encode($invoiceLine->id);
+        echo json_encode($id_invoice_line);
+    }
+
+    private function saveLineData($data, $id_invoice, $id_parent) {
+
+        $idSublineToDelete = array() ;
+
+
+        $invoiceLine = new InvoiceLines();
+
+        if (isset($data["id"]) && is_numeric($data["id"])) {
+            // load subline to check if need to delete
+            $sublines = InvoiceLines::where("id_parent", $data["id"])->get() ;
+
+            foreach ($sublines as $subline) {
+                $idSublineToDelete[] = $subline->id ;
+            }
+
+
+            // load line
+            $invoiceLine = InvoiceLines::where('id', $data["id"])->first();
+        }
+
+        if (!isset($data["id_invoice"])) {
+            $data["id_invoice"] = $id_invoice ;
+        }
+
+
+        foreach ($data as $key => $value) {
+            $invoiceLine->$key = $value;
+        }
+
+
+        // set id parent line
+        $invoiceLine->id_parent = $id_parent ;
+
+
+
+        if (!isset($invoiceLine->accounting_number)) {
+            $invoiceLine->accounting_number = "";
+        }
+
+
+        $invoiceLine->save();
+
+
+        if (isset($data["sublines"]) && count($data["sublines"])) {
+            foreach ($data["sublines"] as $dataSubline) {
+
+                if (isset($dataSubline["id"])) {
+                    $key = array_search($dataSubline["id"], $idSublineToDelete);
+                    if ($key !== false) {
+                        unset($idSublineToDelete[$key]);
+                    }
+                }
+
+                $this->saveLineData($dataSubline, $data["id_invoice"], $invoiceLine->id);
+            }
+        }
+
+        if (count($idSublineToDelete)) {
+            foreach ($idSublineToDelete as $idToDelete) {
+                InvoiceLines::deleteLine($idToDelete);
+            }
+        }
+
+
+        return $invoiceLine->id ;
     }
 
     public function updateLinePosition()

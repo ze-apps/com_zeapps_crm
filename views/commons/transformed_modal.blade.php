@@ -36,18 +36,6 @@
                         <ze-btn fa="download" color="primary" hint="Obtenir le PDF" always-on="true" ng-click="pdf('order', documents.orders.id)"></ze-btn>
                     </td>
                 </tr>
-                <tr ng-show="documents.deliveries">
-                    <td>
-                        Bon de livraison n°@{{documents.deliveries.numerotation}}
-                    </td>
-                    <td></td>
-                    <td class="text-center">
-                        <ze-btn fa="eye" color="info" hint="Consulter" always-on="true" ng-click="goTo('delivery', documents.deliveries.id)"></ze-btn>
-                    </td>
-                    <td class="text-right">
-                        <ze-btn fa="download" color="primary" hint="Obtenir le PDF" always-on="true" ng-click="pdf('delivery', documents.deliveries.id)"></ze-btn>
-                    </td>
-                </tr>
                 <tr ng-show="documents.invoices">
                     <td>
                         Facture n°@{{documents.invoices.numerotation || "non cloturée"}}
@@ -60,6 +48,18 @@
                     </td>
                     <td class="text-right">
                         <ze-btn fa="download" color="primary" hint="Obtenir le PDF" always-on="true" ng-click="pdf('invoice', documents.invoices.id)"></ze-btn>
+                    </td>
+                </tr>
+                <tr ng-show="documents.deliveries">
+                    <td>
+                        Bon de livraison n°@{{documents.deliveries.numerotation}}
+                    </td>
+                    <td></td>
+                    <td class="text-center">
+                        <ze-btn fa="eye" color="info" hint="Consulter" always-on="true" ng-click="goTo('delivery', documents.deliveries.id)"></ze-btn>
+                    </td>
+                    <td class="text-right">
+                        <ze-btn fa="download" color="primary" hint="Obtenir le PDF" always-on="true" ng-click="pdf('delivery', documents.deliveries.id)"></ze-btn>
                     </td>
                 </tr>
                 </tbody>

@@ -132,7 +132,7 @@ class Invoices extends Model
 
         return array(
             "id" => $id,
-            "numerotation" => $src->numerotation
+            "numerotation" => $invoice->numerotation
         );
     }
 
@@ -163,7 +163,7 @@ class Invoices extends Model
                 $invoiceLine->id_parent = $idParent;
                 $invoiceLine->save();
 
-                if (is_array($sublines)) {
+                if ($sublines) {
                     self::createFromLine($sublines, $idDocument, $invoiceLine->id);
                 }
             }

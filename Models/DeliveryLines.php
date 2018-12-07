@@ -52,7 +52,9 @@ class DeliveryLines extends Model {
 
 
     public static function getFromDelivery($id_delivery) {
-        $lines = DeliveryLines::where('id_delivery', $id_delivery)->get() ;
+        $lines = DeliveryLines::where('id_delivery', $id_delivery)
+            ->where("id_parent", 0)
+            ->get() ;
 
         foreach ($lines as &$line) {
             $line->sublines = self::getSubLine($line->id) ;
@@ -89,13 +91,23 @@ class DeliveryLines extends Model {
         return parent::save($options);
     }
 
-    public static function updateOldTable($id_quote, $sort)
+    public static function updateOldTable($id_delivery, $sort)
     {
-        Capsule::statement('UPDATE com_zeapps_crm_delivery_lines SET sort = (sort-1) WHERE id_quote = ' . $id_quote . ' AND sort > ' . $sort);
+        Capsule::statement('UPDATE com_zeapps_crm_delivery_lines SET sort = (sort-1) WHERE id_delivery = ' . $id_delivery . ' AND sort > ' . $sort);
     }
 
-    public static function updateNewTable($id_quote, $sort)
+    public static function updateNewTable($id_delivery, $sort)
     {
-        Capsule::statement('UPDATE com_zeapps_crm_delivery_lines SET sort = (sort+1) WHERE id_quote = ' . $id_quote . ' AND sort >= ' . $sort);
+        Capsule::statement('UPDATE com_zeapps_crm_delivery_lines SET sort = (sort+1) WHERE id_delivery = ' . $id_delivery . ' AND sort >= ' . $sort);
+    }
+
+    public static function deleteLine($id) {
+        $sublines = DeliveryLines::where("id_parent", $id)->get() ;
+
+        foreach ($sublines as $subline) {
+            self::deleteLine($subline->id);
+        }
+
+        DeliveryLines::where("id", $id)->delete() ;
     }
 }

@@ -31,8 +31,6 @@ Routeur::post("/com_zeapps_crm/quotes/del_activity/{id}", 'App\\com_zeapps_crm\\
 
 Routeur::post("/com_zeapps_crm/quotes/makePDF/{id}", 'App\\com_zeapps_crm\\Controllers\\Quotes@makePDF');
 
-
-
 // TODO : implémenter le methode ci-dessous
 // TODO : implémenter le methode ci-dessous
 // TODO : implémenter le methode ci-dessous

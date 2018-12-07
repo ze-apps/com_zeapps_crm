@@ -294,9 +294,11 @@ class Orders extends Controller
     }
 
 
-    public function saveLine(){
+    public function saveLine()
+    {
         // constitution du tableau
-        $data = array() ;
+        $data = array();
+        $id_order_line = 0;
 
         if (strcasecmp($_SERVER['REQUEST_METHOD'], 'post') === 0 && stripos($_SERVER['CONTENT_TYPE'], 'application/json') !== FALSE) {
             // POST is actually in json format, do an internal translation
@@ -305,26 +307,82 @@ class Orders extends Controller
 
 
         if (isset($data)) {
-            $orderLine = new OrderLines();
-
-            if (isset($data["id"]) && is_numeric($data["id"])) {
-                $orderLine = OrderLines::where('id', $data["id"])->first();
-            }
-
-            foreach ($data as $key => $value) {
-                $orderLine->$key = $value;
-            }
-
-            if (!isset($orderLine->accounting_number)) {
-                $orderLine->accounting_number = "" ;
-            }
-
-
-            $orderLine->save();
+            $id_order_line = $this->saveLineData($data, $data["id_order"], 0);
         }
 
-        echo json_encode($orderLine->id);
+        echo json_encode($id_order_line);
     }
+
+    private function saveLineData($data, $id_order, $id_parent) {
+        $idSublineToDelete = array() ;
+
+
+        $orderLine = new OrderLines();
+
+        if (isset($data["id"]) && is_numeric($data["id"])) {
+            // load subline to check if need to delete
+            $sublines = OrderLines::where("id_parent", $data["id"])->get() ;
+
+            foreach ($sublines as $subline) {
+                $idSublineToDelete[] = $subline->id ;
+            }
+
+
+            // load line
+            $orderLine = OrderLines::where('id', $data["id"])->first();
+        }
+
+        if (!isset($data["id_order"])) {
+            $data["id_order"] = $id_order ;
+        }
+
+
+        foreach ($data as $key => $value) {
+            $orderLine->$key = $value;
+        }
+
+
+        // set id parent line
+        $orderLine->id_parent = $id_parent ;
+
+
+
+        if (!isset($orderLine->accounting_number)) {
+            $orderLine->accounting_number = "";
+        }
+
+        $orderLine->save();
+
+
+        if (isset($data["sublines"]) && count($data["sublines"])) {
+            foreach ($data["sublines"] as $dataSubline) {
+
+                if (isset($dataSubline["id"])) {
+                    $key = array_search($dataSubline["id"], $idSublineToDelete);
+                    if ($key !== false) {
+                        unset($idSublineToDelete[$key]);
+                    }
+                }
+
+                $this->saveLineData($dataSubline, $data["id_order"], $orderLine->id);
+            }
+        }
+
+        if (count($idSublineToDelete)) {
+            foreach ($idSublineToDelete as $idToDelete) {
+                OrderLines::deleteLine($idToDelete);
+            }
+        }
+
+
+        return $orderLine->id ;
+    }
+
+
+
+
+
+
 
     public function updateLinePosition(){
         // constitution du tableau
@@ -351,10 +409,11 @@ class Orders extends Controller
         echo json_encode($data['id']);
     }
 
-    public function deleteLine(Request $request){
+    public function deleteLine(Request $request)
+    {
         $id = $request->input('id', 0);
 
-        if($id){
+        if ($id) {
             $line = OrderLines::where("id", $id)->first();
             OrderLines::updateOldTable($line->id_order, $line->sort);
 

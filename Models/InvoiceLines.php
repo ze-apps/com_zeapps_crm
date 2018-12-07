@@ -51,7 +51,9 @@ class InvoiceLines extends Model {
     }
 
     public static function getFromInvoice($id_invoice) {
-        $lines = InvoiceLines::where('id_invoice', $id_invoice)->get() ;
+        $lines = InvoiceLines::where('id_invoice', $id_invoice)
+            ->where("id_parent", 0)
+            ->get() ;
 
         foreach ($lines as &$line) {
             $line->sublines = self::getSubLine($line->id) ;
@@ -86,13 +88,23 @@ class InvoiceLines extends Model {
         return parent::save($options);
     }
 
-    public static function updateOldTable($id_quote, $sort)
+    public static function updateOldTable($id_invoice, $sort)
     {
-        Capsule::statement('UPDATE com_zeapps_crm_invoice_lines SET sort = (sort-1) WHERE id_quote = ' . $id_quote . ' AND sort > ' . $sort);
+        Capsule::statement('UPDATE com_zeapps_crm_invoice_lines SET sort = (sort-1) WHERE id_invoice = ' . $id_invoice . ' AND sort > ' . $sort);
     }
 
-    public static function updateNewTable($id_quote, $sort)
+    public static function updateNewTable($id_invoice, $sort)
     {
-        Capsule::statement('UPDATE com_zeapps_crm_invoice_lines SET sort = (sort+1) WHERE id_quote = ' . $id_quote . ' AND sort >= ' . $sort);
+        Capsule::statement('UPDATE com_zeapps_crm_invoice_lines SET sort = (sort+1) WHERE id_invoice = ' . $id_invoice . ' AND sort >= ' . $sort);
+    }
+
+    public static function deleteLine($id) {
+        $sublines = InvoiceLines::where("id_parent", $id)->get() ;
+
+        foreach ($sublines as $subline) {
+            self::deleteLine($subline->id);
+        }
+
+        InvoiceLines::where("id", $id)->delete() ;
     }
 }

@@ -145,11 +145,30 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
         }
 
         //////////////////// FUNCTIONS ////////////////////
-
-        function broadcast() {
+        function broadcast(event, data) {
+            if (data.received) {
+                code_exists++;
+            } else if (data.found !== undefined && code_exists > 0) {
+                if (data.found) {
+                    code_exists = 0;
+                } else {
+                    code_exists--;
+                    if (code_exists === 0) {
+                        toasts("danger", "Aucun produit avec le code " + code + " trouvé dans la base de données.");
+                    }
+                }
+            } else {
+                $rootScope.$broadcast("comZeappsCrm_dataQuoteHook",
+                    {
+                        order: $scope.order
+                    }
+                );
+            }
+        }
+        function broadcast_code(code){
             $rootScope.$broadcast("comZeappsCrm_dataQuoteHook",
                 {
-                    quote: $scope.quote
+                    code: code
                 }
             );
         }
@@ -259,7 +278,7 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                             price_unit: parseFloat(response.data.price_ht) || parseFloat(response.data.price_ttc),
                             id_taxe: parseFloat(response.data.id_taxe),
                             value_taxe: parseFloat(response.data.value_taxe),
-                            accounting_number: parseFloat(response.data.accounting_number),
+                            accounting_number: response.data.accounting_number,
                             sort: $scope.lines.length
                         };
                         crmTotal.line.update(line);
@@ -275,7 +294,11 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                             }
                         });
                     } else {
-                        toasts("danger", "Aucun produit avec le code " + code + " trouvé dans la base de donnée.");
+                        if ($scope.hooks.length > 0) {
+                            broadcast_code($scope.codeProduct);
+                        } else {
+                            toasts("danger", "Aucun produit avec le code " + code + " trouvé dans la base de données.");
+                        }
                     }
                 });
             }
@@ -405,19 +428,6 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                     var formatted_data = angular.toJson(line);
                     zhttp.crm.quote.line.save(formatted_data);
                 });
-
-
-
-                /*crmTotal.init($scope.quote, $scope.lines);
-                $scope.tvas = crmTotal.get.tvas;
-                var totals = crmTotal.get.totals;
-                $scope.quote.total_prediscount_ht = totals.total_prediscount_ht;
-                $scope.quote.total_prediscount_ttc = totals.total_prediscount_ttc;
-                $scope.quote.total_discount = totals.total_discount;
-                $scope.quote.total_ht = totals.total_ht;
-                $scope.quote.total_tva = totals.total_tva;
-                $scope.quote.total_ttc = totals.total_ttc;*/
-
 
                 // reaload document
                 loadDocument($routeParams.id, function () {

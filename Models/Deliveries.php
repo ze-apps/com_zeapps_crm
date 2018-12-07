@@ -107,7 +107,7 @@ class Deliveries extends Model
 
         return array(
             "id" => $id,
-            "numerotation" => $src->numerotation
+            "numerotation" => $delivery->numerotation
         );
     }
 
@@ -157,8 +157,8 @@ class Deliveries extends Model
                     $stockMovement->save();
                 }
 
-                if (is_array($sublines)) {
-                    self::createFromLine($sublines, $idDocument, $deliveryLine->id);
+                if ($sublines) {
+                    self::createFromLine($sublines, $idDocument, $deliveryLine->id, $id_warehouse, $delivery_number, $mvt_date);
                 }
             }
         }
