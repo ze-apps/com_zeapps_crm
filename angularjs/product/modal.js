@@ -28,15 +28,21 @@ app.controller("ComZeappsCrmModalSearchProductCtrl", ["$scope", "$uibModalInstan
 				type: 'text',
 				label: 'Référence'
         	},
-        	{
-				format: 'input',
-				field: 'name LIKE',
-				type: 'text',
-				label: 'Nom du produit'
-        	}
+            {
+                format: 'input',
+                field: 'name LIKE',
+                type: 'text',
+                label: 'Nom du produit'
+            },
+            {
+                format: 'checkbox',
+                field: 'active',
+                type: 'checkbox',
+                label: 'Actif'
+            }
         ]
     };
-    $scope.filter_model = {};
+    $scope.filter_model = {"active":true};
     $scope.page = 1;
     $scope.pageSize = 15;
 
@@ -80,7 +86,17 @@ app.controller("ComZeappsCrmModalSearchProductCtrl", ["$scope", "$uibModalInstan
 	}
 
 	function select_product(produit) {
-		$uibModalInstance.close(produit);
+
+		// Recherche le subline pour les pack
+		if (produit.type_product == 'pack') {
+            zhttp.crm.product.get(produit.id).then(function (response) {
+                if (response.data && response.data != "false") {
+                    $uibModalInstance.close(response.data);
+                }
+            });
+		} else {
+            $uibModalInstance.close(produit);
+		}
 	}
 
 }]) ;

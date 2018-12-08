@@ -39,15 +39,17 @@
                     <th>Référence</th>
                     <th>Nom du produit</th>
                     <th>Prix HT</th>
+                    <th>Actif</th>
                 </tr>
                 <tr class="leaf" ng-repeat="product in products | orderBy: 'name'" ng-click="select_product(product)">
                     <td>
-                        <i class="fa fa-tag" ng-if="product.compose == 0"></i>
-                        <i class="fa fa-tags" ng-if="product.compose != 0"></i>
+                        <i class="fa fa-tag" ng-if="product.type_product != 'pack'"></i>
+                        <i class="fa fa-tags" ng-if="product.type_product == 'pack'"></i>
                     </td>
                     <td>@{{ product.ref }}</td>
                     <td>@{{ product.name }}</td>
-                    <td>@{{ product.compose == 0 ? ( product.price_ht | currency ) : '-' }}</td>
+                    <td>@{{ product.price_ht | currency }}</td>
+                    <td><span ng-if="product.active">OUI</span><span ng-if="!product.active">NON</span></td>
                 </tr>
             </table>
 

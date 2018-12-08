@@ -266,33 +266,48 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                 var code = $scope.codeProduct;
                 zhttp.crm.product.get_code(code).then(function (response) {
                     if (response.data && response.data != "false") {
-                        var line = {
-                            id_quote: $routeParams.id,
-                            type: "product",
-                            id_product: response.data.id,
-                            ref: response.data.ref,
-                            designation_title: response.data.name,
-                            designation_desc: response.data.description,
-                            qty: 1,
-                            discount: 0.00,
-                            price_unit: parseFloat(response.data.price_ht) || parseFloat(response.data.price_ttc),
-                            id_taxe: parseFloat(response.data.id_taxe),
-                            value_taxe: parseFloat(response.data.value_taxe),
-                            accounting_number: response.data.accounting_number,
-                            sort: $scope.lines.length
-                        };
-                        crmTotal.line.update(line);
+                        if (response.data.active) {
+                            var line = {
+                                id_quote: $routeParams.id,
+                                type: response.data.type_product,
+                                id_product: response.data.id,
+                                ref: response.data.ref,
+                                designation_title: response.data.name,
+                                designation_desc: response.data.description,
+                                qty: 1,
+                                discount: 0.00,
+                                price_unit: parseFloat(response.data.price_ht) || parseFloat(response.data.price_ttc),
+                                id_taxe: parseFloat(response.data.id_taxe),
+                                value_taxe: parseFloat(response.data.value_taxe),
+                                accounting_number: response.data.accounting_number,
+                                sort: $scope.lines.length,
 
-                        $scope.codeProduct = "";
+                                total_ht:response.data.price_ht,
+                                total_ttc:response.data.price_ttc,
+                                price_unit_ht_indicated:response.data.price_ht,
+                                price_unit_ttc_subline:response.data.price_ttc,
 
-                        var formatted_data = angular.toJson(line);
-                        zhttp.crm.quote.line.save(formatted_data).then(function (response) {
-                            if (response.data && response.data != "false") {
-                                line.id = response.data;
-                                $scope.lines.push(line);
-                                updateQuote();
-                            }
-                        });
+
+                                update_price_from_subline:response.data.update_price_from_subline,
+                                show_subline:response.data.show_subline,
+
+                                sublines:addSublines(response.data.sublines),
+                            };
+                            crmTotal.line.update(line);
+
+                            $scope.codeProduct = "";
+
+                            var formatted_data = angular.toJson(line);
+                            zhttp.crm.quote.line.save(formatted_data).then(function (response) {
+                                if (response.data && response.data != "false") {
+                                    line.id = response.data;
+                                    $scope.lines.push(line);
+                                    updateQuote();
+                                }
+                            });
+                        } else {
+                            toasts("danger", "Ce produit n'est plus actif");
+                        }
                     } else {
                         if ($scope.hooks.length > 0) {
                             broadcast_code($scope.codeProduct);
@@ -308,33 +323,85 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
             // charge la modal de la liste de produit
             zeapps_modal.loadModule("com_zeapps_crm", "search_product", {}, function (objReturn) {
                 if (objReturn) {
-                    var line = {
-                        id_quote: $routeParams.id,
-                        type: "product",
-                        id_product: objReturn.id,
-                        ref: objReturn.ref,
-                        designation_title: objReturn.name,
-                        designation_desc: objReturn.description,
-                        qty: 1,
-                        discount: 0.00,
-                        price_unit: parseFloat(objReturn.price_ht) || parseFloat(objReturn.price_ttc),
-                        id_taxe: parseFloat(objReturn.id_taxe),
-                        value_taxe: parseFloat(objReturn.value_taxe),
-                        accounting_number: parseFloat(objReturn.accounting_number),
-                        sort: $scope.lines.length
-                    };
-                    crmTotal.line.update(line);
+                    if (objReturn.active) {
+                        var line = {
+                            id_quote: $routeParams.id,
+                            type: objReturn.type_product,
+                            id_product: objReturn.id,
+                            ref: objReturn.ref,
+                            designation_title: objReturn.name,
+                            designation_desc: objReturn.description,
+                            qty: 1,
+                            discount: 0.00,
+                            price_unit: parseFloat(objReturn.price_ht) || parseFloat(objReturn.price_ttc),
+                            id_taxe: parseFloat(objReturn.id_taxe),
+                            value_taxe: parseFloat(objReturn.value_taxe),
+                            accounting_number: parseFloat(objReturn.accounting_number),
+                            sort: $scope.lines.length,
 
-                    var formatted_data = angular.toJson(line);
-                    zhttp.crm.quote.line.save(formatted_data).then(function (response) {
-                        if (response.data && response.data != "false") {
-                            line.id = response.data;
-                            $scope.lines.push(line);
-                            updateQuote();
-                        }
-                    });
+                            total_ht:objReturn.price_ht,
+                            total_ttc:objReturn.price_ttc,
+                            price_unit_ht_indicated:objReturn.price_ht,
+                            price_unit_ttc_subline:objReturn.price_ttc,
+
+                            update_price_from_subline:objReturn.update_price_from_subline,
+                            show_subline:objReturn.show_subline,
+
+                            sublines:addSublines(objReturn.sublines),
+                        };
+                        crmTotal.line.update(line);
+
+                        var formatted_data = angular.toJson(line);
+                        zhttp.crm.quote.line.save(formatted_data).then(function (response) {
+                            if (response.data && response.data != "false") {
+                                line.id = response.data;
+                                $scope.lines.push(line);
+                                updateQuote();
+                            }
+                        });
+                    } else {
+                        toasts("danger", "Ce produit n'est plus actif");
+                    }
                 }
             });
+        }
+
+
+        function addSublines(sublines) {
+            var dataSublines = [];
+
+            if (sublines) {
+                for(var i = 0 ; i < sublines.length ; i++) {
+                    var line = {
+                        type: sublines[i].type_product,
+                        id_product: sublines[i].id,
+                        ref: sublines[i].ref,
+                        designation_title: sublines[i].name,
+                        designation_desc: sublines[i].description,
+                        qty: 1,
+                        discount: 0.00,
+                        price_unit: parseFloat(sublines[i].price_ht) || parseFloat(sublines[i].price_ttc),
+                        id_taxe: parseFloat(sublines[i].id_taxe),
+                        value_taxe: parseFloat(sublines[i].value_taxe),
+                        accounting_number: parseFloat(sublines[i].accounting_number),
+
+                        total_ht:sublines[i].price_ht,
+                        total_ttc:sublines[i].price_ttc,
+                        price_unit_ht_indicated:sublines[i].price_ht,
+                        price_unit_ttc_subline:sublines[i].price_ttc,
+
+                        sublines:addSublines(sublines[i].sublines),
+
+                        update_price_from_subline:sublines[i].update_price_from_subline,
+                        show_subline:sublines[i].show_subline,
+
+                        sort: sublines[i].sort
+                    };
+                    dataSublines.push(line) ;
+                }
+            }
+
+            return dataSublines ;
         }
 
         function addSubTotal() {

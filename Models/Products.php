@@ -29,7 +29,6 @@ class Products extends Model {
         $this->fieldModelInfo->integer('id_parent')->default(0);
         $this->fieldModelInfo->integer('id_product')->default(0);
         $this->fieldModelInfo->string('type_product', 255)->default("");
-        $this->fieldModelInfo->tinyInteger('compose')->default(0); // TODO : à supprimer (contrôler que ce n'est pas utilisé)
         $this->fieldModelInfo->string('ref', 255)->default("");
         $this->fieldModelInfo->string('name', 255)->default("");
         $this->fieldModelInfo->text('description');
@@ -45,6 +44,7 @@ class Products extends Model {
         $this->fieldModelInfo->decimal('price_unit_ttc_subline', 8, 2)->default(0);
         $this->fieldModelInfo->integer('sort')->default(0);
         $this->fieldModelInfo->mediumtext('extra');
+        $this->fieldModelInfo->tinyInteger('active')->default(1);
         $this->fieldModelInfo->timestamps();
         $this->fieldModelInfo->softDeletes();
 

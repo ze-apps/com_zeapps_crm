@@ -15,7 +15,6 @@ class ComZeappsCrmProductsTable extends Migration
             $table->integer('id_parent')->default(0);
             $table->integer('id_product')->default(0);
             $table->string('type_product', 255)->default("");
-            $table->tinyInteger('compose')->default(0); // TODO : à supprimer (contrôler que ce n'est pas utilisé)
             $table->string('ref', 255)->default("");
             $table->string('name', 255)->default("");
             $table->text('description');
@@ -30,6 +29,7 @@ class ComZeappsCrmProductsTable extends Migration
             $table->tinyInteger('show_subline', false)->default(0);
             $table->decimal('price_unit_ttc_subline', 8, 2)->default(0);
             $table->integer('sort')->default(0);
+            $table->tinyInteger('active')->default(1);
             $table->mediumtext('extra');
             $table->timestamps();
             $table->softDeletes();

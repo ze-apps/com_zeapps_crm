@@ -17,7 +17,6 @@
                     </span>
                     <a class='btn btn-xs btn-success' ng-href='/ng/com_zeapps_crm/product/new_category/@{{ currentBranch.id || 0 }}'><span class='fa fa-plus' aria-hidden='true'></span> Sous-categorie</a>
                     <a class='btn btn-xs btn-success' ng-href='/ng/com_zeapps_crm/product/new_product/@{{ currentBranch.id || 0 }}'><span class='fa fa-plus' aria-hidden='true'></span> Produit</a>
-                    <a class='btn btn-xs btn-success' ng-href='/ng/com_zeapps_crm/product/new_product_compose/@{{ currentBranch.id || 0 }}'><span class='fa fa-plus' aria-hidden='true'></span> Produit Compose</a>
                 </div>
                 <h3 class="text-capitalize active-category-title">
                     @{{ currentBranch.name }}
@@ -66,21 +65,23 @@
                                 <th class="text-right">Prix HT</th>
                                 <th class="text-right">TVA (%)</th>
                                 <th class="text-right">Prix TTC</th>
+                                <th class="text-center">Actif</th>
                                 <th class="text-right">Actions</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr class="leaf" ng-repeat="product in products | filter:quicksearch | orderBy: 'name'">
-                                <td ng-click="goTo(product.id, product.compose)">
-                                    <i class="fa fa-tag" ng-if="product.compose == 0"></i>
-                                    <i class="fa fa-tags" ng-if="product.compose != 0"></i>
+                                <td ng-click="goTo(product.id)">
+                                    <i class="fa fa-tag" ng-if="product.type_product != 'pack'"></i>
+                                    <i class="fa fa-tags" ng-if="product.type_product == 'pack'"></i>
                                 </td>
-                                <td ng-click="goTo(product.id, product.compose)">@{{ product.ref }}</td>
-                                <td ng-click="goTo(product.id, product.compose)">@{{ product.name }}</td>
-                                <td ng-click="goTo(product.id, product.compose)">@{{ product.accounting_number }}</td>
-                                <td ng-click="goTo(product.id, product.compose)" class="text-right">@{{ product.compose == 0 ? ( product.price_ht | currency:'€':2 ) : '-' }}</td>
-                                <td ng-click="goTo(product.id, product.compose)" class="text-right">@{{ product.compose == 0 ? ( product.value_taxe | currency:'%':2 ) : '-' }}</td>
-                                <td ng-click="goTo(product.id, product.compose)" class="text-right">@{{ product.price_ttc | currency:'€':2 }}</td>
+                                <td ng-click="goTo(product.id)">@{{ product.ref }}</td>
+                                <td ng-click="goTo(product.id)">@{{ product.name }}</td>
+                                <td ng-click="goTo(product.id)"><span ng-if="product.type_product != 'pack'">@{{ product.accounting_number }}</span></td>
+                                <td ng-click="goTo(product.id)" class="text-right">@{{ product.price_ht | currency:'€':2 }}</td>
+                                <td ng-click="goTo(product.id)" class="text-right"><span ng-if="product.type_product != 'pack'">@{{ product.value_taxe | currency:'%':2 }}</span></td>
+                                <td ng-click="goTo(product.id)" class="text-right">@{{ product.price_ttc | currency:'€':2 }}</td>
+                                <td ng-click="goTo(product.id)" class="text-center"><span ng-if="product.active">OUI</span><span ng-if="!product.active">NON</span></td>
                                 <td class="text-right">
                                     <button type="button" class="btn btn-xs btn-danger" ng-click="delete(product)">
                                         <i class="fa fa-trash fa-fw"></i>

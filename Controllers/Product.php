@@ -31,11 +31,7 @@ class Product extends Controller
 
         $data = array();
 
-        if ($compose) {
-            return view("product/form_compose", $data, BASEPATH . 'App/com_zeapps_crm/views/');
-        } else {
-            return view("product/form", $data, BASEPATH . 'App/com_zeapps_crm/views/');
-        }
+        return view("product/form", $data, BASEPATH . 'App/com_zeapps_crm/views/');
     }
 
     public function config()
@@ -98,23 +94,10 @@ class Product extends Controller
 
         if (isset($id)) {
             $product = Products::where("id", $id)->first();
+            $product->sublines = array();
 
-            if ($product && $product->compose == 1) {
-                $lines_array = array();
-
-
-                // TODO : mettre en place la lecture des produits associés
-                /*$lines = ProductLines::where("id_product", $id)->get();
-                if ($lines) {
-                    foreach ($lines as $line) {
-                        if ($part = Products::where("id", $line->id_part)->first()) {
-                            $line->product = $part;
-                            $lines_array[] = $line;
-                        }
-                    }
-                }*/
-
-                $product->lines = $lines_array ;
+            if ($product->type_product == "pack") {
+                $product->sublines = Products::where("id_parent", $id)->get();
             }
 
             echo json_encode($product);
@@ -128,21 +111,9 @@ class Product extends Controller
 
         if (isset($code)) {
             $product = Products::where("ref", $code)->first();
-
-
-            // TODO : traiter les lignes composées
-            /*if ($product && $product->compose == 1) {
-                $lines = ProductLines::where("id_product", $product->id)->get();
-                $product->lines = [];
-                if ($lines && is_array($lines)) {
-                    foreach ($lines as $line) {
-                        if ($part = Products::where("id", $line->id_part)->fisrt()) {
-                            $line->product = $part;
-                        }
-                        array_push($product->lines, $line);
-                    }
-                }
-            }*/
+            if ($product) {
+                $product->sublines = Products::where("id_parent", $product->id)->get();
+            }
 
             if ($product) {
                 echo json_encode($product);
@@ -167,15 +138,6 @@ class Product extends Controller
             // POST is actually in json format, do an internal translation
             $data = json_decode(file_get_contents('php://input'), true);
 
-
-            if (isset($data['lines'])) {
-                $lines = $data['lines'];
-                unset($data['lines']);
-            } else {
-                $lines = false;
-            }
-
-
             $product = new Products();
 
             if (isset($data["id"]) && is_numeric($data["id"])) {
@@ -190,33 +152,39 @@ class Product extends Controller
             $data['id'] = $product->id;
 
 
-            if (isset($data['compose']) && $data['compose'] == '1' && $lines) {
-                foreach ($lines as $line) {
-                    $line['id_product'] = $data['id'];
-                    $line['auto'] = isset($data['auto']) ? $data['auto'] : 0;
-                    unset($line['product']);
+            if (isset($data['type_product']) && $data['type_product'] == 'pack' && isset($data['sublines']) && count($data['sublines'])) {
 
-                    $productLine = new ProductLines();
+                // recherche les lignes existantes pour voir si on doit les supprimer
+                $sublines = Products::where('id_parent', $product->id)->get();
 
-                    if (isset($line["id"]) && is_numeric($line["id"]) && $line["id"] != 0) {
-                        $productLine = ProductLines::where('id', $line["id"])->first();
+
+                foreach ($data['sublines'] as $line) {
+                    $productLine = new Products();
+
+                    if (isset($line["id"]) && is_numeric($line["id"]) && $line["id"]) {
+                        foreach ($sublines as &$subline) {
+                            if ($subline->id == $line["id"]) {
+                                $subline->dont_delete = true ;
+                            }
+                        }
+
+                        $productLine = Products::where('id', $line["id"])->first();
                     }
 
                     foreach ($line as $key => $value) {
                         $productLine->$key = $value;
                     }
 
+                    $productLine->id_parent = $product->id ;
                     $productLine->save();
                 }
-            }
 
 
-
-
-
-            if ($lines = ProductLines::where("id_part", $data['id'])->where("auto", true)->get()) {
-                foreach ($lines as $line) {
-                    $this->_updatePriceOf($line->id_product);
+                // supprime les lignes qui ne sont plus utilisé
+                foreach ($sublines as $subline) {
+                    if (!isset($subline->dont_delete)) {
+                        $subline->delete();
+                    }
                 }
             }
         }

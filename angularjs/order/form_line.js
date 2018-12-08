@@ -88,24 +88,39 @@ app.controller("ComZeappsCrmOrderFormLineCtrl", ["$scope", "zeHttp", "zeapps_mod
                 if (objReturn) {
                     nbElementSubLine++;
 
-                    var line = {
-                        type: "product",
-                        id_product: objReturn.id,
-                        ref: objReturn.ref,
-                        designation_title: objReturn.name,
-                        designation_desc: objReturn.description,
-                        qty: 1,
-                        discount: 0.00,
-                        price_unit: parseFloat(objReturn.price_ht) || parseFloat(objReturn.price_ttc),
-                        id_taxe: parseFloat(objReturn.id_taxe),
-                        value_taxe: parseFloat(objReturn.value_taxe),
-                        accounting_number: parseFloat(objReturn.accounting_number),
-                        sort: $scope.form.sublines.length + 1,
-                        serialId: nbElementSubLine,
-                    };
-                    $scope.form.sublines.push(line);
+                    if (objReturn.active) {
+                        var line = {
+                            type: objReturn.type_product,
+                            id_product: objReturn.id,
+                            ref: objReturn.ref,
+                            designation_title: objReturn.name,
+                            designation_desc: objReturn.description,
+                            qty: 1,
+                            discount: 0.00,
+                            price_unit: parseFloat(objReturn.price_ht) || parseFloat(objReturn.price_ttc),
+                            id_taxe: parseFloat(objReturn.id_taxe),
+                            value_taxe: parseFloat(objReturn.value_taxe),
+                            accounting_number: parseFloat(objReturn.accounting_number),
 
-                    updatePrice();
+                            total_ht:objReturn.price_ht,
+                            total_ttc:objReturn.price_ttc,
+                            price_unit_ht_indicated:objReturn.price_ht,
+                            price_unit_ttc_subline:objReturn.price_ttc,
+
+
+                            update_price_from_subline:objReturn.update_price_from_subline,
+                            show_subline:objReturn.show_subline,
+
+                            sublines:addSublines(objReturn.sublines),
+
+                            sort: $scope.form.sublines.length + 1,
+                        };
+                        $scope.form.sublines.push(line);
+
+                        updatePrice();
+                    } else {
+                        toasts("danger", "Ce produit n'est plus actif");
+                    }
                 }
             });
         };
@@ -145,31 +160,82 @@ app.controller("ComZeappsCrmOrderFormLineCtrl", ["$scope", "zeHttp", "zeapps_mod
             }, 500);
         }
 
+        function addSublines(sublines) {
+            var dataSublines = [];
+
+            if (sublines) {
+                for(var i = 0 ; i < sublines.length ; i++) {
+                    var line = {
+                        type: sublines[i].type_product,
+                        id_product: sublines[i].id,
+                        ref: sublines[i].ref,
+                        designation_title: sublines[i].name,
+                        designation_desc: sublines[i].description,
+                        qty: 1,
+                        discount: 0.00,
+                        price_unit: parseFloat(sublines[i].price_ht) || parseFloat(sublines[i].price_ttc),
+                        id_taxe: parseFloat(sublines[i].id_taxe),
+                        value_taxe: parseFloat(sublines[i].value_taxe),
+                        accounting_number: parseFloat(sublines[i].accounting_number),
+
+                        total_ht:sublines[i].price_ht,
+                        total_ttc:sublines[i].price_ttc,
+                        price_unit_ht_indicated:sublines[i].price_ht,
+                        price_unit_ttc_subline:sublines[i].price_ttc,
+
+
+                        update_price_from_subline:sublines[i].update_price_from_subline,
+                        show_subline:sublines[i].show_subline,
+
+                        sublines:addSublines(sublines[i].sublines),
+                        sort: sublines[i].sort
+                    };
+                    dataSublines.push(line) ;
+                }
+            }
+
+            return dataSublines ;
+        }
+
         function addFromCode() {
             if ($scope.codeProduct !== "") {
                 var code = $scope.codeProduct;
                 zhttp.crm.product.get_code(code).then(function (response) {
                     if (response.data && response.data != "false") {
-                        var line = {
-                            type: "product",
-                            id_product: response.data.id,
-                            ref: response.data.ref,
-                            designation_title: response.data.name,
-                            designation_desc: response.data.description,
-                            qty: 1,
-                            discount: 0.00,
-                            price_unit: parseFloat(response.data.price_ht) || parseFloat(response.data.price_ttc),
-                            id_taxe: parseFloat(response.data.id_taxe),
-                            value_taxe: parseFloat(response.data.value_taxe),
-                            accounting_number: parseFloat(response.data.accounting_number),
-                            sort: $scope.form.sublines.length + 1,
-                            serialId: nbElementSubLine,
-                        };
-                        $scope.form.sublines.push(line);
+                        if (response.data.active) {
+                            var line = {
+                                type: "product",
+                                id_product: response.data.id,
+                                ref: response.data.ref,
+                                designation_title: response.data.name,
+                                designation_desc: response.data.description,
+                                qty: 1,
+                                discount: 0.00,
+                                price_unit: parseFloat(response.data.price_ht) || parseFloat(response.data.price_ttc),
+                                id_taxe: parseFloat(response.data.id_taxe),
+                                value_taxe: parseFloat(response.data.value_taxe),
+                                accounting_number: parseFloat(response.data.accounting_number),
 
-                        updatePrice();
+                                sublines:addSublines(response.data.sublines),
 
-                        $scope.codeProduct = "";
+                                total_ht:response.data.price_ht,
+                                total_ttc:response.data.price_ttc,
+                                price_unit_ht_indicated:response.data.price_ht,
+                                price_unit_ttc_subline:response.data.price_ttc,
+
+                                update_price_from_subline:response.data.update_price_from_subline,
+                                show_subline:response.data.show_subline,
+
+                                sort: $scope.form.sublines.length + 1
+                            };
+                            $scope.form.sublines.push(line);
+
+                            updatePrice();
+
+                            $scope.codeProduct = "";
+                        } else {
+                            toasts("danger", "Ce produit n'est plus actif");
+                        }
 
                     } else {
                         toasts("danger", "Aucun produit avec le code " + code + " trouvé dans la base de données.");

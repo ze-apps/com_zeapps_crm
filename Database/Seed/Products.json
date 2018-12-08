@@ -15,6 +15,7 @@
         "value_taxe": "20.00",
         "accounting_number": "706",
         "extra": "{}",
+        "active": 1,
         "created_at": "2018-07-31 08:53:21",
         "updated_at": "2018-07-31 08:54:25",
         "deleted_at": null
@@ -35,6 +36,7 @@
         "value_taxe": "20.00",
         "accounting_number": "706",
         "extra": "{}",
+        "active": 1,
         "created_at": "2018-07-31 08:54:17",
         "updated_at": "2018-07-31 08:54:17",
         "deleted_at": null
@@ -55,6 +57,7 @@
         "value_taxe": "20.00",
         "accounting_number": "706",
         "extra": "{}",
+        "active": 1,
         "created_at": "2018-07-31 08:55:11",
         "updated_at": "2018-07-31 08:55:11",
         "deleted_at": null
@@ -76,6 +79,7 @@
         "value_taxe": "20.00",
         "accounting_number": "706",
         "extra": "{}",
+        "active": 1,
         "created_at": "2018-07-31 08:55:52",
         "updated_at": "2018-07-31 08:55:52",
         "deleted_at": null
@@ -96,6 +100,9 @@
         "value_taxe": "0.00",
         "accounting_number": "0",
         "extra": "{}",
+        "active": 1,
+        "show_subline":1,
+        "update_price_from_subline":1,
         "created_at": "2018-07-31 08:55:52",
         "updated_at": "2018-07-31 08:55:52",
         "deleted_at": null
@@ -106,7 +113,7 @@
         "id_parent": 5,
         "id_product": 1,
         "compose": 0,
-        "type_product": "product_line",
+        "type_product": "product",
         "ref": "ASUS1",
         "name": "Asus Transformer TP203NA-BP027T - Celeron - 4 Go - 32 Go",
         "description": "",
@@ -117,6 +124,8 @@
         "value_taxe": "20.00",
         "accounting_number": "706",
         "extra": "{}",
+        "active": 1,
+        "quantite": 1,
         "created_at": "2018-07-31 08:53:21",
         "updated_at": "2018-07-31 08:54:25",
         "deleted_at": null
@@ -127,7 +136,7 @@
         "id_parent": 5,
         "id_product": 1,
         "compose": 0,
-        "type_product": "product_line",
+        "type_product": "product",
         "ref": "MSI1",
         "name": "MSI GL62MVR 7RFX-1233XFR - i5 - 8 Go - 1 To - GTX 1060 - Sans OS",
         "description": "",
@@ -138,6 +147,8 @@
         "value_taxe": "20.00",
         "accounting_number": "706",
         "extra": "{}",
+        "active": 1,
+        "quantite": 1,
         "created_at": "2018-07-31 08:55:11",
         "updated_at": "2018-07-31 08:55:11",
         "deleted_at": null
@@ -159,6 +170,8 @@
         "value_taxe": "20.00",
         "accounting_number": "706",
         "extra": "{}",
+        "active": 1,
+        "quantite": 1,
         "created_at": "2018-07-31 08:55:11",
         "updated_at": "2018-07-31 08:55:11",
         "deleted_at": null

@@ -12,7 +12,7 @@
             <div class="well">
 
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-10">
                         <div class="form-group">
                             <label>Type de produit <span class="required">*</span></label>
                             <select ng-model="form.type_product" class="form-control"
@@ -23,6 +23,21 @@
                             </select>
                         </div>
                     </div>
+
+
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label>
+                                 Actif
+                            </label>
+                            <input type="checkbox" ng-model="form.active"
+                                   ng-true-value="1"
+                                   ng-false-value="0"
+                                   ng-checked="form.active*1">
+                        </div>
+                    </div>
+
+
                 </div>
 
 
@@ -61,7 +76,7 @@
                         <div class="form-group">
                             <label>TVA <span class="required">*</span></label>
                             <select ng-model="form.id_taxe" ng-change="updateTaxe();updatePrice('ttc')"
-                                    class="form-control" ng-required="true">
+                                    class="form-control" ng-required="form.type_product!='pack'">
                                 <option ng-repeat="taxe in taxes | filter:{ active : 1 }" ng-value="@{{taxe.id}}">
                                     @{{ taxe.label }}
                                 </option>
@@ -86,8 +101,10 @@
                         <div class="form-group">
                             <label>Prix HT <span class="required">*</span></label>
                             <div class="input-group">
-                                <input type="number" min="0" step="0.01" string-to-number ng-model="form.price_ht" class="form-control"
-                                       ng-change="updatePrice('ttc')" ng-required="true" ng-disabled="form.type_product=='pack' && form.update_price_from_subline">
+                                <input type="text" min="0" step="0.01" ng-model="form.price_ht" class="form-control"
+                                       ng-change="updatePrice('ttc')" ng-required="true"
+                                       ng-disabled="form.type_product=='pack' && form.update_price_from_subline"
+                                       ng-value="form.price_ht*1">
                                 <span class="input-group-addon">€</span>
                             </div>
                         </div>
@@ -96,10 +113,11 @@
                         <div class="form-group">
                             <label>Prix TTC <span class="required">*</span></label>
                             <div class="input-group">
-                                <input type="number" min="0" step="0.01" string-to-number ng-model="form.price_ttc" class="form-control"
+                                <input type="text" min="0" step="0.01" ng-model="form.price_ttc" class="form-control"
                                        ng-change="updatePrice('ht')"
                                        ng-required="true"
-                                       ng-disabled="form.type_product=='pack' && form.update_price_from_subline">
+                                       ng-disabled="form.type_product=='pack' && form.update_price_from_subline"
+                                       ng-value="form.price_ttc*1">
                                 <span class="input-group-addon">€</span>
                             </div>
                         </div>
@@ -122,7 +140,10 @@
 
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" ng-model="form.show_subline"> Afficher le detail dans le document
+                                    <input type="checkbox" ng-model="form.show_subline"
+                                           ng-true-value="1"
+                                           ng-false-value="0"
+                                           ng-checked="form.show_subline*1"> Afficher le detail dans le document
                                 </label>
                             </div>
                         </div>
@@ -208,18 +229,17 @@
                             <tr ng-repeat="line in form.sublines" data-serialId="@{{ line.serialId }}">
                                 <td>@{{ line.ref }}</td>
                                 <td>
-                                    <strong>@{{ line.designation_title }} <span
-                                                ng-if="line.designation_desc">:</span></strong><br>
-                                    <span class="text-wrap">@{{ line.designation_desc }}</span>
+                                    <strong>@{{ line.name }} <span ng-if="line.description">:</span></strong><br>
+                                    <span class="text-wrap">@{{ line.description }}</span>
                                 </td>
-                                <td class="text-right"><input type="text" ng-model="line.qty" ng-value="line.qty | number" ng-change="updatePrice()"></td>
-                                <td class="text-right">@{{ line.price_unit | currency }}</td>
+                                <td class="text-right"><input type="text" ng-model="line.quantite" ng-value="line.quantite | number" ng-change="updatePrice()"></td>
+                                <td class="text-right">@{{ line.price_ht | currency }}</td>
                                 <td class="text-right">@{{ line.id_taxe != 0 ? (line.value_taxe | currency:'%':2) : ''
                                     }}
                                 </td>
-                                <td class="text-right">@{{ line.total_ht | currency:'€':2 }}</td>
-                                <td class="text-right">@{{ line.total_ttc | currency:'€':2 }}</td>
-                                <td class="text-right">@{{ line.type }}</td>
+                                <td class="text-right">@{{ (line.price_ht * line.quantite) | currency:'€':2 }}</td>
+                                <td class="text-right">@{{ (line.price_ht * line.quantite) * (1+(line.value_taxe/100)) | currency:'€':2 }}</td>
+                                <td class="text-right">@{{ line.type_product }}</td>
 
                                 <td class="text-right">
                                     <ze-btn fa="trash" color="danger" direction="left" hint="Supprimer"

@@ -1,6 +1,7 @@
 app.controller("ComZeappsCrmProductComposeFormCtrl", ["$scope", "$routeParams", "$location", "zeHttp", "zeapps_modal", "menu",
 	function ($scope, $routeParams, $location, zhttp, zeapps_modal, menu) {
 
+
         menu("com_ze_apps_sales", "com_zeapps_crm_product");
 
         $scope.currentBranch = {};

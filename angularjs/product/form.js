@@ -20,8 +20,8 @@ app.controller("ComZeappsCrmProductFormCtrl", ["$scope", "$routeParams", "$locat
         $scope.type_products.push({id:"pack", label:"Pack"}) ;
 
 
-		$scope.form = [];
-		$scope.form.extra = {};
+		$scope.form = {};
+		//$scope.form.extra = {};
 		$scope.error = "";
 		$scope.max_length = {
 			desc_short: 140,
@@ -104,6 +104,9 @@ app.controller("ComZeappsCrmProductFormCtrl", ["$scope", "$routeParams", "$locat
 
 
 		function loadCtxtNew(){
+            $scope.form.type_product = 'product';
+            $scope.form.active = 1;
+
 			zhttp.crm.category.tree().then(function (response) {
 				if (response.status == 200) {
                     $scope.tree.branches = response.data;
@@ -129,18 +132,10 @@ app.controller("ComZeappsCrmProductFormCtrl", ["$scope", "$routeParams", "$locat
 						if (response.status == 200) {
 							$scope.form = response.data;
 
-                            $scope.form.sublines = [] ;
-
-
 							$scope.form.price_ht = parseFloat($scope.form.price_ht);
 							$scope.form.value_taxe = parseFloat($scope.form.value_taxe);
                             updatePrice('ttc');
-							if($scope.form.extra) {
-                                $scope.form.extra = angular.fromJson($scope.form.extra);
-                            }
-                            else{
-								$scope.form.extra = {};
-							}
+
 							zhttp.crm.category.openTree($scope.tree, $scope.form.id_cat);
 							zhttp.crm.category.get($scope.form.id_cat).then(function (response) {
 								if (response.status == 200) {
@@ -199,7 +194,7 @@ app.controller("ComZeappsCrmProductFormCtrl", ["$scope", "$routeParams", "$locat
                 var montantHT = 0 ;
                 var montantTTC = 0 ;
                 for (var i = 0; i < $scope.form.sublines.length; i++) {
-                    var montantLigneHT = $scope.form.sublines[i].price_unit * $scope.form.sublines[i].qty ;
+                    var montantLigneHT = $scope.form.sublines[i].price_ht * $scope.form.sublines[i].quantite ;
 
                     montantHT += montantLigneHT ;
                     montantTTC += montantLigneHT ;
@@ -220,8 +215,6 @@ app.controller("ComZeappsCrmProductFormCtrl", ["$scope", "$routeParams", "$locat
                     $scope.form.price_ttc = round2(parseFloat(montantTTC));
                 } else {
                     if (price === "ht") {
-                        console.log(montantTTC);
-                        console.log($scope.form.price_ttc);
                         var coef = parseFloat($scope.form.price_ttc) / montantTTC ;
 
                         $scope.form.price_ht = round2(montantHT * coef);
@@ -258,29 +251,17 @@ app.controller("ComZeappsCrmProductFormCtrl", ["$scope", "$routeParams", "$locat
 		}
 
 		function success() {
-			var data = {};
+			var data = $scope.form;
+
+			console.log(data);
 
 			if ($routeParams.id != 0) {
 				data.id = $routeParams.id;
 			}
 
-            if ($routeParams.category) {
+            if (!data.id_cat && $routeParams.category) {
                 data.id_cat = $routeParams.category;
-            } else {
-                data.id_cat = 0;
-			}
-
-			data.ref = $scope.form.ref;
-			data.name = $scope.form.name;
-			data.id_cat = $scope.form.id_cat;
-			data.id_stock = $scope.form.id_stock;
-			data.description = $scope.form.description;
-			data.price_ht = $scope.form.price_ht;
-			data.price_ttc = $scope.form.price_ttc;
-			data.id_taxe = $scope.form.id_taxe;
-			data.value_taxe = $scope.form.value_taxe;
-			data.accounting_number = $scope.form.accounting_number;
-			data.extra = angular.toJson($scope.form.extra);
+            }
 
 			var formatted_data = angular.toJson(data);
 
@@ -314,20 +295,11 @@ app.controller("ComZeappsCrmProductFormCtrl", ["$scope", "$routeParams", "$locat
             zeapps_modal.loadModule("com_zeapps_crm", "search_product", {}, function (objReturn) {
                 if (objReturn) {
                     if (objReturn.type_product != "pack") {
-                        var line = {
-                            type: "product",
-                            id_product: objReturn.id,
-                            ref: objReturn.ref,
-                            designation_title: objReturn.name,
-                            designation_desc: objReturn.description,
-                            qty: 1,
-                            discount: 0.00,
-                            price_unit: parseFloat(objReturn.price_ht) || parseFloat(objReturn.price_ttc),
-                            id_taxe: parseFloat(objReturn.id_taxe),
-                            value_taxe: parseFloat(objReturn.value_taxe),
-                            accounting_number: parseFloat(objReturn.accounting_number),
-                            sort: $scope.form.sublines.length + 1,
-                        };
+                        var line = objReturn ;
+                        line.id = 0 ;
+                        line.id_product = objReturn.id ;
+                        line.quantite = 1 ;
+                        line.sort = $scope.form.sublines.length + 1 ;
                         $scope.form.sublines.push(line);
 
                         updatePrice();
@@ -363,20 +335,11 @@ app.controller("ComZeappsCrmProductFormCtrl", ["$scope", "$routeParams", "$locat
                 zhttp.crm.product.get_code(code).then(function (response) {
                     if (response.data && response.data != "false") {
                         if (response.data.type_product != "pack") {
-                            var line = {
-                                type: "product",
-                                id_product: response.data.id,
-                                ref: response.data.ref,
-                                designation_title: response.data.name,
-                                designation_desc: response.data.description,
-                                qty: 1,
-                                discount: 0.00,
-                                price_unit: parseFloat(response.data.price_ht) || parseFloat(response.data.price_ttc),
-                                id_taxe: parseFloat(response.data.id_taxe),
-                                value_taxe: parseFloat(response.data.value_taxe),
-                                accounting_number: parseFloat(response.data.accounting_number),
-                                sort: $scope.form.sublines.length + 1
-                            };
+                            var line = response.data ;
+                            line.id = 0 ;
+                            line.id_product = response.data.id ;
+                            line.quantite = 1 ;
+                            line.sort = $scope.form.sublines.length + 1 ;
                             $scope.form.sublines.push(line);
 
                             updatePrice();

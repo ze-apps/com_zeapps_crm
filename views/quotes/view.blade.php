@@ -224,7 +224,7 @@
                             </td>
 
                             <td class="text-right">
-                                    <span ng-if="line.type === 'product'">
+                                    <span ng-if="line.type === 'product' || line.type === 'service' || line.type === 'pack'">
                                         <ze-btn fa="pencil" color="info" direction="left" hint="editer"
                                                 ze-modalform="editLine"
                                                 data-edit="line"
