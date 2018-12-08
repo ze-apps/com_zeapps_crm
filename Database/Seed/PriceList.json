@@ -1,0 +1,20 @@
+[
+  {
+    "id": "1",
+    "label": "Standard",
+    "default": "1",
+    "active": "1"
+  },
+  {
+    "id": "2",
+    "label": "Boutique",
+    "default": "0",
+    "active": "1"
+  },
+  {
+    "id": "3",
+    "label": "Distributeur",
+    "default": "0",
+    "active": "1"
+  }
+]

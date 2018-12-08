@@ -9,16 +9,16 @@ use Zeapps\Core\Session;
 use Zeapps\Core\Storage;
 use Mpdf\Mpdf;
 
-use App\com_zeapps_crm\Models\Quotes as QuotesModel;
-use App\com_zeapps_crm\Models\QuoteLines;
-use App\com_zeapps_crm\Models\QuoteDocuments;
-use App\com_zeapps_crm\Models\QuoteActivities;
+use App\com_zeapps_crm\Models\Quote\Quotes as QuotesModel;
+use App\com_zeapps_crm\Models\Quote\QuoteLines;
+use App\com_zeapps_crm\Models\Quote\QuoteDocuments;
+use App\com_zeapps_crm\Models\Quote\QuoteActivities;
 use App\com_zeapps_crm\Models\CreditBalances;
 use App\com_zeapps_crm\Models\CreditBalanceDetails;
 
-use App\com_zeapps_crm\Models\Invoices as InvoicesModel;
-use App\com_zeapps_crm\Models\Orders as OrdersModel;
-use App\com_zeapps_crm\Models\Deliveries as DeliveriesModel;
+use App\com_zeapps_crm\Models\Invoice\Invoices as InvoicesModel;
+use App\com_zeapps_crm\Models\Order\Orders as OrdersModel;
+use App\com_zeapps_crm\Models\Delivery\Deliveries as DeliveriesModel;
 
 use Zeapps\Models\Config;
 

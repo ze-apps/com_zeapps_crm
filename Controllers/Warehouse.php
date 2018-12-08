@@ -6,7 +6,7 @@ use Zeapps\Core\Controller;
 use Zeapps\Core\Request;
 use Zeapps\Core\Session;
 
-use App\com_zeapps_crm\Models\Warehouses ;
+use App\com_zeapps_crm\Models\Stock\Warehouses ;
 
 
 class Warehouse extends Controller

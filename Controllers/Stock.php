@@ -7,9 +7,9 @@ use Zeapps\Core\Request;
 use Zeapps\Core\Session;
 
 
-use App\com_zeapps_crm\Models\ProductStocks;
-use App\com_zeapps_crm\Models\StockMovements;
-use App\com_zeapps_crm\Models\Warehouses;
+use App\com_zeapps_crm\Models\Stock\ProductStocks;
+use App\com_zeapps_crm\Models\Stock\StockMovements;
+use App\com_zeapps_crm\Models\Stock\Warehouses;
 
 
 class Stock extends Controller

@@ -8,17 +8,17 @@ use Zeapps\Core\Request;
 use Zeapps\Core\Session;
 
 
-use App\com_zeapps_crm\Models\Invoices as InvoicesModel;
-use App\com_zeapps_crm\Models\InvoiceLines;
-use App\com_zeapps_crm\Models\InvoiceDocuments;
-use App\com_zeapps_crm\Models\InvoiceActivities;
+use App\com_zeapps_crm\Models\Invoice\Invoices as InvoicesModel;
+use App\com_zeapps_crm\Models\Invoice\InvoiceLines;
+use App\com_zeapps_crm\Models\Invoice\InvoiceDocuments;
+use App\com_zeapps_crm\Models\Invoice\InvoiceActivities;
 use App\com_zeapps_crm\Models\CreditBalances;
 use App\com_zeapps_crm\Models\CreditBalanceDetails;
 use App\com_zeapps_contact\Models\Modalities;
 
-use App\com_zeapps_crm\Models\Orders as OrdersModel;
-use App\com_zeapps_crm\Models\Quotes as QuotesModel;
-use App\com_zeapps_crm\Models\Deliveries as DeliveriesModel;
+use App\com_zeapps_crm\Models\Order\Orders as OrdersModel;
+use App\com_zeapps_crm\Models\Quote\Quotes as QuotesModel;
+use App\com_zeapps_crm\Models\Delivery\Deliveries as DeliveriesModel;
 
 use Zeapps\Models\Config;
 

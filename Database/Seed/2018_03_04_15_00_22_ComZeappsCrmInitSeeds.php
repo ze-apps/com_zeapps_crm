@@ -5,27 +5,29 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 use App\com_zeapps_crm\Models\Taxes;
 use App\com_zeapps_crm\Models\Activities;
 use App\com_zeapps_crm\Models\CrmOrigins;
-use App\com_zeapps_crm\Models\Warehouses;
+use App\com_zeapps_crm\Models\Stock\Warehouses;
 
-use App\com_zeapps_crm\Models\Products;
-use App\com_zeapps_crm\Models\ProductCategories;
-use App\com_zeapps_crm\Models\ProductStocks;
+use App\com_zeapps_crm\Models\Product\Products;
+use App\com_zeapps_crm\Models\Product\ProductCategories;
+use App\com_zeapps_crm\Models\Stock\ProductStocks;
 
-use App\com_zeapps_crm\Models\Quotes;
-use App\com_zeapps_crm\Models\QuoteLines;
-use App\com_zeapps_crm\Models\QuoteActivities;
+use App\com_zeapps_crm\Models\Quote\Quotes;
+use App\com_zeapps_crm\Models\Quote\QuoteLines;
+use App\com_zeapps_crm\Models\Quote\QuoteActivities;
 
-use App\com_zeapps_crm\Models\Orders;
-use App\com_zeapps_crm\Models\OrderLines;
-use App\com_zeapps_crm\Models\OrderActivities;
+use App\com_zeapps_crm\Models\Order\Orders;
+use App\com_zeapps_crm\Models\Order\OrderLines;
+use App\com_zeapps_crm\Models\Order\OrderActivities;
 
-use App\com_zeapps_crm\Models\Invoices;
-use App\com_zeapps_crm\Models\InvoiceLines;
-use App\com_zeapps_crm\Models\InvoiceActivities;
+use App\com_zeapps_crm\Models\Invoice\Invoices;
+use App\com_zeapps_crm\Models\Invoice\InvoiceLines;
+use App\com_zeapps_crm\Models\Invoice\InvoiceActivities;
 
-use App\com_zeapps_crm\Models\Deliveries;
-use App\com_zeapps_crm\Models\DeliveryLines;
-use App\com_zeapps_crm\Models\DeliveryActivities;
+use App\com_zeapps_crm\Models\Delivery\Deliveries;
+use App\com_zeapps_crm\Models\Delivery\DeliveryLines;
+use App\com_zeapps_crm\Models\Delivery\DeliveryActivities;
+
+use App\com_zeapps_crm\Models\PriceList;
 
 
 class ComZeappsCrmInitSeeds
@@ -318,6 +320,25 @@ class ComZeappsCrmInitSeeds
         $json_content = json_decode(file_get_contents(dirname(__FILE__) . "/DeliveryActivities.json"));
         foreach ($json_content as $data_json) {
             $obj_data = new DeliveryActivities();
+
+            foreach ($data_json as $key => $value) {
+                $obj_data->$key = $value;
+            }
+
+            $obj_data->save();
+        }
+
+
+
+
+
+
+
+        // import de PriceList
+        Capsule::table('com_zeapps_crm_price_list')->truncate();
+        $json_content = json_decode(file_get_contents(dirname(__FILE__) . "/PriceList.json"));
+        foreach ($json_content as $data_json) {
+            $obj_data = new PriceList();
 
             foreach ($data_json as $key => $value) {
                 $obj_data->$key = $value;

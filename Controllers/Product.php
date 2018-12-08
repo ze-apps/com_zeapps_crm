@@ -6,9 +6,9 @@ use Zeapps\Core\Controller;
 use Zeapps\Core\Request;
 use Zeapps\Core\Session;
 
-use App\com_zeapps_crm\Models\Products;
-use App\com_zeapps_crm\Models\ProductLines;
-use App\com_zeapps_crm\Models\ProductCategories;
+use App\com_zeapps_crm\Models\Product\Products;
+use App\com_zeapps_crm\Models\Product\ProductLines;
+use App\com_zeapps_crm\Models\Product\ProductCategories;
 
 
 class Product extends Controller

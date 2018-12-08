@@ -11,6 +11,7 @@ class ComZeappsCrmOrdersTable extends Migration
     {
         Capsule::schema()->create('com_zeapps_crm_orders', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('id_price_list')->default(0);
             $table->string('libelle', 255)->default("");
             $table->string('numerotation', 255)->default("");
             $table->integer('id_origin', false)->default(0);

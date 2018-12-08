@@ -6,8 +6,8 @@ use Zeapps\Core\Controller;
 use Zeapps\Core\Request;
 use Zeapps\Core\Session;
 
-use App\com_zeapps_crm\Models\ProductCategories as CategoriesModel;
-use App\com_zeapps_crm\Models\Products;
+use App\com_zeapps_crm\Models\Product\ProductCategories as CategoriesModel;
+use App\com_zeapps_crm\Models\Product\Products;
 
 class Categories extends Controller
 {
