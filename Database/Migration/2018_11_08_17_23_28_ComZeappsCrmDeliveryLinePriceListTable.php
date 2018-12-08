@@ -13,7 +13,7 @@ class ComZeappsCrmDeliveryLinePriceListTable extends Migration
     {
         Capsule::schema()->create('com_zeapps_crm_delivery_line_price_list', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('id_quote_line')->default(0);
+            $table->integer('id_delivery_line')->default(0);
             $table->integer('id_price_list')->default(0);
 
             $table->string('accounting_number', 255)->default("");
