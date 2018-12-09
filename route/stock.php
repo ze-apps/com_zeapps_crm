@@ -3,6 +3,16 @@ use Zeapps\Core\Routeur ;
 
 
 
+Routeur::get("/com_zeapps_crm/stock/view", 'App\\com_zeapps_crm\\Controllers\\Stock@view');
+Routeur::get("/com_zeapps_crm/stock/details", 'App\\com_zeapps_crm\\Controllers\\Stock@details');
+//Routeur::get("/com_zeapps_crm/stock/chart", 'App\\com_zeapps_crm\\Controllers\\Stock@chart');
+//Routeur::get("/com_zeapps_crm/stock/history", 'App\\com_zeapps_crm\\Controllers\\Stock@history');
+//Routeur::get("/com_zeapps_crm/stock/form_modal", 'App\\com_zeapps_crm\\Controllers\\Stock@form_modal');
+//Routeur::get("/com_zeapps_crm/stock/form_transfert", 'App\\com_zeapps_crm\\Controllers\\Stock@form_transfert');
+//Routeur::get("/com_zeapps_crm/stock/form_mvt", 'App\\com_zeapps_crm\\Controllers\\Stock@form_mvt');
+//Routeur::get("/com_zeapps_crm/stock/modal", 'App\\com_zeapps_crm\\Controllers\\Stock@modal');
+
+
 
 
 Routeur::get("/com_zeapps_crm/stock/get/{id_stock}/{id_warehouse}", 'App\\com_zeapps_crm\\Controllers\\Stock@get');

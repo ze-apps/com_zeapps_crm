@@ -40,8 +40,6 @@ app.controller("ComZeappsCrmStockViewCtrl", ["$scope", "$location", "$rootScope"
 
 		$scope.loadList = loadList;
 		$scope.goTo = goTo;
-		$scope.add = add;
-		$scope.delete = del;
 
         function loadList(context){
             context = context || "";
@@ -68,31 +66,7 @@ app.controller("ComZeappsCrmStockViewCtrl", ["$scope", "$location", "$rootScope"
         }
 
         function goTo(id){
-        	$location.url("/ng/com_zeapps_crm/stock/" + id);
-		}
-
-		function add(product_stock){
-			var formatted_data = angular.toJson(product_stock);
-
-			zhttp.crm.product_stock.save(formatted_data, $scope.filter_model.id_warehouse).then(function(response){
-				if(response.data && response.data != false){
-					var product_stock = response.data.product_stock;
-					product_stock.value_ht = parseFloat(product_stock.value_ht);
-					calcTimeLeft(product_stock);
-					$scope.product_stocks.push(product_stock);
-
-					$scope.form = {};
-					$scope.shownForm = false;
-				}
-			});
-		}
-
-		function del(product_stock){
-            zhttp.crm.product_stock.del(product_stock.id_stock).then(function (response) {
-                if (response.status == 200) {
-                    $scope.product_stocks.splice($scope.product_stocks.indexOf(product_stock), 1);
-                }
-            });
+        	//$location.url("/ng/com_zeapps_crm/stock/" + id);
 		}
 
 		function calcTimeLeft(product_stock){
