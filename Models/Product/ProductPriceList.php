@@ -1,6 +1,6 @@
 <?php
 
-namespace App\com_zeapps_crm\Models\Quote;
+namespace App\com_zeapps_crm\Models\Product;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;

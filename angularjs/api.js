@@ -4,6 +4,9 @@ app.config(["$provide",
             var zeHttp = $delegate;
 
             zeHttp.crm = {
+                price_list: {
+                    get_all: getAll_pricelist,
+                },
                 modality: {
                     get: get_modality,
                     get_all: getAll_modality,
@@ -253,6 +256,15 @@ app.config(["$provide",
 
                 return allStatus;
             }
+
+
+
+            // PRICE LIST
+            function getAll_pricelist() {
+                return zeHttp.get("/com_zeapps_crm/price-list/getAll");
+            }
+
+
 
 
             // MODALITY

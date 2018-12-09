@@ -9,7 +9,17 @@
         </div>
 
         <form name="newProduct" class="col-md-9">
-            <div class="well">
+
+
+            <ul role="tablist" class="nav nav-tabs">
+                <li ng-class="navigationState =='body' ? 'active' : ''"><a href="#" ng-click="setTab('body')">Information</a></li>
+                <li ng-class="navigationState =='tarif' ? 'active' : ''"><a href="#" ng-click="setTab('tarif')">Tarif(s)</a></li>
+                <li ng-class="navigationState =='article_pack' ? 'active' : ''" ng-show="form.type_product=='pack'"><a href="#" ng-click="setTab('article_pack')">Articles du pack</a></li>
+            </ul>
+
+
+
+            <div class="well" ng-show="navigationState =='body'">
 
                 <div class="row">
                     <div class="col-md-10">
@@ -70,39 +80,31 @@
                     </div>
                 </div>
 
-
-                <div class="row" ng-hide="form.type_product=='pack'">
-                    <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-12">
                         <div class="form-group">
-                            <label>TVA <span class="required">*</span></label>
-                            <select ng-model="form.id_taxe" ng-change="updateTaxe();updatePrice('ttc')"
-                                    class="form-control" ng-required="form.type_product!='pack'">
-                                <option ng-repeat="taxe in taxes | filter:{ active : 1 }" ng-value="@{{taxe.id}}">
-                                    @{{ taxe.label }}
-                                </option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Compte Comptable</label>
-                            <span ze-modalsearch="loadAccountingNumber"
-                                  data-http="accountingNumberHttp"
-                                  data-model="form.accounting_number"
-                                  data-fields="accountingNumberFields"
-                                  data-template-new="accountingNumberTplNew"
-                                  data-title="Choisir un compte comptable"></span>
+                            <label>Description</label>
+                            <textarea type="text" ng-model="form.description" class="form-control" rows="7"></textarea>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="row">
+
+
+
+
+
+
+            <div class="well" ng-show="navigationState =='tarif'">
+
+                <div class="row" ng-show="price_lists.length >= 2">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Prix HT <span class="required">*</span></label>
                             <div class="input-group">
                                 <input type="text" min="0" step="0.01" ng-model="form.price_ht" class="form-control"
-                                       ng-change="updatePrice('ttc')" ng-required="true"
+                                       ng-change="updatePrice(-1, 'ttc')" ng-required="true"
                                        ng-disabled="form.type_product=='pack' && form.update_price_from_subline"
                                        ng-value="form.price_ht*1">
                                 <span class="input-group-addon">€</span>
@@ -114,7 +116,7 @@
                             <label>Prix TTC <span class="required">*</span></label>
                             <div class="input-group">
                                 <input type="text" min="0" step="0.01" ng-model="form.price_ttc" class="form-control"
-                                       ng-change="updatePrice('ht')"
+                                       ng-change="updatePrice(-1, 'ht')"
                                        ng-required="true"
                                        ng-disabled="form.type_product=='pack' && form.update_price_from_subline"
                                        ng-value="form.price_ttc*1">
@@ -123,6 +125,34 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="row" ng-hide="form.type_product=='pack' || price_lists.length >= 2">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>TVA <span class="required">*</span></label>
+                            <select ng-model="form.id_taxe" ng-change="updateTaxe(-1);updatePrice(-1, 'ttc')"
+                                    class="form-control" ng-required="form.type_product!='pack'">
+                                <option ng-repeat="taxe in taxes | filter:{ active : 1 }" ng-value="@{{taxe.id}}">
+                                    @{{ taxe.label }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Compte Comptable</label>
+                            <span ze-modalsearch="loadAccountingNumber"
+                                  data-onloadmodal="openModalAccountingNumber"
+                                  data-onloadmodalparam="-1"
+                                  data-http="accountingNumberHttp"
+                                  data-model="form.accounting_number"
+                                  data-fields="accountingNumberFields"
+                                  data-template-new="accountingNumberTplNew"
+                                  data-title="Choisir un compte comptable"></span>
+                        </div>
+                    </div>
+                </div>
+
 
                 <div class="row" ng-show="form.type_product=='pack'">
                     <div class="col-md-12">
@@ -155,15 +185,76 @@
 
 
 
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label>Description</label>
-                            <textarea type="text" ng-model="form.description" class="form-control" rows="7"></textarea>
+
+                <div ng-show="price_lists.length >= 2" ng-repeat="price_list in price_lists " style="border-bottom: solid 1px #000">
+                    <h3>Tarif : @{{ price_list.label }}</h3>
+
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Prix HT <span class="required">*</span></label>
+                                <div class="input-group">
+                                    <input type="text" ng-model="form.priceList[price_list.id].price_ht" class="form-control"
+                                           ng-change="updatePrice(price_list.id, 'ttc')" ng-required="true"
+                                           ng-disabled="form.type_product=='pack' && form.update_price_from_subline">
+                                    <span class="input-group-addon">€</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Prix TTC <span class="required">*</span></label>
+                                <div class="input-group">
+                                    <input type="text" ng-model="form.priceList[price_list.id].price_ttc" class="form-control"
+                                           ng-change="updatePrice(price_list.id, 'ht')"
+                                           ng-required="true"
+                                           ng-disabled="form.type_product=='pack' && form.update_price_from_subline">
+                                    <span class="input-group-addon">€</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
+
+                    <div class="row" ng-hide="form.type_product=='pack'">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>TVA <span class="required">*</span></label>
+                                <select ng-model="form.priceList[price_list.id].id_taxe" ng-change="updateTaxe(price_list.id);updatePrice(price_list.id, 'ttc')"
+                                        class="form-control" ng-required="form.type_product!='pack'">
+                                    <option ng-repeat="taxe in taxes | filter:{ active : 1 }" ng-value="@{{taxe.id}}">
+                                        @{{ taxe.label }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Compte Comptable @{{ form.priceList[price_list.id].accounting_number }}</label>
+                                <span ze-modalsearch="loadAccountingNumber"
+                                      data-onloadmodal="openModalAccountingNumber"
+                                      data-onloadmodalparam="price_list.id"
+                                      data-http="accountingNumberHttp"
+                                      data-model="form.priceList[price_list.id].accounting_number"
+                                      data-fields="accountingNumberFields"
+                                      data-template-new="accountingNumberTplNew"
+                                      data-title="Choisir un compte comptable"></span>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
+
+
+
+
             </div>
+
+
+
+
+
 
 
             <div class="well" ng-show="attributes.length">
@@ -189,8 +280,10 @@
             </div>
 
 
+
+
             <!-- Article composant le pack -->
-            <div class="well" ng-show="form.type_product=='pack'">
+            <div class="well" ng-show="form.type_product=='pack' && navigationState =='article_pack'">
                 <h3>Articles composants le pack</h3>
 
                 <div class="row">

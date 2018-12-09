@@ -88,15 +88,11 @@ app.controller("ComZeappsCrmModalSearchProductCtrl", ["$scope", "$uibModalInstan
 	function select_product(produit) {
 
 		// Recherche le subline pour les pack
-		if (produit.type_product == 'pack') {
-            zhttp.crm.product.get(produit.id).then(function (response) {
-                if (response.data && response.data != "false") {
-                    $uibModalInstance.close(response.data);
-                }
-            });
-		} else {
-            $uibModalInstance.close(produit);
-		}
+        zhttp.crm.product.get(produit.id).then(function (response) {
+            if (response.data && response.data != "false") {
+                $uibModalInstance.close(response.data);
+            }
+        });
 	}
 
 }]) ;

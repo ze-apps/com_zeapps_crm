@@ -9,6 +9,7 @@ use Zeapps\Core\Session;
 use App\com_zeapps_crm\Models\Product\Products;
 use App\com_zeapps_crm\Models\Product\ProductLines;
 use App\com_zeapps_crm\Models\Product\ProductCategories;
+use App\com_zeapps_crm\Models\Product\ProductPriceList;
 
 
 class Product extends Controller
@@ -96,11 +97,38 @@ class Product extends Controller
             $product = Products::where("id", $id)->first();
             $product->sublines = array();
 
+
+            // recupère les tarifs de la grille
+            $priceList = array();
+            $ProductPriceLists = ProductPriceList::where("id_product", $product->id)->get();
+            if ($ProductPriceLists) {
+                foreach ($ProductPriceLists as $ProductPriceList) {
+                    $priceList[$ProductPriceList->id_price_list] = $ProductPriceList ;
+                }
+            }
+            $product->priceList = $priceList;
+
+
+
+
             if ($product->type_product == "pack") {
                 $product->sublines = Products::where("id_parent", $id)->get();
+
+                foreach ($product->sublines as &$subline) {
+                    $priceListSubline = array();
+                    $ProductPriceLists = ProductPriceList::where("id_product", $subline->id_product)->get();
+
+                    if ($ProductPriceLists) {
+                        foreach ($ProductPriceLists as $ProductPriceList) {
+                            $priceListSubline[$ProductPriceList->id_price_list] = $ProductPriceList ;
+                        }
+                    }
+
+                    $subline->priceList = $priceListSubline;
+                }
             }
 
-            echo json_encode($product);
+            echo json_encode($product, JSON_PRETTY_PRINT);
         }
         return;
     }
@@ -150,6 +178,35 @@ class Product extends Controller
 
             $product->save();
             $data['id'] = $product->id;
+
+
+
+
+            // enregistre les tarifs de la grille de prix
+            if (isset($data['priceList'])) {
+                foreach ($data['priceList'] as $indexPriceList => $priceList) {
+                    if ($indexPriceList >= 1) {
+                        $productPriceList = new ProductPriceList();
+
+                        if (isset($priceList["id"]) && is_numeric($priceList["id"])) {
+                            $productPriceList = ProductPriceList::where('id', $priceList["id"])->first();
+                        }
+
+                        foreach ($priceList as $key => $value) {
+                            $productPriceList->$key = $value;
+                        }
+
+                        $productPriceList->id_product = $product->id;
+                        $productPriceList->id_price_list = $indexPriceList;
+
+
+                        $productPriceList->save();
+                    }
+                }
+            }
+
+
+
 
 
             if (isset($data['type_product']) && $data['type_product'] == 'pack' && isset($data['sublines']) && count($data['sublines'])) {
