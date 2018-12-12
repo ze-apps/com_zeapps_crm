@@ -237,13 +237,19 @@ class Invoices extends Model
 
     public function save(array $options = [])
     {
-
-
         $finalized_orignal = $this->getOriginal("finalized");
 
 
         /******** clean data **********/
         $this->fieldModelInfo->cleanData($this);
+
+
+        /**** to delete unwanted field ****/
+        $this->fieldModelInfo->removeFieldUnwanted($this);
+        /**** end to delete unwanted field ****/
+
+
+
 
 
         /**** set a document number ****/
@@ -258,15 +264,13 @@ class Invoices extends Model
             parent::save($options);
         }
 
-
-        if ($this->finalized == 1 && $finalized_orignal != 1) {
+        if ($this->finalized == 1 && $finalized_orignal != 1 && $finalized_orignal != null) {
+            parent::save($options);
             $this->finalize();
         }
 
 
-        /**** to delete unwanted field ****/
-        $this->fieldModelInfo->removeFieldUnwanted($this);
-        /**** end to delete unwanted field ****/
+
 
         return parent::save($options);
     }
