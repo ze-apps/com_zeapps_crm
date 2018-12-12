@@ -134,6 +134,28 @@ app.controller("ComZeappsCrmDeliveryViewCtrl", ["$scope", "$routeParams", "$loca
                     $scope.delivery.total_ttc = totals.total_ttc;
 
 
+                    // charge l'entreprise associée à la commande
+                    $scope.company = null ;
+                    if ($scope.delivery.id_company) {
+                        zhttp.contact.company.get($scope.delivery.id_company).then(function (response) {
+                            if (response.data && response.data != "false") {
+                                $scope.company = response.data.company ;
+                            }
+                        });
+                    }
+
+
+                    // charge le contact associé à la commande
+                    $scope.contact = null ;
+                    if ($scope.delivery.id_contact) {
+                        zhttp.contact.contact.get($scope.delivery.id_contact).then(function (response) {
+                            if (response.data && response.data != "false") {
+                                $scope.contact = response.data.contact ;
+                            }
+                        });
+                    }
+
+
                     // call Callback
                     if (next) {
                         next() ;
@@ -502,32 +524,32 @@ app.controller("ComZeappsCrmDeliveryViewCtrl", ["$scope", "$routeParams", "$loca
                     zhttp.crm.delivery.line.save(formatted_data)
 				});
 
-                // reaload document
-                loadDocument($routeParams.id, function () {
-                    var data = $scope.delivery;
 
-                    var y = data.date_creation.getFullYear();
-                    var M = data.date_creation.getMonth();
-                    var d = data.date_creation.getDate();
+                var data = $scope.delivery;
 
-                    data.date_creation = new Date(Date.UTC(y, M, d));
+                var y = data.date_creation.getFullYear();
+                var M = data.date_creation.getMonth();
+                var d = data.date_creation.getDate();
 
-                    var y = data.date_limit.getFullYear();
-                    var M = data.date_limit.getMonth();
-                    var d = data.date_limit.getDate();
+                data.date_creation = new Date(Date.UTC(y, M, d));
 
-                    data.date_limit = new Date(Date.UTC(y, M, d));
+                var y = data.date_limit.getFullYear();
+                var M = data.date_limit.getMonth();
+                var d = data.date_limit.getDate();
 
-                    var formatted_data = angular.toJson(data);
-                    zhttp.crm.delivery.save(formatted_data).then(function (response) {
-                        if (response.data && response.data != "false") {
-                            toasts('success', "Les informations du bon de livraison ont bien été mises a jour");
-                        }
-                        else {
-                            toasts('danger', "Il y a eu une erreur lors de la mise a jour des informations du bon de livraison");
-                        }
-                    });
-                }) ;
+                data.date_limit = new Date(Date.UTC(y, M, d));
+
+                var formatted_data = angular.toJson(data);
+                zhttp.crm.delivery.save(formatted_data).then(function (response) {
+                    if (response.data && response.data != "false") {
+                        toasts('success', "Les informations du bon de livraison ont bien été mises a jour");
+                    } else {
+                        toasts('danger', "Il y a eu une erreur lors de la mise a jour des informations du bon de livraison");
+                    }
+
+                    // reaload document
+                    loadDocument($routeParams.id) ;
+                });
 			}
 		}
 

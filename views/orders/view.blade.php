@@ -22,8 +22,7 @@
                 <div class="col-md-3">
                     <strong>Adresse de facturation :</strong><br>
                     @{{ company.company_name }}<br ng-if="company.company_name">
-                    @{{ contact.last_name + ' ' + contact.first_name }}<br
-                            ng-if="contact.last_name || contact.first_name">
+                    @{{ contact.last_name + ' ' + contact.first_name }}<br ng-if="contact.last_name || contact.first_name">
                     @{{ order.billing_address_1 }}<br ng-if="order.billing_address_1">
                     @{{ order.billing_address_2 }}<br ng-if="order.billing_address_2">
                     @{{ order.billing_address_3 }}<br ng-if="order.billing_address_3">

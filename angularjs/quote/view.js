@@ -69,7 +69,7 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
         if ($rootScope.quotes === undefined || $rootScope.quotes.ids === undefined) {
             $rootScope.quotes = {};
             $rootScope.quotes.ids = [];
-        }  else {
+        } else {
             initNavigation();
         }
 
@@ -80,8 +80,7 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
         }
 
 
-
-        var loadDocument = function(idDocument, next) {
+        var loadDocument = function (idDocument, next) {
             zhttp.crm.quote.get(idDocument).then(function (response) {
                 if (response.data && response.data != "false") {
                     $scope.quote = response.data.quote;
@@ -132,16 +131,38 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                     $scope.quote.total_ttc = totals.total_ttc;
 
 
+                    // charge l'entreprise associée à la commande
+                    $scope.company = null;
+                    if ($scope.quote.id_company) {
+                        zhttp.contact.company.get($scope.quote.id_company).then(function (response) {
+                            if (response.data && response.data != "false") {
+                                $scope.company = response.data.company;
+                            }
+                        });
+                    }
+
+
+                    // charge le contact associé à la commande
+                    $scope.contact = null;
+                    if ($scope.quote.id_contact) {
+                        zhttp.contact.contact.get($scope.quote.id_contact).then(function (response) {
+                            if (response.data && response.data != "false") {
+                                $scope.contact = response.data.contact;
+                            }
+                        });
+                    }
+
+
                     // call Callback
                     if (next) {
-                        next() ;
+                        next();
                     }
                 }
             });
         };
 
         if ($routeParams.id && $routeParams.id > 0) {
-            loadDocument($routeParams.id) ;
+            loadDocument($routeParams.id);
         }
 
         //////////////////// FUNCTIONS ////////////////////
@@ -165,7 +186,8 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                 );
             }
         }
-        function broadcast_code(code){
+
+        function broadcast_code(code) {
             $rootScope.$broadcast("comZeappsCrm_dataQuoteHook",
                 {
                     code: code
@@ -181,11 +203,9 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
         function back() {
             if ($rootScope.quotes.src === undefined || $rootScope.quotes.src === "quotes") {
                 $location.path("/ng/com_zeapps_crm/quote/");
-            }
-            else if ($rootScope.quotes.src === 'company') {
+            } else if ($rootScope.quotes.src === 'company') {
                 $location.path("/ng/com_zeapps_contact/companies/" + $rootScope.quotes.src_id);
-            }
-            else if ($rootScope.quotes.src === 'contact') {
+            } else if ($rootScope.quotes.src === 'contact') {
                 $location.path("/ng/com_zeapps_contact/contacts/" + $rootScope.quotes.src_id);
             }
         }
@@ -225,8 +245,7 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
             zhttp.crm.quote.save(formatted_data).then(function (response) {
                 if (response.data && response.data != "false") {
                     toasts('success', "Le status du devis a bien été mis à jour.");
-                }
-                else {
+                } else {
                     toasts('danger', "Il y a eu une erreur lors de la mise a jour du status du devis");
                 }
             });
@@ -282,16 +301,16 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                                 accounting_number: response.data.accounting_number,
                                 sort: $scope.lines.length,
 
-                                total_ht:response.data.price_ht,
-                                total_ttc:response.data.price_ttc,
-                                price_unit_ht_indicated:response.data.price_ht,
-                                price_unit_ttc_subline:response.data.price_ttc,
+                                total_ht: response.data.price_ht,
+                                total_ttc: response.data.price_ttc,
+                                price_unit_ht_indicated: response.data.price_ht,
+                                price_unit_ttc_subline: response.data.price_ttc,
 
 
-                                update_price_from_subline:response.data.update_price_from_subline,
-                                show_subline:response.data.show_subline,
+                                update_price_from_subline: response.data.update_price_from_subline,
+                                show_subline: response.data.show_subline,
 
-                                sublines:addSublines(response.data.sublines),
+                                sublines: addSublines(response.data.sublines),
                             };
                             crmTotal.line.update(line);
 
@@ -339,15 +358,15 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                             accounting_number: parseFloat(objReturn.accounting_number),
                             sort: $scope.lines.length,
 
-                            total_ht:objReturn.price_ht,
-                            total_ttc:objReturn.price_ttc,
-                            price_unit_ht_indicated:objReturn.price_ht,
-                            price_unit_ttc_subline:objReturn.price_ttc,
+                            total_ht: objReturn.price_ht,
+                            total_ttc: objReturn.price_ttc,
+                            price_unit_ht_indicated: objReturn.price_ht,
+                            price_unit_ttc_subline: objReturn.price_ttc,
 
-                            update_price_from_subline:objReturn.update_price_from_subline,
-                            show_subline:objReturn.show_subline,
+                            update_price_from_subline: objReturn.update_price_from_subline,
+                            show_subline: objReturn.show_subline,
 
-                            sublines:addSublines(objReturn.sublines),
+                            sublines: addSublines(objReturn.sublines),
                         };
                         crmTotal.line.update(line);
 
@@ -371,7 +390,7 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
             var dataSublines = [];
 
             if (sublines) {
-                for(var i = 0 ; i < sublines.length ; i++) {
+                for (var i = 0; i < sublines.length; i++) {
                     var line = {
                         type: sublines[i].type_product,
                         id_product: sublines[i].id,
@@ -385,23 +404,23 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                         value_taxe: parseFloat(sublines[i].value_taxe),
                         accounting_number: parseFloat(sublines[i].accounting_number),
 
-                        total_ht:sublines[i].price_ht,
-                        total_ttc:sublines[i].price_ttc,
-                        price_unit_ht_indicated:sublines[i].price_ht,
-                        price_unit_ttc_subline:sublines[i].price_ttc,
+                        total_ht: sublines[i].price_ht,
+                        total_ttc: sublines[i].price_ttc,
+                        price_unit_ht_indicated: sublines[i].price_ht,
+                        price_unit_ttc_subline: sublines[i].price_ttc,
 
-                        sublines:addSublines(sublines[i].sublines),
+                        sublines: addSublines(sublines[i].sublines),
 
-                        update_price_from_subline:sublines[i].update_price_from_subline,
-                        show_subline:sublines[i].show_subline,
+                        update_price_from_subline: sublines[i].update_price_from_subline,
+                        show_subline: sublines[i].show_subline,
 
                         sort: sublines[i].sort
                     };
-                    dataSublines.push(line) ;
+                    dataSublines.push(line);
                 }
             }
 
-            return dataSublines ;
+            return dataSublines;
         }
 
         function addSubTotal() {
@@ -496,32 +515,31 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                     zhttp.crm.quote.line.save(formatted_data);
                 });
 
-                // reaload document
-                loadDocument($routeParams.id, function () {
-                    var data = $scope.quote;
+                var data = $scope.quote;
 
-                    var y = data.date_creation.getFullYear();
-                    var M = data.date_creation.getMonth();
-                    var d = data.date_creation.getDate();
+                var y = data.date_creation.getFullYear();
+                var M = data.date_creation.getMonth();
+                var d = data.date_creation.getDate();
 
-                    data.date_creation = new Date(Date.UTC(y, M, d));
+                data.date_creation = new Date(Date.UTC(y, M, d));
 
-                    var y = data.date_limit.getFullYear();
-                    var M = data.date_limit.getMonth();
-                    var d = data.date_limit.getDate();
+                var y = data.date_limit.getFullYear();
+                var M = data.date_limit.getMonth();
+                var d = data.date_limit.getDate();
 
-                    data.date_limit = new Date(Date.UTC(y, M, d));
+                data.date_limit = new Date(Date.UTC(y, M, d));
 
-                    var formatted_data = angular.toJson(data);
-                    zhttp.crm.quote.save(formatted_data).then(function (response) {
-                        if (response.data && response.data != "false") {
-                            toasts('success', "Les informations du devis ont bien été mises a jour");
-                        }
-                        else {
-                            toasts('danger', "Il y a eu une erreur lors de la mise a jour des informations du devis");
-                        }
-                    });
-                }) ;
+                var formatted_data = angular.toJson(data);
+                zhttp.crm.quote.save(formatted_data).then(function (response) {
+                    if (response.data && response.data != "false") {
+                        toasts('success', "Les informations du devis ont bien été mises a jour");
+                    } else {
+                        toasts('danger', "Il y a eu une erreur lors de la mise a jour des informations du devis");
+                    }
+
+                    // reaload document
+                    loadDocument($routeParams.id);
+                });
             }
         }
 
@@ -574,8 +592,7 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                         response.data.name_user = $rootScope.user.firstname[0] + '. ' + $rootScope.user.lastname;
                         $scope.documents.push(response.data);
                         toasts('success', "Les documents ont bien été mis en ligne");
-                    }
-                    else {
+                    } else {
                         toasts('danger', "Il y a eu une erreur lors de la mise en ligne des documents");
                     }
                 }
@@ -592,8 +609,7 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                     if (response.data && response.data != "false") {
                         response.data.date = new Date(response.data.date);
                         toasts('success', "Les documents ont bien été mis à jour");
-                    }
-                    else {
+                    } else {
                         toasts('danger', "Il y a eu une erreur lors de la mise à jour des documents");
                     }
                 }
@@ -692,8 +708,7 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                     if ($rootScope.quotes.ids[0] != $routeParams.id) {
                         $scope.quote_first = $rootScope.quotes.ids[0];
                     }
-                }
-                else
+                } else
                     $scope.quote_first = 0;
 
                 // recherche la dernière facture de la liste
@@ -701,11 +716,9 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                     if ($rootScope.quotes.ids[$rootScope.quotes.ids.length - 1] != $routeParams.id) {
                         $scope.quote_last = $rootScope.quotes.ids[$rootScope.quotes.ids.length - 1];
                     }
-                }
-                else
+                } else
                     $scope.quote_last = 0;
-            }
-            else {
+            } else {
                 $scope.nb_quotes = 0;
             }
         }
