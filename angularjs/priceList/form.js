@@ -10,24 +10,10 @@ app.controller("ComZeappsCrmPriceListFormCtrl", ["$scope", "$routeParams", "$roo
 		});
 
 
-		/*function Initform(){
-			if($scope.form.id === undefined) {
-                if($routeParams.id_company !== undefined && $routeParams.id_company !== 0){
-                    zhttp.contact.company.get($routeParams.id_company).then(function(response){
-                        if(response.data && response.data != "false"){
-                            loadCompany(response.data.company);
-                        }
-                    });
-                }
-                if($routeParams.id_contact !== undefined && $routeParams.id_contact !== 0){
-                    zhttp.contact.contact.get($routeParams.id_contact).then(function(response){
-                        if(response.data && response.data != "false"){
-                            loadContact(response.data.contact);
-                        }
-                    });
-                }
-            }
-		}
-        Initform();*/
+		$scope.changeParDefaut = function () {
+			if ($scope.form.default == 1) {
+				$scope.form.type_pricelist = 0 ;
+			}
+		};
 
 	}]);

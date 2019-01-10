@@ -1,5 +1,7 @@
-app.controller("ComZeappsCrmPriceListListsCtrl", ["$scope", "$location", "$rootScope", "zeHttp", "$timeout", "toasts",
-    function ($scope, $location, $rootScope, zhttp, $timeout, toasts) {
+app.controller("ComZeappsCrmPriceListListsCtrl", ["$scope", "$location", "$rootScope", "zeHttp", "$timeout", "toasts", "menu",
+    function ($scope, $location, $rootScope, zhttp, $timeout, toasts, menu) {
+
+        menu("com_ze_apps_sales", "com_zeapps_crm_product_price_list");
 
 
         $scope.templatePriceList = '/com_zeapps_crm/price-list/form_modal';

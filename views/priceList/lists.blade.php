@@ -1,11 +1,16 @@
 <div id="breadcrumb">Grille de prix</div>
 
-<ze-btn fa="plus" color="success" hint="Nouvelle grille" always-on="true"
-        ze-modalform="add"
-        data-template="templatePriceList"
-        data-title="Créer une nouvelle grille"></ze-btn>
+
 
 <div id="content">
+    <div class="row">
+        <div class="col-md-12">
+            <ze-btn fa="plus" color="success" hint="Nouvelle grille" always-on="true"
+                    ze-modalform="add"
+                    data-template="templatePriceList"
+                    data-title="Créer une nouvelle grille"></ze-btn>
+        </div>
+    </div>
     <div class="row">
         <div class="col-md-12">
             <table class="table table-hover table-condensed table-responsive" ng-show="priceLists.length">

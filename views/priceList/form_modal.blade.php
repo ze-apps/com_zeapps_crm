@@ -28,7 +28,7 @@
             <div class="col-md-12">
                 <div class="form-group">
                     <label>Par defaut</label>
-                    <select ng-model="form.default" class="form-control" name="id_origin" ng-required="true">
+                    <select ng-model="form.default" class="form-control" name="id_origin" ng-required="true" ng-change="changeParDefaut()">
                         <option ng-repeat="valOuiNon in listOuiNon" ng-value="@{{valOuiNon.id}}">
                             @{{ valOuiNon.label }}
                         </option>
