@@ -18,6 +18,8 @@ class PriceList extends Model
 
     protected $fieldModelInfo;
 
+    static protected $typePriceListPrice = array(0=>"Prix", 1=>"Pourcentage");
+
 
     public function __construct(array $attributes = [])
     {
@@ -28,6 +30,8 @@ class PriceList extends Model
         $this->fieldModelInfo->increments('id');
         $this->fieldModelInfo->string('label', 255)->default("");
         $this->fieldModelInfo->tinyInteger('default')->default(0);
+        $this->fieldModelInfo->tinyInteger('type_pricelist')->default(0);
+        $this->fieldModelInfo->double('percentage')->default(0);
         $this->fieldModelInfo->tinyInteger('active')->default(0);
         $this->fieldModelInfo->timestamps();
         $this->fieldModelInfo->softDeletes();
@@ -51,5 +55,19 @@ class PriceList extends Model
         $this->fieldModelInfo->removeFieldUnwanted($this);
 
         return parent::save($options);
+    }
+
+    public static function getPriceListTypes() {
+        return self::$typePriceListPrice;
+    }
+
+    public static function getPriceListType($id) {
+        $label = "" ;
+
+        if (isset(self::$typePriceListPrice[$id])) {
+            $label = self::$typePriceListPrice[$id] ;
+        }
+
+        return $label;
     }
 }

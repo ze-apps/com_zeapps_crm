@@ -6,6 +6,10 @@ app.config(["$provide",
             zeHttp.crm = {
                 price_list: {
                     get_all: getAll_pricelist,
+                    get_all_admin: getAll_pricelist_admin,
+                    get_price_list_type: get_price_list_type,
+                    save: save_price_list,
+                    del: del_price_list
                 },
                 modality: {
                     get: get_modality,
@@ -263,6 +267,27 @@ app.config(["$provide",
             function getAll_pricelist() {
                 return zeHttp.get("/com_zeapps_crm/price-list/getAll");
             }
+
+            function getAll_pricelist_admin() {
+                return zeHttp.get("/com_zeapps_crm/price-list/getAllAdmin");
+            }
+
+            function get_price_list_type() {
+                return zeHttp.get("/com_zeapps_crm/price-list/getPriceListType");
+            }
+
+            function save_price_list(data) {
+                return zeHttp.post("/com_zeapps_crm/price-list/save", data);
+            }
+
+            function del_price_list(id) {
+                return zeHttp.delete("/com_zeapps_crm/price-list/delete/" + id);
+            }
+
+
+
+
+
 
 
 

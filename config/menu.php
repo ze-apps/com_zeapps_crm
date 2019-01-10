@@ -1,6 +1,6 @@
 <?php
 
-/********** CONFIG MENU ************/
+/********** insert in left menu ************/
 $tabMenu = array () ;
 $tabMenu["id"] = "com_ze_apps_modalities" ;
 $tabMenu["space"] = "com_ze_apps_config" ;
@@ -85,7 +85,9 @@ $menuLeft[] = $tabMenu ;
 
 
 
-/********** insert in left menu ************/
+
+
+
 $tabMenu = array () ;
 $tabMenu["id"] = "com_zeapps_crm_quote" ;
 $tabMenu["space"] = "com_ze_apps_sales" ;
@@ -139,6 +141,9 @@ $tabMenu["access"] = "com_zeapps_crm_read" ;
 $tabMenu["order"] = 7 ;
 $menuLeft[] = $tabMenu ;*/
 
+
+
+
 $tabMenu = array () ;
 $tabMenu["id"] = "com_zeapps_crm_contract" ;
 $tabMenu["space"] = "com_ze_apps_sales" ;
@@ -170,14 +175,14 @@ $tabMenu["order"] = 9 ;
 $menuLeft[] = $tabMenu ;
 
 $tabMenu = array () ;
-$tabMenu["id"] = "com_zeapps_crm_product_price" ;
+$tabMenu["id"] = "com_zeapps_crm_product_price_list" ;
 $tabMenu["space"] = "com_ze_apps_sales" ;
 $tabMenu["label"] = "Grille tarifaire" ;
 $tabMenu["fa-icon"] = "tags" ;
-$tabMenu["url"] = "/ng/com_zeapps_crm/product_price" ;
+$tabMenu["url"] = "/ng/com_zeapps_crm/product_price_list" ;
 $tabMenu["access"] = "com_zeapps_crm_read" ;
 $tabMenu["order"] = 10 ;
-//$menuLeft[] = $tabMenu ;
+$menuLeft[] = $tabMenu ;
 
 $tabMenu = array () ;
 $tabMenu["id"] = "com_zeapps_crm_stock" ;

@@ -148,6 +148,19 @@ app.config(["$routeProvider",
 				controller: "ComZeappsCrmProductConfigCtrl"
 			})
 
+
+
+
+		// PriceList
+			.when("/ng/com_zeapps_crm/product_price_list", {
+				templateUrl: "/com_zeapps_crm/price-list/lists",
+				controller: "ComZeappsCrmPriceListListsCtrl"
+			})
+
+
+
+
+
 		// STOCK
 			.when("/ng/com_zeapps_crm/stock/", {
 				templateUrl: "/com_zeapps_crm/stock/view",
