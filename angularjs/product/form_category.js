@@ -101,7 +101,11 @@ app.controller("ComZeappsCrmProductFormCategoryCtrl", ["$scope", "$routeParams",
 							zhttp.crm.category.get($scope.form.id_parent).then(function (response) {
 								if (response.status == 200) {
                                     $scope.currentBranch = response.data;
-									zhttp.crm.category.openTree($scope.tree, $scope.currentBranch.data.id);
+                                    if ($scope.currentBranch) {
+										zhttp.crm.category.openTree($scope.tree, $scope.currentBranch.data.id);
+									} else {
+										zhttp.crm.category.openTree($scope.tree, 0);
+									}
 								}
 							});
 						}
