@@ -156,6 +156,10 @@ app.config(["$routeProvider",
 				templateUrl: "/com_zeapps_crm/price-list/lists",
 				controller: "ComZeappsCrmPriceListListsCtrl"
 			})
+			.when("/ng/com_zeapps_crm/product_price_list_taux/:id", {
+				templateUrl: "/com_zeapps_crm/price-list/taux",
+				controller: "ComZeappsCrmPriceListTauxCtrl"
+			})
 
 
 

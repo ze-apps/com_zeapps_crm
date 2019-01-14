@@ -13,6 +13,7 @@ app.controller("ComZeappsCrmPriceListListsCtrl", ["$scope", "$location", "$rootS
         $scope.add = add;
         $scope.edit = edit;
         $scope.delete = del;
+        $scope.taux = taux;
 
 
         function loadList() {
@@ -59,5 +60,9 @@ app.controller("ComZeappsCrmPriceListListsCtrl", ["$scope", "$location", "$rootS
                     loadList();
                 }
             });
+        }
+
+        function taux(idPriceList) {
+            $location.url('/ng/com_zeapps_crm/product_price_list_taux/' + idPriceList);
         }
     }]);

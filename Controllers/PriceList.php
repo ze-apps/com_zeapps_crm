@@ -7,6 +7,7 @@ use Zeapps\Core\Request;
 use Zeapps\Core\Session;
 
 use App\com_zeapps_crm\Models\PriceList as PriceListModel;
+use App\com_zeapps_crm\Models\PriceListRate;
 
 class PriceList extends Controller
 {
@@ -20,8 +21,19 @@ class PriceList extends Controller
         return view("priceList/form_modal", $data, BASEPATH . 'App/com_zeapps_crm/views/');
     }
 
+    public function taux(){
+        $data = array();
+        return view("priceList/taux", $data, BASEPATH . 'App/com_zeapps_crm/views/');
+    }
 
 
+
+
+    public function get(Request $request)
+    {
+        $id = $request->input('id', 0);
+        echo json_encode(PriceListModel::find($id));
+    }
 
     public function getAll(Request $request)
     {
@@ -86,5 +98,47 @@ class PriceList extends Controller
         } else {
             echo json_encode("ERROR");
         }
+    }
+
+
+    public function rate(Request $request)
+    {
+        $id_pricelist = $request->input('id_pricelist', 0);
+        $priceList = PriceListRate::where("id_pricelist", $id_pricelist)->get();
+        echo json_encode($priceList);
+    }
+
+    public function rateSave()
+    {
+        if (strcasecmp($_SERVER['REQUEST_METHOD'], 'post') === 0 && stripos($_SERVER['CONTENT_TYPE'], 'application/json') !== FALSE) {
+            // POST is actually in json format, do an internal translation
+            $data = json_decode(file_get_contents('php://input'), true);
+
+            $id_pricelist = $data['id_pricelist'];
+            $id_category = $data['id_category'];
+            $percentage = $data['percentage'];
+            $accounting_number = $data['accounting_number'];
+            $id_taxe = $data['id_taxe'];
+            $value_taxe = $data['value_taxe'];
+
+
+            $objPriceListRate = PriceListRate::where("id_pricelist", $id_pricelist)->where("id_category", $id_category)->first();
+
+            if (!$objPriceListRate) {
+                $objPriceListRate = new PriceListRate() ;
+            }
+
+            $objPriceListRate->id_pricelist = $id_pricelist ;
+            $objPriceListRate->id_category = $id_category ;
+            $objPriceListRate->percentage = $percentage ;
+            $objPriceListRate->accounting_number = $accounting_number ;
+            $objPriceListRate->id_taxe = $id_taxe ;
+            $objPriceListRate->value_taxe = $value_taxe ;
+
+            $objPriceListRate->save();
+        }
+
+        echo json_encode("OK");
+        return;
     }
 }
