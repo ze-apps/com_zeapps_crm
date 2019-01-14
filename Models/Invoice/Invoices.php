@@ -10,6 +10,7 @@ use Mpdf\Mpdf;
 
 use Zeapps\Models\Config;
 use App\com_zeapps_crm\Models\Invoice\InvoiceLines;
+use App\com_zeapps_crm\Models\Invoice\InvoiceLinePriceList;
 use App\com_zeapps_contact\Models\Modalities;
 use App\com_zeapps_crm\Models\CreditBalanceDetails;
 use App\com_zeapps_crm\Models\AccountingEntries;
@@ -163,6 +164,29 @@ class Invoices extends Model
                 $invoiceLine->id_invoice = $idDocument;
                 $invoiceLine->id_parent = $idParent;
                 $invoiceLine->save();
+
+
+                // save price list
+                if (isset($line->priceList)) {
+                    foreach ($line->priceList as $priceList) {
+                        unset($priceList->id);
+                        unset($priceList->created_at);
+                        unset($priceList->updated_at);
+                        unset($priceList->deleted_at);
+
+
+                        $objInvoiceLinePriceList = new InvoiceLinePriceList() ;
+
+                        foreach (InvoiceLinePriceList::getSchema() as $key) {
+                            if (isset($priceList->$key)) {
+                                $objInvoiceLinePriceList->$key = $priceList->$key;
+                            }
+                        }
+
+                        $objInvoiceLinePriceList->id_invoice_line = $invoiceLine->id ;
+                        $objInvoiceLinePriceList->save() ;
+                    }
+                }
 
                 if ($sublines) {
                     self::createFromLine($sublines, $idDocument, $invoiceLine->id);

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\com_zeapps_crm\Models\Delivery\DeliveryLines;
+use App\com_zeapps_crm\Models\Delivery\DeliveryLinePriceList;
 use App\com_zeapps_crm\Models\Stock\StockMovements;
 use App\com_zeapps_crm\Models\Product\Products;
 use Zeapps\Models\Config;
@@ -142,6 +143,36 @@ class Deliveries extends Model
 
 
                 $new_id_lines[$old_id] = $deliveryLine->id;
+
+
+
+                // save price list
+                if (isset($line->priceList)) {
+                    foreach ($line->priceList as $priceList) {
+                        unset($priceList->id);
+                        unset($priceList->created_at);
+                        unset($priceList->updated_at);
+                        unset($priceList->deleted_at);
+
+
+                        $objDeliveryLinePriceList = new DeliveryLinePriceList() ;
+
+                        foreach (DeliveryLinePriceList::getSchema() as $key) {
+                            if (isset($priceList->$key)) {
+                                $objDeliveryLinePriceList->$key = $priceList->$key;
+                            }
+                        }
+
+                        $objDeliveryLinePriceList->id_delivery_line = $deliveryLine->id ;
+                        $objDeliveryLinePriceList->save() ;
+                    }
+                }
+
+
+
+
+
+
 
                 if ($line->type === 'product') {
                     $product = Products::where("id", $line->id_product)->first();

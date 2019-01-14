@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use Zeapps\Models\Config;
-use App\com_zeapps_crm\Models\OrderLines;
+use App\com_zeapps_crm\Models\Order\OrderLines;
+use App\com_zeapps_crm\Models\Order\OrderLinePriceList;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 
@@ -136,6 +137,29 @@ class Orders extends Model
                 $orderLine->id_order = $idDocument;
                 $orderLine->id_parent = $idParent;
                 $orderLine->save();
+
+
+                // save price list
+                if (isset($line->priceList)) {
+                    foreach ($line->priceList as $priceList) {
+                        unset($priceList->id);
+                        unset($priceList->created_at);
+                        unset($priceList->updated_at);
+                        unset($priceList->deleted_at);
+
+
+                        $objDeliveryLinePriceList = new OrderLinePriceList() ;
+
+                        foreach (OrderLinePriceList::getSchema() as $key) {
+                            if (isset($priceList->$key)) {
+                                $objDeliveryLinePriceList->$key = $priceList->$key;
+                            }
+                        }
+
+                        $objDeliveryLinePriceList->id_order_line = $orderLine->id ;
+                        $objDeliveryLinePriceList->save() ;
+                    }
+                }
 
                 if ($sublines) {
                     self::createFromLine($sublines, $idDocument, $orderLine->id);

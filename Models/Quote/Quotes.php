@@ -5,7 +5,8 @@ namespace App\com_zeapps_crm\Models\Quote;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-use App\com_zeapps_crm\Models\QuoteLines;
+use App\com_zeapps_crm\Models\Quote\QuoteLines;
+use App\com_zeapps_crm\Models\Quote\QuoteLinePriceList;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 
@@ -135,6 +136,30 @@ class Quotes extends Model
                 $quote_line->id_quote = $idDocument;
                 $quote_line->id_parent = $idParent;
                 $quote_line->save();
+
+
+
+                // save price list
+                if (isset($line->priceList)) {
+                    foreach ($line->priceList as $priceList) {
+                        unset($priceList->id);
+                        unset($priceList->created_at);
+                        unset($priceList->updated_at);
+                        unset($priceList->deleted_at);
+
+
+                        $objDeliveryLinePriceList = new QuoteLinePriceList() ;
+
+                        foreach (QuoteLinePriceList::getSchema() as $key) {
+                            if (isset($priceList->$key)) {
+                                $objDeliveryLinePriceList->$key = $priceList->$key;
+                            }
+                        }
+
+                        $objDeliveryLinePriceList->id_quote_line = $quote_line->id ;
+                        $objDeliveryLinePriceList->save() ;
+                    }
+                }
 
 
                 if ($sublines) {
