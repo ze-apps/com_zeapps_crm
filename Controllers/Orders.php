@@ -13,6 +13,7 @@ use App\com_zeapps_crm\Models\Order\Orders as OrdersModel ;
 use App\com_zeapps_crm\Models\Order\OrderLines;
 use App\com_zeapps_crm\Models\Order\OrderDocuments;
 use App\com_zeapps_crm\Models\Order\OrderActivities;
+use App\com_zeapps_crm\Models\Order\OrderLinePriceList;
 use App\com_zeapps_crm\Models\CreditBalances;
 use App\com_zeapps_crm\Models\CreditBalanceDetails;
 
@@ -354,6 +355,35 @@ class Orders extends Controller
         $orderLine->save();
 
 
+
+
+        // save price list
+        if (isset($data["priceList"]) && count($data["priceList"])) {
+            foreach ($data["priceList"] as $priceList) {
+
+                $orderLinePriceList = OrderLinePriceList::where("id_order_line", $orderLine->id)->where("id_price_list", $priceList["id_price_list"])->first();
+
+                if (!$orderLinePriceList) {
+                    $orderLinePriceList = new OrderLinePriceList() ;
+                    $orderLinePriceList->id_order_line = $orderLine->id ;
+                    $orderLinePriceList->id_price_list = $priceList["id_price_list"] ;
+                }
+                $orderLinePriceList->accounting_number = $priceList["accounting_number"] ;
+                $orderLinePriceList->price_ht = $priceList["price_ht"] ;
+                $orderLinePriceList->price_ttc = $priceList["price_ttc"] ;
+                $orderLinePriceList->id_taxe = $priceList["id_taxe"] ;
+                $orderLinePriceList->value_taxe = $priceList["value_taxe"] ;
+                $orderLinePriceList->percentage_discount = $priceList["percentage_discount"] ;
+
+                $orderLinePriceList->save() ;
+            }
+        }
+
+
+
+
+
+        // save sub line
         if (isset($data["sublines"]) && count($data["sublines"])) {
             foreach ($data["sublines"] as $dataSubline) {
 

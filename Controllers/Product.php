@@ -140,7 +140,35 @@ class Product extends Controller
         if (isset($code)) {
             $product = Products::where("ref", $code)->first();
             if ($product) {
-                $product->sublines = Products::where("id_parent", $product->id)->get();
+                $product->sublines = array();
+
+                // recupère les tarifs de la grille
+                $priceList = array();
+                $ProductPriceLists = ProductPriceList::where("id_product", $product->id)->get();
+                if ($ProductPriceLists) {
+                    foreach ($ProductPriceLists as $ProductPriceList) {
+                        $priceList[$ProductPriceList->id_price_list] = $ProductPriceList ;
+                    }
+                }
+                $product->priceList = $priceList;
+
+
+                if ($product->type_product == "pack") {
+                    $product->sublines = Products::where("id_parent", $product->id)->get();
+
+                    foreach ($product->sublines as &$subline) {
+                        $priceListSubline = array();
+                        $ProductPriceLists = ProductPriceList::where("id_product", $subline->id_product)->get();
+
+                        if ($ProductPriceLists) {
+                            foreach ($ProductPriceLists as $ProductPriceList) {
+                                $priceListSubline[$ProductPriceList->id_price_list] = $ProductPriceList ;
+                            }
+                        }
+
+                        $subline->priceList = $priceListSubline;
+                    }
+                }
             }
 
             if ($product) {

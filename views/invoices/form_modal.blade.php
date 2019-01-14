@@ -9,7 +9,18 @@
          <div ng-hide="true">@{{ form.zeapps_modal_form_isvalid = formRequired.$valid }}</div>
          -->
 
-
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label>Grille de tarif</label>
+                    <select ng-model="form.id_price_list" class="form-control">
+                        <option ng-repeat="price_list in price_lists" ng-value="@{{price_list.id}}">
+                            @{{ price_list.label }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </div>
 
 
         <div class="row">

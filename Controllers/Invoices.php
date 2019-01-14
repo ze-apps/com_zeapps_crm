@@ -12,6 +12,7 @@ use App\com_zeapps_crm\Models\Invoice\Invoices as InvoicesModel;
 use App\com_zeapps_crm\Models\Invoice\InvoiceLines;
 use App\com_zeapps_crm\Models\Invoice\InvoiceDocuments;
 use App\com_zeapps_crm\Models\Invoice\InvoiceActivities;
+use App\com_zeapps_crm\Models\Invoice\InvoiceLinePriceList;
 use App\com_zeapps_crm\Models\CreditBalances;
 use App\com_zeapps_crm\Models\CreditBalanceDetails;
 use App\com_zeapps_contact\Models\Modalities;
@@ -391,6 +392,32 @@ class Invoices extends Controller
         $invoiceLine->save();
 
 
+
+        // save price list
+        if (isset($data["priceList"]) && count($data["priceList"])) {
+            foreach ($data["priceList"] as $priceList) {
+
+                $invoiceLinePriceList = InvoiceLinePriceList::where("id_invoice_line", $invoiceLine->id)->where("id_price_list", $priceList["id_price_list"])->first();
+
+                if (!$invoiceLinePriceList) {
+                    $invoiceLinePriceList = new InvoiceLinePriceList() ;
+                    $invoiceLinePriceList->id_invoice_line = $invoiceLine->id ;
+                    $invoiceLinePriceList->id_price_list = $priceList["id_price_list"] ;
+                }
+                $invoiceLinePriceList->accounting_number = $priceList["accounting_number"] ;
+                $invoiceLinePriceList->price_ht = $priceList["price_ht"] ;
+                $invoiceLinePriceList->price_ttc = $priceList["price_ttc"] ;
+                $invoiceLinePriceList->id_taxe = $priceList["id_taxe"] ;
+                $invoiceLinePriceList->value_taxe = $priceList["value_taxe"] ;
+                $invoiceLinePriceList->percentage_discount = $priceList["percentage_discount"] ;
+
+                $invoiceLinePriceList->save() ;
+            }
+        }
+
+
+
+        // save sub line
         if (isset($data["sublines"]) && count($data["sublines"])) {
             foreach ($data["sublines"] as $dataSubline) {
 

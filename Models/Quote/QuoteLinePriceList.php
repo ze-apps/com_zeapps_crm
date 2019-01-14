@@ -33,6 +33,7 @@ class QuoteLinePriceList extends Model
         $this->fieldModelInfo->decimal('price_ttc', 8, 2)->default(0);
         $this->fieldModelInfo->integer('id_taxe')->default(0);
         $this->fieldModelInfo->decimal('value_taxe', 8, 2)->default(0);
+        $this->fieldModelInfo->decimal('percentage_discount', 8, 2)->default(0);
 
         $this->fieldModelInfo->timestamps();
         $this->fieldModelInfo->softDeletes();

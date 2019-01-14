@@ -13,6 +13,7 @@ use App\com_zeapps_crm\Models\Delivery\Deliveries as DeliveriesModel;
 use App\com_zeapps_crm\Models\Delivery\DeliveryLines;
 use App\com_zeapps_crm\Models\Delivery\DeliveryDocuments;
 use App\com_zeapps_crm\Models\Delivery\DeliveryActivities;
+use App\com_zeapps_crm\Models\Delivery\DeliveryLinePriceList;
 use App\com_zeapps_crm\Models\CreditBalances;
 use App\com_zeapps_crm\Models\CreditBalanceDetails;
 
@@ -361,6 +362,31 @@ class Deliveries extends Controller
         $deliveryLine->save();
 
 
+        // save price list
+        if (isset($data["priceList"]) && count($data["priceList"])) {
+            foreach ($data["priceList"] as $priceList) {
+
+                $deliveryLinePriceList = DeliveryLinePriceList::where("id_delivery_line", $deliveryLine->id)->where("id_price_list", $priceList["id_price_list"])->first();
+
+                if (!$deliveryLinePriceList) {
+                    $deliveryLinePriceList = new DeliveryLinePriceList() ;
+                    $deliveryLinePriceList->id_delivery_line = $deliveryLine->id ;
+                    $deliveryLinePriceList->id_price_list = $priceList["id_price_list"] ;
+                }
+                $deliveryLinePriceList->accounting_number = $priceList["accounting_number"] ;
+                $deliveryLinePriceList->price_ht = $priceList["price_ht"] ;
+                $deliveryLinePriceList->price_ttc = $priceList["price_ttc"] ;
+                $deliveryLinePriceList->id_taxe = $priceList["id_taxe"] ;
+                $deliveryLinePriceList->value_taxe = $priceList["value_taxe"] ;
+                $deliveryLinePriceList->percentage_discount = $priceList["percentage_discount"] ;
+
+                $deliveryLinePriceList->save() ;
+            }
+        }
+
+
+
+        // save sub line
         if (isset($data["sublines"]) && count($data["sublines"])) {
             foreach ($data["sublines"] as $dataSubline) {
 

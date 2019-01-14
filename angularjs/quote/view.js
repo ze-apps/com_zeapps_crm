@@ -80,10 +80,13 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
         }
 
 
+
+        var _id_price_list_before_update =  0 ;
         var loadDocument = function (idDocument, next) {
             zhttp.crm.quote.get(idDocument).then(function (response) {
                 if (response.data && response.data != "false") {
                     $scope.quote = response.data.quote;
+                    _id_price_list_before_update = $scope.quote.id_price_list ;
 
                     $scope.credits = response.data.credits;
 
@@ -311,7 +314,27 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                                 show_subline: response.data.show_subline,
 
                                 sublines: addSublines(response.data.sublines),
+
+                                priceList: response.data.priceList,
                             };
+
+                            // applique la grille de prix
+                            if (response.data.priceList) {
+                                angular.forEach(response.data.priceList, function (priceList) {
+                                    if (priceList.id_price_list == $scope.quote.id_price_list) {
+
+                                        if (priceList.accounting_number && priceList.accounting_number != "") {
+                                            line.accounting_number = priceList.accounting_number;
+                                        }
+
+                                        line.discount = priceList.percentage_discount ;
+                                        line.price_unit = priceList.price_ht ;
+                                        line.id_taxe = priceList.id_taxe ;
+                                        line.value_taxe = priceList.value_taxe ;
+                                    }
+                                });
+                            }
+
                             crmTotal.line.update(line);
 
                             $scope.codeProduct = "";
@@ -367,7 +390,27 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                             show_subline: objReturn.show_subline,
 
                             sublines: addSublines(objReturn.sublines),
+
+                            priceList: objReturn.priceList,
                         };
+
+                        // applique la grille de prix
+                        if (response.data.priceList) {
+                            angular.forEach(response.data.priceList, function (priceList) {
+                                if (priceList.id_price_list == $scope.quote.id_price_list) {
+
+                                    if (priceList.accounting_number && priceList.accounting_number != "") {
+                                        line.accounting_number = priceList.accounting_number;
+                                    }
+
+                                    line.discount = priceList.percentage_discount ;
+                                    line.price_unit = priceList.price_ht ;
+                                    line.id_taxe = priceList.id_taxe ;
+                                    line.value_taxe = priceList.value_taxe ;
+                                }
+                            });
+                        }
+
                         crmTotal.line.update(line);
 
                         var formatted_data = angular.toJson(line);
@@ -411,11 +454,31 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
 
                         sublines: addSublines(sublines[i].sublines),
 
+                        priceList: sublines[i].priceList,
+
                         update_price_from_subline: sublines[i].update_price_from_subline,
                         show_subline: sublines[i].show_subline,
 
                         sort: sublines[i].sort
                     };
+
+                    // applique la grille de prix
+                    if (response.data.priceList) {
+                        angular.forEach(response.data.priceList, function (priceList) {
+                            if (priceList.id_price_list == $scope.quote.id_price_list) {
+
+                                if (priceList.accounting_number && priceList.accounting_number != "") {
+                                    line.accounting_number = priceList.accounting_number;
+                                }
+
+                                line.discount = priceList.percentage_discount ;
+                                line.price_unit = priceList.price_ht ;
+                                line.id_taxe = priceList.id_taxe ;
+                                line.value_taxe = priceList.value_taxe ;
+                            }
+                        });
+                    }
+
                     dataSublines.push(line);
                 }
             }
@@ -507,6 +570,27 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                 $scope.quote.global_discount = $scope.quote.global_discount || 0;
 
                 angular.forEach($scope.lines, function (line) {
+
+                    // if must update price list
+                    if (_id_price_list_before_update != $scope.quote.id_price_list) {
+                        if (line.priceList) {
+                            angular.forEach(line.priceList, function (priceList) {
+                                if (priceList.id_price_list == $scope.quote.id_price_list) {
+
+                                    if (priceList.accounting_number && priceList.accounting_number != "") {
+                                        line.accounting_number = priceList.accounting_number;
+                                    }
+
+                                    line.discount = priceList.percentage_discount;
+                                    line.price_unit = priceList.price_ht;
+                                    line.id_taxe = priceList.id_taxe;
+                                    line.value_taxe = priceList.value_taxe;
+                                }
+                            });
+                        }
+                    }
+
+
                     crmTotal.line.update(line);
                     if (line.id) {
                         updateLine(line);
@@ -514,6 +598,13 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                     var formatted_data = angular.toJson(line);
                     zhttp.crm.quote.line.save(formatted_data);
                 });
+
+
+                // to save price list state
+                _id_price_list_before_update = $scope.quote.id_price_list ;
+
+
+
 
                 var data = $scope.quote;
 

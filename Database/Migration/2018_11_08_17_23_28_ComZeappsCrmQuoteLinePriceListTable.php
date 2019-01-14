@@ -21,6 +21,7 @@ class ComZeappsCrmQuoteLinePriceListTable extends Migration
             $table->decimal('price_ttc', 8, 2)->default(0);
             $table->integer('id_taxe')->default(0);
             $table->decimal('value_taxe', 8, 2)->default(0);
+            $table->decimal('percentage_discount', 8, 2)->default(0);
 
             $table->timestamps();
             $table->softDeletes();

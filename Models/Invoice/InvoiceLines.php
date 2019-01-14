@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 
+use App\com_zeapps_crm\Models\Invoice\InvoiceLinePriceList;
+
 use Zeapps\Core\ModelHelper;
 
 class InvoiceLines extends Model {
@@ -56,7 +58,11 @@ class InvoiceLines extends Model {
             ->get() ;
 
         foreach ($lines as &$line) {
+            // load sublines
             $line->sublines = self::getSubLine($line->id) ;
+
+            // load price list
+            $line->priceList = InvoiceLinePriceList::where("id_invoice_line", $line->id)->get();
         }
 
         return $lines ;

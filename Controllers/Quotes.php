@@ -13,6 +13,7 @@ use App\com_zeapps_crm\Models\Quote\Quotes as QuotesModel;
 use App\com_zeapps_crm\Models\Quote\QuoteLines;
 use App\com_zeapps_crm\Models\Quote\QuoteDocuments;
 use App\com_zeapps_crm\Models\Quote\QuoteActivities;
+use App\com_zeapps_crm\Models\Quote\QuoteLinePriceList;
 use App\com_zeapps_crm\Models\CreditBalances;
 use App\com_zeapps_crm\Models\CreditBalanceDetails;
 
@@ -362,6 +363,34 @@ class Quotes extends Controller
         $quoteLine->save();
 
 
+
+        // save price list
+        if (isset($data["priceList"]) && count($data["priceList"])) {
+            foreach ($data["priceList"] as $priceList) {
+
+                $quoteLinePriceList = QuoteLinePriceList::where("id_quote_line", $quoteLine->id)->where("id_price_list", $priceList["id_price_list"])->first();
+
+                if (!$quoteLinePriceList) {
+                    $quoteLinePriceList = new QuoteLinePriceList() ;
+                    $quoteLinePriceList->id_quote_line = $quoteLine->id ;
+                    $quoteLinePriceList->id_price_list = $priceList["id_price_list"] ;
+                }
+                $quoteLinePriceList->accounting_number = $priceList["accounting_number"] ;
+                $quoteLinePriceList->price_ht = $priceList["price_ht"] ;
+                $quoteLinePriceList->price_ttc = $priceList["price_ttc"] ;
+                $quoteLinePriceList->id_taxe = $priceList["id_taxe"] ;
+                $quoteLinePriceList->value_taxe = $priceList["value_taxe"] ;
+                $quoteLinePriceList->percentage_discount = $priceList["percentage_discount"] ;
+
+                $quoteLinePriceList->save() ;
+            }
+        }
+
+
+
+
+
+        // save sub line
         if (isset($data["sublines"]) && count($data["sublines"])) {
             foreach ($data["sublines"] as $dataSubline) {
 

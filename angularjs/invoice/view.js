@@ -77,10 +77,14 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
         }
 
 
+
+
+        var _id_price_list_before_update =  0 ;
         var loadDocument = function (idDocument, next) {
             zhttp.crm.invoice.get(idDocument).then(function (response) {
                 if (response.data && response.data != "false") {
                     $scope.invoice = response.data.invoice;
+                    _id_price_list_before_update = $scope.invoice.id_price_list ;
 
                     $scope.credits = response.data.credits;
 
@@ -345,7 +349,27 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
                                 show_subline: response.data.show_subline,
 
                                 sublines: addSublines(response.data.sublines),
+
+                                priceList: response.data.priceList,
                             };
+
+                            // applique la grille de prix
+                            if (response.data.priceList) {
+                                angular.forEach(response.data.priceList, function (priceList) {
+                                    if (priceList.id_price_list == $scope.invoice.id_price_list) {
+
+                                        if (priceList.accounting_number && priceList.accounting_number != "") {
+                                            line.accounting_number = priceList.accounting_number;
+                                        }
+
+                                        line.discount = priceList.percentage_discount ;
+                                        line.price_unit = priceList.price_ht ;
+                                        line.id_taxe = priceList.id_taxe ;
+                                        line.value_taxe = priceList.value_taxe ;
+                                    }
+                                });
+                            }
+
                             crmTotal.line.update(line);
 
                             $scope.codeProduct = "";
@@ -402,7 +426,27 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
                                 show_subline: objReturn.show_subline,
 
                                 sublines: addSublines(objReturn.sublines),
+
+                                priceList: objReturn.priceList,
                             };
+
+                            // applique la grille de prix
+                            if (response.data.priceList) {
+                                angular.forEach(response.data.priceList, function (priceList) {
+                                    if (priceList.id_price_list == $scope.invoice.id_price_list) {
+
+                                        if (priceList.accounting_number && priceList.accounting_number != "") {
+                                            line.accounting_number = priceList.accounting_number;
+                                        }
+
+                                        line.discount = priceList.percentage_discount ;
+                                        line.price_unit = priceList.price_ht ;
+                                        line.id_taxe = priceList.id_taxe ;
+                                        line.value_taxe = priceList.value_taxe ;
+                                    }
+                                });
+                            }
+
                             crmTotal.line.update(line);
 
                             var formatted_data = angular.toJson(line);
@@ -446,11 +490,31 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
 
                         sublines: addSublines(sublines[i].sublines),
 
+                        priceList: sublines[i].priceList,
+
                         update_price_from_subline: sublines[i].update_price_from_subline,
                         show_subline: sublines[i].show_subline,
 
                         sort: sublines[i].sort
                     };
+
+                    // applique la grille de prix
+                    if (response.data.priceList) {
+                        angular.forEach(response.data.priceList, function (priceList) {
+                            if (priceList.id_price_list == $scope.invoice.id_price_list) {
+
+                                if (priceList.accounting_number && priceList.accounting_number != "") {
+                                    line.accounting_number = priceList.accounting_number;
+                                }
+
+                                line.discount = priceList.percentage_discount ;
+                                line.price_unit = priceList.price_ht ;
+                                line.id_taxe = priceList.id_taxe ;
+                                line.value_taxe = priceList.value_taxe ;
+                            }
+                        });
+                    }
+
                     dataSublines.push(line);
                 }
             }
@@ -566,6 +630,27 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
                     $scope.invoice.global_discount = $scope.invoice.global_discount || 0;
 
                     angular.forEach($scope.lines, function (line) {
+
+                        // if must update price list
+                        if (_id_price_list_before_update != $scope.invoice.id_price_list) {
+                            if (line.priceList) {
+                                angular.forEach(line.priceList, function (priceList) {
+                                    if (priceList.id_price_list == $scope.invoice.id_price_list) {
+
+                                        if (priceList.accounting_number && priceList.accounting_number != "") {
+                                            line.accounting_number = priceList.accounting_number;
+                                        }
+
+                                        line.discount = priceList.percentage_discount;
+                                        line.price_unit = priceList.price_ht;
+                                        line.id_taxe = priceList.id_taxe;
+                                        line.value_taxe = priceList.value_taxe;
+                                    }
+                                });
+                            }
+                        }
+
+
                         crmTotal.line.update(line);
                         if (line.id) {
                             updateLine(line);
@@ -573,6 +658,10 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
                         var formatted_data = angular.toJson(line);
                         zhttp.crm.invoice.line.save(formatted_data)
                     });
+
+
+                    // to save price list state
+                    _id_price_list_before_update = $scope.invoice.id_price_list ;
 
 
                     var data = $scope.invoice;

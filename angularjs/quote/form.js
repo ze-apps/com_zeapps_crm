@@ -60,6 +60,17 @@ app.controller("ComZeappsCrmQuoteFormCtrl", ["$scope", "$routeParams", "$rootSco
 
 
 
+
+        // charge la liste des grilles de prix
+        $scope.price_lists = false;
+        zhttp.crm.price_list.get_all().then(function (response) {
+            if (response.status == 200) {
+                $scope.price_lists = response.data;
+            }
+        });
+
+
+
 		function Initform(){
 			if($scope.form.id === undefined) {
                 $scope.form.id_user_account_manager = $rootScope.user.id;
@@ -132,6 +143,11 @@ app.controller("ComZeappsCrmQuoteFormCtrl", ["$scope", "$routeParams", "$rootSco
                     $scope.form.delivery_country_id = company.delivery_country_id || company.billing_country_id || "";
                     $scope.form.delivery_country_name = company.delivery_country_name || company.billing_country_name || "";
                 }
+
+                // applique la grille de prix
+                if (company.id_price_list) {
+                    $scope.form.id_price_list = company.id_price_list;
+                }
             } else {
                 $scope.form.id_company = 0;
                 $scope.form.name_company = "";
@@ -167,13 +183,19 @@ app.controller("ComZeappsCrmQuoteFormCtrl", ["$scope", "$routeParams", "$rootSco
                     $scope.form.delivery_country_name = contact.country_name || "";
                 }
 
-				if(contact.id_company !== "0" && ($scope.form.id_company === undefined || $scope.form.id_company === 0)){
-					zhttp.contact.company.get(contact.id_company).then(function(response){
-						if(response.data && response.data != "false"){
+
+                if (contact.id_company !== "0" && ($scope.form.id_company === undefined || $scope.form.id_company === 0)) {
+                    zhttp.contact.company.get(contact.id_company).then(function (response) {
+                        if (response.data && response.data != "false") {
                             loadCompany(response.data.company);
-						}
-					})
-				}
+                        }
+                    })
+                } else {
+                    // applique la grille de prix
+                    if (($scope.form.id_company === undefined || $scope.form.id_company === 0) && contact.id_price_list) {
+                        $scope.form.id_price_list = contact.id_price_list;
+                    }
+                }
             } else {
                 $scope.form.id_contact = 0;
                 $scope.form.name_contact = "";

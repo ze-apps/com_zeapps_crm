@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 
+use App\com_zeapps_crm\Models\Quote\QuoteLinePriceList;
+
 use Zeapps\Core\ModelHelper;
 
 class QuoteLines extends Model
@@ -57,8 +59,14 @@ class QuoteLines extends Model
             ->orderBy("sort")->get() ;
 
         foreach ($lines as &$line) {
+            // load sublines
             $line->sublines = self::getSubLine($line->id) ;
+
+            // load price list
+            $line->priceList = QuoteLinePriceList::where("id_quote_line", $line->id)->get();
         }
+
+
 
         return $lines ;
     }

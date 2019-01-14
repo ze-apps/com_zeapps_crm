@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 
+use App\com_zeapps_crm\Models\Delivery\DeliveryLinePriceList;
+
 use Zeapps\Core\ModelHelper;
 
 class DeliveryLines extends Model {
@@ -57,7 +59,11 @@ class DeliveryLines extends Model {
             ->get() ;
 
         foreach ($lines as &$line) {
+            // load sublines
             $line->sublines = self::getSubLine($line->id) ;
+
+            // load price list
+            $line->priceList = DeliveryLinePriceList::where("id_delivery_line", $line->id)->get();
         }
 
         return $lines ;
