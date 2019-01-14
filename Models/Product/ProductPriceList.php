@@ -29,10 +29,12 @@ class ProductPriceList extends Model
         $this->fieldModelInfo->integer('id_product')->default(0);
         $this->fieldModelInfo->integer('id_price_list')->default(0);
         $this->fieldModelInfo->string('accounting_number', 255)->default("");
+        $this->fieldModelInfo->decimal('percentage_discount', 8, 2)->default(0);
         $this->fieldModelInfo->decimal('price_ht', 8, 2)->default(0);
         $this->fieldModelInfo->decimal('price_ttc', 8, 2)->default(0);
         $this->fieldModelInfo->integer('id_taxe')->default(0);
         $this->fieldModelInfo->decimal('value_taxe', 8, 2)->default(0);
+
 
         $this->fieldModelInfo->timestamps();
         $this->fieldModelInfo->softDeletes();

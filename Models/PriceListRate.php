@@ -33,6 +33,7 @@ class PriceListRate extends Model
         $this->fieldModelInfo->string('accounting_number', 255)->default("");
         $this->fieldModelInfo->integer('id_taxe')->default(0);
         $this->fieldModelInfo->decimal('value_taxe', 8, 2)->default(0);
+        $this->fieldModelInfo->tinyInteger('is_updated')->default(0);
 
         $this->fieldModelInfo->timestamps();
         $this->fieldModelInfo->softDeletes();
@@ -54,6 +55,9 @@ class PriceListRate extends Model
 
         /**** to delete unwanted field ****/
         $this->fieldModelInfo->removeFieldUnwanted($this);
+
+        /**** to launch the price update ****/
+        $this->is_updated = 1 ;
 
         return parent::save($options);
     }

@@ -15,8 +15,8 @@ class ComZeappsCrmProductPriceListTable extends Migration
             $table->increments('id');
             $table->integer('id_product')->default(0);
             $table->integer('id_price_list')->default(0);
-
             $table->string('accounting_number', 255)->default("");
+            $table->decimal('percentage_discount', 8, 2)->default(0);
             $table->decimal('price_ht', 8, 2)->default(0);
             $table->decimal('price_ttc', 8, 2)->default(0);
             $table->integer('id_taxe')->default(0);

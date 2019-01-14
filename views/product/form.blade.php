@@ -187,14 +187,17 @@
 
 
                 <div ng-show="price_lists.length >= 2" ng-repeat="price_list in price_lists " style="border-bottom: solid 1px #000">
-                    <h3>Tarif : @{{ price_list.label }}</h3>
+                    <h3>Tarif : @{{ price_list.label }} <span ng-if="price_list.type_pricelist == 1 && form.priceList[price_list.id].percentage_discount">(Remise @{{ form.priceList[price_list.id].percentage_discount }} %)</span></h3>
 
 
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Prix HT <span class="required">*</span></label>
-                                <div class="input-group">
+                                <label>Prix HT <span class="required" ng-if="price_list.type_pricelist == 0">*</span>
+                                    <span ng-if="price_list.type_pricelist == 1"> : @{{ (form.priceList[price_list.id].price_ht * (1-form.priceList[price_list.id].percentage_discount/100)).toFixed(2) }} €</span>
+                                </label>
+
+                                <div class="input-group" ng-if="price_list.type_pricelist == 0">
                                     <input type="text" ng-model="form.priceList[price_list.id].price_ht" class="form-control"
                                            ng-change="updatePrice(price_list.id, 'ttc')" ng-required="true"
                                            ng-disabled="form.type_product=='pack' && form.update_price_from_subline">
@@ -204,8 +207,11 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Prix TTC <span class="required">*</span></label>
-                                <div class="input-group">
+                                <label>Prix TTC <span class="required" ng-if="price_list.type_pricelist == 0">*</span>
+                                    <span ng-if="price_list.type_pricelist == 1"> : @{{ (form.priceList[price_list.id].price_ttc * (1-form.priceList[price_list.id].percentage_discount/100)).toFixed(2) }} €</span>
+                                </label>
+
+                                <div class="input-group" ng-if="price_list.type_pricelist == 0">
                                     <input type="text" ng-model="form.priceList[price_list.id].price_ttc" class="form-control"
                                            ng-change="updatePrice(price_list.id, 'ht')"
                                            ng-required="true"
@@ -220,9 +226,13 @@
                     <div class="row" ng-hide="form.type_product=='pack'">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>TVA <span class="required">*</span></label>
+                                <label>TVA <span class="required" ng-if="price_list.type_pricelist == 0">*</span>
+                                    <span ng-if="price_list.type_pricelist == 1"> : @{{ form.priceList[price_list.id].value_taxe }} %</span>
+                                </label>
+
                                 <select ng-model="form.priceList[price_list.id].id_taxe" ng-change="updateTaxe(price_list.id);updatePrice(price_list.id, 'ttc')"
-                                        class="form-control" ng-required="form.type_product!='pack'">
+                                        class="form-control" ng-required="form.type_product!='pack'"
+                                        ng-if="price_list.type_pricelist == 0">
                                     <option ng-repeat="taxe in taxes | filter:{ active : 1 }" ng-value="@{{taxe.id}}">
                                         @{{ taxe.label }}
                                     </option>
@@ -231,7 +241,9 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Compte Comptable @{{ form.priceList[price_list.id].accounting_number }}</label>
+                                <label>Compte Comptable
+                                    <span ng-if="price_list.type_pricelist == 1"> : @{{ form.priceList[price_list.id].accounting_number }}</span>
+                                </label>
                                 <span ze-modalsearch="loadAccountingNumber"
                                       data-onloadmodal="openModalAccountingNumber"
                                       data-onloadmodalparam="price_list.id"
@@ -239,7 +251,8 @@
                                       data-model="form.priceList[price_list.id].accounting_number"
                                       data-fields="accountingNumberFields"
                                       data-template-new="accountingNumberTplNew"
-                                      data-title="Choisir un compte comptable"></span>
+                                      data-title="Choisir un compte comptable"
+                                      ng-if="price_list.type_pricelist == 0"></span>
                             </div>
                         </div>
                     </div>

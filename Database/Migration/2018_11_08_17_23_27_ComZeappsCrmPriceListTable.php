@@ -18,6 +18,7 @@ class ComZeappsCrmPriceListTable extends Migration
             $table->tinyInteger('type_pricelist')->default(0);
             $table->double('percentage')->default(0);
             $table->tinyInteger('active')->default(0);
+            $table->tinyInteger('is_updated')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

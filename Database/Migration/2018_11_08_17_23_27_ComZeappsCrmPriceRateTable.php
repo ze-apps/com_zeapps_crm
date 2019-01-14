@@ -19,6 +19,7 @@ class ComZeappsCrmPriceRateTable extends Migration
             $table->string('accounting_number', 255)->default("");
             $table->integer('id_taxe')->default(0);
             $table->decimal('value_taxe', 8, 2)->default(0);
+            $table->tinyInteger('is_updated')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

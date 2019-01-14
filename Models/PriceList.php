@@ -33,6 +33,7 @@ class PriceList extends Model
         $this->fieldModelInfo->tinyInteger('type_pricelist')->default(0);
         $this->fieldModelInfo->double('percentage')->default(0);
         $this->fieldModelInfo->tinyInteger('active')->default(0);
+        $this->fieldModelInfo->tinyInteger('is_updated')->default(0);
         $this->fieldModelInfo->timestamps();
         $this->fieldModelInfo->softDeletes();
 
@@ -53,6 +54,10 @@ class PriceList extends Model
 
         /**** to delete unwanted field ****/
         $this->fieldModelInfo->removeFieldUnwanted($this);
+
+
+        /**** to launch the price update ****/
+        $this->is_updated = 1 ;
 
         return parent::save($options);
     }
