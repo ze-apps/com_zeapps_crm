@@ -403,8 +403,8 @@ app.controller("ComZeappsCrmDeliveryViewCtrl", ["$scope", "$routeParams", "$loca
                         };
 
                         // applique la grille de prix
-                        if (response.data.priceList) {
-                            angular.forEach(response.data.priceList, function (priceList) {
+                        if (objReturn.priceList) {
+                            angular.forEach(objReturn.priceList, function (priceList) {
                                 if (priceList.id_price_list == $scope.delivery.id_price_list) {
 
                                     if (priceList.accounting_number && priceList.accounting_number != "") {
@@ -470,8 +470,8 @@ app.controller("ComZeappsCrmDeliveryViewCtrl", ["$scope", "$routeParams", "$loca
                     };
 
                     // applique la grille de prix
-                    if (response.data.priceList) {
-                        angular.forEach(response.data.priceList, function (priceList) {
+                    if (sublines[i].priceList) {
+                        angular.forEach(sublines[i].priceList, function (priceList) {
                             if (priceList.id_price_list == $scope.delivery.id_price_list) {
 
                                 if (priceList.accounting_number && priceList.accounting_number != "") {

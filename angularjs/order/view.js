@@ -7,7 +7,16 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
 		var code = "";
 
 		$scope.$on("comZeappsCrm_triggerOrderHook", broadcast);
-		$scope.hooks = zeHooks.get("comZeappsCrm_OrderHook");
+		$scope.$on("comZeappsCrm_triggerOrderAddLineHook", broadcastOrderAddLineHook);
+
+
+        // to activate hook function
+        $scope.hooksComZeappsCRM_OrderBtnTopBodyHook = zeHooks.get("comZeappsCRM_OrderBtnTopBodyHook");
+
+
+
+
+
 
 		$scope.progress = 0;
 		$scope.activities = [];
@@ -193,11 +202,13 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
             } else {
                 $rootScope.$broadcast("comZeappsCrm_dataOrderHook",
                     {
-                        order: $scope.order
+                        order: $scope.order,
+                        lines: $scope.lines,
                     }
                 );
             }
         }
+
 		function broadcast_code(code){
 			$rootScope.$broadcast("comZeappsCrm_dataOrderHook",
 				{
@@ -205,6 +216,20 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
 				}
 			);
 		}
+
+
+        function broadcastOrderAddLineHook(event, line) {
+            crmTotal.line.update(line);
+
+            var formatted_data = angular.toJson(line);
+            zhttp.crm.order.line.save(formatted_data).then(function (response) {
+                if (response.data && response.data != "false") {
+                    line.id = response.data;
+                    $scope.lines.push(line);
+                    updateOrder();
+                }
+            });
+        }
 
 		function setTab(tab){
             $rootScope.comZeappsCrmLastShowTabOrder = tab;
@@ -406,8 +431,8 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                         };
 
                         // applique la grille de prix
-                        if (response.data.priceList) {
-                            angular.forEach(response.data.priceList, function (priceList) {
+                        if (objReturn.priceList) {
+                            angular.forEach(objReturn.priceList, function (priceList) {
                                 if (priceList.id_price_list == $scope.order.id_price_list) {
 
                                     if (priceList.accounting_number && priceList.accounting_number != "") {
@@ -473,8 +498,8 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                     };
 
                     // applique la grille de prix
-                    if (response.data.priceList) {
-                        angular.forEach(response.data.priceList, function (priceList) {
+                    if (sublines[i].priceList) {
+                        angular.forEach(sublines[i].priceList, function (priceList) {
                             if (priceList.id_price_list == $scope.order.id_price_list) {
 
                                 if (priceList.accounting_number && priceList.accounting_number != "") {

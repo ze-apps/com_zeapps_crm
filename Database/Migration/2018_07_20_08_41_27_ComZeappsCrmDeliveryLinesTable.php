@@ -30,6 +30,7 @@ class ComZeappsCrmDeliveryLinesTable extends Migration
             $table->tinyInteger('show_subline', false)->default(0);
             $table->decimal('price_unit_ttc_subline', 8, 2)->default(0);
             $table->integer('sort')->default(0);
+            $table->text('json');
 
             $table->timestamps();
             $table->softDeletes();

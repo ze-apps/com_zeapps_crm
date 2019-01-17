@@ -177,16 +177,18 @@ class Deliveries extends Model
                 if ($line->type === 'product') {
                     $product = Products::where("id", $line->id_product)->first();
 
-                    $stockMovement = new StockMovements();
-                    $stockMovement->id_warehouse = $id_warehouse;
-                    $stockMovement->id_stock = $product->id_stock; // TODO : le stock ne doit pas être associé au produit mais ID Stock du document source
-                    $stockMovement->label = "Bon de livraison n° " . $delivery_number;
-                    $stockMovement->qty = -1 * floatval($line->qty);
-                    $stockMovement->id_table = $idDocument;
-                    $stockMovement->name_table = "com_zeapps_crm_deliveries";
-                    $stockMovement->date_mvt = $mvt_date;
-                    $stockMovement->ignored = 0;
-                    $stockMovement->save();
+                    if ($product) {
+                        $stockMovement = new StockMovements();
+                        $stockMovement->id_warehouse = $id_warehouse;
+                        $stockMovement->id_stock = $product->id_stock; // TODO : le stock ne doit pas être associé au produit mais ID Stock du document source
+                        $stockMovement->label = "Bon de livraison n° " . $delivery_number;
+                        $stockMovement->qty = -1 * floatval($line->qty);
+                        $stockMovement->id_table = $idDocument;
+                        $stockMovement->name_table = "com_zeapps_crm_deliveries";
+                        $stockMovement->date_mvt = $mvt_date;
+                        $stockMovement->ignored = 0;
+                        $stockMovement->save();
+                    }
                 }
 
                 if ($sublines) {

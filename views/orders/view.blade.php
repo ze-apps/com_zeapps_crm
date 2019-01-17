@@ -107,6 +107,11 @@
             </div>
         </div>
 
+
+        <div class="alert alert-danger" role="alert" ng-show="(order.id_price_list != company.id_price_list && company.id) || (!company.id && order.id_price_list != contact.id_price_list && contact.id)">
+            Attention : la grille de prix appliquée sur ce document ne correspond pas à la grille de prix du client.
+        </div>
+
         <ul role="tablist" class="nav nav-tabs">
             <li ng-class="navigationState =='body' ? 'active' : ''"><a href="#" ng-click="setTab('body')">Corps</a></li>
             <li ng-class="navigationState =='header' ? 'active' : ''"><a href="#" ng-click="setTab('header')">Entête</a>
@@ -135,6 +140,16 @@
                         </span>
                     </span>
                     <ze-btn fa="tags" color="success" hint="produit" always-on="true" ng-click="addLine()"></ze-btn>
+
+
+
+
+                    <div ng-include="hook.template" ng-repeat="hook in hooksComZeappsCRM_OrderBtnTopBodyHook" style="display: inline-block">
+                    </div>
+
+
+
+
                     <ze-btn fa="euro" color="info" hint="sous-total" always-on="true" ng-click="addSubTotal()"></ze-btn>
                     <ze-btn fa="commenting" color="warning" hint="commentaire" always-on="true"
                             ze-modalform="addComment"

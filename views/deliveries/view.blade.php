@@ -110,6 +110,11 @@
             </div>
         </div>
 
+
+        <div class="alert alert-danger" role="alert" ng-show="(delivery.id_price_list != company.id_price_list && company.id) || (!company.id && delivery.id_price_list != contact.id_price_list && contact.id)">
+            Attention : la grille de prix appliquée sur ce document ne correspond pas à la grille de prix du client.
+        </div>
+
         <ul role="tablist" class="nav nav-tabs">
             <li ng-class="navigationState =='body' ? 'active' : ''"><a href="#" ng-click="setTab('body')">Corps</a></li>
             <li ng-class="navigationState =='header' ? 'active' : ''"><a href="#" ng-click="setTab('header')">Entête</a>
