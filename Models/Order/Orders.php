@@ -12,6 +12,7 @@ use App\com_zeapps_crm\Models\Order\OrderLinePriceList;
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 use Zeapps\Core\ModelHelper;
+use Zeapps\Core\Event;
 
 class Orders extends Model
 {
@@ -234,6 +235,13 @@ class Orders extends Model
 
     public function save(array $options = [])
     {
+        $isFinalized = false ;
+
+
+
+        if ((!isset($this->original["finalized"]) && $this->finalized) || ($this->original["finalized"] != $this->finalized && $this->finalized)) {
+            $isFinalized = true ;
+        }
 
 
         /******** clean data **********/
@@ -251,7 +259,17 @@ class Orders extends Model
         /**** to delete unwanted field ****/
         $this->fieldModelInfo->removeFieldUnwanted($this);
 
-        return parent::save($options);
+
+        $result = parent::save($options) ;
+
+
+        if ($isFinalized) {
+            $dataEvent = array('id_order'=>$this->id) ;
+            Event::sendAction('com_zeapps_crm_order', 'finalized', $dataEvent);
+        }
+
+
+        return $result;
     }
 
 }

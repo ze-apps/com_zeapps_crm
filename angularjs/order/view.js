@@ -48,6 +48,7 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
 		$scope.updateStatus = updateStatus;
 		$scope.updateOrder = updateOrder;
 		$scope.transform = transform;
+        $scope.finalize = finalize;
 
 		$scope.addFromCode = addFromCode;
         $scope.keyEventaddFromCode = keyEventaddFromCode;
@@ -302,6 +303,67 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
 				}
 			});
 		}
+
+        function finalize() {
+            zhttp.crm.order.finalize($scope.order.id).then(function (response) {
+                if (response.data && response.data !== "false") {
+                    if (response.data.error) {
+                        toasts('danger', response.data.error);
+                    } else {
+                        $scope.order.numerotation = response.data.numerotation;
+                        $scope.order.final_pdf = response.data.final_pdf;
+                        $scope.order.finalized = '1';
+                        $scope.sortable.disabled = true;
+                    }
+                }
+            });
+
+            /*if (($scope.order.accounting_number && $scope.order.accounting_number != "") && ($scope.order.id_modality || parseInt($scope.order.id_modality, 10) != 0) && (($scope.order.id_company && parseInt($scope.order.id_company, 10) != 0) || ($scope.order.id_contact && parseInt($scope.order.id_contact, 10) != 0))) {
+                zhttp.crm.order.finalize($scope.order.id).then(function (response) {
+                    if (response.data && response.data !== "false") {
+                        if (response.data.error) {
+                            toasts('danger', response.data.error);
+                        } else {
+                            $scope.order.numerotation = response.data.numerotation;
+                            $scope.order.final_pdf = response.data.final_pdf;
+                            $scope.order.finalized = '1';
+                            $scope.sortable.disabled = true;
+                        }
+                    }
+                });
+            } else {
+
+                var msg_toast = "";
+
+                if (!$scope.order.accounting_number || $scope.order.accounting_number == "") {
+                    if (msg_toast != "") {
+                        msg_toast += ", ";
+                    }
+                    msg_toast += "un compte comptable";
+                }
+
+                if (!$scope.order.id_modality || parseInt($scope.order.id_modality, 10) == 0) {
+                    if (msg_toast != "") {
+                        msg_toast += ", ";
+                    }
+                    msg_toast += "un moyen de paiement";
+                }
+
+                if (!$scope.order.id_company && parseInt($scope.order.id_company, 10) == 0 || !$scope.order.id_contact || parseInt($scope.order.id_contact, 10) == 0) {
+                    if (msg_toast != "") {
+                        msg_toast += ", ";
+                    }
+                    msg_toast += "une société ou un contact";
+                }
+
+
+                msg_toast = "Vous devez renseigner (" + msg_toast + ") pour pouvoir clôturer une facture";
+
+
+                toasts('warning', msg_toast);
+            }*/
+        }
+
 
         function keyEventaddFromCode($event) {
             if ($event.which === 13) {

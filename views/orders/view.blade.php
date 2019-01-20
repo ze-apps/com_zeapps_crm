@@ -54,6 +54,8 @@
                                 ng-click="sendByMail()"></ze-btn>
                         <ze-btn fa="files-o" color="success" hint="Dupliquer" direction="left"
                                 ng-click="transform()"></ze-btn>
+                        <ze-btn fa="lock" color="danger" hint="Clôturer" direction="left" ng-click="finalize()"
+                                ng-hide="order.finalized"></ze-btn>
 
                         <div class="btn-group btn-group-xs" role="group" ng-if="nb_orders > 0">
                             <button type="button" class="btn btn-default" ng-class="order_first == 0 ? 'disabled' :''"

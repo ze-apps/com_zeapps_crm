@@ -69,6 +69,7 @@ app.config(["$provide",
                     save: post_order,
                     del: del_order,
                     transform: transform_order,
+                    finalize: finalize_order,
                     test: test_order,
                     line: {
                         save: save_line_order,
@@ -466,6 +467,10 @@ app.config(["$provide",
 
             function transform_order(id, data) {
                 return zeHttp.post("/com_zeapps_crm/orders/transform/" + id, data);
+            }
+
+            function finalize_order(id) {
+                return zeHttp.post("/com_zeapps_crm/orders/finalize/" + id);
             }
 
             function save_line_order(data) {

@@ -9,7 +9,7 @@ use Zeapps\Core\Session;
 use Zeapps\Core\Storage;
 use Mpdf\Mpdf;
 
-use App\com_zeapps_crm\Models\Order\Orders as OrdersModel ;
+use App\com_zeapps_crm\Models\Order\Orders as OrdersModel;
 use App\com_zeapps_crm\Models\Order\OrderLines;
 use App\com_zeapps_crm\Models\Order\OrderDocuments;
 use App\com_zeapps_crm\Models\Order\OrderActivities;
@@ -17,43 +17,49 @@ use App\com_zeapps_crm\Models\Order\OrderLinePriceList;
 use App\com_zeapps_crm\Models\CreditBalances;
 use App\com_zeapps_crm\Models\CreditBalanceDetails;
 
-use App\com_zeapps_crm\Models\Invoice\Invoices as InvoicesModel ;
-use App\com_zeapps_crm\Models\Quote\Quotes as QuotesModel ;
-use App\com_zeapps_crm\Models\Delivery\Deliveries as DeliveriesModel ;
+use App\com_zeapps_crm\Models\Invoice\Invoices as InvoicesModel;
+use App\com_zeapps_crm\Models\Quote\Quotes as QuotesModel;
+use App\com_zeapps_crm\Models\Delivery\Deliveries as DeliveriesModel;
 
 use Zeapps\Models\Config;
 
 class Orders extends Controller
 {
-    public function lists(){
+    public function lists()
+    {
         $data = array();
         return view("orders/lists", $data, BASEPATH . 'App/com_zeapps_crm/views/');
     }
 
-    public function view(){
+    public function view()
+    {
         $data = array();
         return view("orders/view", $data, BASEPATH . 'App/com_zeapps_crm/views/');
     }
 
-    public function form_line(){
+    public function form_line()
+    {
         $data = array();
         return view("orders/form_line", $data, BASEPATH . 'App/com_zeapps_crm/views/');
     }
 
-    public function lists_partial(){
+    public function lists_partial()
+    {
         $data = array();
         return view("orders/lists_partial", $data, BASEPATH . 'App/com_zeapps_crm/views/');
     }
 
-    public function form_modal(){
+    public function form_modal()
+    {
         $data = array();
         return view("orders/form_modal", $data, BASEPATH . 'App/com_zeapps_crm/views/');
     }
 
 
-    public function testFormat(){
+    public function testFormat()
+    {
         // constitution du tableau
-        $data = array() ;
+        $data = array();
 
         if (strcasecmp($_SERVER['REQUEST_METHOD'], 'post') === 0 && stripos($_SERVER['CONTENT_TYPE'], 'application/json') !== FALSE) {
             // POST is actually in json format, do an internal translation
@@ -69,7 +75,8 @@ class Orders extends Controller
     }
 
 
-    public function get(Request $request) {
+    public function get(Request $request)
+    {
 
         $id = $request->input('id', 0);
 
@@ -79,14 +86,13 @@ class Orders extends Controller
         $documents = OrderDocuments::where('id_order', $id)->get();
         $activities = OrderActivities::where('id_order', $id)->get();
 
-        if($order->id_company) {
+        if ($order->id_company) {
             $credits = CreditBalances::where('id_company', $order->id_company)
-                ->where('left_to_pay', '>=',  0.01)
+                ->where('left_to_pay', '>=', 0.01)
                 ->get();
-        }
-        else {
+        } else {
             $credits = CreditBalances::where('id_contact', $order->id_contact)
-                ->where('left_to_pay', '>=',  0.01)
+                ->where('left_to_pay', '>=', 0.01)
                 ->get();
         }
 
@@ -100,8 +106,8 @@ class Orders extends Controller
     }
 
 
-
-    public function getAll(Request $request) {
+    public function getAll(Request $request)
+    {
         $id = $request->input('id', 0);
         $type = $request->input('type', 'company');
         $limit = $request->input('limit', 15);
@@ -109,7 +115,7 @@ class Orders extends Controller
         $context = $request->input('context', false);
 
 
-        $filters = array() ;
+        $filters = array();
 
         if (strcasecmp($_SERVER['REQUEST_METHOD'], 'post') === 0 && stripos($_SERVER['CONTENT_TYPE'], 'application/json') !== FALSE) {
             // POST is actually in json format, do an internal translation
@@ -121,32 +127,29 @@ class Orders extends Controller
         }
 
 
-
-
-
-        $orders_rs = OrdersModel::orderBy('date_creation', 'DESC')->orderBy('id', 'DESC') ;
+        $orders_rs = OrdersModel::orderBy('date_creation', 'DESC')->orderBy('id', 'DESC');
         foreach ($filters as $key => $value) {
             if (strpos($key, " LIKE")) {
                 $key = str_replace(" LIKE", "", $key);
-                $orders_rs = $orders_rs->where($key, 'like', '%' . $value . '%') ;
+                $orders_rs = $orders_rs->where($key, 'like', '%' . $value . '%');
             } else {
-                $orders_rs = $orders_rs->where($key, $value) ;
+                $orders_rs = $orders_rs->where($key, $value);
             }
         }
 
         $total = $orders_rs->count();
-        $orders_rs_id = $orders_rs ;
+        $orders_rs_id = $orders_rs;
 
         $orders = $orders_rs->limit($limit)->offset($offset)->get();;
 
 
-        if(!$orders){
+        if (!$orders) {
             $orders = [];
         }
 
 
         $ids = [];
-        if($total < 500) {
+        if ($total < 500) {
             $rows = $orders_rs_id->select(array("id"))->get();
             foreach ($rows as $row) {
                 array_push($ids, $row->id);
@@ -162,13 +165,13 @@ class Orders extends Controller
     }
 
 
-    public function modal(Request $request) {
+    public function modal(Request $request)
+    {
         $limit = $request->input('limit', 15);
         $offset = $request->input('offset', 0);
 
 
-
-        $filters = array() ;
+        $filters = array();
 
         if (strcasecmp($_SERVER['REQUEST_METHOD'], 'post') === 0 && stripos($_SERVER['CONTENT_TYPE'], 'application/json') !== FALSE) {
             // POST is actually in json format, do an internal translation
@@ -176,23 +179,23 @@ class Orders extends Controller
         }
 
 
-        $orders_rs = OrdersModel::orderBy('date_creation', 'DESC')->orderBy('id', 'DESC') ;
+        $orders_rs = OrdersModel::orderBy('date_creation', 'DESC')->orderBy('id', 'DESC');
         foreach ($filters as $key => $value) {
             if (strpos($key, " LIKE")) {
                 $key = str_replace(" LIKE", "", $key);
-                $orders_rs = $orders_rs->where($key, 'like', '%' . $value . '%') ;
+                $orders_rs = $orders_rs->where($key, 'like', '%' . $value . '%');
             } else {
-                $orders_rs = $orders_rs->where($key, $value) ;
+                $orders_rs = $orders_rs->where($key, $value);
             }
         }
 
         $total = $orders_rs->count();
-        $orders_rs_id = $orders_rs ;
+        $orders_rs_id = $orders_rs;
 
         $orders = $orders_rs->limit($limit)->offset($offset)->get();;
 
 
-        if(!$orders){
+        if (!$orders) {
             $orders = [];
         }
 
@@ -203,9 +206,10 @@ class Orders extends Controller
 
     }
 
-    public function save() {
+    public function save()
+    {
         // constitution du tableau
-        $data = array() ;
+        $data = array();
 
         if (strcasecmp($_SERVER['REQUEST_METHOD'], 'post') === 0 && stripos($_SERVER['CONTENT_TYPE'], 'application/json') !== FALSE) {
             // POST is actually in json format, do an internal translation
@@ -213,26 +217,26 @@ class Orders extends Controller
         }
 
 
-
-        $order = new OrdersModel() ;
+        $order = new OrdersModel();
 
         if (isset($data["id"]) && is_numeric($data["id"])) {
-            $order = OrdersModel::where('id', $data["id"])->first() ;
+            $order = OrdersModel::where('id', $data["id"])->first();
         }
 
-        foreach ($data as $key =>$value) {
-            $order->$key = $value ;
+        foreach ($data as $key => $value) {
+            $order->$key = $value;
         }
 
-        $order->save() ;
+        $order->save();
 
         echo json_encode($order->id);
     }
 
-    public function delete(Request $request) {
+    public function delete(Request $request)
+    {
         $id = $request->input('id', 0);
 
-        if($id) {
+        if ($id) {
             OrderLines::where('id_order', $id)->delete();
 
             $documents = OrderDocuments::where('id_order', $id)->get();
@@ -253,12 +257,13 @@ class Orders extends Controller
         }
     }
 
-    public function transform(Request $request) {
+    public function transform(Request $request)
+    {
         $id = $request->input('id', 0);
 
-        if($id) {
+        if ($id) {
             // constitution du tableau
-            $data = array() ;
+            $data = array();
 
             if (strcasecmp($_SERVER['REQUEST_METHOD'], 'post') === 0 && stripos($_SERVER['CONTENT_TYPE'], 'application/json') !== FALSE) {
                 // POST is actually in json format, do an internal translation
@@ -267,20 +272,20 @@ class Orders extends Controller
 
             $return = [];
 
-            if($src = OrdersModel::where("id", $id)->first()){
-                $src->lines = OrderLines::getFromOrder($id) ;
+            if ($src = OrdersModel::where("id", $id)->first()) {
+                $src->lines = OrderLines::getFromOrder($id);
 
-                if($data){
-                    foreach($data as $document => $value){
-                        if($value == 'true'){
+                if ($data) {
+                    foreach ($data as $document => $value) {
+                        if ($value == 'true') {
                             if ($document == "quotes") {
-                                QuotesModel::createFrom($src) ;
+                                QuotesModel::createFrom($src);
                             } elseif ($document == "orders") {
-                                OrdersModel::createFrom($src) ;
+                                OrdersModel::createFrom($src);
                             } elseif ($document == "invoices") {
-                                InvoicesModel::createFrom($src) ;
+                                InvoicesModel::createFrom($src);
                             } elseif ($document == "deliveries") {
-                                DeliveriesModel::createFrom($src) ;
+                                DeliveriesModel::createFrom($src);
                             }
                         }
                     }
@@ -288,12 +293,35 @@ class Orders extends Controller
             }
 
             echo json_encode($return);
-        }
-        else{
+        } else {
             echo json_encode(false);
         }
     }
 
+    public function finalize(Request $request)
+    {
+        $id = $request->input('id', 0);
+
+        if ($id) {
+            if ($order = OrdersModel::where("id", $id)->first()) {
+                /*if ($invoice->id_modality === '0') {
+                    echo json_encode(array('error' => 'Modalité de paiement non renseignée'));
+                    return;
+                }*/
+
+                $order->finalized = 1;
+                $order->save();
+
+                echo json_encode(array(
+                    'numerotation' => $order->numerotation
+                ));
+            } else {
+                echo json_encode(false);
+            }
+        } else {
+            echo json_encode(false);
+        }
+    }
 
     public function saveLine()
     {
@@ -314,18 +342,19 @@ class Orders extends Controller
         echo json_encode($id_order_line);
     }
 
-    private function saveLineData($data, $id_order, $id_parent) {
-        $idSublineToDelete = array() ;
+    private function saveLineData($data, $id_order, $id_parent)
+    {
+        $idSublineToDelete = array();
 
 
         $orderLine = new OrderLines();
 
         if (isset($data["id"]) && is_numeric($data["id"])) {
             // load subline to check if need to delete
-            $sublines = OrderLines::where("id_parent", $data["id"])->get() ;
+            $sublines = OrderLines::where("id_parent", $data["id"])->get();
 
             foreach ($sublines as $subline) {
-                $idSublineToDelete[] = $subline->id ;
+                $idSublineToDelete[] = $subline->id;
             }
 
 
@@ -334,7 +363,7 @@ class Orders extends Controller
         }
 
         if (!isset($data["id_order"])) {
-            $data["id_order"] = $id_order ;
+            $data["id_order"] = $id_order;
         }
 
 
@@ -344,8 +373,7 @@ class Orders extends Controller
 
 
         // set id parent line
-        $orderLine->id_parent = $id_parent ;
-
+        $orderLine->id_parent = $id_parent;
 
 
         if (!isset($orderLine->accounting_number)) {
@@ -355,8 +383,6 @@ class Orders extends Controller
         $orderLine->save();
 
 
-
-
         // save price list
         if (isset($data["priceList"]) && count($data["priceList"])) {
             foreach ($data["priceList"] as $priceList) {
@@ -364,23 +390,20 @@ class Orders extends Controller
                 $orderLinePriceList = OrderLinePriceList::where("id_order_line", $orderLine->id)->where("id_price_list", $priceList["id_price_list"])->first();
 
                 if (!$orderLinePriceList) {
-                    $orderLinePriceList = new OrderLinePriceList() ;
-                    $orderLinePriceList->id_order_line = $orderLine->id ;
-                    $orderLinePriceList->id_price_list = $priceList["id_price_list"] ;
+                    $orderLinePriceList = new OrderLinePriceList();
+                    $orderLinePriceList->id_order_line = $orderLine->id;
+                    $orderLinePriceList->id_price_list = $priceList["id_price_list"];
                 }
-                $orderLinePriceList->accounting_number = $priceList["accounting_number"] ;
-                $orderLinePriceList->price_ht = $priceList["price_ht"] ;
-                $orderLinePriceList->price_ttc = $priceList["price_ttc"] ;
-                $orderLinePriceList->id_taxe = $priceList["id_taxe"] ;
-                $orderLinePriceList->value_taxe = $priceList["value_taxe"] ;
-                $orderLinePriceList->percentage_discount = $priceList["percentage_discount"] ;
+                $orderLinePriceList->accounting_number = $priceList["accounting_number"];
+                $orderLinePriceList->price_ht = $priceList["price_ht"];
+                $orderLinePriceList->price_ttc = $priceList["price_ttc"];
+                $orderLinePriceList->id_taxe = $priceList["id_taxe"];
+                $orderLinePriceList->value_taxe = $priceList["value_taxe"];
+                $orderLinePriceList->percentage_discount = $priceList["percentage_discount"];
 
-                $orderLinePriceList->save() ;
+                $orderLinePriceList->save();
             }
         }
-
-
-
 
 
         // save sub line
@@ -405,18 +428,14 @@ class Orders extends Controller
         }
 
 
-        return $orderLine->id ;
+        return $orderLine->id;
     }
 
 
-
-
-
-
-
-    public function updateLinePosition(){
+    public function updateLinePosition()
+    {
         // constitution du tableau
-        $data = array() ;
+        $data = array();
 
         if (strcasecmp($_SERVER['REQUEST_METHOD'], 'post') === 0 && stripos($_SERVER['CONTENT_TYPE'], 'application/json') !== FALSE) {
             // POST is actually in json format, do an internal translation
@@ -424,14 +443,14 @@ class Orders extends Controller
         }
 
         if (isset($data)) {
-            $line = OrderLines::where("id", $data['id'])->first() ;
+            $line = OrderLines::where("id", $data['id'])->first();
 
             OrderLines::updateOldTable($line->id_order, $data['oldSort']);
             OrderLines::updateNewTable($line->id_order, $data['sort']);
 
             $OrderLine = OrderLines::where("id", $data["id"])->first();
             if ($OrderLine) {
-                $OrderLine->sort = $data['sort'] ;
+                $OrderLine->sort = $data['sort'];
             }
             $OrderLine->save();
         }
@@ -452,9 +471,10 @@ class Orders extends Controller
         }
     }
 
-    public function activity(){
+    public function activity()
+    {
         // constitution du tableau
-        $data = array() ;
+        $data = array();
 
         if (strcasecmp($_SERVER['REQUEST_METHOD'], 'post') === 0 && stripos($_SERVER['CONTENT_TYPE'], 'application/json') !== FALSE) {
             // POST is actually in json format, do an internal translation
@@ -478,14 +498,16 @@ class Orders extends Controller
         }
     }
 
-    public function del_activity(Request $request){
+    public function del_activity(Request $request)
+    {
         $id = $request->input('id', 0);
 
         echo json_encode(OrderActivities::where("id", $id)->delete());
     }
 
 
-    public function makePDF(Request $request){
+    public function makePDF(Request $request)
+    {
         $id = $request->input('id', 0);
         $echo = $request->input('echo', true);
 
@@ -496,12 +518,12 @@ class Orders extends Controller
 
         $data['showDiscount'] = false;
         $data['tvas'] = [];
-        foreach($data['lines'] as $line){
-            if(floatval($line->discount) > 0)
+        foreach ($data['lines'] as $line) {
+            if (floatval($line->discount) > 0)
                 $data['showDiscount'] = true;
 
-            if($line->id_taxe !== '0'){
-                if(!isset($data['tvas'][$line->id_taxe])){
+            if ($line->id_taxe !== '0') {
+                if (!isset($data['tvas'][$line->id_taxe])) {
                     $data['tvas'][$line->id_taxe] = array(
                         'ht' => 0,
                         'value_taxe' => floatval($line->value_taxe)
@@ -516,7 +538,7 @@ class Orders extends Controller
         //load the view and saved it into $html variable
         $html = view("orders/PDF", $data, BASEPATH . 'App/com_zeapps_crm/views/')->getContent();
 
-        $nomPDF = $data['order']->name_company.'_'.$data['order']->numerotation.'_'.$data['order']->libelle;
+        $nomPDF = $data['order']->name_company . '_' . $data['order']->numerotation . '_' . $data['order']->libelle;
         $nomPDF = preg_replace('/\W+/', '_', $nomPDF);
         $nomPDF = trim($nomPDF, '_');
 
@@ -532,7 +554,7 @@ class Orders extends Controller
         //download it.
         $mpdf->Output(BASEPATH . $pdfFilePath, "F");
 
-        if($echo) {
+        if ($echo) {
             echo json_encode($pdfFilePath);
         }
 
