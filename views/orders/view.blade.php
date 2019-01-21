@@ -131,7 +131,7 @@
 
         <div ng-show="navigationState =='body'">
             <div class="row">
-                <div class="col-md-12 text-right">
+                <div class="col-md-12 text-right" ng-hide="order.finalized">
                     <span class="form-inline">
                         <label>Code produit :</label>
                         <span class="input-group">
