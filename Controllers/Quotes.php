@@ -499,7 +499,7 @@ class Quotes extends Controller
         $data = [];
 
         $data['quote'] = QuotesModel::where("id", $id)->first();
-        $data['lines'] = QuoteLines::where("id_quote", $id)->orderBy("sort")->get();
+        $data['lines'] = QuoteLines::getFromQuote($id);
 
         $data['showDiscount'] = false;
         $data['tvas'] = [];

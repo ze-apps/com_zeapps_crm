@@ -403,7 +403,7 @@ class Invoices extends Model
         if ($data['invoice']->finalized == 1 && $data['invoice']->final_pdf != "" && Storage::isFileExists($data['invoice']->final_pdf)) {
             $pdfFilePath = $data['invoice']->final_pdf;
         } else {
-            $data['lines'] = InvoiceLines::where("id_invoice", $id)->orderBy("sort")->get();
+            $data['lines'] = InvoiceLines::getFromInvoice($id) ;
 
             $data['showDiscount'] = false;
             $data['tvas'] = [];

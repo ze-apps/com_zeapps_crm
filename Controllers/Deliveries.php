@@ -492,7 +492,7 @@ class Deliveries extends Controller
         $data = [];
 
         $data['delivery'] = DeliveriesModel::where("id", $id)->first();
-        $data['lines'] = DeliveryLines::where("id_delivery", $id)->orderBy("sort")->get();
+        $data['lines'] = DeliveryLines::getFromDelivery($id) ;
 
         $data['showDiscount'] = false;
         $data['tvas'] = [];

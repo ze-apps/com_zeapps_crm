@@ -514,13 +514,17 @@ class Orders extends Controller
         $data = [];
 
         $data['order'] = OrdersModel::where("id", $id)->first();
-        $data['lines'] = OrderLines::where("id_order", $id)->orderBy("sort")->get();
+        $data['lines'] = OrderLines::getFromOrder($id);
 
         $data['showDiscount'] = false;
         $data['tvas'] = [];
         foreach ($data['lines'] as $line) {
-            if (floatval($line->discount) > 0)
+
+            //var_dump($line);
+
+            if (floatval($line->discount) > 0) {
                 $data['showDiscount'] = true;
+            }
 
             if ($line->id_taxe !== '0') {
                 if (!isset($data['tvas'][$line->id_taxe])) {
