@@ -239,7 +239,7 @@ class Orders extends Model
 
 
 
-        if ((!isset($this->original["finalized"]) && $this->finalized) || ($this->original["finalized"] != $this->finalized && $this->finalized)) {
+        if ((!isset($this->original["finalized"]) && isset($this->finalized) && $this->finalized) || (isset($this->original["finalized"]) && isset($this->finalized) && $this->original["finalized"] != $this->finalized && $this->finalized)) {
             $isFinalized = true ;
         }
 

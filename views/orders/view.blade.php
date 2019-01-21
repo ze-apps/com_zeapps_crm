@@ -48,7 +48,8 @@
                                 ze-modalform="updateOrder"
                                 data-edit="order"
                                 data-template="templateEdit"
-                                data-title="Modifier la commande"></ze-btn>
+                                data-title="Modifier la commande"
+                                ng-hide="order.finalized"></ze-btn>
                         <ze-btn fa="download" color="primary" hint="PDF" direction="left" ng-click="print()"></ze-btn>
                         <ze-btn fa="envelope" color="primary" hint="Envoyer par email" direction="left"
                                 ng-click="sendByMail()"></ze-btn>
@@ -228,7 +229,7 @@
                             </td>
 
                             <td class="text-right">
-                                    <span ng-if="line.type === 'product' || line.type === 'service' || line.type === 'pack'">
+                                    <span ng-if="(line.type === 'product' || line.type === 'service' || line.type === 'pack') && order.finalized != 1">
                                         <ze-btn fa="pencil" color="info" direction="left" hint="editer"
                                                 ze-modalform="editLine"
                                                 data-edit="line"
@@ -240,10 +241,11 @@
                                                 ze-modalform="editComment"
                                                 data-edit="line"
                                                 data-title="Modifier un commentaire"
-                                                data-template="orderCommentTplUrl"></ze-btn>
+                                                data-template="orderCommentTplUrl"
+                                                ng-hide="order.finalized"></ze-btn>
                                     </span>
                                 <ze-btn fa="trash" color="danger" direction="left" hint="Supprimer"
-                                        ng-click="deleteLine(line)" ze-confirmation ng-if="line"></ze-btn>
+                                        ng-click="deleteLine(line)" ze-confirmation ng-if="line && order.finalized != 1"></ze-btn>
                             </td>
                         </tr>
                         </tbody>
