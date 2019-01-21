@@ -22,11 +22,11 @@
                 <thead>
                 <tr>
                     <th>#</th>
-                    <th>Libelle</th>
+                    <th>Date de création</th>
                     <th>Destinataire</th>
+                    <th>Libelle</th>
                     <th class="text-right">Total HT</th>
                     <th class="text-right">Total TTC</th>
-                    <th>Date de création</th>
                     <th>Date limite</th>
                     <th>Responsable</th>
                     <th class="text-right">%</th>
@@ -37,17 +37,17 @@
                 <tbody>
                 <tr ng-repeat="invoice in invoices">
                     <td ng-click="goTo(invoice.id)">@{{invoice.numerotation}}</td>
-                    <td ng-click="goTo(invoice.id)">@{{invoice.libelle}}</td>
+                    <td ng-click="goTo(invoice.id)">@{{invoice.date_creation || "-" | date:'dd/MM/yyyy'}}</td>
                     <td ng-click="goTo(invoice.id)">
-                        
-                            @{{invoice.name_company}}
-                            <span ng-if="invoice.name_company && invoice.name_contact">-</span>
-                            @{{invoice.name_contact ? invoice.name_contact : ''}}
-                        
+
+                        @{{invoice.name_company}}
+                        <span ng-if="invoice.name_company && invoice.name_contact">-</span>
+                        @{{invoice.name_contact ? invoice.name_contact : ''}}
+
                     </td>
+                    <td ng-click="goTo(invoice.id)">@{{invoice.libelle}}</td>
                     <td ng-click="goTo(invoice.id)" class="text-right">@{{invoice.total_ht | currency:'€':2}}</td>
                     <td ng-click="goTo(invoice.id)" class="text-right">@{{invoice.total_ttc | currency:'€':2}}</td>
-                    <td ng-click="goTo(invoice.id)">@{{invoice.date_creation || "-" | date:'dd/MM/yyyy'}}</td>
                     <td ng-click="goTo(invoice.id)">@{{invoice.date_limit || "-" | date:'dd/MM/yyyy'}}</td>
                     <td ng-click="goTo(invoice.id)">@{{invoice.name_user_account_manager}}</td>
                     <td ng-click="goTo(invoice.id)" class="text-right">@{{invoice.probability | number:2}}</td>
