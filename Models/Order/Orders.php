@@ -103,7 +103,7 @@ class Orders extends Model
 
 
         if (isset($src->lines)) {
-            self::createFromLine($src->lines, $id, 0) ;
+            self::createFromLine($src->lines, $id, 0);
         }
 
         return array(
@@ -149,7 +149,7 @@ class Orders extends Model
                         unset($priceList->deleted_at);
 
 
-                        $objDeliveryLinePriceList = new OrderLinePriceList() ;
+                        $objDeliveryLinePriceList = new OrderLinePriceList();
 
                         foreach (OrderLinePriceList::getSchema() as $key) {
                             if (isset($priceList->$key)) {
@@ -157,8 +157,8 @@ class Orders extends Model
                             }
                         }
 
-                        $objDeliveryLinePriceList->id_order_line = $orderLine->id ;
-                        $objDeliveryLinePriceList->save() ;
+                        $objDeliveryLinePriceList->id_order_line = $orderLine->id;
+                        $objDeliveryLinePriceList->save();
                     }
                 }
 
@@ -235,12 +235,11 @@ class Orders extends Model
 
     public function save(array $options = [])
     {
-        $isFinalized = false ;
-
+        $isFinalized = false;
 
 
         if ((!isset($this->original["finalized"]) && isset($this->finalized) && $this->finalized) || (isset($this->original["finalized"]) && isset($this->finalized) && $this->original["finalized"] != $this->finalized && $this->finalized)) {
-            $isFinalized = true ;
+            $isFinalized = true;
         }
 
 
@@ -260,16 +259,37 @@ class Orders extends Model
         $this->fieldModelInfo->removeFieldUnwanted($this);
 
 
-        $result = parent::save($options) ;
+        $result = parent::save($options);
 
 
         if ($isFinalized) {
-            $dataEvent = array('id_order'=>$this->id) ;
+            $dataEvent = array('id_order' => $this->id);
             Event::sendAction('com_zeapps_crm_order', 'finalized', $dataEvent);
         }
 
 
         return $result;
+    }
+
+
+    public static function frequencyOf($id = 0, $src = 'contact')
+    {
+        $orders = Capsule::table('com_zeapps_crm_orders')
+            ->select(Capsule::raw('TIMESTAMPDIFF(DAY, MIN(date_creation), MAX(date_creation)) as total_time, COUNT(id) as nb_orders'))
+            ->where("id_" . $src, $id)
+            ->where("date_creation", "!=", "0000-00-00 00:00:00")
+            ->where("deleted_at", null)
+            ->get();
+
+        if ($orders && count($orders)) {
+            if (intval($orders[0]->nb_orders) > 0) {
+                return intval($orders[0]->total_time) / intval($orders[0]->nb_orders);
+            } else {
+                return '--';
+            }
+        } else {
+            return '--';
+        }
     }
 
 }
