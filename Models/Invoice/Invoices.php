@@ -468,19 +468,8 @@ class Invoices extends Model
             ->where("id_" . $src, $id)
             ->where("deleted_at", null)
             ->groupBy(Capsule::raw("YEAR(date_creation)"))
-            ->orderBy("date_creation", "DESC")
+            ->orderBy(Capsule::raw("YEAR(date_creation)"), "DESC")
             ->get();
-
-        /*$query = "SELECT SUM(total_ht) as total_ht,
-                         YEAR(date_creation) as year
-                  FROM com_zeapps_crm_invoices
-                  WHERE finalized = '1'
-                        AND deleted_at IS NULL";
-
-        $query .= " AND id_" . $src . " = " . $id;
-
-        $query .= " GROUP BY YEAR(date_creation) ORDER BY date_creation DESC";*/
-        //$rs = Capsule::statement($query) ;
 
         return $invoices;
     }
