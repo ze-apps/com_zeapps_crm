@@ -13,6 +13,7 @@ use App\com_zeapps_crm\Models\Invoice\InvoiceLines;
 use App\com_zeapps_crm\Models\Invoice\InvoiceDocuments;
 use App\com_zeapps_crm\Models\Invoice\InvoiceActivities;
 use App\com_zeapps_crm\Models\Invoice\InvoiceLinePriceList;
+use App\com_zeapps_crm\Models\Invoice\InvoiceTaxes;
 use App\com_zeapps_crm\Models\CreditBalances;
 use App\com_zeapps_crm\Models\CreditBalanceDetails;
 use App\com_zeapps_contact\Models\Modalities;
@@ -81,8 +82,9 @@ class Invoices extends Controller
         $id = $request->input('id', 0);
 
         $invoice = InvoicesModel::where('id', $id)->first();
-
         $lines = InvoiceLines::getFromInvoice($id);
+        $tableTaxes = InvoiceTaxes::getTableTaxe($id);
+
         $documents = InvoiceDocuments::where('id_invoice', $id)->get();
         $activities = InvoiceActivities::where('id_invoice', $id)->get();
 
@@ -99,6 +101,7 @@ class Invoices extends Controller
         echo json_encode(array(
             'invoice' => $invoice,
             'lines' => $lines,
+            'tableTaxes' => $tableTaxes,
             'documents' => $documents,
             'activities' => $activities,
             'credits' => $credits

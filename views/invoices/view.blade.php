@@ -259,15 +259,15 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr ng-repeat="tva in tvas">
-                            <td>@{{ tva.ht | currency:'€':2 }}</td>
-                            <td class="text-right">@{{ tva.value_taxe | currency:'%':2 }}</td>
-                            <td class="text-right">@{{ tva.value | currency:'€':2 }}</td>
+                        <tr ng-repeat="tableTax in tableTaxes">
+                            <td>@{{ tableTax.base_tax | currency:'€':2 }}</td>
+                            <td class="text-right">@{{ tableTax.rate_tax | currency:'%':2 }}</td>
+                            <td class="text-right">@{{ tableTax.amount_tax | currency:'€':2 }}</td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
-                <div class="col-md-5 col-md-offset-2">
+                <div class="col-md-5 col-md-offset-2 divPrice">
                     <div class="well well-sm">
                         <div ng-if="invoice.total_discount > 0">
                             <div class="row">
@@ -294,7 +294,16 @@
                                     Total remises HT
                                 </div>
                                 <div class="col-md-6 text-right">
-                                    @{{ invoice.total_discount | currency:'€':2 }}
+                                    @{{ invoice.total_discount_ht | currency:'€':2 }}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    Total remises TTC
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    @{{ invoice.total_discount_ttc | currency:'€':2 }}
                                 </div>
                             </div>
 

@@ -14,12 +14,14 @@ use App\com_zeapps_crm\Models\Delivery\DeliveryLines;
 use App\com_zeapps_crm\Models\Delivery\DeliveryDocuments;
 use App\com_zeapps_crm\Models\Delivery\DeliveryActivities;
 use App\com_zeapps_crm\Models\Delivery\DeliveryLinePriceList;
+use App\com_zeapps_crm\Models\Delivery\DeliveryTaxes;
 use App\com_zeapps_crm\Models\CreditBalances;
 use App\com_zeapps_crm\Models\CreditBalanceDetails;
 
 use App\com_zeapps_crm\Models\Order\Orders as OrdersModel;
 use App\com_zeapps_crm\Models\Quote\Quotes as QuotesModel;
 use App\com_zeapps_crm\Models\Invoice\Invoices as InvoicesModel;
+
 
 use Zeapps\Models\Config;
 
@@ -81,8 +83,9 @@ class Deliveries extends Controller
         $id = $request->input('id', 0);
 
         $deliverie = DeliveriesModel::where('id', $id)->first();
-
         $lines = DeliveryLines::getFromDelivery($id);
+        $tableTaxes = DeliveryTaxes::getTableTaxe($id);
+
         $documents = DeliveryDocuments::where('id_delivery', $id)->get();
         $activities = DeliveryActivities::where('id_delivery', $id)->get();
 
@@ -99,6 +102,7 @@ class Deliveries extends Controller
         echo json_encode(array(
             'delivery' => $deliverie,
             'lines' => $lines,
+            'tableTaxes' => $tableTaxes,
             'documents' => $documents,
             'activities' => $activities,
             'credits' => $credits

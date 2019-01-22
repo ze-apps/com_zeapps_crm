@@ -11,6 +11,7 @@ use Mpdf\Mpdf;
 use Zeapps\Models\Config;
 use App\com_zeapps_crm\Models\Invoice\InvoiceLines;
 use App\com_zeapps_crm\Models\Invoice\InvoiceLinePriceList;
+use App\com_zeapps_crm\Models\Invoice\InvoiceTaxes;
 use App\com_zeapps_contact\Models\Modalities;
 use App\com_zeapps_crm\Models\CreditBalanceDetails;
 use App\com_zeapps_crm\Models\AccountingEntries;
@@ -74,7 +75,8 @@ class Invoices extends Model
         $this->fieldModelInfo->decimal('global_discount', 8, 2)->default(0);
         $this->fieldModelInfo->decimal('total_prediscount_ht', 8, 2)->default(0);
         $this->fieldModelInfo->decimal('total_prediscount_ttc', 8, 2)->default(0);
-        $this->fieldModelInfo->decimal('total_discount', 8, 2)->default(0);
+        $this->fieldModelInfo->decimal('total_discount_ht', 8, 2)->default(0);
+        $this->fieldModelInfo->decimal('total_discount_ttc', 8, 2)->default(0);
         $this->fieldModelInfo->decimal('total_ht', 9, 2)->default(0);
         $this->fieldModelInfo->decimal('total_tva', 9, 2)->default(0);
         $this->fieldModelInfo->decimal('total_ttc', 9, 2)->default(0);
@@ -131,6 +133,8 @@ class Invoices extends Model
         if (isset($src->lines) && $src->lines) {
             self::createFromLine($src->lines, $id, 0);
         }
+
+        $invoice->save();
 
         return array(
             "id" => $id,
@@ -294,9 +298,12 @@ class Invoices extends Model
         }
 
 
+        $return = parent::save($options);
 
+        // update price
+        $this->updatePrice($this);
 
-        return parent::save($options);
+        return $return;
     }
 
     private function finalize()
@@ -472,5 +479,254 @@ class Invoices extends Model
             ->get();
 
         return $invoices;
+    }
+
+
+
+
+    private function updatePrice($invoice)
+    {
+        if ($invoice && $invoice->id) {
+            $ecritureComptable = [];
+            $lines = InvoiceLines::getFromInvoice($invoice->id);
+            $taxes = Taxes::all();
+
+            foreach ($lines as $line) {
+                $ecritureComptaRetour = $this->updateLine($invoice, $line, $taxes);
+                $ecritureComptable = $this->fuisionTableTaxe($ecritureComptable, $ecritureComptaRetour);
+            }
+
+
+            $total_ht = 0 ;
+            $total_tva = 0 ;
+            $total_ttc = 0 ;
+
+            $total_ht_before_discount = 0 ;
+            $total_ttc_before_discount = 0 ;
+
+
+
+            // sauvegarde les lignes comptables
+            InvoiceTaxes::where("id_invoice", $invoice->id)->delete();
+
+            foreach ($ecritureComptable as $ecriture) {
+                $objQuoteTaxes = new InvoiceTaxes();
+                $objQuoteTaxes->id_invoice = $invoice->id;
+                $objQuoteTaxes->base_tax = $ecriture["total_ht"] ;
+                $objQuoteTaxes->id_taxe = $ecriture["id_taxe"] ;
+                $objQuoteTaxes->value_rate_tax = $ecriture["value_taxe"] ;
+                $objQuoteTaxes->amount_tax = $ecriture["amount_tva"] ;
+                $objQuoteTaxes->accounting_number = $ecriture["accounting_number"] ;
+                $objQuoteTaxes->accounting_number_taxe = $ecriture["accounting_number_taxe"] ;
+                $objQuoteTaxes->total_ttc = $ecriture["total_ttc"] ;
+                $objQuoteTaxes->save();
+
+
+                $total_ht += $objQuoteTaxes->base_tax * 1 ;
+                $total_tva += $objQuoteTaxes->amount_tax * 1 ;
+                $total_ttc += $objQuoteTaxes->base_tax * 1 + $objQuoteTaxes->amount_tax * 1 ;
+
+                $total_ht_before_discount += $ecriture["total_ht_before_discount"] ;
+                $total_ttc_before_discount += $ecriture["total_ttc_before_discount"] ;
+            }
+
+
+
+            // calcul le montant total du document
+            self::where('id', $invoice->id)->update(
+                ['total_ht' => $total_ht,
+                    'total_tva' => $total_tva,
+                    'total_ttc' => $total_ttc,
+                    'total_prediscount_ht' => $total_ht_before_discount,
+                    'total_prediscount_ttc' => $total_ttc_before_discount,
+                    'total_discount_ht' => $total_ht_before_discount - $total_ht,
+                    'total_discount_ttc' => $total_ttc_before_discount - $total_ttc
+                ]);
+        }
+    }
+
+    private function updateLine($invoice, $line, $taxes) {
+        $ecritureComptable = [] ;
+
+
+        // si c'est une ligne composée
+        if (isset($line->sublines) && count($line->sublines)) {
+            foreach ($line->sublines as $subline) {
+                $ecritureComptable = $this->fuisionTableTaxe($ecritureComptable, $this->updateLine($invoice, $subline, $taxes));
+            }
+
+            // recalcul le tableau en fonction du montant souhaité sur la ligne
+            if ($line->update_price_from_subline == 0) {
+                $total_ttc = 0 ;
+                foreach ($ecritureComptable as $ecriture) {
+                    $total_ttc += $ecriture["total_ttc"] * 1 ;
+                }
+
+                $ecritureComptable = $this->appliqueCoef($ecritureComptable, $line->price_unit_ttc_subline / $total_ttc);
+            }
+
+
+            // applique la remise
+            $ecritureComptable = $this->appliqueRemise($ecritureComptable, $line->discount);
+
+
+            // si c'est une ligne simple
+        } else {
+            $ecritureComptable[] = $this->getEcritureLigne($line, $taxes) ;
+
+            // applique la remise de la ligne
+            if ($line->discount > 0) {
+                $ecritureComptable = $this->appliqueRemise($ecritureComptable, $line->discount);
+            }
+        }
+
+
+
+
+
+
+        // Calcul le prix unitaire
+        $price_unit = $line->price_unit ;
+        if (isset($line->sublines) && count($line->sublines)) {
+            $price_unit = 0 ;
+            foreach ($ecritureComptable as &$ecriture) {
+                $price_unit += $ecriture["total_ht"] * 1 ;
+            }
+        }
+
+
+
+
+        // applique la quantité
+        if ($line->qty != 1) {
+            $ecritureComptable = $this->appliqueCoef($ecritureComptable, $line->qty);
+        }
+
+
+
+
+        // applique la remise du document si la ligne à un parent = 0
+        if ($invoice->global_discount > 0 && $line->id_parent == 0) {
+            $ecritureComptable = $this->appliqueRemise($ecritureComptable, $invoice->global_discount);
+        }
+
+
+
+        // calcul le prix total de la ligne
+        $total_ht = 0 ;
+        $total_ttc = 0 ;
+        foreach ($ecritureComptable as &$ecriture) {
+            $total_ht += $ecriture["total_ht"] * 1 ;
+            $total_ttc += $ecriture["total_ttc"] * 1 ;
+        }
+
+
+        // Sauvergarder le prix unitaire
+        $line = InvoiceLines::find($line->id) ;
+        if ($line) {
+            $line->price_unit = $price_unit ;
+            $line->total_ht = $total_ht ;
+            $line->total_ttc = $total_ttc ;
+            $line->save() ;
+        }
+
+        return $ecritureComptable ;
+    }
+
+
+    private function appliqueCoef($ecritureComptable = [], $coef = 0) {
+        foreach ($ecritureComptable as &$ecriture) {
+            $ecriture["total_ht"] = round($ecriture["total_ht"] * 1 * $coef, 2);
+            $ecriture["amount_tva"] = round($ecriture["total_ht"] * (($ecriture["value_taxe"]*1) / 100), 2) ;
+            $ecriture["total_ttc"] = $ecriture["total_ht"] + $ecriture["amount_tva"] ;
+
+            $ecriture["total_ht_before_discount"] = $ecriture["total_ht"] ;
+            $ecriture["total_ttc_before_discount"] = $ecriture["total_ht"] + $ecriture["amount_tva"] ;
+
+        }
+
+        return $ecritureComptable ;
+    }
+
+    private function appliqueRemise($ecritureComptable = [], $remise = 0) {
+        foreach ($ecritureComptable as &$ecriture) {
+            $ecriture["total_ht"] = round($ecriture["total_ht"] * 1 * (1 - $remise / 100), 2);
+            $ecriture["amount_tva"] = round($ecriture["total_ht"] * (($ecriture["value_taxe"]*1) / 100), 2) ;
+            $ecriture["total_ttc"] = $ecriture["total_ht"] + $ecriture["amount_tva"] ;
+        }
+
+        return $ecritureComptable ;
+    }
+
+    private function getEcritureLigne($line, $taxes) {
+        // recherche le taux de TVA
+        $accounting_number_taxe = "" ;
+        $value_taxe = $line->value_taxe * 1 ;
+        foreach ($taxes as $taxe) {
+            if ($taxe->id == $line->id_taxe) {
+                $accounting_number_taxe = $taxe->accounting_number ;
+                $value_taxe = $taxe->value * 1 ;
+                break;
+            }
+        }
+
+        $dataLine = [] ;
+        $dataLine["accounting_number"] = $line->accounting_number ;
+        $dataLine["accounting_number_taxe"] = $accounting_number_taxe ;
+        $dataLine["id_taxe"] = $line->id_taxe ;
+        $dataLine["value_taxe"] = $value_taxe ;
+        $dataLine["total_ht"] = $line->price_unit * 1 ;
+        $dataLine["amount_tva"] = round($dataLine["total_ht"] * 1 * ($value_taxe / 100), 2) ;
+        $dataLine["total_ttc"] = $dataLine["total_ht"] + $dataLine["amount_tva"] ;
+
+        $dataLine["total_ht_before_discount"] = $dataLine["total_ht"] ;
+        $dataLine["total_ttc_before_discount"] = $dataLine["total_ttc"] ;
+
+        return $dataLine ;
+    }
+
+    private function fuisionTableTaxe($source, $ajout) {
+        foreach ($ajout as $lineAdd) {
+            $addToTable = true;
+
+            foreach ($source as &$line) {
+                if ($line["accounting_number"] == $lineAdd["accounting_number"]
+                    && $line["accounting_number_taxe"] == $lineAdd["accounting_number_taxe"]
+                    && $line["id_taxe"] == $lineAdd["id_taxe"]
+                    && $line["value_taxe"] == $lineAdd["value_taxe"]
+                ) {
+                    $addToTable = false ;
+
+                    $line["total_ht"] += $lineAdd["total_ht"] * 1 ;
+
+                    // calcul du montant de la TVA
+                    $line["amount_tva"] = round($line["total_ht"] * ($line["value_taxe"] / 100), 2) ;
+                    $line["total_ttc"] = $line["total_ht"] + $line["amount_tva"] ;
+
+                    $line["total_ht_before_discount"] += $line["total_ht_before_discount"] ;
+                    $line["total_ttc_before_discount"] += $line["total_ttc_before_discount"] ;
+
+                    break;
+                }
+            }
+
+            if ($addToTable) {
+                $dataLine = [] ;
+                $dataLine["accounting_number"] = $lineAdd["accounting_number"] ;
+                $dataLine["accounting_number_taxe"] = $lineAdd["accounting_number_taxe"] ;
+                $dataLine["id_taxe"] = $lineAdd["id_taxe"] ;
+                $dataLine["value_taxe"] = $lineAdd["value_taxe"] * 1 ;
+                $dataLine["total_ht"] = $lineAdd["total_ht"] * 1 ;
+                $dataLine["amount_tva"] = round($dataLine["total_ht"] * ($dataLine["value_taxe"] / 100), 2) ;
+                $dataLine["total_ttc"] = $dataLine["total_ht"] + $dataLine["amount_tva"] ;
+
+                $dataLine["total_ht_before_discount"] = $lineAdd["total_ht_before_discount"] ;
+                $dataLine["total_ttc_before_discount"] = $lineAdd["total_ttc_before_discount"] ;
+
+                $source[] = $dataLine ;
+            }
+        }
+
+        return $source ;
     }
 }

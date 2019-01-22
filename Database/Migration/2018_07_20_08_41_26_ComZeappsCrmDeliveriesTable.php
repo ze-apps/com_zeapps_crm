@@ -45,7 +45,8 @@ class ComZeappsCrmDeliveriesTable extends Migration
             $table->decimal('global_discount', 8, 2)->default(0);
             $table->decimal('total_prediscount_ht', 8, 2)->default(0);
             $table->decimal('total_prediscount_ttc', 8, 2)->default(0);
-            $table->decimal('total_discount', 8, 2)->default(0);
+            $table->decimal('total_discount_ht', 8, 2)->default(0);
+            $table->decimal('total_discount_ttc', 8, 2)->default(0);
             $table->decimal('total_ht', 9, 2)->default(0);
             $table->decimal('total_tva', 9, 2)->default(0);
             $table->decimal('total_ttc', 9, 2)->default(0);

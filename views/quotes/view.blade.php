@@ -264,17 +264,17 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr ng-repeat="tva in tvas">
-                            <td>@{{ tva.ht | currency:'€':2 }}</td>
-                            <td class="text-right">@{{ tva.value_taxe | currency:'%':2 }}</td>
-                            <td class="text-right">@{{ tva.value | currency:'€':2 }}</td>
+                        <tr ng-repeat="tableTax in tableTaxes">
+                            <td>@{{ tableTax.base_tax | currency:'€':2 }}</td>
+                            <td class="text-right">@{{ tableTax.rate_tax | currency:'%':2 }}</td>
+                            <td class="text-right">@{{ tableTax.amount_tax | currency:'€':2 }}</td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
-                <div class="col-md-5 col-md-offset-2">
+                <div class="col-md-5 col-md-offset-2 divPrice">
                     <div class="well well-sm">
-                        <div ng-if="quote.total_discount > 0">
+                        <div ng-if="quote.total_discount_ht > 0">
                             <div class="row">
                                 <div class="col-md-6">
                                     Total HT av remise
@@ -283,8 +283,15 @@
                                     @{{ quote.total_prediscount_ht | currency:'€':2 }}
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    Total TTC av remise
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    @{{ quote.total_prediscount_ttc | currency:'€':2 }}
+                                </div>
+                            </div>
                             <hr>
-
                             <div class="row" ng-if="quote.global_discount > 0">
                                 <div class="col-md-6">
                                     Remise globale
@@ -299,7 +306,16 @@
                                     Total remises HT
                                 </div>
                                 <div class="col-md-6 text-right">
-                                    @{{ quote.total_discount | currency:'€':2 }}
+                                    @{{ quote.total_discount_ht | currency:'€':2 }}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    Total remises TTC
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    @{{ quote.total_discount_ttc | currency:'€':2 }}
                                 </div>
                             </div>
 

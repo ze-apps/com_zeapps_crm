@@ -14,6 +14,7 @@ use App\com_zeapps_crm\Models\Quote\QuoteLines;
 use App\com_zeapps_crm\Models\Quote\QuoteDocuments;
 use App\com_zeapps_crm\Models\Quote\QuoteActivities;
 use App\com_zeapps_crm\Models\Quote\QuoteLinePriceList;
+use App\com_zeapps_crm\Models\Quote\QuoteTaxes;
 use App\com_zeapps_crm\Models\CreditBalances;
 use App\com_zeapps_crm\Models\CreditBalanceDetails;
 
@@ -82,8 +83,10 @@ class Quotes extends Controller
         $id = $request->input('id', 0);
 
         $quote = QuotesModel::where('id', $id)->first();
-
         $lines = QuoteLines::getFromQuote($id);
+        $tableTaxes = QuoteTaxes::getTableTaxe($id);
+
+
         $documents = QuoteDocuments::where('id_quote', $id)->get();
         $activities = QuoteActivities::where('id_quote', $id)->get();
 
@@ -100,6 +103,7 @@ class Quotes extends Controller
         echo json_encode(array(
             'quote' => $quote,
             'lines' => $lines,
+            'tableTaxes' => $tableTaxes,
             'documents' => $documents,
             'activities' => $activities,
             'credits' => $credits

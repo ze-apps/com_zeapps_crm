@@ -249,7 +249,7 @@
             </table>
         </td>
         <td class="text-right">
-                <?php if(floatval($quote->total_discount) > 0){ ?>
+                <?php if(floatval($quote->total_discount_ht) > 0){ ?>
                 <table class="total">
                     <tr>
                         <td class="text-left">
@@ -274,7 +274,15 @@
                             Total remises HT
                         </td>
                         <td class="text-right">
-                            <?php echo number_format(floatval($quote->total_discount), 2, ',', ' ') ? : '0,00'; ?>
+                            <?php echo number_format(floatval($quote->total_discount_ht), 2, ',', ' ') ? : '0,00'; ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">
+                            Total remises TTC
+                        </td>
+                        <td class="text-right">
+                            <?php echo number_format(floatval($quote->total_discount_ttc), 2, ',', ' ') ? : '0,00'; ?>
                         </td>
                     </tr>
                 </table>

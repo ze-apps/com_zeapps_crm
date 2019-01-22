@@ -4,7 +4,7 @@
 }
 .total div {
     font-weight: bold;
-    font-size: 1.125em;
+    font-size: 1.5em;
 }
 
 .no-deco{
@@ -115,4 +115,11 @@ p.indented{
 .editable .glyphicon-pencil{
     opacity: .5;
     font-size: .75em;
+}
+
+
+.divPrice hr {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-color: #717171;
 }

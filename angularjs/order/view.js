@@ -1,34 +1,30 @@
 app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$location", "$rootScope", "zeHttp", "zeapps_modal", "Upload", "crmTotal", "zeHooks", "toasts", "menu",
-	function ($scope, $routeParams, $location, $rootScope, zhttp, zeapps_modal, Upload, crmTotal, zeHooks, toasts, menu) {
+    function ($scope, $routeParams, $location, $rootScope, zhttp, zeapps_modal, Upload, crmTotal, zeHooks, toasts, menu) {
 
         menu("com_ze_apps_sales", "com_zeapps_crm_order");
 
-		var code_exists = 0;
-		var code = "";
+        var code_exists = 0;
+        var code = "";
 
-		$scope.$on("comZeappsCrm_triggerOrderHook", broadcast);
-		$scope.$on("comZeappsCrm_triggerOrderAddLineHook", broadcastOrderAddLineHook);
+        $scope.$on("comZeappsCrm_triggerOrderHook", broadcast);
+        $scope.$on("comZeappsCrm_triggerOrderAddLineHook", broadcastOrderAddLineHook);
 
 
         // to activate hook function
         $scope.hooksComZeappsCRM_OrderBtnTopBodyHook = zeHooks.get("comZeappsCRM_OrderBtnTopBodyHook");
 
 
+        $scope.progress = 0;
+        $scope.activities = [];
+        $scope.documents = [];
 
-
-
-
-		$scope.progress = 0;
-		$scope.activities = [];
-		$scope.documents = [];
-
-		$scope.orderLineTplUrl = "/com_zeapps_crm/orders/form_line";
+        $scope.orderLineTplUrl = "/com_zeapps_crm/orders/form_line";
         $scope.orderCommentTplUrl = "/com_zeapps_crm/crm_commons/form_comment";
         $scope.orderActivityTplUrl = "/com_zeapps_crm/crm_commons/form_activity";
         $scope.orderDocumentTplUrl = "/com_zeapps_crm/crm_commons/form_document";
-		$scope.templateEdit = "/com_zeapps_crm/orders/form_modal";
+        $scope.templateEdit = "/com_zeapps_crm/orders/form_modal";
 
-		$scope.lines = [];
+        $scope.lines = [];
 
         $scope.sortable = {
             connectWith: ".sortableContainer",
@@ -37,70 +33,69 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
             stop: sortableStop
         };
 
-		$scope.setTab = setTab;
+        $scope.setTab = setTab;
 
-		$scope.back = back;
-		$scope.first_order = first_order;
-		$scope.previous_order = previous_order;
-		$scope.next_order = next_order;
-		$scope.last_order = last_order;
+        $scope.back = back;
+        $scope.first_order = first_order;
+        $scope.previous_order = previous_order;
+        $scope.next_order = next_order;
+        $scope.last_order = last_order;
 
-		$scope.updateStatus = updateStatus;
-		$scope.updateOrder = updateOrder;
-		$scope.transform = transform;
+        $scope.updateStatus = updateStatus;
+        $scope.updateOrder = updateOrder;
+        $scope.transform = transform;
         $scope.finalize = finalize;
 
-		$scope.addFromCode = addFromCode;
+        $scope.addFromCode = addFromCode;
         $scope.keyEventaddFromCode = keyEventaddFromCode;
-		$scope.addLine = addLine;
+        $scope.addLine = addLine;
         $scope.editLine = editLine;
-		$scope.addSubTotal = addSubTotal;
-		$scope.addComment = addComment;
+        $scope.addSubTotal = addSubTotal;
+        $scope.addComment = addComment;
         $scope.editComment = editComment;
 
-		$scope.deleteLine = deleteLine;
+        $scope.deleteLine = deleteLine;
 
-		$scope.subtotalHT = subtotalHT;
-		$scope.subtotalTTC = subtotalTTC;
+        $scope.subtotalHT = subtotalHT;
+        $scope.subtotalTTC = subtotalTTC;
 
-		$scope.addActivity = addActivity;
-		$scope.editActivity = editActivity;
-		$scope.deleteActivity = deleteActivity;
+        $scope.addActivity = addActivity;
+        $scope.editActivity = editActivity;
+        $scope.deleteActivity = deleteActivity;
 
         $scope.addDocument = addDocument;
         $scope.editDocument = editDocument;
-		$scope.deleteDocument = deleteDocument;
+        $scope.deleteDocument = deleteDocument;
 
-		$scope.print = print;
+        $scope.print = print;
         $scope.sendByMail = sendByMail;
 
 
-		//////////////////// INIT ////////////////////
-		if($rootScope.orders === undefined || $rootScope.orders.ids === undefined) {
+        //////////////////// INIT ////////////////////
+        if ($rootScope.orders === undefined || $rootScope.orders.ids === undefined) {
             $rootScope.orders = {};
             $rootScope.orders.ids = [];
-		}
-		else{
-			initNavigation();
-		}
+        } else {
+            initNavigation();
+        }
 
-		/******* gestion de la tabs *********/
-		$scope.navigationState = "body";
-		if ($rootScope.comZeappsCrmLastShowTabOrder) {
-			$scope.navigationState = $rootScope.comZeappsCrmLastShowTabOrder ;
-		}
-
+        /******* gestion de la tabs *********/
+        $scope.navigationState = "body";
+        if ($rootScope.comZeappsCrmLastShowTabOrder) {
+            $scope.navigationState = $rootScope.comZeappsCrmLastShowTabOrder;
+        }
 
 
-
-        var _id_price_list_before_update =  0 ;
-        var loadDocument = function(idDocument, next) {
+        var _id_price_list_before_update = 0;
+        var loadDocument = function (idDocument, next) {
             zhttp.crm.order.get(idDocument).then(function (response) {
                 if (response.data && response.data != "false") {
                     $scope.order = response.data.order;
-                    _id_price_list_before_update = $scope.order.id_price_list ;
+                    _id_price_list_before_update = $scope.order.id_price_list;
 
                     $scope.credits = response.data.credits;
+
+                    $scope.tableTaxes = response.data.tableTaxes;
 
                     $scope.activities = response.data.activities || [];
                     angular.forEach($scope.activities, function (activity) {
@@ -135,7 +130,7 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                     });
                     $scope.lines = lines;
 
-                    crmTotal.init($scope.order, $scope.lines);
+                    /*crmTotal.init($scope.order, $scope.lines);
                     $scope.tvas = crmTotal.get.tvas;
                     var totals = crmTotal.get.totals;
                     $scope.order.total_prediscount_ht = totals.total_prediscount_ht;
@@ -143,50 +138,45 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                     $scope.order.total_discount = totals.total_discount;
                     $scope.order.total_ht = totals.total_ht;
                     $scope.order.total_tva = totals.total_tva;
-                    $scope.order.total_ttc = totals.total_ttc;
+                    $scope.order.total_ttc = totals.total_ttc;*/
 
 
                     // charge l'entreprise associée à la commande
-                    $scope.company = null ;
+                    $scope.company = null;
                     if ($scope.order.id_company) {
                         zhttp.contact.company.get($scope.order.id_company).then(function (response) {
                             if (response.data && response.data != "false") {
-                                $scope.company = response.data.company ;
+                                $scope.company = response.data.company;
                             }
                         });
                     }
 
 
                     // charge le contact associé à la commande
-                    $scope.contact = null ;
+                    $scope.contact = null;
                     if ($scope.order.id_contact) {
                         zhttp.contact.contact.get($scope.order.id_contact).then(function (response) {
                             if (response.data && response.data != "false") {
-                                $scope.contact = response.data.contact ;
+                                $scope.contact = response.data.contact;
                             }
                         });
                     }
 
 
-
                     // call Callback
                     if (next) {
-                        next() ;
+                        next();
                     }
                 }
             });
         };
 
 
+        if ($routeParams.id && $routeParams.id > 0) {
+            loadDocument($routeParams.id);
+        }
 
-
-
-
-		if($routeParams.id && $routeParams.id > 0){
-            loadDocument($routeParams.id) ;
-		}
-
-		//////////////////// FUNCTIONS ////////////////////
+        //////////////////// FUNCTIONS ////////////////////
 
         function broadcast(event, data) {
             if (data.received) {
@@ -210,13 +200,13 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
             }
         }
 
-		function broadcast_code(code){
-			$rootScope.$broadcast("comZeappsCrm_dataOrderHook",
-				{
+        function broadcast_code(code) {
+            $rootScope.$broadcast("comZeappsCrm_dataOrderHook",
+                {
                     code: code
-				}
-			);
-		}
+                }
+            );
+        }
 
 
         function broadcastOrderAddLineHook(event, line) {
@@ -232,77 +222,75 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
             });
         }
 
-		function setTab(tab){
+        function setTab(tab) {
             $rootScope.comZeappsCrmLastShowTabOrder = tab;
             $scope.navigationState = tab;
-		}
+        }
 
-		function back(){
-            if ($rootScope.orders.src === undefined || $rootScope.orders.src === "orders") {
+        function back() {
+            if ($rootScope.orders.src === undefined || $rootScope.orders.src === "orders") {
                 $location.path("/ng/com_zeapps_crm/order/");
-            }
-            else if ($rootScope.orders.src === 'company') {
+            } else if ($rootScope.orders.src === 'company') {
                 $location.path("/ng/com_zeapps_contact/companies/" + $rootScope.orders.src_id);
-            }
-            else if ($rootScope.orders.src === 'contact') {
+            } else if ($rootScope.orders.src === 'contact') {
                 $location.path("/ng/com_zeapps_contact/contacts/" + $rootScope.orders.src_id);
             }
-		}
+        }
 
-		function first_order() {
-			if ($scope.order_first != 0) {
-				$location.path("/ng/com_zeapps_crm/order/" + $scope.order_first);
-			}
-		}
+        function first_order() {
+            if ($scope.order_first != 0) {
+                $location.path("/ng/com_zeapps_crm/order/" + $scope.order_first);
+            }
+        }
 
-		function previous_order() {
-			if ($scope.order_previous != 0) {
-				$location.path("/ng/com_zeapps_crm/order/" + $scope.order_previous);
-			}
-		}
+        function previous_order() {
+            if ($scope.order_previous != 0) {
+                $location.path("/ng/com_zeapps_crm/order/" + $scope.order_previous);
+            }
+        }
 
-		function next_order() {
-			if ($scope.order_next) {
-				$location.path("/ng/com_zeapps_crm/order/" + $scope.order_next);
-			}
-		}
+        function next_order() {
+            if ($scope.order_next) {
+                $location.path("/ng/com_zeapps_crm/order/" + $scope.order_next);
+            }
+        }
 
-		function last_order() {
-			if ($scope.order_last) {
-				$location.path("/ng/com_zeapps_crm/order/" + $scope.order_last);
-			}
-		}
+        function last_order() {
+            if ($scope.order_last) {
+                $location.path("/ng/com_zeapps_crm/order/" + $scope.order_last);
+            }
+        }
 
-        function updateStatus(){
-			var data = {};
+        function updateStatus() {
+            var data = {};
 
-			data.id = $scope.order.id;
-			data.status = $scope.order.status;
+            data.id = $scope.order.id;
+            data.status = $scope.order.status;
 
-			var formatted_data = angular.toJson(data);
+            var formatted_data = angular.toJson(data);
 
-			zhttp.crm.order.save(formatted_data).then(function(response){
-                if(response.data && response.data != "false"){
+            zhttp.crm.order.save(formatted_data).then(function (response) {
+                if (response.data && response.data != "false") {
                     toasts('success', "Le status du devis a bien été mis à jour.");
-                }
-                else{
+                    loadDocument($routeParams.id);
+                } else {
                     toasts('danger', "Il y a eu une erreur lors de la mise a jour du status du devis");
                 }
             });
-		}
+        }
 
-		function transform(){
-			zeapps_modal.loadModule("com_zeapps_crm", "transform_document", {}, function(objReturn) {
-				if (objReturn) {
-					var formatted_data = angular.toJson(objReturn);
-					zhttp.crm.order.transform($scope.order.id, formatted_data).then(function(response){
-						if(response.data && response.data != "false"){
+        function transform() {
+            zeapps_modal.loadModule("com_zeapps_crm", "transform_document", {}, function (objReturn) {
+                if (objReturn) {
+                    var formatted_data = angular.toJson(objReturn);
+                    zhttp.crm.order.transform($scope.order.id, formatted_data).then(function (response) {
+                        if (response.data && response.data != "false") {
                             zeapps_modal.loadModule("com_zeapps_crm", "transformed_document", response.data);
-						}
-					});
-				}
-			});
-		}
+                        }
+                    });
+                }
+            });
+        }
 
         function finalize() {
             zhttp.crm.order.finalize($scope.order.id).then(function (response) {
@@ -402,16 +390,16 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                                 accounting_number: response.data.accounting_number,
                                 sort: $scope.lines.length,
 
-                                total_ht:response.data.price_ht,
-                                total_ttc:response.data.price_ttc,
-                                price_unit_ht_indicated:response.data.price_ht,
-                                price_unit_ttc_subline:response.data.price_ttc,
+                                total_ht: response.data.price_ht,
+                                total_ttc: response.data.price_ttc,
+                                price_unit_ht_indicated: response.data.price_ht,
+                                price_unit_ttc_subline: response.data.price_ttc,
 
 
-                                update_price_from_subline:response.data.update_price_from_subline,
-                                show_subline:response.data.show_subline,
+                                update_price_from_subline: response.data.update_price_from_subline,
+                                show_subline: response.data.show_subline,
 
-                                sublines:addSublines(response.data.sublines),
+                                sublines: addSublines(response.data.sublines),
 
                                 priceList: response.data.priceList,
                             };
@@ -425,10 +413,10 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                                             line.accounting_number = priceList.accounting_number;
                                         }
 
-                                        line.discount = priceList.percentage_discount ;
-                                        line.price_unit = priceList.price_ht ;
-                                        line.id_taxe = priceList.id_taxe ;
-                                        line.value_taxe = priceList.value_taxe ;
+                                        line.discount = priceList.percentage_discount;
+                                        line.price_unit = priceList.price_ht;
+                                        line.id_taxe = priceList.id_taxe;
+                                        line.value_taxe = priceList.value_taxe;
                                     }
                                 });
                             }
@@ -459,10 +447,10 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
             }
         }
 
-		function addLine(){
-			// charge la modal de la liste de produit
-			zeapps_modal.loadModule("com_zeapps_crm", "search_product", {}, function(objReturn) {
-				if (objReturn) {
+        function addLine() {
+            // charge la modal de la liste de produit
+            zeapps_modal.loadModule("com_zeapps_crm", "search_product", {}, function (objReturn) {
+                if (objReturn) {
                     if (objReturn.active) {
                         var line = {
                             id_order: $routeParams.id,
@@ -473,21 +461,21 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                             designation_desc: objReturn.description,
                             qty: 1,
                             discount: 0.00,
-                            price_unit: parseFloat(objReturn.price_ht) || parseFloat(objReturn.price_ttc),
+                            price_unit: parseFloat(objReturn.price_ht) || parseFloat(objReturn.price_ttc),
                             id_taxe: objReturn.id_taxe,
                             value_taxe: parseFloat(objReturn.value_taxe),
                             accounting_number: parseFloat(objReturn.accounting_number),
                             sort: $scope.lines.length,
 
-                            total_ht:objReturn.price_ht,
-                            total_ttc:objReturn.price_ttc,
-                            price_unit_ht_indicated:objReturn.price_ht,
-                            price_unit_ttc_subline:objReturn.price_ttc,
+                            total_ht: objReturn.price_ht,
+                            total_ttc: objReturn.price_ttc,
+                            price_unit_ht_indicated: objReturn.price_ht,
+                            price_unit_ttc_subline: objReturn.price_ttc,
 
-                            update_price_from_subline:objReturn.update_price_from_subline,
-                            show_subline:objReturn.show_subline,
+                            update_price_from_subline: objReturn.update_price_from_subline,
+                            show_subline: objReturn.show_subline,
 
-                            sublines:addSublines(objReturn.sublines),
+                            sublines: addSublines(objReturn.sublines),
 
                             priceList: objReturn.priceList,
                         };
@@ -501,10 +489,10 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                                         line.accounting_number = priceList.accounting_number;
                                     }
 
-                                    line.discount = priceList.percentage_discount ;
-                                    line.price_unit = priceList.price_ht ;
-                                    line.id_taxe = priceList.id_taxe ;
-                                    line.value_taxe = priceList.value_taxe ;
+                                    line.discount = priceList.percentage_discount;
+                                    line.price_unit = priceList.price_ht;
+                                    line.id_taxe = priceList.id_taxe;
+                                    line.value_taxe = priceList.value_taxe;
                                 }
                             });
                         }
@@ -512,8 +500,8 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                         crmTotal.line.update(line);
 
                         var formatted_data = angular.toJson(line);
-                        zhttp.crm.order.line.save(formatted_data).then(function(response){
-                            if(response.data && response.data != "false"){
+                        zhttp.crm.order.line.save(formatted_data).then(function (response) {
+                            if (response.data && response.data != "false") {
                                 line.id = response.data;
                                 $scope.lines.push(line);
                                 updateOrder();
@@ -522,15 +510,15 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                     } else {
                         toasts("danger", "Ce produit n'est plus actif");
                     }
-				}
-			});
-		}
+                }
+            });
+        }
 
         function addSublines(sublines) {
             var dataSublines = [];
 
             if (sublines) {
-                for(var i = 0 ; i < sublines.length ; i++) {
+                for (var i = 0; i < sublines.length; i++) {
                     var line = {
                         type: sublines[i].type_product,
                         id_product: sublines[i].id,
@@ -544,17 +532,17 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                         value_taxe: parseFloat(sublines[i].value_taxe),
                         accounting_number: parseFloat(sublines[i].accounting_number),
 
-                        total_ht:sublines[i].price_ht,
-                        total_ttc:sublines[i].price_ttc,
-                        price_unit_ht_indicated:sublines[i].price_ht,
-                        price_unit_ttc_subline:sublines[i].price_ttc,
+                        total_ht: sublines[i].price_ht,
+                        total_ttc: sublines[i].price_ttc,
+                        price_unit_ht_indicated: sublines[i].price_ht,
+                        price_unit_ttc_subline: sublines[i].price_ttc,
 
-                        sublines:addSublines(sublines[i].sublines),
+                        sublines: addSublines(sublines[i].sublines),
 
                         priceList: sublines[i].priceList,
 
-                        update_price_from_subline:sublines[i].update_price_from_subline,
-                        show_subline:sublines[i].show_subline,
+                        update_price_from_subline: sublines[i].update_price_from_subline,
+                        show_subline: sublines[i].show_subline,
 
                         sort: sublines[i].sort
                     };
@@ -568,40 +556,40 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                                     line.accounting_number = priceList.accounting_number;
                                 }
 
-                                line.discount = priceList.percentage_discount ;
-                                line.price_unit = priceList.price_ht ;
-                                line.id_taxe = priceList.id_taxe ;
-                                line.value_taxe = priceList.value_taxe ;
+                                line.discount = priceList.percentage_discount;
+                                line.price_unit = priceList.price_ht;
+                                line.id_taxe = priceList.id_taxe;
+                                line.value_taxe = priceList.value_taxe;
                             }
                         });
                     }
 
-                    dataSublines.push(line) ;
+                    dataSublines.push(line);
                 }
             }
 
-            return dataSublines ;
+            return dataSublines;
         }
 
-		function addSubTotal(){
-			var subTotal = {
-				id_order: $routeParams.id,
-				type: "subTotal",
-				sort: $scope.lines.length
-			};
+        function addSubTotal() {
+            var subTotal = {
+                id_order: $routeParams.id,
+                type: "subTotal",
+                sort: $scope.lines.length
+            };
 
-			var formatted_data = angular.toJson(subTotal);
-			zhttp.crm.order.line.save(formatted_data).then(function(response){
-				if(response.data && response.data != "false"){
-					subTotal.id = response.data;
-					$scope.lines.push(subTotal);
+            var formatted_data = angular.toJson(subTotal);
+            zhttp.crm.order.line.save(formatted_data).then(function (response) {
+                if (response.data && response.data != "false") {
+                    subTotal.id = response.data;
+                    $scope.lines.push(subTotal);
                     updateOrder();
-				}
-			});
-		}
+                }
+            });
+        }
 
-        function addComment(comment){
-            if(comment.designation_desc !== ""){
+        function addComment(comment) {
+            if (comment.designation_desc !== "") {
                 var comment = {
                     id_order: $routeParams.id,
                     type: "comment",
@@ -610,8 +598,8 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                 };
 
                 var formatted_data = angular.toJson(comment);
-                zhttp.crm.order.line.save(formatted_data).then(function(response){
-                    if(response.data && response.data != "false"){
+                zhttp.crm.order.line.save(formatted_data).then(function (response) {
+                    if (response.data && response.data != "false") {
                         comment.id = response.data;
                         $scope.lines.push(comment);
                     }
@@ -619,48 +607,48 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
             }
         }
 
-        function editComment(comment){
+        function editComment(comment) {
             var formatted_data = angular.toJson(comment);
             zhttp.crm.order.line.save(formatted_data);
         }
 
-        function editLine(){
+        function editLine() {
             updateOrder();
         }
 
-        function updateLine(line){
+        function updateLine(line) {
             $rootScope.$broadcast("comZeappsCrm_orderEditTrigger",
                 {
-                    line : line
+                    line: line
                 }
             );
         }
 
-		function deleteLine(line){
-			if($scope.lines.indexOf(line) > -1){
-				zhttp.crm.order.line.del(line.id).then(function(response){
-					if(response.data && response.data != "false"){
-						$scope.lines.splice($scope.lines.indexOf(line), 1);
+        function deleteLine(line) {
+            if ($scope.lines.indexOf(line) > -1) {
+                zhttp.crm.order.line.del(line.id).then(function (response) {
+                    if (response.data && response.data != "false") {
+                        $scope.lines.splice($scope.lines.indexOf(line), 1);
 
-						$rootScope.$broadcast("comZeappsCrm_orderDeleteTrigger",
-							{
-								id_line : line.id
-							}
-						);
+                        $rootScope.$broadcast("comZeappsCrm_orderDeleteTrigger",
+                            {
+                                id_line: line.id
+                            }
+                        );
 
                         updateOrder();
-					}
-				});
-			}
-		}
+                    }
+                });
+            }
+        }
 
-		function subtotalHT(index){
-			return crmTotal.sub.HT($scope.lines, index);
-		}
+        function subtotalHT(index) {
+            return crmTotal.sub.HT($scope.lines, index);
+        }
 
-		function subtotalTTC(index){
-			return crmTotal.sub.TTC($scope.lines, index);
-		}
+        function subtotalTTC(index) {
+            return crmTotal.sub.TTC($scope.lines, index);
+        }
 
         function updateOrder() {
             if ($scope.order) {
@@ -697,8 +685,7 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
 
 
                 // to save price list state
-                _id_price_list_before_update = $scope.order.id_price_list ;
-
+                _id_price_list_before_update = $scope.order.id_price_list;
 
 
                 var data = $scope.order;
@@ -719,18 +706,17 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                 zhttp.crm.order.save(formatted_data).then(function (response) {
                     if (response.data && response.data != "false") {
                         toasts('success', "Les informations de la commande ont bien été mises a jour");
-                    }
-                    else {
+                    } else {
                         toasts('danger', "Il y a eu une erreur lors de la mise a jour des informations de la commande");
                     }
 
                     // reaload document
-                    loadDocument($routeParams.id) ;
+                    loadDocument($routeParams.id);
                 });
             }
         }
 
-		function addActivity(activity){
+        function addActivity(activity) {
             var y = activity.deadline.getFullYear();
             var M = activity.deadline.getMonth();
             var d = activity.deadline.getDate();
@@ -739,15 +725,15 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
             activity.id_order = $scope.order.id;
             var formatted_data = angular.toJson(activity);
 
-            zhttp.crm.order.activity.save(formatted_data).then(function(response){
-                if(response.data && response.data != "false"){
+            zhttp.crm.order.activity.save(formatted_data).then(function (response) {
+                if (response.data && response.data != "false") {
                     response.data.deadline = new Date(response.data.deadline);
                     $scope.activities.push(response.data);
                 }
             });
-		}
+        }
 
-		function editActivity(activity){
+        function editActivity(activity) {
             var y = activity.deadline.getFullYear();
             var M = activity.deadline.getMonth();
             var d = activity.deadline.getDate();
@@ -756,69 +742,67 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
             var formatted_data = angular.toJson(activity);
 
             zhttp.crm.order.activity.save(formatted_data);
-		}
+        }
 
-		function deleteActivity(activity){
+        function deleteActivity(activity) {
             zhttp.crm.order.activity.del(activity.id).then(function (response) {
                 if (response.status == 200) {
                     $scope.activities.splice($scope.activities.indexOf(activity), 1);
                 }
             });
-		}
+        }
 
-		function addDocument(document) {
+        function addDocument(document) {
             Upload.upload({
                 url: zhttp.crm.order.document.upload() + $scope.order.id,
                 data: document
             }).then(
-                function(response){
+                function (response) {
                     $scope.progress = false;
-                    if(response.data && response.data != "false"){
+                    if (response.data && response.data != "false") {
                         response.data.date = new Date(response.data.date);
                         response.data.id_user = $rootScope.user.id;
                         response.data.name_user = $rootScope.user.firstname[0] + '. ' + $rootScope.user.lastname;
                         $scope.documents.push(response.data);
                         toasts('success', "Les documents ont bien été mis en ligne");
-                    }
-                    else{
+                    } else {
                         toasts('danger', "Il y a eu une erreur lors de la mise en ligne des documents");
                     }
                 }
             );
-		}
+        }
 
-		function editDocument(document) {
+        function editDocument(document) {
             Upload.upload({
                 url: zhttp.crm.order.document.upload() + $scope.order.id,
                 data: document
             }).then(
-                function(response){
+                function (response) {
                     $scope.progress = false;
-                    if(response.data && response.data != "false"){
+                    if (response.data && response.data != "false") {
                         response.data.date = new Date(response.data.date);
                         toasts('success', "Les documents ont bien été mis à jour");
-                    }
-                    else{
+                    } else {
                         toasts('danger', "Il y a eu une erreur lors de la mise à jour des documents");
                     }
                 }
             );
-		}
+        }
 
-		function deleteDocument(document){
-            zhttp.crm.order.document.del(document.id).then(function(response){
-                if(response.data && response.data != "false"){
+        function deleteDocument(document) {
+            zhttp.crm.order.document.del(document.id).then(function (response) {
+                if (response.data && response.data != "false") {
                     $scope.documents.splice($scope.documents.indexOf(document), 1);
                 }
             });
-		}
+        }
 
 
         function sendByMail() {
 
-            var options = {} ;
+            var options = {};
 
-            options.subject = "Commande : " + $scope.order.numerotation ;
+            options.subject = "Commande : " + $scope.order.numerotation;
 
             options.content = "Bonjour,\n"
                 + "\n"
@@ -828,17 +812,16 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                 + $scope.user.firstname + " " + $scope.user.lastname
             ;
 
-            options.modules = [] ;
-            options.modules.push({module:"com_zeapps_crm", id:"orders_" + $scope.order.id}) ;
+            options.modules = [];
+            options.modules.push({module: "com_zeapps_crm", id: "orders_" + $scope.order.id});
 
             if ($scope.order.id_contact) {
-                options.modules.push({module:"com_zeapps_contact", id:"contacts_" + $scope.order.id_contact}) ;
+                options.modules.push({module: "com_zeapps_contact", id: "contacts_" + $scope.order.id_contact});
             }
 
             if ($scope.order.id_company) {
-                options.modules.push({module:"com_zeapps_contact", id:"compagnies_" + $scope.order.id_company}) ;
+                options.modules.push({module: "com_zeapps_contact", id: "compagnies_" + $scope.order.id_company});
             }
-
 
 
             options.attachments = [];
@@ -857,84 +840,80 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
             });
         }
 
-		function print(){
-			zhttp.crm.order.pdf.make($scope.order.id).then(function(response){
-				if(response.data && response.data != "false"){
-					window.document.location.href = "/" + angular.fromJson(response.data);
-				}
-			});
-		}
+        function print() {
+            zhttp.crm.order.pdf.make($scope.order.id).then(function (response) {
+                if (response.data && response.data != "false") {
+                    window.document.location.href = "/" + angular.fromJson(response.data);
+                }
+            });
+        }
 
-		function initNavigation() {
+        function initNavigation() {
 
-			// calcul le nombre de résultat
-			if($rootScope.orders) {
-				$scope.nb_orders = $rootScope.orders.ids.length;
+            // calcul le nombre de résultat
+            if ($rootScope.orders) {
+                $scope.nb_orders = $rootScope.orders.ids.length;
 
 
-				// calcul la position du résultat actuel
-				$scope.order_order = 0;
-				$scope.order_first = 0;
-				$scope.order_previous = 0;
-				$scope.order_next = 0;
-				$scope.order_last = 0;
+                // calcul la position du résultat actuel
+                $scope.order_order = 0;
+                $scope.order_first = 0;
+                $scope.order_previous = 0;
+                $scope.order_next = 0;
+                $scope.order_last = 0;
 
-				for (var i = 0; i < $rootScope.orders.ids.length; i++) {
-					if ($rootScope.orders.ids[i] == $routeParams.id) {
-						$scope.order_order = i + 1;
-						if (i > 0) {
-							$scope.order_previous = $rootScope.orders.ids[i - 1];
-						}
+                for (var i = 0; i < $rootScope.orders.ids.length; i++) {
+                    if ($rootScope.orders.ids[i] == $routeParams.id) {
+                        $scope.order_order = i + 1;
+                        if (i > 0) {
+                            $scope.order_previous = $rootScope.orders.ids[i - 1];
+                        }
 
-						if ((i + 1) < $rootScope.orders.ids.length) {
-							$scope.order_next = $rootScope.orders.ids[i + 1];
-						}
-					}
-				}
+                        if ((i + 1) < $rootScope.orders.ids.length) {
+                            $scope.order_next = $rootScope.orders.ids[i + 1];
+                        }
+                    }
+                }
 
-				// recherche la première facture de la liste
-				if ($rootScope.orders.ids[0] != undefined) {
-					if ($rootScope.orders.ids[0] != $routeParams.id) {
-						$scope.order_first = $rootScope.orders.ids[0];
-					}
-				}
-				else
-					$scope.order_first = 0;
+                // recherche la première facture de la liste
+                if ($rootScope.orders.ids[0] != undefined) {
+                    if ($rootScope.orders.ids[0] != $routeParams.id) {
+                        $scope.order_first = $rootScope.orders.ids[0];
+                    }
+                } else
+                    $scope.order_first = 0;
 
-				// recherche la dernière facture de la liste
-				if ($rootScope.orders.ids[$rootScope.orders.ids.length - 1] != undefined) {
-					if ($rootScope.orders.ids[$rootScope.orders.ids.length - 1] != $routeParams.id) {
-						$scope.order_last = $rootScope.orders.ids[$rootScope.orders.ids.length - 1];
-					}
-				}
-				else
-					$scope.order_last = 0;
-			}
-			else{
-				$scope.nb_orders = 0;
-			}
-		}
+                // recherche la dernière facture de la liste
+                if ($rootScope.orders.ids[$rootScope.orders.ids.length - 1] != undefined) {
+                    if ($rootScope.orders.ids[$rootScope.orders.ids.length - 1] != $routeParams.id) {
+                        $scope.order_last = $rootScope.orders.ids[$rootScope.orders.ids.length - 1];
+                    }
+                } else
+                    $scope.order_last = 0;
+            } else {
+                $scope.nb_orders = 0;
+            }
+        }
 
-		function sortableStop(event, ui) {
+        function sortableStop(event, ui) {
 
-			var data = {};
-			var pushedLine = false;
-			data.id = $(ui.item[0]).attr("data-id");
+            var data = {};
+            var pushedLine = false;
+            data.id = $(ui.item[0]).attr("data-id");
 
-			for(var i=0; i<$scope.lines.length; i++){
-				if($scope.lines[i].id == data.id && !pushedLine){
-					data.oldSort = $scope.lines[i].sort;
-					data.sort = i;
-					$scope.lines[i].sort = data.sort;
-					pushedLine = true;
-				}
-				else if(pushedLine){
-					$scope.lines[i].sort++;
-				}
-			}
+            for (var i = 0; i < $scope.lines.length; i++) {
+                if ($scope.lines[i].id == data.id && !pushedLine) {
+                    data.oldSort = $scope.lines[i].sort;
+                    data.sort = i;
+                    $scope.lines[i].sort = data.sort;
+                    pushedLine = true;
+                } else if (pushedLine) {
+                    $scope.lines[i].sort++;
+                }
+            }
 
-			var formatted_data = angular.toJson(data);
-			zhttp.crm.order.line.position(formatted_data);
-		}
+            var formatted_data = angular.toJson(data);
+            zhttp.crm.order.line.position(formatted_data);
+        }
 
-	}]);
+    }]);

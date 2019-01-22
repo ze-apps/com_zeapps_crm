@@ -77,16 +77,16 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
         }
 
 
-
-
-        var _id_price_list_before_update =  0 ;
+        var _id_price_list_before_update = 0;
         var loadDocument = function (idDocument, next) {
             zhttp.crm.invoice.get(idDocument).then(function (response) {
                 if (response.data && response.data != "false") {
                     $scope.invoice = response.data.invoice;
-                    _id_price_list_before_update = $scope.invoice.id_price_list ;
+                    _id_price_list_before_update = $scope.invoice.id_price_list;
 
                     $scope.credits = response.data.credits;
+
+                    $scope.tableTaxes = response.data.tableTaxes;
 
                     $scope.activities = response.data.activities || [];
                     angular.forEach($scope.activities, function (activity) {
@@ -121,7 +121,7 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
                     });
                     $scope.lines = lines;
 
-                    crmTotal.init($scope.invoice, $scope.lines);
+                    /*crmTotal.init($scope.invoice, $scope.lines);
                     $scope.tvas = crmTotal.get.tvas;
                     var totals = crmTotal.get.totals;
                     $scope.invoice.total_prediscount_ht = totals.total_prediscount_ht;
@@ -129,7 +129,7 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
                     $scope.invoice.total_discount = totals.total_discount;
                     $scope.invoice.total_ht = totals.total_ht;
                     $scope.invoice.total_tva = totals.total_tva;
-                    $scope.invoice.total_ttc = totals.total_ttc;
+                    $scope.invoice.total_ttc = totals.total_ttc;*/
 
 
                     // charge l'entreprise associée à la commande
@@ -362,10 +362,10 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
                                             line.accounting_number = priceList.accounting_number;
                                         }
 
-                                        line.discount = priceList.percentage_discount ;
-                                        line.price_unit = priceList.price_ht ;
-                                        line.id_taxe = priceList.id_taxe ;
-                                        line.value_taxe = priceList.value_taxe ;
+                                        line.discount = priceList.percentage_discount;
+                                        line.price_unit = priceList.price_ht;
+                                        line.id_taxe = priceList.id_taxe;
+                                        line.value_taxe = priceList.value_taxe;
                                     }
                                 });
                             }
@@ -439,10 +439,10 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
                                             line.accounting_number = priceList.accounting_number;
                                         }
 
-                                        line.discount = priceList.percentage_discount ;
-                                        line.price_unit = priceList.price_ht ;
-                                        line.id_taxe = priceList.id_taxe ;
-                                        line.value_taxe = priceList.value_taxe ;
+                                        line.discount = priceList.percentage_discount;
+                                        line.price_unit = priceList.price_ht;
+                                        line.id_taxe = priceList.id_taxe;
+                                        line.value_taxe = priceList.value_taxe;
                                     }
                                 });
                             }
@@ -507,10 +507,10 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
                                     line.accounting_number = priceList.accounting_number;
                                 }
 
-                                line.discount = priceList.percentage_discount ;
-                                line.price_unit = priceList.price_ht ;
-                                line.id_taxe = priceList.id_taxe ;
-                                line.value_taxe = priceList.value_taxe ;
+                                line.discount = priceList.percentage_discount;
+                                line.price_unit = priceList.price_ht;
+                                line.id_taxe = priceList.id_taxe;
+                                line.value_taxe = priceList.value_taxe;
                             }
                         });
                     }
@@ -661,7 +661,7 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
 
 
                     // to save price list state
-                    _id_price_list_before_update = $scope.invoice.id_price_list ;
+                    _id_price_list_before_update = $scope.invoice.id_price_list;
 
 
                     var data = $scope.invoice;

@@ -16,6 +16,7 @@ use App\com_zeapps_crm\Models\Order\OrderActivities;
 use App\com_zeapps_crm\Models\Order\OrderLinePriceList;
 use App\com_zeapps_crm\Models\CreditBalances;
 use App\com_zeapps_crm\Models\CreditBalanceDetails;
+use App\com_zeapps_crm\Models\Order\OrderTaxes;
 
 use App\com_zeapps_crm\Models\Invoice\Invoices as InvoicesModel;
 use App\com_zeapps_crm\Models\Quote\Quotes as QuotesModel;
@@ -81,8 +82,9 @@ class Orders extends Controller
         $id = $request->input('id', 0);
 
         $order = OrdersModel::where('id', $id)->first();
-
         $lines = OrderLines::getFromOrder($id);
+        $tableTaxes = OrderTaxes::getTableTaxe($id);
+
         $documents = OrderDocuments::where('id_order', $id)->get();
         $activities = OrderActivities::where('id_order', $id)->get();
 
@@ -99,6 +101,7 @@ class Orders extends Controller
         echo json_encode(array(
             'order' => $order,
             'lines' => $lines,
+            'tableTaxes' => $tableTaxes,
             'documents' => $documents,
             'activities' => $activities,
             'credits' => $credits

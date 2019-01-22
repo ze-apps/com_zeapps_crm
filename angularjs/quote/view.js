@@ -90,6 +90,14 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
 
                     $scope.credits = response.data.credits;
 
+
+
+                    $scope.tableTaxes = response.data.tableTaxes;
+
+
+
+
+
                     $scope.activities = response.data.activities || [];
                     angular.forEach($scope.activities, function (activity) {
                         activity.deadline = new Date(activity.deadline);
@@ -108,7 +116,7 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                     var i;
 
                     for (i = 0; i < $scope.activities.length; i++) {
-                        $scope.activities[i].reminder = new Date($scope.activities[i].reminder);
+                        $scoloadDocumentpe.activities[i].reminder = new Date($scope.activities[i].reminder);
                     }
 
                     for (i = 0; i < $scope.documents.length; i++) {
@@ -123,15 +131,11 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                     });
                     $scope.lines = lines;
 
-                    crmTotal.init($scope.quote, $scope.lines);
-                    $scope.tvas = crmTotal.get.tvas;
-                    var totals = crmTotal.get.totals;
-                    $scope.quote.total_prediscount_ht = totals.total_prediscount_ht;
-                    $scope.quote.total_prediscount_ttc = totals.total_prediscount_ttc;
-                    $scope.quote.total_discount = totals.total_discount;
-                    $scope.quote.total_ht = totals.total_ht;
-                    $scope.quote.total_tva = totals.total_tva;
-                    $scope.quote.total_ttc = totals.total_ttc;
+
+
+
+
+
 
 
                     // charge l'entreprise associée à la commande
@@ -248,6 +252,7 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
             zhttp.crm.quote.save(formatted_data).then(function (response) {
                 if (response.data && response.data != "false") {
                     toasts('success', "Le status du devis a bien été mis à jour.");
+                    loadDocument($routeParams.id);
                 } else {
                     toasts('danger', "Il y a eu une erreur lors de la mise a jour du status du devis");
                 }
