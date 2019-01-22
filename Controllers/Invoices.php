@@ -277,7 +277,7 @@ class Invoices extends Controller
                 $data = json_decode(file_get_contents('php://input'), true);
             }
 
-            $return = [];
+            $return = new \stdClass();
 
             if ($src = InvoicesModel::where("id", $id)->first()) {
                 $src->lines = InvoiceLines::getFromInvoice($id) ;
@@ -286,13 +286,13 @@ class Invoices extends Controller
                     foreach ($data as $document => $value) {
                         if ($value == 'true') {
                             if ($document == "quotes") {
-                                QuotesModel::createFrom($src);
+                                $return->quotes = QuotesModel::createFrom($src);
                             } elseif ($document == "orders") {
-                                OrdersModel::createFrom($src);
+                                $return->orders = OrdersModel::createFrom($src);
                             } elseif ($document == "invoices") {
-                                InvoicesModel::createFrom($src);
+                                $return->invoices = InvoicesModel::createFrom($src);
                             } elseif ($document == "deliveries") {
-                                DeliveriesModel::createFrom($src);
+                                $return->deliveries = DeliveriesModel::createFrom($src);
                             }
                         }
                     }

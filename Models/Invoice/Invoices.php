@@ -411,23 +411,13 @@ class Invoices extends Model
             $pdfFilePath = $data['invoice']->final_pdf;
         } else {
             $data['lines'] = InvoiceLines::getFromInvoice($id) ;
+            $data['tableTaxes'] = InvoiceTaxes::getTableTaxe($id);
 
             $data['showDiscount'] = false;
             $data['tvas'] = [];
             foreach ($data['lines'] as $line) {
-                if (floatval($line->discount) > 0)
+                if (floatval($line->discount) > 0) {
                     $data['showDiscount'] = true;
-
-                if ($line->id_taxe !== '0') {
-                    if (!isset($data['tvas'][$line->id_taxe])) {
-                        $data['tvas'][$line->id_taxe] = array(
-                            'ht' => 0,
-                            'value_taxe' => floatval($line->value_taxe)
-                        );
-                    }
-
-                    $data['tvas'][$line->id_taxe]['ht'] += floatval($line->total_ht);
-                    $data['tvas'][$line->id_taxe]['value'] = round(floatval($data['tvas'][$line->id_taxe]['ht']) * ($data['tvas'][$line->id_taxe]['value_taxe'] / 100), 2);
                 }
             }
 

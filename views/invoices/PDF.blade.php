@@ -239,14 +239,14 @@
                 </thead>
                 <tbody>
                 <?php
-                foreach ($tvas as $tva) {
-                    ?>
-                    <tr>
-                        <td><?php echo number_format(floatval($tva['ht']), 2, ',', ' '); ?></td>
-                        <td class="text-right"><?php echo number_format(floatval($tva['value_taxe']), 2, ',', ' '); ?>%</td>
-                        <td class="text-right"><?php echo number_format(floatval($tva['value']), 2, ',', ' '); ?></td>
-                    </tr>
-                    <?php
+                foreach ($tableTaxes as $tableTax) {
+                ?>
+                <tr>
+                    <td class="text-right"><?php echo number_format(floatval($tableTax['base_tax']), 2, ',', ' '); ?></td>
+                    <td class="text-right"><?php echo number_format(floatval($tableTax['rate_tax']), 2, ',', ' '); ?>%</td>
+                    <td class="text-right"><?php echo number_format(floatval($tableTax['amount_tax']), 2, ',', ' '); ?></td>
+                </tr>
+                <?php
                 }
                 ?>
                 </tbody>

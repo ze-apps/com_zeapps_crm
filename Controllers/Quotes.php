@@ -279,7 +279,7 @@ class Quotes extends Controller
 
 
             if ($src = QuotesModel::where("id", $id)->first()) {
-                $src->lines = QuoteLines::getFromQuote($id) ;
+                $src->lines = QuoteLines::getFromQuote($id);
 
                 if ($data) {
                     foreach ($data as $document => $value) {
@@ -504,24 +504,13 @@ class Quotes extends Controller
 
         $data['quote'] = QuotesModel::where("id", $id)->first();
         $data['lines'] = QuoteLines::getFromQuote($id);
+        $data['tableTaxes'] = QuoteTaxes::getTableTaxe($id);
 
         $data['showDiscount'] = false;
         $data['tvas'] = [];
         foreach ($data['lines'] as $line) {
             if (floatval($line->discount) > 0) {
                 $data['showDiscount'] = true;
-            }
-
-            if ($line->id_taxe !== '0') {
-                if (!isset($data['tvas'][$line->id_taxe])) {
-                    $data['tvas'][$line->id_taxe] = array(
-                        'ht' => 0,
-                        'value_taxe' => floatval($line->value_taxe)
-                    );
-                }
-
-                $data['tvas'][$line->id_taxe]['ht'] += floatval($line->total_ht);
-                $data['tvas'][$line->id_taxe]['value'] = round(floatval($data['tvas'][$line->id_taxe]['ht']) * ($data['tvas'][$line->id_taxe]['value_taxe'] / 100), 2);
             }
         }
 

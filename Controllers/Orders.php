@@ -273,7 +273,7 @@ class Orders extends Controller
                 $data = json_decode(file_get_contents('php://input'), true);
             }
 
-            $return = [];
+            $return = new \stdClass();
 
             if ($src = OrdersModel::where("id", $id)->first()) {
                 $src->lines = OrderLines::getFromOrder($id);
@@ -282,13 +282,13 @@ class Orders extends Controller
                     foreach ($data as $document => $value) {
                         if ($value == 'true') {
                             if ($document == "quotes") {
-                                QuotesModel::createFrom($src);
+                                $return->quotes = QuotesModel::createFrom($src);
                             } elseif ($document == "orders") {
-                                OrdersModel::createFrom($src);
+                                $return->orders = OrdersModel::createFrom($src);
                             } elseif ($document == "invoices") {
-                                InvoicesModel::createFrom($src);
+                                $return->invoices = InvoicesModel::createFrom($src);
                             } elseif ($document == "deliveries") {
-                                DeliveriesModel::createFrom($src);
+                                $return->deliveries = DeliveriesModel::createFrom($src);
                             }
                         }
                     }
@@ -518,27 +518,13 @@ class Orders extends Controller
 
         $data['order'] = OrdersModel::where("id", $id)->first();
         $data['lines'] = OrderLines::getFromOrder($id);
+        $data['tableTaxes'] = OrderTaxes::getTableTaxe($id);
 
         $data['showDiscount'] = false;
         $data['tvas'] = [];
         foreach ($data['lines'] as $line) {
-
-            //var_dump($line);
-
             if (floatval($line->discount) > 0) {
                 $data['showDiscount'] = true;
-            }
-
-            if ($line->id_taxe !== '0') {
-                if (!isset($data['tvas'][$line->id_taxe])) {
-                    $data['tvas'][$line->id_taxe] = array(
-                        'ht' => 0,
-                        'value_taxe' => floatval($line->value_taxe)
-                    );
-                }
-
-                $data['tvas'][$line->id_taxe]['ht'] += floatval($line->total_ht);
-                $data['tvas'][$line->id_taxe]['value'] = round(floatval($data['tvas'][$line->id_taxe]['ht']) * ($data['tvas'][$line->id_taxe]['value_taxe'] / 100), 2);
             }
         }
 
