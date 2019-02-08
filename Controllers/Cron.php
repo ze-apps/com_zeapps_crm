@@ -84,12 +84,16 @@ class Cron extends Controller
             }
 
 
+            $productCategoriesArray = array() ;
+            foreach ($productCategories as &$productCategorie) {
+                $productCategoriesArray[$productCategorie->id] = $productCategorie ;
+            }
+
 
 
 
             // charge les produits
             $products = Products::get();
-
 
 
 
@@ -110,7 +114,7 @@ class Cron extends Controller
 
                     // recherche la catégorie du produit
                     $rate = null ;
-                    if ($product->id_cat) {
+                    /*if ($product->id_cat) {
                         foreach ($productCategories as $productCategorie) {
                             if ($productCategorie->id == $product->id_cat) {
                                 if (isset($productCategorie->priceLists) && isset($productCategorie->priceLists[$priceList->id])) {
@@ -119,7 +123,18 @@ class Cron extends Controller
                                 break;
                             }
                         }
+                    }*/
+
+                    if ($product->id_cat) {
+                        if(isset($productCategoriesArray[$product->id_cat])) {
+                            $productCategorie = $productCategoriesArray[$product->id_cat] ;
+                            if (isset($productCategorie->priceLists) && isset($productCategorie->priceLists[$priceList->id])) {
+                                $rate = $productCategorie->priceLists[$priceList->id] ;
+                            }
+                        }
                     }
+
+
 
 
                     // applique la remise
@@ -138,17 +153,9 @@ class Cron extends Controller
 
 
 
-
-
-            // TODO : activer les lignes ci-dessous quand le dev et terminé
-            // TODO : activer les lignes ci-dessous quand le dev et terminé
-            // TODO : activer les lignes ci-dessous quand le dev et terminé
-            // TODO : activer les lignes ci-dessous quand le dev et terminé
-            // TODO : activer les lignes ci-dessous quand le dev et terminé
-
             // update to disable update
-            //PriceList::where("id", ">", 0)->update(["is_updated"=>0]);
-            //PriceListRate::where("id", ">", 0)->update(["is_updated"=>0]);
+            PriceList::where("id", ">", 0)->update(["is_updated"=>0]);
+            PriceListRate::where("id", ">", 0)->update(["is_updated"=>0]);
         }
     }
 
