@@ -17,6 +17,8 @@ use App\com_zeapps_crm\Models\CreditBalanceDetails;
 use App\com_zeapps_crm\Models\AccountingEntries;
 use App\com_zeapps_crm\Models\Taxes;
 
+use Zeapps\Core\Event;
+
 use Zeapps\Core\ModelHelper;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
@@ -298,7 +300,15 @@ class Invoices extends Model
         }
 
 
+
+        // action before save
+        Event::sendAction('com_zeapps_crm_invoice', 'beforeSave', $this);
+
+
         $return = parent::save($options);
+
+        // action before save
+        Event::sendAction('com_zeapps_crm_invoice', 'afterSave', $this);
 
         // update price
         $this->updatePrice($this);
