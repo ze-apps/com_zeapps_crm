@@ -30,8 +30,8 @@
 
                 <div class="col-md-3">
                     <strong>Adresse de facturation :</strong><br>
-                    @{{ company.company_name }}<br ng-if="company.company_name">
-                    @{{ contact.last_name + ' ' + contact.first_name }}<br
+                    <a href="/ng/com_zeapps_contact/companies/@{{ company.id }}">@{{ company.company_name }}</a><br ng-if="company.company_name">
+                    <a href="/ng/com_zeapps_contact/contacts/@{{ contact.id }}">@{{ contact.last_name + ' ' + contact.first_name }}</a><br
                             ng-if="contact.last_name || contact.first_name">
                     @{{ quote.billing_address_1 }}<br ng-if="quote.billing_address_1">
                     @{{ quote.billing_address_2 }}<br ng-if="quote.billing_address_2">
@@ -41,8 +41,8 @@
 
                 <div class="col-md-3">
                     <strong>Adresse de livraison :</strong><br>
-                    @{{ company.company_name }}<br ng-if="company.company_name">
-                    @{{ contact.last_name + ' ' + contact.first_name }}<br
+                    <a href="/ng/com_zeapps_contact/companies/@{{ company.id }}">@{{ company.company_name }}</a><br ng-if="company.company_name">
+                    <a href="/ng/com_zeapps_contact/contacts/@{{ contact.id }}">@{{ contact.last_name + ' ' + contact.first_name }}</a><br
                             ng-if="contact.last_name && contact.first_name">
                     @{{ quote.delivery_address_1 }}<br ng-if="quote.delivery_address_1">
                     @{{ quote.delivery_address_2 }}<br ng-if="quote.delivery_address_2">
