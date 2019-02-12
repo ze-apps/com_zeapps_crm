@@ -34,4 +34,15 @@ class Commons extends Controller
         $data = array();
         return view("commons/form_activity", $data, BASEPATH . 'App/com_zeapps_crm/views/');
     }
+
+    public function status()
+    {
+        $arrStatus = array() ;
+        $arrStatus[] = array("id"=>1, "label" => "En cours") ;
+        $arrStatus[] = array("id"=>2, "label" => "Gagné") ;
+        $arrStatus[] = array("id"=>3, "label" => "Perdu") ;
+
+        echo json_encode($arrStatus);
+    }
+
 }

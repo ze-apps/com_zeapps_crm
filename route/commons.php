@@ -8,4 +8,6 @@ Routeur::get("/com_zeapps_crm/crm_commons/form_comment", 'App\\com_zeapps_crm\\C
 Routeur::get("/com_zeapps_crm/crm_commons/form_document", 'App\\com_zeapps_crm\\Controllers\\Commons@form_document');
 Routeur::get("/com_zeapps_crm/crm_commons/form_activity", 'App\\com_zeapps_crm\\Controllers\\Commons@form_activity');
 
+Routeur::get("/com_zeapps_crm/crm_commons/status", 'App\\com_zeapps_crm\\Controllers\\Commons@status');
+
 

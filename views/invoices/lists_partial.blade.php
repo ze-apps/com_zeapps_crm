@@ -29,7 +29,6 @@
                     <th class="text-right">Total TTC</th>
                     <th>Date limite</th>
                     <th>Responsable</th>
-                    <th class="text-right">%</th>
                     <th>Statut</th>
                     <th></th>
                 </tr>
@@ -50,8 +49,7 @@
                     <td ng-click="goTo(invoice.id)" class="text-right">@{{invoice.total_ttc | currency:'€':2}}</td>
                     <td ng-click="goTo(invoice.id)">@{{invoice.date_limit || "-" | date:'dd/MM/yyyy'}}</td>
                     <td ng-click="goTo(invoice.id)">@{{invoice.name_user_account_manager}}</td>
-                    <td ng-click="goTo(invoice.id)" class="text-right">@{{invoice.probability | number:2}}</td>
-                    <td ng-click="goTo(invoice.id)">@{{invoice.status}}</td>
+                    <td ng-click="goTo(invoice.id)"><span class="text-danger" ng-show="invoice.finalized">Clôturée</span><span class="text-success" ng-show="!invoice.finalized">Ouvert</span></td>
                     <td class="text-right">
                         <ze-btn fa="pencil" color="info" direction="left" hint="Editer"
                                 ze-modalform="edit"

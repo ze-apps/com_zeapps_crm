@@ -246,23 +246,7 @@ app.config(["$provide",
 
 
             function getall_statuts() {
-                var allStatus = [];
-                var status = {};
-                status.id = 1;
-                status.label = "En cours";
-                allStatus.push(status);
-
-                status = {};
-                status.id = 2;
-                status.label = "Gagné";
-                allStatus.push(status);
-
-                status = {};
-                status.id = 3;
-                status.label = "Perdu";
-                allStatus.push(status);
-
-                return allStatus;
+                return zeHttp.get("/com_zeapps_crm/crm_commons/status") ;
             }
 
 

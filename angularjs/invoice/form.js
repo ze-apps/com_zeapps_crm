@@ -56,7 +56,12 @@ app.controller("ComZeappsCrmInvoiceFormCtrl", ["$scope", "$routeParams", "$rootS
             }
         });
 
-        $scope.status = zhttp.crm.statuts.getAll() ;
+        $scope.status = [];
+        zhttp.crm.statuts.getAll().then(function(response){
+            if(response.data && response.data != "false"){
+                $scope.status = response.data;
+            }
+        });
 
 
         // charge la liste des grilles de prix

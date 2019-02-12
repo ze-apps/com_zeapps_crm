@@ -129,6 +129,34 @@ app.controller("ComZeappsCrmQuoteListsPartialCtrl", ["$scope", "$location", "$ro
         });
         $scope.$emit("comZeappsContact_triggerContactHook", {});
 
+
+
+
+        $scope.status = [];
+        zhttp.crm.statuts.getAll().then(function(response){
+            if(response.data && response.data != "false"){
+                $scope.status = response.data;
+            }
+        });
+
+        $scope.showStatus = function (id_statut) {
+            var label_statut = "" ;
+
+            angular.forEach($scope.status, function (status) {
+                if (status.id == id_statut) {
+                    label_statut = status.label ;
+                }
+            });
+
+
+            return label_statut;
+        };
+
+
+
+
+
+
         $timeout(function () { // Making sure the default call is only triggered after the potential broadcast from a hook
             if (src_id === 0) {
                 loadList(true);

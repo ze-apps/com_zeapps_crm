@@ -29,7 +29,7 @@
                     <th>Date de création</th>
                     <th>Date limite</th>
                     <th>Responsable</th>
-                    <th class="text-right">%</th>
+                    <th class="text-right">Probabilité</th>
                     <th>Statut</th>
                     <th></th>
                 </tr>
@@ -51,7 +51,7 @@
                     <td ng-click="goTo(quote.id)">@{{quote.date_limit || "-" | date:'dd/MM/yyyy'}}</td>
                     <td ng-click="goTo(quote.id)">@{{quote.name_user_account_manager}}</td>
                     <td ng-click="goTo(quote.id)" class="text-right">@{{quote.probability | number:2}}</td>
-                    <td ng-click="goTo(quote.id)">@{{quote.status}}</td>
+                    <td ng-click="goTo(quote.id)">@{{ showStatus(quote.status) }}</td>
                     <td class="text-right">
                         <ze-btn fa="pencil" color="info" direction="left" hint="Editer"
                                 ze-modalform="edit"

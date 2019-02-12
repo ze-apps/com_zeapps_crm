@@ -33,6 +33,7 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
             stop: sortableStop
         };
 
+
         $scope.setTab = setTab;
 
         $scope.back = back;
