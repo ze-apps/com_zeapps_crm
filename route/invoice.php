@@ -21,6 +21,9 @@ Routeur::post("/com_zeapps_crm/invoices/delete/{id}", 'App\\com_zeapps_crm\\Cont
 Routeur::post("/com_zeapps_crm/invoices/transform/{id}", 'App\\com_zeapps_crm\\Controllers\\Invoices@transform');
 
 
+Routeur::post("/com_zeapps_crm/invoices/due/{type_client}/{id_client}", 'App\\com_zeapps_crm\\Controllers\\Invoices@due');
+
+
 
 
 Routeur::post("/com_zeapps_crm/invoices/finalize/{id}", 'App\\com_zeapps_crm\\Controllers\\Invoices@finalize');

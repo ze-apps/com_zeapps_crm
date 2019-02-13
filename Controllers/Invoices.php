@@ -164,8 +164,26 @@ class Invoices extends Controller
             'total' => $total,
             'ids' => $ids
         ));
-
     }
+
+
+
+
+    public function due(Request $request) {
+        $type_client = $request->input('type_client', '');
+        $id_client = $request->input('id_client', 0);
+
+        if ($type_client == "company" || $type_client == "contact") {
+            $invoices = InvoicesModel::where("id_" . $type_client, $id_client)
+                ->where("due", "!=", 0)
+                ->orderBy("date_creation", "ASC")
+                ->get();
+            echo json_encode($invoices);
+        }
+    }
+
+
+
 
 
     public function modal(Request $request)

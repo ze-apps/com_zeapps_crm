@@ -41,6 +41,7 @@ app.config(["$provide",
                     transform: transform_invoice,
                     finalize: finalize_invoice,
                     test: test_invoice,
+                    due: due,
                     line: {
                         save: save_line_invoice,
                         position: update_linepos_invoice,
@@ -358,6 +359,10 @@ app.config(["$provide",
 
 
             // INVOICE
+            function due(type_client, id_client) {
+                return zeHttp.get("/com_zeapps_crm/invoices/due/" + type_client + "/" + id_client);
+            }
+
             function test_invoice(data) {
                 return zeHttp.post("/com_zeapps_crm/invoices/testFormat", data);
             }
