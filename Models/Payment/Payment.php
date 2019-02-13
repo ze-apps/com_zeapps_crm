@@ -30,6 +30,7 @@ class Payment extends Model
         $this->fieldModelInfo->decimal('total', 9, 2)->default(0);
         $this->fieldModelInfo->date('date_payment')->default(null);
         $this->fieldModelInfo->tinyInteger('type_payment')->default(0);
+        $this->fieldModelInfo->string('type_payment_label', 255)->default("");
         $this->fieldModelInfo->string('bank_check_number', 255)->default("");
         $this->fieldModelInfo->string('check_issuer', 255)->default("");
         $this->fieldModelInfo->integer('id_deposit_checks')->default(0);

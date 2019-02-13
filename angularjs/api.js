@@ -151,6 +151,17 @@ app.config(["$provide",
                         make: make_pdf_quote
                     }
                 },
+                payment: {
+                    get: get_payment,
+                    get_all: getAll_payment,
+                    modal: modal_payment,
+                    save: post_payment,
+                    del: del_payment,
+                    /*line: {
+                        save: save_line_quote,
+                        del: del_line_quote
+                    }*/
+                },
                 credit_balance: {
                     get: get_creditBalance,
                     get_all: getAll_creditBalance,
@@ -645,6 +656,47 @@ app.config(["$provide",
             function make_pdf_quote(id) {
                 return zeHttp.post("/com_zeapps_crm/quotes/makePDF/" + id);
             }
+
+
+
+
+
+
+            // Payment
+            function get_payment(id) {
+                return zeHttp.get("/com_zeapps_crm/payment/get/" + id);
+            }
+
+            function getAll_payment(id_project, type, limit, offset, context, filters) {
+                id_project = id_project || 0;
+                type = type || "";
+                return zeHttp.post("/com_zeapps_crm/payment/getAll/" + id_project + "/" + type + "/" + limit + "/" + offset + "/" + context, filters);
+            }
+
+            function modal_payment(limit, offset, filters) {
+                return zeHttp.post("/com_zeapps_crm/payment/modal/" + limit + "/" + offset, filters);
+            }
+
+            function post_payment(data) {
+                return zeHttp.post("/com_zeapps_crm/payment/save", data);
+            }
+
+            function del_payment(id) {
+                return zeHttp.delete("/com_zeapps_crm/payment/delete/" + id);
+            }
+
+            /*function save_line_payment(data) {
+                return zeHttp.post("/com_zeapps_crm/quotes/saveLine", data);
+            }
+
+            function del_line_payment(id) {
+                return zeHttp.delete("/com_zeapps_crm/quotes/deleteLine/" + id);
+            }*/
+
+
+
+
+
 
             // CREDIT BALANCES
             function get_creditBalance(id) {

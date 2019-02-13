@@ -27,6 +27,7 @@
                     <th>Libelle</th>
                     <th class="text-right">Total HT</th>
                     <th class="text-right">Total TTC</th>
+                    <th class="text-right">Solde</th>
                     <th>Date limite</th>
                     <th>Responsable</th>
                     <th>Statut</th>
@@ -47,6 +48,7 @@
                     <td ng-click="goTo(invoice.id)">@{{invoice.libelle}}</td>
                     <td ng-click="goTo(invoice.id)" class="text-right">@{{invoice.total_ht | currency:'€':2}}</td>
                     <td ng-click="goTo(invoice.id)" class="text-right">@{{invoice.total_ttc | currency:'€':2}}</td>
+                    <td ng-click="goTo(invoice.id)" class="text-right"><span ng-class="invoice.due > 0 ? 'text-danger':''" ng-if="invoice.due != 0">@{{invoice.due | currency:'€':2}}</span></td>
                     <td ng-click="goTo(invoice.id)">@{{invoice.date_limit || "-" | date:'dd/MM/yyyy'}}</td>
                     <td ng-click="goTo(invoice.id)">@{{invoice.name_user_account_manager}}</td>
                     <td ng-click="goTo(invoice.id)"><span class="text-danger" ng-show="invoice.finalized">Clôturée</span><span class="text-success" ng-show="!invoice.finalized">Ouvert</span></td>

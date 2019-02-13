@@ -18,6 +18,7 @@ class ComZeappsCrmPaymentTable extends Migration
             $table->decimal('total', 9, 2)->default(0);
             $table->date('date_payment')->default(null)->nullable();
             $table->tinyInteger('type_payment')->default(0);
+            $table->string('type_payment_label', 255)->default("");
             $table->string('bank_check_number', 255)->default("");
             $table->string('check_issuer', 255)->default("");
             $table->integer('id_deposit_checks')->default(0);

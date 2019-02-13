@@ -53,7 +53,7 @@ class ComZeappsCrmInvoicesTable extends Migration
             $table->decimal('total_ttc', 9, 2)->default(0);
             $table->timestamp('date_creation')->nullable();
             $table->timestamp('date_limit')->nullable();
-            $table->string('id_modality', 255)->default("");
+            $table->integer('id_modality', false)->default(0);
             $table->string('label_modality', 255)->default("");
             $table->string('reference_client', 255)->default("");
             $table->timestamps();

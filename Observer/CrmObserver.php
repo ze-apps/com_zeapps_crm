@@ -63,6 +63,14 @@ class CrmObserver implements iObserver
         $retour[] = $hook ;
 
 
+        // déclaration de l'onglet livraison pour les entreprises
+        $hook = new \stdClass();
+        $hook->hook = "comZeappsContact_EntrepriseHook" ;
+        $hook->template = "/com_zeapps_crm/payment/lists_partial" ;
+        $hook->label = "Encaissements" ;
+        $hook->shown = 1 ;
+        $hook->sort = 5 ;
+        $retour[] = $hook ;
 
 
 
@@ -74,7 +82,9 @@ class CrmObserver implements iObserver
 
 
 
-        // déclaration de l'onglet devis pour les entreprises
+
+
+        // déclaration de l'onglet devis pour les contacts
         $hook = new \stdClass();
         $hook->hook = "comZeappsContact_ContactHook" ;
         $hook->template = "/com_zeapps_crm/quotes/lists_partial" ;
@@ -84,7 +94,7 @@ class CrmObserver implements iObserver
         $retour[] = $hook ;
 
 
-        // déclaration de l'onglet commandes pour les entreprises
+        // déclaration de l'onglet commandes pour les contacts
         $hook = new \stdClass();
         $hook->hook = "comZeappsContact_ContactHook" ;
         $hook->template = "/com_zeapps_crm/orders/lists_partial" ;
@@ -95,7 +105,7 @@ class CrmObserver implements iObserver
 
 
 
-        // déclaration de l'onglet factures pour les entreprises
+        // déclaration de l'onglet factures pour les contacts
         $hook = new \stdClass();
         $hook->hook = "comZeappsContact_ContactHook" ;
         $hook->template = "/com_zeapps_crm/invoices/lists_partial" ;
@@ -105,13 +115,24 @@ class CrmObserver implements iObserver
         $retour[] = $hook ;
 
 
-        // déclaration de l'onglet livraison pour les entreprises
+        // déclaration de l'onglet livraison pour les contacts
         $hook = new \stdClass();
         $hook->hook = "comZeappsContact_ContactHook" ;
         $hook->template = "/com_zeapps_crm/deliveries/lists_partial" ;
         $hook->label = "Livraisons" ;
         $hook->shown = 1 ;
         $hook->sort = 4 ;
+        $retour[] = $hook ;
+
+
+
+        // déclaration de l'onglet livraison pour les contacts
+        $hook = new \stdClass();
+        $hook->hook = "comZeappsContact_ContactHook" ;
+        $hook->template = "/com_zeapps_crm/payment/lists_partial" ;
+        $hook->label = "Encaissements" ;
+        $hook->shown = 1 ;
+        $hook->sort = 5 ;
         $retour[] = $hook ;
 
 

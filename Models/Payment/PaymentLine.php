@@ -9,6 +9,8 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 
 use Zeapps\Core\ModelHelper;
 
+use App\com_zeapps_crm\Models\Invoice\Invoices;
+
 class PaymentLine extends Model
 {
     use SoftDeletes;
@@ -52,5 +54,19 @@ class PaymentLine extends Model
         $return = parent::save($options);
 
         return $return;
+    }
+
+
+    public function delete() {
+
+        if (isset($this->id_invoice) && $this->id_invoice != 0) {
+            $invoice = Invoices::find($this->id_invoice) ;
+            if ($invoice) {
+                $invoice->due += $this->amount ;
+                $invoice->save();
+            }
+        }
+
+        parent::delete();
     }
 }

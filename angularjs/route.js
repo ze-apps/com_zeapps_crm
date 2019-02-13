@@ -23,6 +23,8 @@ app.config(["$routeProvider",
 				controller: "ComZeappsCrmTaxeConfigCtrl"
 			})
 
+
+
 		// QUOTE
 			.when("/ng/com_zeapps_crm/quote", {
 				templateUrl: "/com_zeapps_crm/quotes/lists",

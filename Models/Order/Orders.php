@@ -73,7 +73,7 @@ class Orders extends Model
         $this->fieldModelInfo->decimal('total_ttc', 9, 2)->default(0);
         $this->fieldModelInfo->timestamp('date_creation')->nullable();
         $this->fieldModelInfo->timestamp('date_limit')->nullable();
-        $this->fieldModelInfo->string('id_modality', 255)->default("");
+        $this->fieldModelInfo->integer('id_modality', false)->default(0);
         $this->fieldModelInfo->string('label_modality', 255)->default("");
         $this->fieldModelInfo->string('reference_client', 255)->default("");
         $this->fieldModelInfo->timestamps();
