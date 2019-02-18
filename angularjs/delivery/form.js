@@ -1,5 +1,7 @@
 app.controller("ComZeappsCrmDeliveryFormCtrl", ["$scope", "$routeParams", "$rootScope", "zeHttp",
 	function ($scope, $routeParams, $rootScope, zhttp) {
+        $scope.showCheckArea = false;
+        updateModality();
 
         $scope.accountManagerHttp = zhttp.app.user;
         $scope.accountManagerFields = [
@@ -107,6 +109,8 @@ app.controller("ComZeappsCrmDeliveryFormCtrl", ["$scope", "$routeParams", "$root
 
         function loadCompany(company) {
             if (company) {
+                $scope.form.check_issuer = company.company_name;
+
                 $scope.form.id_company = company.id;
                 $scope.form.name_company = company.company_name;
                 $scope.form.accounting_number = company.accounting_number || $scope.form.accounting_number;
@@ -186,6 +190,8 @@ app.controller("ComZeappsCrmDeliveryFormCtrl", ["$scope", "$routeParams", "$root
                     if (($scope.form.id_company === undefined || $scope.form.id_company === 0) && contact.id_price_list) {
                         $scope.form.id_price_list = contact.id_price_list;
                     }
+
+                    $scope.form.check_issuer = contact.last_name + " " + contact.first_name;
                 }
             } else {
                 $scope.form.id_contact = 0;
@@ -202,9 +208,14 @@ app.controller("ComZeappsCrmDeliveryFormCtrl", ["$scope", "$routeParams", "$root
         }
 
         function updateModality(){
+            $scope.showCheckArea = false;
 		    angular.forEach($scope.modalities, function(modality){
 		        if(modality.id === $scope.form.id_modality){
 		            $scope.form.label_modality = modality.label;
+
+                    if (modality.situation >= 1 && modality.type_modality == 1) {
+                        $scope.showCheckArea = true;
+                    }
                 }
             });
         }

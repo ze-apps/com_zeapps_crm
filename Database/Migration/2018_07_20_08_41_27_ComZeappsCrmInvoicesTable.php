@@ -55,6 +55,8 @@ class ComZeappsCrmInvoicesTable extends Migration
             $table->timestamp('date_limit')->nullable();
             $table->integer('id_modality', false)->default(0);
             $table->string('label_modality', 255)->default("");
+            $table->string('bank_check_number', 255)->default("");
+            $table->string('check_issuer', 255)->default("");
             $table->string('reference_client', 255)->default("");
             $table->timestamps();
             $table->softDeletes();

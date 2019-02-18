@@ -1,5 +1,12 @@
 app.controller("ComZeappsCrmInvoiceFormCtrl", ["$scope", "$routeParams", "$rootScope", "zeHttp",
 	function ($scope, $routeParams, $rootScope, zhttp) {
+        if ($scope.form.finalized == 1) {
+            $scope.form.zeapps_modal_hide_save_btn = true ;
+        }
+
+        $scope.showCheckArea = false;
+        updateModality();
+
 
         $scope.accountManagerHttp = zhttp.app.user;
         $scope.accountManagerFields = [
@@ -74,7 +81,7 @@ app.controller("ComZeappsCrmInvoiceFormCtrl", ["$scope", "$routeParams", "$rootS
 
 		function Initform(){
 			if($scope.form.id === undefined) {
-                $scope.form.id_user_account_manager = $rootScope.user.id;
+			    $scope.form.id_user_account_manager = $rootScope.user.id;
                 $scope.form.name_user_account_manager = $rootScope.user.firstname + " " + $rootScope.user.lastname;
                 $scope.form.id_warehouse = $rootScope.user.id_warehouse;
                 $scope.form.date_creation = new Date();
@@ -115,6 +122,8 @@ app.controller("ComZeappsCrmInvoiceFormCtrl", ["$scope", "$routeParams", "$rootS
 
         function loadCompany(company) {
             if (company) {
+                $scope.form.check_issuer = company.company_name;
+
                 $scope.form.id_company = company.id;
                 $scope.form.name_company = company.company_name;
                 $scope.form.accounting_number = company.accounting_number || $scope.form.accounting_number;
@@ -190,6 +199,8 @@ app.controller("ComZeappsCrmInvoiceFormCtrl", ["$scope", "$routeParams", "$rootS
 						}
 					})
 				} else {
+                    $scope.form.check_issuer = contact.last_name + " " + contact.first_name;
+
                     // applique la grille de prix
                     if (($scope.form.id_company === undefined || $scope.form.id_company === 0) && contact.id_price_list) {
                         $scope.form.id_price_list = contact.id_price_list;
@@ -209,10 +220,18 @@ app.controller("ComZeappsCrmInvoiceFormCtrl", ["$scope", "$routeParams", "$rootS
             }
         }
 
-        function updateModality(){
-            angular.forEach($scope.modalities, function(modality){
-                if(modality.id === $scope.form.id_modality){
+
+
+
+        function updateModality() {
+            $scope.showCheckArea = false;
+            angular.forEach($scope.modalities, function (modality) {
+                if (modality.id === $scope.form.id_modality) {
                     $scope.form.label_modality = modality.label;
+
+                    if (modality.situation >= 1 && modality.type_modality == 1) {
+                        $scope.showCheckArea = true;
+                    }
                 }
             });
         }

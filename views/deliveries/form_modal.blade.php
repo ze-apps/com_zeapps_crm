@@ -135,7 +135,7 @@
                 <div class="form-group">
                     <label>Modalités de règlement</label>
                     <select ng-model="form.id_modality" class="form-control" ng-change="updateModality()">
-                        <option ng-repeat="modality in modalities" value="@{{modality.id}}" ng-selected="form.id_modality == modality.id">
+                        <option ng-repeat="modality in modalities" ng-value="@{{modality.id}}">
                             @{{ modality.label }}
                         </option>
                     </select>
@@ -146,6 +146,22 @@
                 <div class="form-group">
                     <label>Référence client</label>
                     <input type="text" ng-model="form.reference_client" class="form-control">
+                </div>
+            </div>
+        </div>
+
+        <div class="row" ng-if="showCheckArea">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Numéro de chèque <span class="required">*</span></label>
+                    <input type="text" ng-model="form.bank_check_number" class="form-control" ng-required="showCheckArea">
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Émetteur du chèque <span class="required">*</span></label>
+                    <input type="text" ng-model="form.check_issuer" class="form-control" ng-required="showCheckArea">
                 </div>
             </div>
         </div>

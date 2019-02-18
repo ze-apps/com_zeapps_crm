@@ -13,6 +13,9 @@ use App\com_zeapps_crm\Models\Invoice\InvoiceLines;
 use App\com_zeapps_crm\Models\Invoice\InvoiceLinePriceList;
 use App\com_zeapps_crm\Models\Invoice\InvoiceTaxes;
 use App\com_zeapps_contact\Models\Modalities;
+use App\com_zeapps_contact\Models\ModalitiesLang;
+use App\com_zeapps_crm\Models\Payment\Payment;
+use App\com_zeapps_crm\Models\Payment\PaymentLine;
 use App\com_zeapps_crm\Models\CreditBalanceDetails;
 use App\com_zeapps_crm\Models\AccountingEntries;
 use App\com_zeapps_crm\Models\Taxes;
@@ -86,6 +89,8 @@ class Invoices extends Model
         $this->fieldModelInfo->timestamp('date_limit')->nullable();
         $this->fieldModelInfo->integer('id_modality', false)->default(0);
         $this->fieldModelInfo->string('label_modality', 255)->default("");
+        $this->fieldModelInfo->string('bank_check_number', 255)->default("");
+        $this->fieldModelInfo->string('check_issuer', 255)->default("");
         $this->fieldModelInfo->string('reference_client', 255)->default("");
 
 
@@ -265,8 +270,23 @@ class Invoices extends Model
         return $schema = Capsule::schema()->getColumnListing(self::$_table);
     }
 
-    public function save(array $options = [])
+    public function save(array $options = [], $savePayment = true)
     {
+        $isSavePayment = false ;
+        $objModalities = Modalities::find($this->id_modality) ;
+        $objModalitiesLang = ModalitiesLang::where("id_modality", $this->id_modality)->where("id_lang", 1)->first() ;
+        if ($objModalities) {
+            if ($objModalities->situation >= 1 && $this->finalized == 1) {
+                $isSavePayment = true;
+            }
+        }
+        if ($objModalitiesLang) {
+            $this->label_modality = $objModalitiesLang->label ;
+        }
+
+
+
+
         $finalized_orignal = $this->getOriginal("finalized");
 
 
@@ -298,6 +318,35 @@ class Invoices extends Model
             parent::save($options);
             $this->finalize();
         }
+
+
+
+
+
+
+
+
+
+        if ($savePayment && $isSavePayment) {
+            $objPayment = new Payment() ;
+            $objPayment->id_company = $this->id_company ;
+            $objPayment->id_contact = $this->id_contact ;
+            $objPayment->total = $this->total_ttc ;
+            $objPayment->date_payment = $this->date_creation ;
+            $objPayment->type_payment = $this->id_modality ;
+            $objPayment->type_payment_label = $this->label_modality ;
+            $objPayment->bank_check_number = $this->bank_check_number ;
+            $objPayment->check_issuer = $this->check_issuer ;
+            $objPayment->id_deposit_checks = 0 ;
+            $objPayment->save() ;
+
+            $objPaymentLine = new PaymentLine() ;
+            $objPaymentLine->id_payment = $objPayment->id ;
+            $objPaymentLine->id_invoice = $this->id ;
+            $objPaymentLine->amount = $this->total_ttc ;
+            $objPaymentLine->save() ;
+        }
+
 
 
 

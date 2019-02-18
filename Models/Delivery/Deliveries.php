@@ -77,6 +77,8 @@ class Deliveries extends Model
         $this->fieldModelInfo->timestamp('date_limit')->nullable();
         $this->fieldModelInfo->integer('id_modality', false)->default(0);
         $this->fieldModelInfo->string('label_modality', 255)->default("");
+        $this->fieldModelInfo->string('bank_check_number', 255)->default("");
+        $this->fieldModelInfo->string('check_issuer', 255)->default("");
         $this->fieldModelInfo->string('reference_client', 255)->default("");
         $this->fieldModelInfo->timestamps();
         $this->fieldModelInfo->softDeletes();

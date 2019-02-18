@@ -21,6 +21,9 @@ app.controller("ComZeappsCrmInvoiceFormLineCtrl", ["$scope", "zeHttp", "zeapps_m
         $scope.invoiceLineTplUrl = "/com_zeapps_crm/invoices/form_line";
 
 
+
+
+
         $scope.editLine = function () {
             updatePrice();
         };
