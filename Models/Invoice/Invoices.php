@@ -270,7 +270,7 @@ class Invoices extends Model
         return $schema = Capsule::schema()->getColumnListing(self::$_table);
     }
 
-    public function save(array $options = [], $savePayment = true)
+    public function save(array $options = [], $savePayment = true, $finalized = true)
     {
         $isSavePayment = false ;
         $objModalities = Modalities::find($this->id_modality) ;
@@ -314,7 +314,10 @@ class Invoices extends Model
             parent::save($options);
         }
 
-        if ($this->finalized == 1 && $finalized_orignal != 1 && $finalized_orignal != null) {
+
+
+
+        if ($finalized && $this->finalized == 1 && $finalized_orignal != 1 && $finalized_orignal !== null) {
             parent::save($options);
             $this->finalize();
         }
@@ -324,6 +327,25 @@ class Invoices extends Model
 
 
 
+
+
+
+
+
+
+
+
+        // action before save
+        Event::sendAction('com_zeapps_crm_invoice', 'beforeSave', $this);
+
+
+        $return = parent::save($options);
+
+        // action before save
+        Event::sendAction('com_zeapps_crm_invoice', 'afterSave', $this);
+
+        // update price
+        $this->updatePrice($this);
 
 
 
@@ -347,21 +369,6 @@ class Invoices extends Model
             $objPaymentLine->save() ;
         }
 
-
-
-
-        // action before save
-        Event::sendAction('com_zeapps_crm_invoice', 'beforeSave', $this);
-
-
-        $return = parent::save($options);
-
-        // action before save
-        Event::sendAction('com_zeapps_crm_invoice', 'afterSave', $this);
-
-        // update price
-        $this->updatePrice($this);
-
         return $return;
     }
 
@@ -370,93 +377,8 @@ class Invoices extends Model
         $pdf = self::makePDF($this->id, false);
 
 
-        $lines = InvoiceLines::where("id_invoice", $this->id)->orderBy("sort")->get();
-
-        if (($modality = Modalities::get($this->id_modality)) && ((int)$modality->situation !== 0)) {
-            $creditBalanceDetails = new CreditBalanceDetails();
-            $creditBalanceDetails->id_invoice = $this->id;
-            $creditBalanceDetails->paid = $this->total_ttc;
-            $creditBalanceDetails->id_modality = $this->id_modality;
-            $creditBalanceDetails->label_modality = $this->label_modality;
-            $creditBalanceDetails->date_payment = date('Y-m-d') . " 00:00:00";
-            $creditBalanceDetails->save();
-        }
-
-
-        $label_entry = $this->name_company ?: ($this->name_contact ?: "");
-
-        $entries = [];
-        $tvas = [];
-        foreach ($lines as $line) {
-            if ((int)$line->has_detail === 0) {
-                if (!isset($entries[$line->accounting_number])) {
-                    $entries[$line->accounting_number] = 0;
-                }
-
-                $entries[$line->accounting_number] += floatval($line->total_ht);
-
-                if ($line->id_taxe !== '0') {
-                    if (!isset($tvas[$line->id_taxe])) {
-                        $tvas[$line->id_taxe] = array(
-                            'ht' => 0,
-                            'value_taxe' => floatval($line->value_taxe)
-                        );
-                    }
-
-                    $tvas[$line->id_taxe]['ht'] += floatval($line->total_ht);
-                    $tvas[$line->id_taxe]['value'] = round(floatval($tvas[$line->id_taxe]['ht']) * ($tvas[$line->id_taxe]['value_taxe'] / 100), 2);
-                }
-            }
-        }
-
-        foreach ($tvas as $id_taxe => $tva) {
-            $taxe = Taxes::where("id", $id_taxe)->first();
-
-            if (!isset($entries[$taxe->accounting_number])) {
-                $entries[$taxe->accounting_number] = 0;
-            }
-
-            $entries[$taxe->accounting_number] += floatval($tva['value']);
-        }
-
-        foreach ($entries as $accounting_number => $sum) {
-
-            $accountingEntries = new AccountingEntries();
-            $accountingEntries->id_invoice = $this->id;
-            $accountingEntries->accounting_number = $accounting_number;
-            $accountingEntries->number_document = $this->numerotation;
-            $accountingEntries->label = $label_entry;
-            if ($sum >= 0) {
-                $accountingEntries->credit = $sum;
-                $accountingEntries->debit = 0;
-            } else {
-                $accountingEntries->credit = 0;
-                $accountingEntries->debit = $sum * -1;
-            }
-
-            $accountingEntries->code_journal = 'VE';
-            $accountingEntries->date_writing = $this->date_creation;
-            $accountingEntries->date_limit = $this->date_limit;
-            $accountingEntries->save();
-        }
-
-        $accountingEntries = new AccountingEntries();
-        $accountingEntries->id_invoice = $this->id;
-        $accountingEntries->accounting_number = $this->accounting_number;
-        $accountingEntries->number_document = $this->numerotation;
-        $accountingEntries->label = $label_entry;
-        if ($this->total_ttc >= 0) {
-            $accountingEntries->credit = 0;
-            $accountingEntries->debit = $this->total_ttc;
-        } else {
-            $accountingEntries->credit = $this->total_ttc * -1;
-            $accountingEntries->debit = 0;
-        }
-
-        $accountingEntries->code_journal = 'VE';
-        $accountingEntries->date_writing = $this->date_creation;
-        $accountingEntries->date_limit = $this->date_limit;
-        $accountingEntries->save();
+        // save accounting entry
+        $this->getEcritureComptable($this);
     }
 
 
@@ -531,6 +453,133 @@ class Invoices extends Model
     }
 
 
+
+    private function getEcritureComptable($invoice) {
+        if ($invoice && $invoice->id) {
+            $ecritureComptable = [];
+            $lines = InvoiceLines::getFromInvoice($invoice->id);
+            $taxes = Taxes::all();
+
+            foreach ($lines as $line) {
+                $ecritureComptaRetour = $this->updateLine($invoice, $line, $taxes);
+                $ecritureComptable = $this->fuisionTableTaxe($ecritureComptable, $ecritureComptaRetour);
+            }
+
+
+
+            $ecritureProduit = array();
+            $ecritureTVA = array();
+
+            foreach ($ecritureComptable as $ecriture) {
+
+                if (!isset($ecritureProduit[$ecriture["accounting_number"]])) {
+                    $ecritureProduit[$ecriture["accounting_number"]] = $ecriture["total_ht"] * 1 ;
+                } else {
+                    $ecritureProduit[$ecriture["accounting_number"]] += $ecriture["total_ht"] * 1 ;
+                }
+
+
+                if (!isset($ecritureTVA[$ecriture["accounting_number_taxe"]])) {
+                    $ecritureTVA[$ecriture["accounting_number_taxe"]] = array();
+                }
+
+                if (!isset($ecritureTVA[$ecriture["accounting_number_taxe"]][$ecriture["value_taxe"]])) {
+                    $ecritureTVA[$ecriture["accounting_number_taxe"]][$ecriture["value_taxe"]] = $ecriture["total_ht"] * 1 ;
+                } else {
+                    $ecritureTVA[$ecriture["accounting_number_taxe"]][$ecriture["value_taxe"]] += $ecriture["total_ht"] * 1 ;
+                }
+            }
+
+
+
+            $total = 0 ;
+
+            // accounting entries for products
+            foreach ($ecritureProduit as $accounting_number => $amount) {
+                $debit = 0 ;
+                $credit = 0 ;
+
+                if ($amount != 0) {
+                    if ($amount > 0) {
+                        $credit = $amount;
+                    } else {
+                        $debit = $amount;
+                    }
+
+                    $objAccountingEntries = new AccountingEntries();
+                    $objAccountingEntries->id_invoice = $invoice->id;
+                    $objAccountingEntries->accounting_number = $accounting_number;
+                    $objAccountingEntries->number_document = $invoice->numerotation;
+                    $objAccountingEntries->label = $invoice->libelle;
+                    $objAccountingEntries->debit = $debit;
+                    $objAccountingEntries->credit = $credit;
+                    $objAccountingEntries->code_journal = "VE";
+                    $objAccountingEntries->date_writing = $invoice->date_creation;
+                    $objAccountingEntries->date_limit = $invoice->date_limit;
+                    $objAccountingEntries->save();
+
+                    $total += $amount;
+                }
+            }
+
+            // accounting entries for taxes
+            foreach ($ecritureTVA as $accounting_number => $value) {
+                foreach ($value as $value_taxe => $amount) {
+                    $value_taxe *= 1 ;
+                    $debit = 0;
+                    $credit = 0;
+
+                    $amount_taxe = round($amount * $value_taxe / 100,2) ;
+
+                    if ($amount_taxe != 0) {
+                        if ($amount_taxe > 0) {
+                            $credit = $amount_taxe;
+                        } else {
+                            $debit = $amount_taxe * -1;
+                        }
+
+                        $objAccountingEntries = new AccountingEntries();
+                        $objAccountingEntries->id_invoice = $invoice->id;
+                        $objAccountingEntries->accounting_number = $accounting_number;
+                        $objAccountingEntries->number_document = $invoice->numerotation;
+                        $objAccountingEntries->label = $invoice->libelle;
+                        $objAccountingEntries->debit = $debit;
+                        $objAccountingEntries->credit = $credit;
+                        $objAccountingEntries->code_journal = "VE";
+                        $objAccountingEntries->date_writing = $invoice->date_creation;
+                        $objAccountingEntries->date_limit = $invoice->date_limit;
+                        $objAccountingEntries->save();
+
+                        $total += $amount_taxe;
+                    }
+                }
+            }
+
+            // accounting entries for customer
+            if ($total != 0) {
+                $debit = 0;
+                $credit = 0;
+
+                if ($amount < 0) {
+                    $credit = $total * -1;
+                } else {
+                    $debit = $total;
+                }
+
+                $objAccountingEntries = new AccountingEntries();
+                $objAccountingEntries->id_invoice = $invoice->id;
+                $objAccountingEntries->accounting_number = $invoice->accounting_number;
+                $objAccountingEntries->number_document = $invoice->numerotation;
+                $objAccountingEntries->label = $invoice->libelle;
+                $objAccountingEntries->debit = $debit;
+                $objAccountingEntries->credit = $credit;
+                $objAccountingEntries->code_journal = "VE";
+                $objAccountingEntries->date_writing = $invoice->date_creation;
+                $objAccountingEntries->date_limit = $invoice->date_limit;
+                $objAccountingEntries->save();
+            }
+        }
+    }
 
 
     private function updatePrice($invoice)
