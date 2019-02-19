@@ -36,7 +36,7 @@ class CrmObserver implements iObserver
         $hook = new \stdClass();
         $hook->hook = "comZeappsContact_EntrepriseHook" ;
         $hook->template = "/com_zeapps_crm/orders/lists_partial" ;
-        $hook->label = "Commandes" ;
+        $hook->label = "Commande" ;
         $hook->shown = 1 ;
         $hook->sort = 2 ;
         $retour[] = $hook ;
@@ -47,7 +47,7 @@ class CrmObserver implements iObserver
         $hook = new \stdClass();
         $hook->hook = "comZeappsContact_EntrepriseHook" ;
         $hook->template = "/com_zeapps_crm/invoices/lists_partial" ;
-        $hook->label = "Factures" ;
+        $hook->label = "Facture" ;
         $hook->shown = 1 ;
         $hook->sort = 3 ;
         $retour[] = $hook ;
@@ -57,7 +57,7 @@ class CrmObserver implements iObserver
         $hook = new \stdClass();
         $hook->hook = "comZeappsContact_EntrepriseHook" ;
         $hook->template = "/com_zeapps_crm/deliveries/lists_partial" ;
-        $hook->label = "Livraisons" ;
+        $hook->label = "Livraison" ;
         $hook->shown = 1 ;
         $hook->sort = 4 ;
         $retour[] = $hook ;
@@ -67,7 +67,7 @@ class CrmObserver implements iObserver
         $hook = new \stdClass();
         $hook->hook = "comZeappsContact_EntrepriseHook" ;
         $hook->template = "/com_zeapps_crm/payment/lists_partial" ;
-        $hook->label = "Encaissements" ;
+        $hook->label = "Encaissement" ;
         $hook->shown = 1 ;
         $hook->sort = 5 ;
         $retour[] = $hook ;
@@ -98,7 +98,7 @@ class CrmObserver implements iObserver
         $hook = new \stdClass();
         $hook->hook = "comZeappsContact_ContactHook" ;
         $hook->template = "/com_zeapps_crm/orders/lists_partial" ;
-        $hook->label = "Commandes" ;
+        $hook->label = "Commande" ;
         $hook->shown = 1 ;
         $hook->sort = 2 ;
         $retour[] = $hook ;
@@ -109,7 +109,7 @@ class CrmObserver implements iObserver
         $hook = new \stdClass();
         $hook->hook = "comZeappsContact_ContactHook" ;
         $hook->template = "/com_zeapps_crm/invoices/lists_partial" ;
-        $hook->label = "Factures" ;
+        $hook->label = "Facture" ;
         $hook->shown = 1 ;
         $hook->sort = 3 ;
         $retour[] = $hook ;
@@ -119,7 +119,7 @@ class CrmObserver implements iObserver
         $hook = new \stdClass();
         $hook->hook = "comZeappsContact_ContactHook" ;
         $hook->template = "/com_zeapps_crm/deliveries/lists_partial" ;
-        $hook->label = "Livraisons" ;
+        $hook->label = "Livraison" ;
         $hook->shown = 1 ;
         $hook->sort = 4 ;
         $retour[] = $hook ;
@@ -130,7 +130,7 @@ class CrmObserver implements iObserver
         $hook = new \stdClass();
         $hook->hook = "comZeappsContact_ContactHook" ;
         $hook->template = "/com_zeapps_crm/payment/lists_partial" ;
-        $hook->label = "Encaissements" ;
+        $hook->label = "Encaissement" ;
         $hook->shown = 1 ;
         $hook->sort = 5 ;
         $retour[] = $hook ;
