@@ -483,10 +483,11 @@ class Invoices extends Model
                     $ecritureTVA[$ecriture["accounting_number_taxe"]] = array();
                 }
 
-                if (!isset($ecritureTVA[$ecriture["accounting_number_taxe"]][$ecriture["value_taxe"]])) {
-                    $ecritureTVA[$ecriture["accounting_number_taxe"]][$ecriture["value_taxe"]] = $ecriture["total_ht"] * 1 ;
+                $value_taxe = $ecriture["value_taxe"] . "" ;
+                if (!isset($ecritureTVA[$ecriture["accounting_number_taxe"]][$value_taxe])) {
+                    $ecritureTVA[$ecriture["accounting_number_taxe"]][$value_taxe] = $ecriture["total_ht"] * 1 ;
                 } else {
-                    $ecritureTVA[$ecriture["accounting_number_taxe"]][$ecriture["value_taxe"]] += $ecriture["total_ht"] * 1 ;
+                    $ecritureTVA[$ecriture["accounting_number_taxe"]][$value_taxe] += $ecriture["total_ht"] * 1 ;
                 }
             }
 
@@ -607,17 +608,44 @@ class Invoices extends Model
             // sauvegarde les lignes comptables
             InvoiceTaxes::where("id_invoice", $invoice->id)->delete();
 
+
+
+            $ecritureTVA = array();
+
             foreach ($ecritureComptable as $ecriture) {
+                $value_taxe = $ecriture["value_taxe"] . "" ;
+                if (!isset($ecritureTVA[$value_taxe])) {
+                    $ecritureTVA[$value_taxe] = $ecriture["total_ht"] * 1 ;
+                } else {
+                    $ecritureTVA[$value_taxe] += $ecriture["total_ht"] * 1 ;
+                }
+            }
+
+
+
+
+
+            foreach ($ecritureTVA as $value_taxe => $total_ht) {
+                $value_taxe = str_replace(",", ".", $value_taxe);
+                $value_taxe *= 1 ;
+
+                $total_ht *= 1 ;
+                $amount_taxe = round($total_ht * $value_taxe / 100, 2) ;
+
+
                 $objQuoteTaxes = new InvoiceTaxes();
                 $objQuoteTaxes->id_invoice = $invoice->id;
-                $objQuoteTaxes->base_tax = $ecriture["total_ht"] ;
-                $objQuoteTaxes->id_taxe = $ecriture["id_taxe"] ;
-                $objQuoteTaxes->value_rate_tax = $ecriture["value_taxe"] ;
-                $objQuoteTaxes->amount_tax = $ecriture["amount_tva"] ;
-                $objQuoteTaxes->accounting_number = $ecriture["accounting_number"] ;
-                $objQuoteTaxes->accounting_number_taxe = $ecriture["accounting_number_taxe"] ;
-                $objQuoteTaxes->total_ttc = $ecriture["total_ttc"] ;
-                $objQuoteTaxes->save();
+                $objQuoteTaxes->base_tax = $total_ht;
+                $objQuoteTaxes->id_taxe = 0;
+                $objQuoteTaxes->value_rate_tax = $value_taxe;
+                $objQuoteTaxes->amount_tax = $amount_taxe;
+                $objQuoteTaxes->accounting_number = "";
+                $objQuoteTaxes->accounting_number_taxe = "";
+                $objQuoteTaxes->total_ttc = $total_ht + $amount_taxe;
+
+                if ($amount_taxe != 0) {
+                    $objQuoteTaxes->save();
+                }
 
 
                 $total_ht += $objQuoteTaxes->base_tax * 1 ;

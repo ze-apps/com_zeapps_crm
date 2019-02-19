@@ -240,7 +240,7 @@ class Orders extends Model
     }
 
 
-    public function save(array $options = [])
+    public function save(array $options = [], $sendEventFinalized = true)
     {
         $isFinalized = false;
 
@@ -274,7 +274,7 @@ class Orders extends Model
 
 
 
-        if ($isFinalized) {
+        if ($sendEventFinalized && $isFinalized) {
             $dataEvent = array('id_order' => $this->id);
             Event::sendAction('com_zeapps_crm_order', 'finalized', $dataEvent);
         }
