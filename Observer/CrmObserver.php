@@ -63,7 +63,7 @@ class CrmObserver implements iObserver
         $retour[] = $hook ;
 
 
-        // déclaration de l'onglet livraison pour les entreprises
+        // déclaration de l'onglet Encaissement pour les entreprises
         $hook = new \stdClass();
         $hook->hook = "comZeappsContact_EntrepriseHook" ;
         $hook->template = "/com_zeapps_crm/payment/lists_partial" ;
@@ -126,7 +126,7 @@ class CrmObserver implements iObserver
 
 
 
-        // déclaration de l'onglet livraison pour les contacts
+        // déclaration de l'onglet Encaissement pour les contacts
         $hook = new \stdClass();
         $hook->hook = "comZeappsContact_ContactHook" ;
         $hook->template = "/com_zeapps_crm/payment/lists_partial" ;
