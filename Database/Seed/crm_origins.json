@@ -10,5 +10,9 @@
   {
     "id": "3",
     "label": "Salons"
+  },
+  {
+    "id": "4",
+    "label": "Distributeur"
   }
 ]
