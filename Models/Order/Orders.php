@@ -240,7 +240,7 @@ class Orders extends Model
     }
 
 
-    public function save(array $options = [], $sendEventFinalized = true)
+    public function save(array $options = [], $sendEventFinalized = true, $updatePrice = true)
     {
         $isFinalized = false;
 
@@ -270,8 +270,10 @@ class Orders extends Model
 
 
         // update price
-        $this->updatePrice($this);
-
+        $updatePrice = false ;
+        if ($updatePrice) {
+            $this->updatePrice($this);
+        }
 
 
         if ($sendEventFinalized && $isFinalized) {

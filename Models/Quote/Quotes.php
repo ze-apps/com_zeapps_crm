@@ -492,7 +492,7 @@ class Quotes extends Model
 
 
 
-    public function save(array $options = [])
+    public function save(array $options = [], $updatePrice = true)
     {
         /******** clean data **********/
         $this->fieldModelInfo->cleanData($this);
@@ -513,7 +513,10 @@ class Quotes extends Model
         $return = parent::save($options);
 
         // update price
-        $this->updatePrice($this);
+        $updatePrice = false ;
+        if ($updatePrice) {
+            $this->updatePrice($this);
+        }
 
         return $return;
     }

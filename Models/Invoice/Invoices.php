@@ -270,7 +270,7 @@ class Invoices extends Model
         return $schema = Capsule::schema()->getColumnListing(self::$_table);
     }
 
-    public function save(array $options = [], $savePayment = true, $finalized = true)
+    public function save(array $options = [], $savePayment = true, $finalized = true, $updatePrice = true)
     {
         $isSavePayment = false ;
         $objModalities = Modalities::find($this->id_modality) ;
@@ -345,7 +345,10 @@ class Invoices extends Model
         Event::sendAction('com_zeapps_crm_invoice', 'afterSave', $this);
 
         // update price
-        $this->updatePrice($this);
+        $updatePrice = false ;
+        if ($updatePrice) {
+            $this->updatePrice($this);
+        }
 
 
 
