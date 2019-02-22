@@ -51,7 +51,7 @@
                     <td ng-click="goTo(delivery.id)">@{{delivery.name_user_account_manager}}</td>
                     <td ng-click="goTo(delivery.id)"><span class="text-danger" ng-show="delivery.finalized">Clôturée</span><span class="text-success" ng-show="!delivery.finalized">Ouvert</span></td>
                     <td class="text-right">
-                        <ze-btn fa="pencil" color="info" direction="left" hint="Editer"
+                        <ze-btn fa="edit" color="info" direction="left" hint="Editer"
                                 ze-modalform="edit"
                                 data-edit="delivery"
                                 data-title="Editer le bon de livraison"

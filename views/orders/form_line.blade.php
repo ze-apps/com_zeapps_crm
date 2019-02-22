@@ -156,7 +156,7 @@
 
                         <td class="text-right">
                             <span>
-                                <ze-btn fa="pencil" color="info" direction="left" hint="editer"
+                                <ze-btn fa="edit" color="info" direction="left" hint="editer"
                                         ze-modalform="editLine"
                                         data-edit="line"
                                         data-title="Editer la ligne"

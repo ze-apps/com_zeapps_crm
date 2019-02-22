@@ -53,7 +53,7 @@
                     <td ng-click="goTo(quote.id)" class="text-right">@{{quote.probability | number:2}}</td>
                     <td ng-click="goTo(quote.id)">@{{ showStatus(quote.status) }}</td>
                     <td class="text-right">
-                        <ze-btn fa="pencil" color="info" direction="left" hint="Editer"
+                        <ze-btn fa="edit" color="info" direction="left" hint="Editer"
                                 ze-modalform="edit"
                                 data-edit="quote"
                                 data-title="Editer le devis"

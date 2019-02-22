@@ -54,7 +54,7 @@
                     <div class="pull-right">
                         <ze-btn fa="arrow-left" color="primary" hint="Retour" direction="left"
                                 ng-click="back()"></ze-btn>
-                        <ze-btn fa="pencil" color="info" hint="Editer" direction="left"
+                        <ze-btn fa="edit" color="info" hint="Editer" direction="left"
                                 ze-modalform="updateQuote"
                                 data-edit="quote"
                                 data-template="templateEdit"
@@ -231,14 +231,14 @@
 
                             <td class="text-right">
                                     <span ng-if="line.type === 'product' || line.type === 'service' || line.type === 'pack'">
-                                        <ze-btn fa="pencil" color="info" direction="left" hint="editer"
+                                        <ze-btn fa="edit" color="info" direction="left" hint="editer"
                                                 ze-modalform="editLine"
                                                 data-edit="line"
                                                 data-title="Editer la ligne du devis"
                                                 data-template="quoteLineTplUrl"></ze-btn>
                                     </span>
                                 <span ng-show="line.type === 'comment'">
-                                        <ze-btn fa="pencil" color="info" direction="left" hint="editer"
+                                        <ze-btn fa="edit" color="info" direction="left" hint="editer"
                                                 ze-modalform="editComment"
                                                 data-edit="line"
                                                 data-title="Modifier un commentaire"
@@ -388,7 +388,7 @@
                         <div class="col-md-12">
                             <div class="card_document-head clearfix">
                                 <div class="pull-right">
-                                    <ze-btn data-fa="pencil" data-hint="Editer" data-direction="left" data-color="info"
+                                    <ze-btn data-fa="edit" data-hint="Editer" data-direction="left" data-color="info"
                                             ze-modalform="editActivity"
                                             data-edit="activity"
                                             data-template="quoteActivityTplUrl"
@@ -425,7 +425,7 @@
                     <div class="card_document" ng-repeat="document in documents | orderBy:['-date','-id']">
                         <div class="card_document-head clearfix">
                             <div class="pull-right">
-                                <ze-btn data-fa="pencil" data-hint="Editer" data-direction="left" data-color="info"
+                                <ze-btn data-fa="edit" data-hint="Editer" data-direction="left" data-color="info"
                                         ze-modalform="editDocument"
                                         data-edit="document"
                                         data-template="quoteDocumentTplUrl"

@@ -7,7 +7,7 @@
                         data-update="getStocks"></ze-filters>
             <h3>
                 @{{ product_stock.ref ? product_stock.ref + ' - ' : '' }}@{{product_stock.label }}
-                <ze-btn fa="pencil" color="info" hint="Editer"
+                <ze-btn fa="edit" color="info" hint="Editer"
                         ze-modalform="edit"
                         edit="product_stock"
                         data-template="templateStock"

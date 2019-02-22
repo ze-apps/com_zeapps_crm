@@ -53,7 +53,7 @@
                     <td ng-click="goTo(order.id)" class="text-right">@{{order.probability | number:2}}</td>
                     <td ng-click="goTo(order.id)"><span class="text-danger" ng-show="order.finalized">Clôturée</span><span class="text-success" ng-show="!order.finalized">Ouvert</span></td>
                     <td class="text-right">
-                        <ze-btn fa="pencil" color="info" direction="left" hint="Editer"
+                        <ze-btn fa="edit" color="info" direction="left" hint="Editer"
                                 ze-modalform="edit"
                                 data-edit="order"
                                 data-title="Editer la commande"

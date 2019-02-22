@@ -36,7 +36,7 @@
 
                     <td class="text-right">
                         <ze-btn fa="th-large" color="success" hint="taux" direction="left" ng-click="taux(priceList.id)" ng-if="priceList.type_pricelist == 1"></ze-btn>
-                        <ze-btn fa="pencil" color="info" direction="left" hint="Editer"
+                        <ze-btn fa="edit" color="info" direction="left" hint="Editer"
                                 ze-modalform="edit"
                                 data-edit="priceList"
                                 data-title="Editer"

@@ -124,7 +124,7 @@
 
                                 <td class="text-right" ng-hide="lineForm.index == $index">
                                     <button type="button" class="btn btn-xs btn-info" ng-click="edit(line)" ng-hide="lineForm.index != undefined">
-                                        <i class="fa fa-pencil fa-fw"></i>
+                                        <i class="fas fa-edit fa-fw"></i>
                                     </button>
                                 </td>
                                 <td class="text-right" ng-show="lineForm.index == $index">

@@ -53,7 +53,7 @@
                     <td ng-click="goTo(invoice.id)">@{{invoice.name_user_account_manager}}</td>
                     <td ng-click="goTo(invoice.id)"><span class="text-danger" ng-show="invoice.finalized">Clôturée</span><span class="text-success" ng-show="!invoice.finalized">Ouvert</span></td>
                     <td class="text-right">
-                        <ze-btn fa="pencil" color="info" direction="left" hint="Editer"
+                        <ze-btn fa="edit" color="info" direction="left" hint="Editer"
                                 ze-modalform="edit"
                                 data-edit="invoice"
                                 data-title="Editer la facture"

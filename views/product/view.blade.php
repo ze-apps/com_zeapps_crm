@@ -21,7 +21,7 @@
                 <h3 class="text-capitalize active-category-title">
                     @{{ currentBranch.name }}
                     <a class="btn btn-info btn-xs" ng-href="/ng/com_zeapps_crm/product/category/@{{ currentBranch.id }}/edit" ng-show="currentBranch.id > 0">
-                        <span class="fa fa-fw fa-pencil"></span>
+                        <span class="fas fa-fw fa-edit"></span>
                     </a>
                     <button type="button" class="btn btn-xs btn-danger" ng-click="delete_category(currentBranch.id)" ng-show="currentBranch.id > 0">
                         <span class="fa fa-fw fa-trash"></span>

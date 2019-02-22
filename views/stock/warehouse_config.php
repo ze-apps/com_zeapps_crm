@@ -41,7 +41,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         {{resupply_label[warehouse.resupply_unit]}}
                     </td>
                     <td class="text-right">
-                        <ze-btn fa="pencil" color="info" hint="Editer" direction="left"
+                        <ze-btn fa="edit" color="info" hint="Editer" direction="left"
                                 ze-modalform="edit"
                                 data-edit="warehouse"
                                 data-template="templateForm"

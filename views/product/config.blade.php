@@ -38,7 +38,7 @@
                         <i class="fa fa-fw" ng-class="attribute.required ? 'fa-check text-success' : 'fa-times text-danger'"></i>
                     </td>
                     <td class="text-right">
-                        <ze-btn fa="pencil" color="info" hint="Editer" direction="left"
+                        <ze-btn fa="edit" color="info" hint="Editer" direction="left"
                                 ze-modalform="edit"
                                 data-edit="attribute"
                                 data-template="templateForm"
