@@ -270,7 +270,6 @@ class Orders extends Model
 
 
         // update price
-        $updatePrice = false ;
         if ($updatePrice) {
             $this->updatePrice($this);
         }

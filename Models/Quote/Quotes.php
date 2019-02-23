@@ -513,7 +513,6 @@ class Quotes extends Model
         $return = parent::save($options);
 
         // update price
-        $updatePrice = false ;
         if ($updatePrice) {
             $this->updatePrice($this);
         }

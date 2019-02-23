@@ -271,7 +271,7 @@ class Deliveries extends Model
     }
 
 
-    public function save(array $options = [], $updatePrice = true)
+    public function save(array $options = [], $updatePrice = true, $updateStock = true)
     {
 
 
@@ -293,10 +293,19 @@ class Deliveries extends Model
         $return = parent::save($options);
 
         // update price
-        $updatePrice = false ;
         if ($updatePrice) {
             $this->updatePrice($this);
         }
+
+
+
+        // TODO : mettre à jour les stocks si le document est finalisé
+        if ($updateStock) {
+
+        }
+
+
+
 
         return $return;
     }

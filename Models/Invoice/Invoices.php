@@ -345,7 +345,6 @@ class Invoices extends Model
         Event::sendAction('com_zeapps_crm_invoice', 'afterSave', $this);
 
         // update price
-        $updatePrice = false ;
         if ($updatePrice) {
             $this->updatePrice($this);
         }
