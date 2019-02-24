@@ -627,23 +627,23 @@ class Invoices extends Model
 
 
 
-            foreach ($ecritureTVA as $value_taxe => $total_ht) {
+            foreach ($ecritureTVA as $value_taxe => $total_amount_ht) {
                 $value_taxe = str_replace(",", ".", $value_taxe);
                 $value_taxe *= 1 ;
 
-                $total_ht *= 1 ;
-                $amount_taxe = round($total_ht * $value_taxe / 100, 2) ;
+                $total_amount_ht *= 1 ;
+                $amount_taxe = round($total_amount_ht * $value_taxe / 100, 2) ;
 
 
                 $objQuoteTaxes = new InvoiceTaxes();
                 $objQuoteTaxes->id_invoice = $invoice->id;
-                $objQuoteTaxes->base_tax = $total_ht;
+                $objQuoteTaxes->base_tax = $total_amount_ht;
                 $objQuoteTaxes->id_taxe = 0;
                 $objQuoteTaxes->value_rate_tax = $value_taxe;
                 $objQuoteTaxes->amount_tax = $amount_taxe;
                 $objQuoteTaxes->accounting_number = "";
                 $objQuoteTaxes->accounting_number_taxe = "";
-                $objQuoteTaxes->total_ttc = $total_ht + $amount_taxe;
+                $objQuoteTaxes->total_ttc = $total_amount_ht + $amount_taxe;
 
                 if ($amount_taxe != 0) {
                     $objQuoteTaxes->save();
