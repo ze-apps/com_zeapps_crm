@@ -53,7 +53,7 @@
                         <ze-btn fa="download" color="primary" hint="PDF" direction="left" ng-click="print()"></ze-btn>
                         <ze-btn fa="envelope" color="primary" hint="Envoyer par email" direction="left"
                                 ng-click="sendByMail()"></ze-btn>
-                        <ze-btn fa="files-o" color="success" hint="Dupliquer" direction="left"
+                        <ze-btn fa="copy" color="success" hint="Dupliquer" direction="left"
                                 ng-click="transform()"></ze-btn>
                         <ze-btn fa="lock" color="danger" hint="Clôturer" direction="left" ng-click="finalize()"
                                 ng-hide="order.finalized"></ze-btn>

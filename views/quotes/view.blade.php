@@ -66,7 +66,7 @@
                         <ze-btn fa="envelope" color="primary" hint="Envoyer par email" direction="left" ng-click="sendByMail()"></ze-btn>
 
 
-                        <ze-btn fa="files-o" color="success" hint="Dupliquer" direction="left"
+                        <ze-btn fa="copy" color="success" hint="Dupliquer" direction="left"
                                 ng-click="transform()"></ze-btn>
 
                         <div class="btn-group btn-group-xs" role="group" ng-if="nb_quotes > 0">
