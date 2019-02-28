@@ -19,6 +19,8 @@ use App\com_zeapps_crm\Models\Payment\PaymentLine;
 use App\com_zeapps_crm\Models\CreditBalanceDetails;
 use App\com_zeapps_crm\Models\AccountingEntries;
 use App\com_zeapps_crm\Models\Taxes;
+use App\com_zeapps_contact\Models\Companies;
+use App\com_zeapps_contact\Models\Contacts;
 
 use Zeapps\Core\Event;
 
@@ -393,6 +395,24 @@ class Invoices extends Model
         if ($data['invoice']->finalized == 1 && $data['invoice']->final_pdf != "" && Storage::isFileExists($data['invoice']->final_pdf)) {
             $pdfFilePath = $data['invoice']->final_pdf;
         } else {
+
+            // load contact
+            if ($data['invoice']->id_contact) {
+                $data['contact'] = Contacts::find($data['invoice']->id_contact);
+            }
+
+
+
+            // load company
+            if ($data['invoice']->id_company) {
+                $data['company'] = Companies::find($data['invoice']->id_company);
+            }
+
+
+
+
+
+
             $data['lines'] = InvoiceLines::getFromInvoice($id) ;
             $data['tableTaxes'] = InvoiceTaxes::getTableTaxe($id);
 
