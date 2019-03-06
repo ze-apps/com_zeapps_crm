@@ -62,6 +62,26 @@ class InvoiceLines extends Model {
             // load sublines
             $line->sublines = self::getSubLine($line->id) ;
 
+            // search if line has multiple taxe in subline
+            if ($line->sublines && count($line->sublines)) {
+                $hasMultipleTaxe = self::_hasMultipleTaxe($line) ;
+
+                $line->hasMultipleTaxe = $hasMultipleTaxe["hasMultipleTaxe"] ;
+                $line->listIdTaxe = $hasMultipleTaxe["listIdTaxe"] ;
+                $line->listTaxe = $hasMultipleTaxe["listTaxe"] ;
+
+                if ($line->hasMultipleTaxe) {
+                    $line->taxeLabel = "*" ;
+                } else {
+                    $line->taxeLabel = $line->listTaxe[0]["value_taxe"];
+                }
+
+            } else {
+                $line->hasMultipleTaxe = false ;
+                $line->listIdTaxe = array($line->id_taxe) ;
+                $line->taxeLabel = $line->value_taxe ;
+            }
+
             // load price list
             $line->priceList = InvoiceLinePriceList::where("id_invoice_line", $line->id)->get();
         }
@@ -74,9 +94,55 @@ class InvoiceLines extends Model {
 
         foreach ($sublines as &$subline) {
             $subline->sublines = self::getSubLine($subline->id) ;
+
+            // search if line has multiple taxe in subline
+            if ($subline->sublines && count($subline->sublines)) {
+                $hasMultipleTaxe = self::_hasMultipleTaxe($subline) ;
+                $subline->hasMultipleTaxe = $hasMultipleTaxe["hasMultipleTaxe"] ;
+                $subline->listIdTaxe = $hasMultipleTaxe["listIdTaxe"] ;
+                $subline->listTaxe = $hasMultipleTaxe["listTaxe"] ;
+                if ($subline->hasMultipleTaxe) {
+                    $subline->taxeLabel = "*" ;
+                } else {
+                    $subline->taxeLabel = $subline->listTaxe[0]["value_taxe"];
+                }
+            } else {
+                $subline->hasMultipleTaxe = false ;
+                $subline->listIdTaxe = array($subline->id_taxe) ;
+                $subline->taxeLabel = array($subline->value_taxe) ;
+            }
         }
 
         return $sublines ;
+    }
+
+    private static function _hasMultipleTaxe($line)
+    {
+        $listIdTaxe = array();
+        $listTaxe = array();
+        $hasMultipleTaxe = false ;
+
+        if (isset($line->sublines) && count($line->sublines)) {
+            foreach ($line->sublines as $subline) {
+                $_hasMultipleTaxe = self::_hasMultipleTaxe($subline) ;
+                $listIdTaxe = array_merge($listIdTaxe, $_hasMultipleTaxe["listIdTaxe"]);
+                $listTaxe = array_merge($listTaxe, $_hasMultipleTaxe["listTaxe"]);
+            }
+
+
+            $listIdTaxe = array_unique($listIdTaxe);
+
+            if (count($listIdTaxe) > 1) {
+                $hasMultipleTaxe = true ;
+            }
+
+        } else {
+            $listIdTaxe[] = $line->id_taxe ;
+            $listTaxe[] = array("id_taxe" => $line->id_taxe, "value_taxe" => $line->value_taxe) ;
+        }
+
+
+        return array("listIdTaxe" => $listIdTaxe, "listTaxe" => $listTaxe, "hasMultipleTaxe" => $hasMultipleTaxe);
     }
 
     public static function getSchema() {
