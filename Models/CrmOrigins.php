@@ -26,6 +26,7 @@ class CrmOrigins extends Model {
         $this->fieldModelInfo = new ModelHelper();
         $this->fieldModelInfo->increments('id');
         $this->fieldModelInfo->string('label')->default("");
+        $this->fieldModelInfo->tinyInteger('default_value')->default(0);
         $this->fieldModelInfo->timestamps();
         $this->fieldModelInfo->softDeletes();
 

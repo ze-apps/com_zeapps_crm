@@ -11,6 +11,7 @@ class ComZeappsCrmCrmOriginsDetailsTable
        Capsule::schema()->create('com_zeapps_crm_crm_origins', function (Blueprint $table) {
             $table->increments('id');
             $table->string('label')->default("");
+            $table->tinyInteger('default_value')->default(0);
 
             $table->timestamps();
             $table->softDeletes();

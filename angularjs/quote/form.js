@@ -55,6 +55,14 @@ app.controller("ComZeappsCrmQuoteFormCtrl", ["$scope", "$routeParams", "$rootSco
         zhttp.crm.crm_origin.get_all().then(function(response){
             if(response.data && response.data != "false"){
                 $scope.crm_origins = response.data;
+
+                if ($scope.form.id === undefined) {
+                    angular.forEach($scope.crm_origins, function (crm_origin) {
+                        if (crm_origin.default_value == 1) {
+                            $scope.form.id_origin = crm_origin.id ;
+                        }
+                    });
+                }
             }
         });
 

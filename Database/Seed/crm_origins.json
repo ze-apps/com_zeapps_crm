@@ -1,18 +1,22 @@
 [
   {
     "id": "1",
-    "label": "Vente par correspondance"
+    "label": "Vente par correspondance",
+    "default_value": "1"
   },
   {
     "id": "2",
-    "label": "Web"
+    "label": "Web",
+    "default_value": "0"
   },
   {
     "id": "3",
-    "label": "Salons"
+    "label": "Salons",
+    "default_value": "0"
   },
   {
     "id": "4",
-    "label": "Distributeur"
+    "label": "Distributeur",
+    "default_value": "0"
   }
 ]
