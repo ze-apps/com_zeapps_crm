@@ -3,6 +3,11 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
 
         menu("com_ze_apps_sales", "com_zeapps_crm_order");
 
+        // call all module to get function to control data on finalize
+        var listControlFinalize = [];
+        zeappsBroadcast.emit("ComZeappsCrmOrderFinalizeControlFunction", {listControlFinalize:listControlFinalize});
+
+
         var code_exists = 0;
         var code = "";
 
@@ -294,18 +299,36 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
         }
 
         function finalize() {
-            zhttp.crm.order.finalize($scope.order.id).then(function (response) {
-                if (response.data && response.data !== "false") {
-                    if (response.data.error) {
-                        toasts('danger', response.data.error);
-                    } else {
-                        $scope.order.numerotation = response.data.numerotation;
-                        $scope.order.final_pdf = response.data.final_pdf;
-                        $scope.order.finalized = '1';
-                        $scope.sortable.disabled = true;
-                    }
+
+
+            var isValid = true ;
+            angular.forEach(listControlFinalize, function (controlFinalize) {
+                if (controlFinalize($scope.order, toasts) == false) {
+                    isValid = false;
                 }
             });
+
+            if (isValid) {
+                zhttp.crm.order.finalize($scope.order.id).then(function (response) {
+                    if (response.data && response.data !== "false") {
+                        if (response.data.error) {
+                            toasts('danger', response.data.error);
+                        } else {
+                            $scope.order.numerotation = response.data.numerotation;
+                            $scope.order.final_pdf = response.data.final_pdf;
+                            $scope.order.finalized = '1';
+                            $scope.sortable.disabled = true;
+                        }
+                    }
+                });
+            }
+
+
+
+
+
+
+
 
             /*if (($scope.order.accounting_number && $scope.order.accounting_number != "") && ($scope.order.id_modality || parseInt($scope.order.id_modality, 10) != 0) && (($scope.order.id_company && parseInt($scope.order.id_company, 10) != 0) || ($scope.order.id_contact && parseInt($scope.order.id_contact, 10) != 0))) {
                 zhttp.crm.order.finalize($scope.order.id).then(function (response) {
