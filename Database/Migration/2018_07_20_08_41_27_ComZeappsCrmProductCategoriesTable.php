@@ -9,7 +9,7 @@ class ComZeappsCrmProductCategoriesTable extends Migration
 
     public function up()
     {
-       Capsule::schema()->create('com_zeapps_crm_product_categories', function (Blueprint $table) {
+        Capsule::schema()->create('com_zeapps_crm_product_categories', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('id_parent')->default(0);
             $table->string('name', 255)->default("");
@@ -18,6 +18,8 @@ class ComZeappsCrmProductCategoriesTable extends Migration
             $table->integer('sort')->default(0);
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index('id_parent');
         });
     }
 

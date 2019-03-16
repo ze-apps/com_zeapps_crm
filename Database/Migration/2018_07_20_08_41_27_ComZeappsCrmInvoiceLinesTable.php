@@ -34,6 +34,9 @@ class ComZeappsCrmInvoiceLinesTable extends Migration
 
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index('id_invoice');
+            $table->index('id_parent');
         });
     }
 

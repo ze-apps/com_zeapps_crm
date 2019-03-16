@@ -25,6 +25,9 @@ class ComZeappsCrmPaymentTable extends Migration
 
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index('id_company');
+            $table->index('id_contact');
         });
     }
 

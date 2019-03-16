@@ -33,6 +33,9 @@ class ComZeappsCrmProductsTable extends Migration
             $table->mediumtext('extra');
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index('id_parent');
+            $table->index('id_product');
         });
     }
 

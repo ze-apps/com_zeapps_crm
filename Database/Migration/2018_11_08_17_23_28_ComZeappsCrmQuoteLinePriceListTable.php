@@ -25,6 +25,8 @@ class ComZeappsCrmQuoteLinePriceListTable extends Migration
 
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index('id_quote_line');
         });
     }
 

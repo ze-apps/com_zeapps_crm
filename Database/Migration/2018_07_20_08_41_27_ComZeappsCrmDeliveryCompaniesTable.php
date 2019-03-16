@@ -9,7 +9,7 @@ class ComZeappsCrmDeliveryCompaniesTable extends Migration
 
     public function up()
     {
-       Capsule::schema()->create('com_zeapps_crm_delivery_companies', function (Blueprint $table) {
+        Capsule::schema()->create('com_zeapps_crm_delivery_companies', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('id_delivery')->default(0);
             $table->integer('id_user_account_manager')->default(0);
@@ -48,6 +48,8 @@ class ComZeappsCrmDeliveryCompaniesTable extends Migration
             $table->string('accounting_number', 15)->default("");
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index('id_delivery');
         });
     }
 

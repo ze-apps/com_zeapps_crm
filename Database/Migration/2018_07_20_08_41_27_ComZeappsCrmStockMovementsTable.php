@@ -9,7 +9,7 @@ class ComZeappsCrmStockMovementsTable extends Migration
 
     public function up()
     {
-       Capsule::schema()->create('com_zeapps_crm_stock_movements', function (Blueprint $table) {
+        Capsule::schema()->create('com_zeapps_crm_stock_movements', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('id_warehouse')->default(0);
             $table->integer('id_stock')->default(0);
@@ -22,6 +22,9 @@ class ComZeappsCrmStockMovementsTable extends Migration
 
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index('id_warehouse');
+            $table->index(array('id_warehouse', 'id_stock'));
         });
     }
 

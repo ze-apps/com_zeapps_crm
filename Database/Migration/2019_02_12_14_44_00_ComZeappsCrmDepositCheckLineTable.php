@@ -22,6 +22,10 @@ class ComZeappsCrmDepositCheckLineTable extends Migration
 
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index('id_deposit');
+            $table->index('id_invoice');
+            $table->index('id_payment');
         });
     }
 

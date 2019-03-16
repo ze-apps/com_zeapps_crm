@@ -9,7 +9,7 @@ class ComZeappsCrmOrderContactsTable extends Migration
 
     public function up()
     {
-       Capsule::schema()->create('com_zeapps_crm_order_contacts', function (Blueprint $table) {
+        Capsule::schema()->create('com_zeapps_crm_order_contacts', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('id_order')->default(0);
             $table->integer('id_user_account_manager')->default(0);
@@ -28,7 +28,7 @@ class ComZeappsCrmOrderContactsTable extends Migration
             $table->string('assistant_phone', 25)->default("");
             $table->string('department', 100)->default("");
             $table->string('job', 100)->default("");
-            $table->enum('email_opt_out', ['Y','N'])->default("N");
+            $table->enum('email_opt_out', ['Y', 'N'])->default("N");
             $table->string('skype_id', 100)->default("");
             $table->string('twitter', 100)->default("");
             $table->date('date_of_birth')->nullable();
@@ -45,6 +45,8 @@ class ComZeappsCrmOrderContactsTable extends Migration
             $table->string('accounting_number', 15)->default("");
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index('id_order');
         });
     }
 

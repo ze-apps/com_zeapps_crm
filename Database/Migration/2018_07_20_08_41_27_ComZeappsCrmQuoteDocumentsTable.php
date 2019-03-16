@@ -16,6 +16,8 @@ class ComZeappsCrmQuoteDocumentsTable extends Migration
             $table->string('path', 255)->default("");
             $table->timestamps();
             $table->softDeletes();
+
+           $table->index('id_quote');
         });
     }
 

@@ -25,6 +25,8 @@ class ComZeappsCrmOrderLinePriceListTable extends Migration
 
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index('id_order_line');
         });
     }
 

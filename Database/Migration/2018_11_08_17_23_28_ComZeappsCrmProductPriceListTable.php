@@ -24,6 +24,8 @@ class ComZeappsCrmProductPriceListTable extends Migration
 
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index('id_product');
         });
     }
 

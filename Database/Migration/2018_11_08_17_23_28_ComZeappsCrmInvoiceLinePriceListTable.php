@@ -25,6 +25,8 @@ class ComZeappsCrmInvoiceLinePriceListTable extends Migration
 
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index('id_invoice_line');
         });
     }
 

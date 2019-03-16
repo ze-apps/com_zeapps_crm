@@ -25,6 +25,8 @@ class ComZeappsCrmDeliveryLinePriceListTable extends Migration
 
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index('id_delivery_line');
         });
     }
 

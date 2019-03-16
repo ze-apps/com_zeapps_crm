@@ -25,6 +25,8 @@ class ComZeappsCrmOrderActivitiesTable extends Migration
             $table->timestamp('validation')->nullable();
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index('id_order');
         });
     }
 

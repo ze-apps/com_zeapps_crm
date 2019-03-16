@@ -19,6 +19,9 @@ class ComZeappsCrmPaymentLineTable extends Migration
 
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index('id_payment');
+            $table->index('id_invoice');
         });
     }
 

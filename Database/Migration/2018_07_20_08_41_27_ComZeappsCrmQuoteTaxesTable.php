@@ -22,6 +22,8 @@ class ComZeappsCrmQuoteTaxesTable extends Migration
             $table->decimal('total_ttc', 8, 2)->default(0);
 
             $table->timestamps();
+
+            $table->index('id_quote');
         });
     }
 

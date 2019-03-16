@@ -34,6 +34,9 @@ class ComZeappsCrmOrderLinesTable extends Migration
 
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index('id_order');
+            $table->index('id_parent');
         });
     }
 

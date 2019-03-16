@@ -22,6 +22,10 @@ class ComZeappsCrmPriceRateTable extends Migration
             $table->tinyInteger('is_updated')->default(0);
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index('id_pricelist');
+            $table->index('id_category');
+            $table->index(array('id_pricelist', 'id_category'));
         });
     }
 

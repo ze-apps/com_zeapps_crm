@@ -9,7 +9,7 @@ class ComZeappsCrmQuoteCompaniesTable extends Migration
 
     public function up()
     {
-       Capsule::schema()->create('com_zeapps_crm_quote_companies', function (Blueprint $table) {
+        Capsule::schema()->create('com_zeapps_crm_quote_companies', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('id_quote')->default(0);
             $table->integer('id_user_account_manager')->default(0);
@@ -48,6 +48,8 @@ class ComZeappsCrmQuoteCompaniesTable extends Migration
             $table->string('accounting_number', 15)->default("");
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index('id_quote');
         });
     }
 

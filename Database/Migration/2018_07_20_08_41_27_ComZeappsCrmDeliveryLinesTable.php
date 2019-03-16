@@ -34,6 +34,9 @@ class ComZeappsCrmDeliveryLinesTable extends Migration
 
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index('id_delivery');
+            $table->index('id_parent');
         });
     }
 
