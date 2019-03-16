@@ -308,6 +308,11 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                 }
             });
 
+
+
+
+
+
             if (isValid) {
                 zhttp.crm.order.finalize($scope.order.id).then(function (response) {
                     if (response.data && response.data !== "false") {
@@ -318,6 +323,9 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                             $scope.order.final_pdf = response.data.final_pdf;
                             $scope.order.finalized = '1';
                             $scope.sortable.disabled = true;
+
+                            // emit broadcast at finalize
+                            zeappsBroadcast.emit("ComZeappsCrmOrderFinalize", {"order":$scope.order, "zeapps_modal":zeapps_modal});
                         }
                     }
                 });
