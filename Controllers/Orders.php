@@ -22,6 +22,8 @@ use App\com_zeapps_crm\Models\Invoice\Invoices as InvoicesModel;
 use App\com_zeapps_crm\Models\Quote\Quotes as QuotesModel;
 use App\com_zeapps_crm\Models\Delivery\Deliveries as DeliveriesModel;
 
+use App\com_zeapps_crm\Models\DocumentRelated;
+
 use Zeapps\Models\Config;
 
 class Orders extends Controller
@@ -281,15 +283,31 @@ class Orders extends Controller
                 if ($data) {
                     foreach ($data as $document => $value) {
                         if ($value == 'true') {
+                            $idTo = 0 ;
+
                             if ($document == "quotes") {
                                 $return->quotes = QuotesModel::createFrom($src);
+                                $idTo = $return->quotes["id"];
+
                             } elseif ($document == "orders") {
                                 $return->orders = OrdersModel::createFrom($src);
+                                $idTo = $return->orders["id"];
+
                             } elseif ($document == "invoices") {
                                 $return->invoices = InvoicesModel::createFrom($src);
+                                $idTo = $return->invoices["id"];
+
                             } elseif ($document == "deliveries") {
                                 $return->deliveries = DeliveriesModel::createFrom($src);
+                                $idTo = $return->deliveries["id"];
                             }
+
+                            $objDocumentRelated = new DocumentRelated() ;
+                            $objDocumentRelated->type_document_from = "orders" ;
+                            $objDocumentRelated->id_document_from = $id ;
+                            $objDocumentRelated->type_document_to = $document ;
+                            $objDocumentRelated->id_document_to = $idTo ;
+                            $objDocumentRelated->save();
                         }
                     }
                 }
