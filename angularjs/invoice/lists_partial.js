@@ -29,6 +29,13 @@ app.controller("ComZeappsCrmInvoiceListsPartialCtrl", ["$scope", "$location", "$
                     field: 'name_contact LIKE',
                     type: 'text',
                     label: 'Contact'
+                },
+                {
+                    format: 'checkbox',
+                    field: 'unpaid',
+                    type: 'text',
+                    label: 'Impayé'
+
                 }
             ],
             secondaries: [

@@ -134,9 +134,18 @@ class Invoices extends Controller
 
         $invoices_rs = InvoicesModel::orderBy('date_creation', 'DESC')->orderBy('id', 'DESC');
         foreach ($filters as $key => $value) {
-            if (strpos($key, " LIKE")) {
+            if ($key == "unpaid") {
+                if ($value) {
+                    $invoices_rs = $invoices_rs->where("finalized", 1);
+                    $invoices_rs = $invoices_rs->where("due", "!=", 0);
+                    $invoices_rs = $invoices_rs->where("date_limit", "<", date("Y-m-d H:i:s"));
+                }
+            } elseif (strpos($key, " LIKE") !== false) {
                 $key = str_replace(" LIKE", "", $key);
                 $invoices_rs = $invoices_rs->where($key, 'like', '%' . $value . '%');
+            } elseif (strpos($key, " ") !== false) {
+                $tabKey = explode(" ", $key);
+                $invoices_rs = $invoices_rs->where($tabKey[0], $tabKey[1], $value);
             } else {
                 $invoices_rs = $invoices_rs->where($key, $value);
             }
