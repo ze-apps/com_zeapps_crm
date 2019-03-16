@@ -59,6 +59,9 @@ class ComZeappsCrmOrdersTable extends Migration
             $table->string('reference_client', 255)->default("");
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index('id_company');
+            $table->index('id_contact');
         });
     }
 
