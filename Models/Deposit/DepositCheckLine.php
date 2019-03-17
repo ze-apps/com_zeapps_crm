@@ -9,6 +9,8 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 
 use Zeapps\Core\ModelHelper;
 
+use App\com_zeapps_crm\Models\Deposit\DepositCheck;
+
 class DepositCheckLine extends Model
 {
     use SoftDeletes;
@@ -53,6 +55,27 @@ class DepositCheckLine extends Model
         $this->fieldModelInfo->removeFieldUnwanted($this);
 
         $return = parent::save($options);
+
+        DepositCheck::updateAmount($this->id_deposit);
+
+
+        return $return;
+    }
+
+    public function delete() {
+
+        if (is_null($this->getKeyName())) {
+            throw new Exception('No primary key defined on model.');
+        }
+
+        $DepositCheckLine = self::find($this->id) ;
+
+
+        $return = parent::delete();
+
+        if ($DepositCheckLine) {
+            DepositCheck::updateAmount($DepositCheckLine->id_deposit);
+        }
 
         return $return;
     }

@@ -34,6 +34,9 @@ class DepositCheck extends Model
         $this->fieldModelInfo->date('date_in_bank')->default(null);
         $this->fieldModelInfo->string('status', 2)->default("");
         $this->fieldModelInfo->string('type_deposit', 20)->default("");
+        $this->fieldModelInfo->decimal('amount', 9, 2)->default(0);
+        $this->fieldModelInfo->integer('nb_lines')->default(0);
+        $this->fieldModelInfo->string('pdf', 255)->default("");
         $this->fieldModelInfo->timestamps();
         $this->fieldModelInfo->softDeletes();
 
@@ -116,5 +119,26 @@ class DepositCheck extends Model
 
 
         return $idDeposit ;
+    }
+
+
+    public static function updateAmount($id) {
+        if ($id) {
+            $nbLines = 0;
+            $amount = 0;
+
+            $lines = DepositCheckLine::where("id_deposit", $id)->get();
+            foreach ($lines as $line) {
+                $nbLines++;
+                $amount += $line->amount;
+            }
+
+            $depositCheck = DepositCheck::find($id);
+            if ($depositCheck) {
+                $depositCheck->amount = $amount ;
+                $depositCheck->nb_lines = $nbLines ;
+                $depositCheck->save();
+            }
+        }
     }
 }

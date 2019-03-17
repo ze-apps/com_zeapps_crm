@@ -19,6 +19,9 @@ class ComZeappsCrmDepositCheckTable extends Migration
             $table->date('date_in_bank')->default(null)->nullable();
             $table->string('status', 2)->default("");
             $table->string('type_deposit', 20)->default("");
+            $table->decimal('amount', 9, 2)->default(0);
+            $table->integer('nb_lines')->default(0);
+            $table->string('pdf', 255)->default("");
 
             $table->timestamps();
             $table->softDeletes();
