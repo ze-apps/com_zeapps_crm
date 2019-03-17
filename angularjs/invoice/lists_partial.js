@@ -1,8 +1,9 @@
 app.controller("ComZeappsCrmInvoiceListsPartialCtrl", ["$scope", "$location", "$rootScope", "zeHttp", "$timeout", "toasts",
 	function ($scope, $location, $rootScope, zhttp, $timeout, toasts) {
 
-		if(!$rootScope.invoices)
-			$rootScope.invoices = {};
+		if(!$rootScope.invoices) {
+            $rootScope.invoices = {};
+        }
 		$scope.id_company = 0;
 		$scope.filters = {
             main: [
