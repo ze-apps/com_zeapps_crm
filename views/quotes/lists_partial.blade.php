@@ -22,11 +22,11 @@
                 <thead>
                 <tr>
                     <th>#</th>
-                    <th>Libelle</th>
+                    <th>Date de création</th>
                     <th>Destinataire</th>
+                    <th>Libelle</th>
                     <th class="text-right">Total HT</th>
                     <th class="text-right">Total TTC</th>
-                    <th>Date de création</th>
                     <th>Date limite</th>
                     <th>Responsable</th>
                     <th class="text-right">Probabilité</th>
@@ -37,17 +37,17 @@
                 <tbody>
                 <tr ng-repeat="quote in quotes">
                     <td ng-click="goTo(quote.id)">@{{quote.numerotation}}</td>
-                    <td ng-click="goTo(quote.id)">@{{quote.libelle}}</td>
+                    <td ng-click="goTo(quote.id)">@{{quote.date_creation || "-" | date:'dd/MM/yyyy'}}</td>
                     <td ng-click="goTo(quote.id)">
-                        
-                            @{{quote.name_company}}
-                            <span ng-if="quote.name_company && quote.name_contact">-</span>
-                            @{{quote.name_contact ? quote.name_contact : ''}}
-                        
+
+                        @{{quote.name_company}}
+                        <span ng-if="quote.name_company && quote.name_contact">-</span>
+                        @{{quote.name_contact ? quote.name_contact : ''}}
+
                     </td>
+                    <td ng-click="goTo(quote.id)">@{{quote.libelle}}</td>
                     <td ng-click="goTo(quote.id)" class="text-right">@{{quote.total_ht | currency:'€':2}}</td>
                     <td ng-click="goTo(quote.id)" class="text-right">@{{quote.total_ttc | currency:'€':2}}</td>
-                    <td ng-click="goTo(quote.id)">@{{quote.date_creation || "-" | date:'dd/MM/yyyy'}}</td>
                     <td ng-click="goTo(quote.id)">@{{quote.date_limit || "-" | date:'dd/MM/yyyy'}}</td>
                     <td ng-click="goTo(quote.id)">@{{quote.name_user_account_manager}}</td>
                     <td ng-click="goTo(quote.id)" class="text-right">@{{quote.probability | number:2}}</td>

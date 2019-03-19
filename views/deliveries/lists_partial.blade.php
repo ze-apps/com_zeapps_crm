@@ -22,12 +22,11 @@
                 <thead>
                 <tr>
                     <th>#</th>
-                    <th>Libelle</th>
+                    <th>Date de création</th>
                     <th>Destinataire</th>
+                    <th>Libelle</th>
                     <th class="text-right">Total HT</th>
                     <th class="text-right">Total TTC</th>
-                    <th>Date de création</th>
-                    <!--<th>Date limite</th>-->
                     <th>Responsable</th>
                     <th>Statut</th>
                     <th></th>
@@ -36,18 +35,17 @@
                 <tbody>
                 <tr ng-repeat="delivery in deliveries">
                     <td ng-click="goTo(delivery.id)">@{{delivery.numerotation}}</td>
-                    <td ng-click="goTo(delivery.id)">@{{delivery.libelle}}</td>
+                    <td ng-click="goTo(delivery.id)">@{{delivery.date_creation || "-" | date:'dd/MM/yyyy'}}</td>
                     <td ng-click="goTo(delivery.id)">
-                        
-                            @{{delivery.name_company}}
-                            <span ng-if="delivery.name_company && delivery.name_contact">-</span>
-                            @{{delivery.name_contact ? deliverie.name_contact : ''}}
-                        
+
+                        @{{delivery.name_company}}
+                        <span ng-if="delivery.name_company && delivery.name_contact">-</span>
+                        @{{delivery.name_contact ? deliverie.name_contact : ''}}
+
                     </td>
+                    <td ng-click="goTo(delivery.id)">@{{delivery.libelle}}</td>
                     <td ng-click="goTo(delivery.id)" class="text-right">@{{delivery.total_ht | currency:'€':2}}</td>
                     <td ng-click="goTo(delivery.id)" class="text-right">@{{delivery.total_ttc | currency:'€':2}}</td>
-                    <td ng-click="goTo(delivery.id)">@{{delivery.date_creation || "-" | date:'dd/MM/yyyy'}}</td>
-                    <!--<td ng-click="goTo(delivery.id)">@{{delivery.date_limit || "-" | date:'dd/MM/yyyy'}}</td>-->
                     <td ng-click="goTo(delivery.id)">@{{delivery.name_user_account_manager}}</td>
                     <td ng-click="goTo(delivery.id)"><span class="text-danger" ng-show="delivery.finalized">Clôturée</span><span class="text-success" ng-show="!delivery.finalized">Ouvert</span></td>
                     <td class="text-right">

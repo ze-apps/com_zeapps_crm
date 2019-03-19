@@ -138,6 +138,9 @@ class Deliveries extends Controller
             if (strpos($key, " LIKE")) {
                 $key = str_replace(" LIKE", "", $key);
                 $deliveries_rs = $deliveries_rs->where($key, 'like', '%' . $value . '%');
+            } elseif (strpos($key, " ") !== false) {
+                $tabKey = explode(" ", $key);
+                $deliveries_rs = $deliveries_rs->where($tabKey[0], $tabKey[1], $value);
             } else {
                 $deliveries_rs = $deliveries_rs->where($key, $value);
             }

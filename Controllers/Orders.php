@@ -137,6 +137,9 @@ class Orders extends Controller
             if (strpos($key, " LIKE")) {
                 $key = str_replace(" LIKE", "", $key);
                 $orders_rs = $orders_rs->where($key, 'like', '%' . $value . '%');
+            } elseif (strpos($key, " ") !== false) {
+                $tabKey = explode(" ", $key);
+                $orders_rs = $orders_rs->where($tabKey[0], $tabKey[1], $value);
             } else {
                 $orders_rs = $orders_rs->where($key, $value);
             }

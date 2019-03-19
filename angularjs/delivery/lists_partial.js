@@ -34,14 +34,14 @@ app.controller("ComZeappsCrmDeliveryListsPartialCtrl", ["$scope", "$location", "
             secondaries: [
                 {
                     format: 'input',
-                    field: 'date_creation >',
+                    field: 'date_creation >=',
                     type: 'date',
                     label: 'Date de création : Début',
                     size: 3
                 },
                 {
                     format: 'input',
-                    field: 'date_creation <',
+                    field: 'date_creation <=',
                     type: 'date',
                     label: 'Fin',
                     size: 3
@@ -123,8 +123,35 @@ app.controller("ComZeappsCrmDeliveryListsPartialCtrl", ["$scope", "$location", "
         function loadList(context) {
             context = context || "";
             var offset = ($scope.page - 1) * $scope.pageSize;
-            var formatted_filters = angular.toJson($scope.filter_model);
 
+
+
+
+            var filtre = {} ;
+            angular.forEach($scope.filter_model, function (value, key) {
+                filtre[key] = value ;
+            });
+
+
+
+            // convet date JS to YYYY-MM-DD
+            var arrayFieldDate = ["date_creation >=", "date_creation <="] ;
+            for (var i_arrayFieldDate = 0 ; i_arrayFieldDate < arrayFieldDate.length ; i_arrayFieldDate++) {
+                if (filtre[arrayFieldDate[i_arrayFieldDate]] != undefined) {
+                    filtre[arrayFieldDate[i_arrayFieldDate]] = filtre[arrayFieldDate[i_arrayFieldDate]].getFullYear() + "-" + (filtre[arrayFieldDate[i_arrayFieldDate]].getMonth() + 1) + "-" + filtre[arrayFieldDate[i_arrayFieldDate]].getDate();
+                }
+            }
+
+
+            // convert , to . for numeric
+            var arrayFieldNumeric = ["total_ht >", "total_ht <", "total_ttc >", "total_ttc <"] ;
+            for (var i_arrayFieldNumeric = 0 ; i_arrayFieldNumeric < arrayFieldNumeric.length ; i_arrayFieldNumeric++) {
+                if (filtre[arrayFieldNumeric[i_arrayFieldNumeric]] != undefined) {
+                    filtre[arrayFieldNumeric[i_arrayFieldNumeric]] = filtre[arrayFieldNumeric[i_arrayFieldNumeric]].replace(",", ".").replace(" ", "") ;
+                }
+            }
+
+            var formatted_filters = angular.toJson(filtre);
             zhttp.crm.delivery.get_all(src_id, src, $scope.pageSize, offset, context, formatted_filters).then(function (response) {
                 if (response.data && response.data != "false") {
                     $scope.deliveries = response.data.deliveries;
