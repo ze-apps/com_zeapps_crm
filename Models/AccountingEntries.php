@@ -26,12 +26,14 @@ class AccountingEntries extends Model {
         $this->fieldModelInfo = new ModelHelper();
         $this->fieldModelInfo->increments('id');
         $this->fieldModelInfo->integer('id_invoice', false)->default(0);
+        $this->fieldModelInfo->integer('n_export', false)->default(0);
         $this->fieldModelInfo->string('accounting_number')->default("");
         $this->fieldModelInfo->string('number_document')->default("");
         $this->fieldModelInfo->string('label')->default("");
         $this->fieldModelInfo->float('debit', 9, 2)->default(0.0);
         $this->fieldModelInfo->float('credit', 9, 2)->default(0.0);
         $this->fieldModelInfo->string('code_journal')->default("");
+        $this->fieldModelInfo->timestamp('date_export');
         $this->fieldModelInfo->timestamp('date_writing');
         $this->fieldModelInfo->timestamp('date_limit');
         
