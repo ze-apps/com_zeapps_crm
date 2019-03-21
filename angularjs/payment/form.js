@@ -195,7 +195,6 @@ app.controller("ComZeappsCrmPaymentFormCtrl", ["$scope", "$routeParams", "$rootS
             }
 
             $scope.ecart = ecart ;
-            console.log($scope.ecart);
 
             checkForm();
         }
