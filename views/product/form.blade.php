@@ -15,6 +15,7 @@
                 <li ng-class="navigationState =='body' ? 'active' : ''"><a href="#" ng-click="setTab('body')">Information</a></li>
                 <li ng-class="navigationState =='tarif' ? 'active' : ''"><a href="#" ng-click="setTab('tarif')">Tarif(s)</a></li>
                 <li ng-class="navigationState =='article_pack' ? 'active' : ''" ng-show="form.type_product=='pack'"><a href="#" ng-click="setTab('article_pack')">Articles du pack</a></li>
+                <li ng-class="navigationState =='achat' ? 'active' : ''"><a href="#" ng-click="setTab('achat')">Achat</a></li>
             </ul>
 
 
@@ -359,6 +360,48 @@
 
 
             </div>
+
+
+
+
+
+
+            <div ng-show="navigationState =='achat'">
+
+                <button type="button" class="btn btn-xs btn-success" ng-click="addSupplierPurchase()">
+                    <i class="fa fa-plus fa-fw"></i>
+                </button>
+
+                <table class="table table-hover table-condensed table-responsive" ng-show="supplierPurchases.length > 0">
+                    <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Fournisseur</th>
+                        <th class="text-right">Quantité</th>
+                        <th class="text-right">Prix HT</th>
+                        <th class="text-right">TVA (%)</th>
+                        <th class="text-right">Prix TTC</th>
+                        <th class="text-right">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="leaf" ng-repeat="supplierPurchase in supplierPurchases">
+                        <td ng-click="goToSupplierPurchase(supplierPurchase.id)">@{{ supplierPurchase.date_purchase }}</td>
+                        <td ng-click="goToSupplierPurchase(supplierPurchase.id)">@{{ supplierPurchase.supplier }}</td>
+                        <td ng-click="goToSupplierPurchase(supplierPurchase.id)" class="text-right">@{{ supplierPurchase.quantity | currency:'':0 }}</td>
+                        <td ng-click="goToSupplierPurchase(supplierPurchase.id)" class="text-right">@{{ supplierPurchase.price_ht | currency:'€':2 }}</td>
+                        <td ng-click="goToSupplierPurchase(supplierPurchase.id)" class="text-right">@{{ supplierPurchase.value_taxe | currency:'%':2 }}</td>
+                        <td ng-click="goToSupplierPurchase(supplierPurchase.id)" class="text-right">@{{ supplierPurchase.price_ttc | currency:'€':2 }}</td>
+                        <td class="text-right">
+                            <button type="button" class="btn btn-xs btn-danger" ng-click="deleteSupplierPurchase(supplierPurchase)">
+                                <i class="fa fa-trash fa-fw"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
 
 
             <form-buttons></form-buttons>

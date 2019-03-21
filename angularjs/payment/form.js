@@ -187,7 +187,15 @@ app.controller("ComZeappsCrmPaymentFormCtrl", ["$scope", "$routeParams", "$rootS
                 }
                 cumul += montant_ligne ;
             }
-            $scope.ecart = montant_total-cumul ;
+
+            var ecart = montant_total-cumul ;
+
+            if (ecart > -0.01 && ecart < 0.01) {
+                ecart = 0 ;
+            }
+
+            $scope.ecart = ecart ;
+            console.log($scope.ecart);
 
             checkForm();
         }

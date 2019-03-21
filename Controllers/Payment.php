@@ -119,6 +119,10 @@ class Payment extends Controller
         }
 
         foreach ($data as $key => $value) {
+            if ($key == "total") {
+                $value = str_replace(",", ".", $value) ;
+                $value *= 1 ;
+            }
             $payment->$key = $value;
         }
 

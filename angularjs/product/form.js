@@ -70,6 +70,38 @@ app.controller("ComZeappsCrmProductFormCtrl", ["$scope", "$routeParams", "$locat
         $scope.updatePriceSubLine = updatePriceSubLine;
 
 
+
+
+
+
+
+        $scope.supplierPurchases = [] ;
+
+        $scope.supplierPurchases.push({
+            date_purchase: '25/09/2018',
+            supplier: 'Offset 5',
+            quantity: 4000,
+            price_ht: 12000,
+            value_taxe: 20,
+            price_ttc: 14400,
+        }) ;
+
+        $scope.supplierPurchases.push({
+            date_purchase: '01/02/2016',
+            supplier: 'Ulzama',
+            quantity: 10000,
+            price_ht: 25000,
+            value_taxe: 20,
+            price_ttc: 30000,
+        }) ;
+
+
+
+
+
+
+
+
         zhttp.config.product.get.attr().then(function (response) {
             if (response.data && response.data != "false") {
                 $scope.attributes = angular.fromJson(response.data.value);

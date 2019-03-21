@@ -163,7 +163,7 @@
                             ?>
                             <tr>
                                 <td class="text-left" colspan="3">
-                                    <?php echo $line->designation_desc; ?>
+                                    <?php echo nl2br($line->designation_desc); ?>
                                 </td>
                             </tr>
                             <?php
@@ -175,7 +175,7 @@
                                 <td class="text-left"><?php echo $line->ref; ?></td>
                                 <td class="text-left">
                                     <strong><?php echo $line->designation_title; ?></strong><br/>
-                                    <?php echo $line->designation_desc; ?>
+                                    <?php echo nl2br($line->designation_desc); ?>
                                 </td>
                                 <td class="text-center"><?php echo floatval($line->qty) === round(floatval($line->qty)) ? intval($line->qty) : number_format(floatval($line->qty), 3, ',', ' '); ?></td>
                             </tr>
