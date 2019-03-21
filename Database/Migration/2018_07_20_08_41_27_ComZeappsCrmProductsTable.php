@@ -18,6 +18,7 @@ class ComZeappsCrmProductsTable extends Migration
             $table->string('ref', 255)->default("");
             $table->string('name', 255)->default("");
             $table->text('description');
+            $table->decimal('price_unit_stock', 8, 2)->default(0);
             $table->decimal('price_ht', 8, 2)->default(0);
             $table->decimal('price_ttc', 8, 2)->default(0);
             $table->decimal('quantite', 8, 2)->default(0);

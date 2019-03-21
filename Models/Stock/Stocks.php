@@ -25,7 +25,7 @@ class Stocks extends Model {
         // stock la liste des champs
         $this->fieldModelInfo = new ModelHelper();
         $this->fieldModelInfo->increments('id');
-        $this->fieldModelInfo->integer('id_stock', false)->default(0);
+        $this->fieldModelInfo->integer('id_product', false)->default(0);
         $this->fieldModelInfo->string('label', 255)->default("");
         $this->fieldModelInfo->string('ref', 255)->default("");
         $this->fieldModelInfo->decimal('value_ht', 9, 2)->default(0);

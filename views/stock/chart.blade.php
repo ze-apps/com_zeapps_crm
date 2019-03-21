@@ -1,6 +1,3 @@
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-?>
 <div class="row">
     <div class="col-md-12 text-right">
         <button type="button" class="btn btn-xs" ng-click="changeScaleTo('month')" ng-class="selectedScale === 'month' ? 'btn-success' : 'btn-info';">

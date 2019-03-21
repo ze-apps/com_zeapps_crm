@@ -50,7 +50,7 @@ app.controller("ComZeappsCrmProductViewCtrl", ["$scope", "$location", "zeHttp", 
             stop: sortableStop
         };
 
-        getTree();
+
 
         function update(branch) {
             $scope.currentBranch = branch;
@@ -83,6 +83,7 @@ app.controller("ComZeappsCrmProductViewCtrl", ["$scope", "$location", "zeHttp", 
                 }
             });
         }
+        getTree();
 
         function sortableStop() {
             var data = {

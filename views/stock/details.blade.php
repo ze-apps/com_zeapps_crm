@@ -1,4 +1,3 @@
-<div class="msg-ecran-construction"><div>Ecran en cours de construction</div></div>
 <div id="breadcrumb">Stocks</div>
 <div id="content">
     <div class="row">
@@ -6,12 +5,7 @@
             <ze-filters class="pull-right" data-model="filter_model" data-filters="filters"
                         data-update="getStocks"></ze-filters>
             <h3>
-                @{{ product_stock.ref ? product_stock.ref + ' - ' : '' }}@{{product_stock.label }}
-                <ze-btn fa="edit" color="info" hint="Editer"
-                        ze-modalform="edit"
-                        edit="product_stock"
-                        data-template="templateStock"
-                        data-title="Modifier le produit stocké"></ze-btn>
+                @{{ product_stock.ref ? product_stock.ref + ' - ' : '' }}@{{product_stock.name }}
             </h3>
         </div>
     </div>

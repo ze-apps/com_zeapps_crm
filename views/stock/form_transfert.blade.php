@@ -1,6 +1,3 @@
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-?>
 <div ng-controller="ComZeAppsCrmStockTransfertFormCtrl">
     <div class="row">
         <div class="col-md-12">
@@ -15,8 +12,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             <div class="form-group">
                 <label>Entrepôt de départ</label>
                 <select ng-model="form.src" class="form-control">
-                    <option ng-repeat="warehouse in warehouses" value="{{warehouse.id}}">
-                        {{warehouse.label}}
+                    <option ng-repeat="warehouse in warehouses" value="@{{warehouse.id}}">
+                        @{{warehouse.label}}
                     </option>
                 </select>
             </div>
@@ -24,8 +21,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <div class="col-md-6">
             <label>Entrepôt d'arrivée</label>
             <select ng-model="form.trgt" class="form-control">
-                <option ng-repeat="warehouse in warehouses" value="{{warehouse.id}}">
-                    {{warehouse.label}}
+                <option ng-repeat="warehouse in warehouses" value="@{{warehouse.id}}">
+                    @{{warehouse.label}}
                 </option>
             </select>
         </div>

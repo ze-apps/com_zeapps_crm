@@ -33,6 +33,7 @@ class Products extends Model
         $this->fieldModelInfo->string('ref', 255)->default("");
         $this->fieldModelInfo->string('name', 255)->default("");
         $this->fieldModelInfo->text('description');
+        $this->fieldModelInfo->decimal('price_unit_stock', 8, 2)->default(0);
         $this->fieldModelInfo->decimal('price_ht', 8, 2)->default(0);
         $this->fieldModelInfo->decimal('price_ttc', 8, 2)->default(0);
         $this->fieldModelInfo->decimal('quantite', 8, 2)->default(0);

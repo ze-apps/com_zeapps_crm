@@ -3,6 +3,50 @@ app.controller("ComZeappsCrmStockViewCtrl", ["$scope", "$location", "$rootScope"
 
         menu("com_ze_apps_sales", "com_zeapps_crm_stock");
 
+
+        $scope.currentBranch = {};
+        $scope.tree = {
+            branches: []
+        };
+
+
+        $scope.loadList = loadList;
+        $scope.update = update;
+
+        var showSubCats = false;
+        $scope.isSubCatOpen = function () {
+            return showSubCats;
+        };
+        $scope.openSubCats = function () {
+            showSubCats = true;
+        };
+        $scope.closeSubCats = function () {
+            showSubCats = false;
+        };
+
+
+
+
+        function getTree() {
+            zhttp.crm.category.tree().then(function (response) {
+                if (response.status == 200) {
+                    $scope.tree.branches = response.data;
+                    $scope.currentBranch = $scope.tree.branches[0];
+                    loadList();
+                }
+            });
+        }
+        getTree();
+
+
+        function update(branch) {
+            $scope.currentBranch = branch;
+            loadList();
+        }
+
+
+
+
 		$rootScope.current_warehouse = $rootScope.current_warehouse || $rootScope.user.id_warehouse;
 
         $scope.filters = {
@@ -15,7 +59,7 @@ app.controller("ComZeappsCrmStockViewCtrl", ["$scope", "$location", "$rootScope"
                 },
                 {
                     format: 'input',
-                    field: 'label LIKE',
+                    field: 'name LIKE',
                     type: 'text',
                     label: 'Libellé'
                 },
@@ -28,6 +72,7 @@ app.controller("ComZeappsCrmStockViewCtrl", ["$scope", "$location", "$rootScope"
                 }
             ]
         };
+
         $scope.filter_model = {
         	'id_warehouse': $rootScope.current_warehouse
 		};
@@ -36,19 +81,40 @@ app.controller("ComZeappsCrmStockViewCtrl", ["$scope", "$location", "$rootScope"
         $scope.total = 0;
         $scope.templateStock = '/com_zeapps_crm/stock/form_modal';
 
-        loadList(true);
+
+
+
+
+
+
+        zhttp.crm.warehouse.get_all().then(function (response) {
+            if (response.data && response.data != "false") {
+                $scope.filters.main[2].options = response.data ;
+            }
+
+            loadList(true);
+        });
+
+
+
+
+
+
+
+
 
 		$scope.loadList = loadList;
 		$scope.goTo = goTo;
 
         function loadList(context){
             context = context || "";
+            var id = $scope.currentBranch ? $scope.currentBranch.id : 0;
             var offset = ($scope.page - 1) * $scope.pageSize;
             var formatted_filters = angular.toJson($scope.filter_model);
 
             $rootScope.current_warehouse = $scope.filter_model.id_warehouse;
 
-            zhttp.crm.product_stock.get_all($scope.pageSize, offset, context, formatted_filters).then(function(response){
+            zhttp.crm.product_stock.get_all(id, $scope.pageSize, offset, context, formatted_filters).then(function(response){
                 if(response.data && response.data != "false"){
                     $scope.product_stocks = response.data.product_stocks;
                     angular.forEach($scope.product_stocks, function(product_stock){
@@ -57,21 +123,17 @@ app.controller("ComZeappsCrmStockViewCtrl", ["$scope", "$location", "$rootScope"
                     });
 
                     $scope.total = response.data.total;
-
-                    if(context){
-                        $scope.filters.main[2].options = response.data.warehouses;
-                    }
                 }
             });
         }
 
         function goTo(id){
-        	//$location.url("/ng/com_zeapps_crm/stock/" + id);
+        	$location.url("/ng/com_zeapps_crm/stock/" + id);
 		}
 
 		function calcTimeLeft(product_stock){
 			if(product_stock.avg > 0) {
-				var timeleft = product_stock.total / product_stock.avg;
+				var timeleft = product_stock.qty / product_stock.avg;
 
 				if(timeleft > 0) {
 					product_stock.timeleft = moment().to(moment().add(timeleft, "days"));

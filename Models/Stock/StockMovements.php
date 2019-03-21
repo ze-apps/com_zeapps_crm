@@ -14,9 +14,9 @@ class StockMovements extends Model
     use SoftDeletes;
 
     static protected $_table = 'com_zeapps_crm_stock_movements';
-    protected $table ;
+    protected $table;
 
-    protected $fieldModelInfo ;
+    protected $fieldModelInfo;
 
 
     public function __construct(array $attributes = [])
@@ -27,7 +27,7 @@ class StockMovements extends Model
         $this->fieldModelInfo = new ModelHelper();
         $this->fieldModelInfo->increments('id');
         $this->fieldModelInfo->integer('id_warehouse')->default(0);
-        $this->fieldModelInfo->integer('id_stock')->default(0);
+        $this->fieldModelInfo->integer('id_product')->default(0);
         $this->fieldModelInfo->string('label', 255)->default("");
         $this->fieldModelInfo->decimal('qty', 8, 2)->default(0);
         $this->fieldModelInfo->string('id_table', 255)->default("");
@@ -40,18 +40,20 @@ class StockMovements extends Model
         parent::__construct($attributes);
     }
 
-    public static function getSchema() {
-        return $schema = Capsule::schema()->getColumnListing(self::$_table) ;
+    public static function getSchema()
+    {
+        return $schema = Capsule::schema()->getColumnListing(self::$_table);
     }
 
-    public function save(array $options = []) {
+    public function save(array $options = [])
+    {
 
         /******** clean data **********/
-        $this->fieldModelInfo->cleanData($this) ;
+        $this->fieldModelInfo->cleanData($this);
 
 
         /**** to delete unwanted field ****/
-        $this->fieldModelInfo->removeFieldUnwanted($this) ;
+        $this->fieldModelInfo->removeFieldUnwanted($this);
 
         return parent::save($options);
     }
@@ -59,14 +61,14 @@ class StockMovements extends Model
 
     public static function avg($where = array())
     {
-        $ret = Capsule::table('com_zeapps_crm_stock_movements') ;
-        $ret = $ret->selectRaw("sum(zeapps_stock_movements.qty) as average");
+        $ret = Capsule::table('com_zeapps_crm_stock_movements');
+        $ret = $ret->selectRaw("sum(com_zeapps_crm_stock_movements.qty) as average");
 
         $queryWhere = "deleted_at is null
                 and qty < 0
                 and ignored = '0'
                 and date_mvt BETWEEN CURDATE() - INTERVAL 90 DAY AND CURDATE() + INTERVAL 1 DAY
-                and id_stock = " . $where['id_stock'];
+                and id_product = " . $where['id_product'];
 
         if (isset($where['id_warehouse'])) {
             $queryWhere .= " and id_warehouse = " . $where['id_warehouse'];
@@ -77,21 +79,26 @@ class StockMovements extends Model
 
 
         if ($res) {
-            $w = array('deleted_at' => null, 'id_stock' => $where['id_stock'], 'qty <' => 0);
+            $w = array('deleted_at' => null, 'id_product' => $where['id_product'], 'qty <' => 0);
             if (isset($where['id_warehouse'])) {
                 $w['id_warehouse'] = $where['id_warehouse'];
             }
 
 
-            $ret = StockMovements::select("date_mvt") ;
+            $ret = StockMovements::select("date_mvt");
 
             foreach ($w as $key => $value) {
-                $ret = $ret->where($key, $value) ;
+                $tabKey = explode(" ", $key);
+                if (count($tabKey) > 1) {
+                    $ret = $ret->where($tabKey[0], $tabKey[1], $value);
+                } else {
+                    $ret = $ret->where($key, $value);
+                }
             }
-            $ret = $ret->get();
+            $ret = $ret->first();
 
             if ($ret) {
-                $first = $ret[0]->date_mvt;
+                $first = $ret->date_mvt;
                 $now = time();
                 $first = strtotime($first);
                 $diff = (($now - $first) / 86400) < 90 ? (($now - $first) / 86400) : 90; // 86400 = 60*60*24
@@ -108,81 +115,73 @@ class StockMovements extends Model
 
     public static function last_year($where = array())
     {
-        $ret = Capsule::table('com_zeapps_crm_stock_movements') ;
+        $ret = Capsule::table('com_zeapps_crm_stock_movements');
         $ret = $ret->selectRaw("date_mvt, qty");
 
         $queryWhere = "date_mvt > date_sub(CURDATE(),INTERVAL 12 MONTH) 
                   and deleted_at is null 
-                  and id_stock = " . $where['id_stock'] ;
+                  and id_product = " . $where['id_product'];
 
         if (isset($where['id_warehouse'])) {
             $queryWhere .= ' and id_warehouse = ' . $where['id_warehouse'];
         }
 
         $ret = $ret->whereRaw($queryWhere);
-        $res = $ret->get();
 
-
-        return $res->get();
+        return $ret->get();
     }
 
     public static function last_months($where = array())
     {
-        $ret = Capsule::table('com_zeapps_crm_stock_movements') ;
+        $ret = Capsule::table('com_zeapps_crm_stock_movements');
         $ret = $ret->selectRaw("date_mvt, qty");
 
         $queryWhere = "date_mvt > date_sub(CURDATE(),INTERVAL 90 DAY) 
                   and deleted_at is null 
-                  and id_stock = " . $where['id_stock'] ;
+                  and id_product = " . $where['id_product'];
 
         if (isset($where['id_warehouse'])) {
             $queryWhere .= ' and id_warehouse = ' . $where['id_warehouse'];
         }
 
         $ret = $ret->whereRaw($queryWhere);
-        $res = $ret->get();
 
-
-        return $res->get();
+        return $ret->get();
     }
 
     public static function last_month($where = array())
     {
-        $ret = Capsule::table('com_zeapps_crm_stock_movements') ;
+        $ret = Capsule::table('com_zeapps_crm_stock_movements');
         $ret = $ret->selectRaw("date_mvt, qty");
 
         $queryWhere = "date_mvt > date_sub(CURDATE(),INTERVAL 30 DAY) 
                   and deleted_at is null 
-                  and id_stock = " . $where['id_stock'] ;
+                  and id_product = " . $where['id_product'];
 
         if (isset($where['id_warehouse'])) {
             $queryWhere .= ' and id_warehouse = ' . $where['id_warehouse'];
         }
 
         $ret = $ret->whereRaw($queryWhere);
-        $res = $ret->get();
 
-
-        return $res->get();
+        return $ret->get();
     }
 
     public static function last_week($where = array())
     {
-        $ret = Capsule::table('com_zeapps_crm_stock_movements') ;
+        $ret = Capsule::table('com_zeapps_crm_stock_movements');
         $ret = $ret->selectRaw("date_mvt, qty");
 
         $queryWhere = "date_mvt > date_sub(CURDATE(),INTERVAL 7 DAY) 
                   and deleted_at is null 
-                  and id_stock = " . $where['id_stock'] ;
+                  and id_product = " . $where['id_product'];
 
         if (isset($where['id_warehouse'])) {
             $queryWhere .= ' and id_warehouse = ' . $where['id_warehouse'];
         }
 
         $ret = $ret->whereRaw($queryWhere);
-        $res = $ret->get();
 
-
-        return $res->get();
+        return $ret->get();
     }
 }

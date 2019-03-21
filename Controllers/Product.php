@@ -68,7 +68,9 @@ class Product extends Controller
 
         $products_rs = Products::where("id_parent", 0)->orderBy('name', 'ASC');
         foreach ($filters as $key => $value) {
-            if (strpos($key, " LIKE")) {
+            if ($key == "id_cat") {
+                $products_rs = $products_rs->whereIn("id_cat", $value);
+            } elseif (strpos($key, " LIKE")) {
                 $key = str_replace(" LIKE", "", $key);
                 $products_rs = $products_rs->where($key, 'like', '%' . $value . '%');
             } else {

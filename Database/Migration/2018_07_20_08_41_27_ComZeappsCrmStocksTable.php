@@ -11,7 +11,7 @@ class ComZeappsCrmStocksTable extends Migration
     {
         Capsule::schema()->create('com_zeapps_crm_stocks', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('id_stock', false)->default(0);
+            $table->integer('id_product', false)->default(0);
             $table->string('label', 255)->default("");
             $table->string('ref', 255)->default("");
             $table->decimal('value_ht', 9, 2)->default(0);
@@ -24,7 +24,7 @@ class ComZeappsCrmStocksTable extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->index('id_stock');
+            $table->index('id_product');
         });
     }
 

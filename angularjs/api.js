@@ -806,8 +806,8 @@ app.config(["$provide",
                 return zeHttp.get("/com_zeapps_crm/stock/get_movements/" + id_stock + "/" + id_warehouse + "/" + limit + "/" + offset);
             }
 
-            function getAll_product_stock(limit, offset, context, filters) {
-                return zeHttp.post("/com_zeapps_crm/stock/getAll/" + limit + "/" + offset + "/" + context, filters);
+            function getAll_product_stock(id, limit, offset, context, filters) {
+                return zeHttp.post("/com_zeapps_crm/stock/getAll/" + id + "/" + limit + "/" + offset + "/" + context, filters);
             }
 
             function save_product_stock(data, id_warehouse) {

@@ -32,6 +32,7 @@ app.controller("ComZeappsCrmProductFormCtrl", ["$scope", "$routeParams", "$locat
         $scope.type_products.push({id: "product", label: "Produit"});
         $scope.type_products.push({id: "service", label: "Service"});
         $scope.type_products.push({id: "pack", label: "Pack"});
+        $scope.type_products.push({id: "virtual", label: "Virtuel"});
 
 
         $scope.form = {};

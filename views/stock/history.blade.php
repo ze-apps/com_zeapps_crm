@@ -1,7 +1,3 @@
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-?>
-
 <div class="row">
     <div class="col-md-12 text-right" ng-show="filter_model.id_warehouse">
         <ze-btn fa="plus" color="success" hint="Ajouter un transfert" always-on="true"
@@ -24,6 +20,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     </div>
 </div>
 
+
 <div class="text-center" ng-show="total > pageSize">
     <ul uib-pagination total-items="total" ng-model="page.current" items-per-page="pageSize" ng-change="loadList()"
         class="pagination-sm" boundary-links="true" max-size="15"
@@ -45,14 +42,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             <tr ng-repeat="movement in product_stock.movements"
                 ng-class="backgroundOf(movement)"
             >
-                <td>{{movement.date_mvt | date:'dd/MM/yyyy'}}</td>
-                <td>{{movement.label}}</td>
-                <td class="text-right">{{movement.qty}}</td>
+                <td>@{{movement.date_mvt | date:'dd/MM/yyyy'}}</td>
+                <td>@{{movement.label}}</td>
+                <td class="text-right">@{{movement.qty}}</td>
                 <td class="text-right">
-                    <button type="button" class="btn btn-xs btn-success" ng-show="movement.ignored === '0'" ng-click="setIgnoredTo(movement, '1')">
+                    <button type="button" class="btn btn-xs btn-success" ng-show="movement.ignored == 0" ng-click="setIgnoredTo(movement, 1)">
                         <i class="fa fa-fw fa-eye"></i>
                     </button>
-                    <button type="button" class="btn btn-xs btn-danger" ng-show="movement.ignored === '1'" ng-click="setIgnoredTo(movement, '0')">
+                    <button type="button" class="btn btn-xs btn-danger" ng-show="movement.ignored == 1" ng-click="setIgnoredTo(movement, 0)">
                         <i class="fa fa-fw fa-eye-slash"></i>
                     </button>
                 </td>
@@ -63,7 +60,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 </div>
 
 <div class="text-center" ng-show="total > pageSize">
-    <ul uib-pagination total-items="total" ng-model="page" items-per-page="pageSize" ng-change="loadList()"
+    <ul uib-pagination total-items="total" ng-model="page.current" items-per-page="pageSize" ng-change="loadList()"
         class="pagination-sm" boundary-links="true" max-size="15"
         previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
 </div>

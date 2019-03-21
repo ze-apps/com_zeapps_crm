@@ -1,6 +1,3 @@
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-?>
 <div class="row" ng-controller="ComZeAppsCrmStockMvtFormCtrl">
     <div class="col-md-12">
         <div class="col-md-7">
@@ -11,7 +8,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         </div>
         <div class="col-md-2">
             <div class="form-group">
-                <label>Mouvement</label>
+                <label>Quantité</label>
                 <input class="form-control" type="number" ng-model="form.qty">
             </div>
         </div>
