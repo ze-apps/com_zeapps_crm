@@ -84,6 +84,7 @@ class Products extends Model
     public static function top10($year = null, $where = array())
     {
         $query = "SELECT SUM(l.total_ht) as total_ht,
+                         SUM(l.qty) as qty,
                          p.name as name
                   FROM com_zeapps_crm_product_categories ca
                   LEFT JOIN com_zeapps_crm_products p ON p.id_cat = ca.id
@@ -93,7 +94,7 @@ class Products extends Model
                         AND l.type = 'product'
                         AND i.deleted_at IS NULL
                         AND l.deleted_at IS NULL
-                        AND YEAR(i.date_limit) = " . $year;
+                        AND YEAR(i.date_creation) = " . $year;
 
 
         if (isset($where['id_cat'])) {
@@ -119,13 +120,9 @@ class Products extends Model
         }
 
 
-
-
-
-
-
-
         $query .= " GROUP BY p.id ORDER BY total_ht DESC LIMIT 10";
+
+        //echo $query . "\n" ;
 
         return Capsule::select(Capsule::raw($query));
     }

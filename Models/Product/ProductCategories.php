@@ -159,7 +159,8 @@ class ProductCategories extends Model
     public static function turnover($year = null, $where = array())
     {
         $query = "SELECT SUM(l.total_ht) as total_ht,
-                         YEAR(i.date_limit) as year
+                         SUM(l.qty) as qty,
+                         YEAR(i.date_creation) as year
                   FROM com_zeapps_crm_product_categories ca
                   LEFT JOIN com_zeapps_crm_products p ON p.id_cat = ca.id
                   LEFT JOIN com_zeapps_crm_invoice_lines l ON l.id_product = p.id
@@ -168,7 +169,7 @@ class ProductCategories extends Model
                         AND l.type = 'product'
                         AND i.deleted_at IS NULL
                         AND l.deleted_at IS NULL
-                        AND YEAR(i.date_limit) in (" . ($year - 1) . "," . $year . ")";
+                        AND YEAR(i.date_creation) in (" . ($year - 1) . "," . $year . ")";
 
         if (isset($where['id_cat'])) {
             $query .= " AND ca.id IN (" . implode(',', $where['id_cat']) . ")";
@@ -199,7 +200,7 @@ class ProductCategories extends Model
 
 
 
-        $query .= " GROUP BY YEAR(i.date_limit)";
+        $query .= " GROUP BY YEAR(i.date_creation)";
 
         return Capsule::select(Capsule::raw($query));
     }
