@@ -9,7 +9,6 @@ use App\com_zeapps_crm\Models\Stock\Warehouses;
 
 use App\com_zeapps_crm\Models\Product\Products;
 use App\com_zeapps_crm\Models\Product\ProductCategories;
-use App\com_zeapps_crm\Models\Stock\ProductStocks;
 
 use App\com_zeapps_crm\Models\Quote\Quotes;
 use App\com_zeapps_crm\Models\Quote\QuoteLines;
@@ -109,19 +108,6 @@ class ComZeappsCrmInitSeeds
         $json_content = json_decode(file_get_contents(dirname(__FILE__) . "/Products.json"));
         foreach ($json_content as $data_json) {
             $obj_data = new Products();
-
-            foreach ($data_json as $key => $value) {
-                $obj_data->$key = $value;
-            }
-
-            $obj_data->save();
-        }
-
-        // import de ProductStocks
-        Capsule::table('com_zeapps_crm_product_stocks')->truncate();
-        $json_content = json_decode(file_get_contents(dirname(__FILE__) . "/ProductStocks.json"));
-        foreach ($json_content as $data_json) {
-            $obj_data = new ProductStocks();
 
             foreach ($data_json as $key => $value) {
                 $obj_data->$key = $value;
