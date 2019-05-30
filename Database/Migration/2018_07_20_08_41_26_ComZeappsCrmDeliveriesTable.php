@@ -25,11 +25,16 @@ class ComZeappsCrmDeliveriesTable extends Migration
             $table->string('name_company')->default("");
             $table->integer('id_contact')->default(0);
             $table->string('name_contact')->default("");
+            $table->integer('id_company_address_billing')->default(0);
+            $table->integer('id_contact_address_billing')->default(0);
+            $table->integer('id_company_address_delivery')->default(0);
+            $table->integer('id_contact_address_delivery')->default(0);
             $table->string('billing_address_1', 100)->default("");
             $table->string('billing_address_2', 100)->default("");
             $table->string('billing_address_3', 100)->default("");
             $table->string('billing_city', 100)->default("");
             $table->string('billing_zipcode', 50)->default("");
+            $table->integer('billing_state_id', false)->default(0);
             $table->string('billing_state', 100)->default("");
             $table->integer('billing_country_id')->default(0);
             $table->string('billing_country_name', 100)->default("");
@@ -38,6 +43,7 @@ class ComZeappsCrmDeliveriesTable extends Migration
             $table->string('delivery_address_3', 100)->default("");
             $table->string('delivery_city', 100)->default("");
             $table->string('delivery_zipcode', 50)->default("");
+            $table->integer('delivery_state_id', false)->default(0);
             $table->string('delivery_state', 100)->default("");
             $table->integer('delivery_country_id')->default(0);
             $table->string('delivery_country_name', 100)->default("");

@@ -46,11 +46,16 @@ class Quotes extends Model
         $this->fieldModelInfo->string('name_company')->default("");
         $this->fieldModelInfo->integer('id_contact')->default(0);
         $this->fieldModelInfo->string('name_contact')->default("");
+        $this->fieldModelInfo->integer('id_company_address_billing')->default(0);
+        $this->fieldModelInfo->integer('id_contact_address_billing')->default(0);
+        $this->fieldModelInfo->integer('id_company_address_delivery')->default(0);
+        $this->fieldModelInfo->integer('id_contact_address_delivery')->default(0);
         $this->fieldModelInfo->string('billing_address_1', 100)->default("");
         $this->fieldModelInfo->string('billing_address_2', 100)->default("");
         $this->fieldModelInfo->string('billing_address_3', 100)->default("");
         $this->fieldModelInfo->string('billing_city', 100)->default("");
         $this->fieldModelInfo->string('billing_zipcode', 50)->default("");
+        $this->fieldModelInfo->integer('billing_state_id', false)->default(0);
         $this->fieldModelInfo->string('billing_state', 100)->default("");
         $this->fieldModelInfo->integer('billing_country_id')->default(0);
         $this->fieldModelInfo->string('billing_country_name', 100)->default("");
@@ -59,6 +64,7 @@ class Quotes extends Model
         $this->fieldModelInfo->string('delivery_address_3', 100)->default("");
         $this->fieldModelInfo->string('delivery_city', 100)->default("");
         $this->fieldModelInfo->string('delivery_zipcode', 50)->default("");
+        $this->fieldModelInfo->integer('delivery_state_id', false)->default(0);
         $this->fieldModelInfo->string('delivery_state', 100)->default("");
         $this->fieldModelInfo->integer('delivery_country_id')->default(0);
         $this->fieldModelInfo->string('delivery_country_name', 100)->default("");
