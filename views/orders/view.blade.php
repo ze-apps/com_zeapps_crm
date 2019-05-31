@@ -153,8 +153,8 @@
 
 
 
-                    <ze-btn fa="euro" color="info" hint="sous-total" always-on="true" ng-click="addSubTotal()"></ze-btn>
-                    <ze-btn fa="commenting" color="warning" hint="commentaire" always-on="true"
+                    <ze-btn fa="dollar-sign" color="info" hint="sous-total" always-on="true" ng-click="addSubTotal()"></ze-btn>
+                    <ze-btn fa="comments" color="warning" hint="commentaire" always-on="true"
                             ze-modalform="addComment"
                             data-title="Ajouter un commentaire"
                             data-template="orderCommentTplUrl"></ze-btn>

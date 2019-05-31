@@ -121,8 +121,8 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
                     });
                     $scope.lines = lines;
 
-                    /*crmTotal.init($scope.invoice, $scope.lines);
-                    $scope.tvas = crmTotal.get.tvas;
+                    crmTotal.init($scope.invoice, $scope.lines);
+                    /*$scope.tvas = crmTotal.get.tvas;
                     var totals = crmTotal.get.totals;
                     $scope.invoice.total_prediscount_ht = totals.total_prediscount_ht;
                     $scope.invoice.total_prediscount_ttc = totals.total_prediscount_ttc;

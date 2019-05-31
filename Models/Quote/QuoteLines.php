@@ -34,7 +34,7 @@ class QuoteLines extends Model
         $this->fieldModelInfo->integer('id_product')->default(0);
         $this->fieldModelInfo->string('ref', 255)->default("");
         $this->fieldModelInfo->string('designation_title', 255)->default("");
-        $this->fieldModelInfo->text('designation_desc');
+        $this->fieldModelInfo->text('designation_desc')->default("");
         $this->fieldModelInfo->decimal('qty', 8, 2)->default(0);
         $this->fieldModelInfo->decimal('discount', 8, 2)->default(0);
         $this->fieldModelInfo->decimal('price_unit', 8, 2)->default(0);

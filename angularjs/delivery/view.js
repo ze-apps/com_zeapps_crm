@@ -122,8 +122,8 @@ app.controller("ComZeappsCrmDeliveryViewCtrl", ["$scope", "$routeParams", "$loca
                     });
                     $scope.lines = lines;
 
-                    /*crmTotal.init($scope.delivery, $scope.lines);
-                    $scope.tvas = crmTotal.get.tvas;
+                    crmTotal.init($scope.delivery, $scope.lines);
+                    /*$scope.tvas = crmTotal.get.tvas;
                     var totals = crmTotal.get.totals;
                     $scope.delivery.total_prediscount_ht = totals.total_prediscount_ht;
                     $scope.delivery.total_prediscount_ttc = totals.total_prediscount_ttc;

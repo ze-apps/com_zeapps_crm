@@ -154,8 +154,8 @@
                         </span>
                     </span>
                     <ze-btn fa="tags" color="success" hint="produit" always-on="true" ng-click="addLine()"></ze-btn>
-                    <ze-btn fa="euro" color="info" hint="sous-total" always-on="true" ng-click="addSubTotal()"></ze-btn>
-                    <ze-btn fa="commenting" color="warning" hint="commentaire" always-on="true"
+                    <ze-btn fa="dollar-sign" color="info" hint="sous-total" always-on="true" ng-click="addSubTotal()"></ze-btn>
+                    <ze-btn fa="comments" color="warning" hint="commentaire" always-on="true"
                             ze-modalform="addComment"
                             data-title="Ajouter un commentaire"
                             data-template="quoteCommentTplUrl"></ze-btn>

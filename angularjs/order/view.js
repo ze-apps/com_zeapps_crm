@@ -136,8 +136,8 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                     });
                     $scope.lines = lines;
 
-                    /*crmTotal.init($scope.order, $scope.lines);
-                    $scope.tvas = crmTotal.get.tvas;
+                    crmTotal.init($scope.order, $scope.lines);
+                    /*$scope.tvas = crmTotal.get.tvas;
                     var totals = crmTotal.get.totals;
                     $scope.order.total_prediscount_ht = totals.total_prediscount_ht;
                     $scope.order.total_prediscount_ttc = totals.total_prediscount_ttc;
