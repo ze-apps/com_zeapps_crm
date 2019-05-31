@@ -57,6 +57,7 @@ class DeliveryLines extends Model {
     public static function getFromDelivery($id_delivery) {
         $lines = DeliveryLines::where('id_delivery', $id_delivery)
             ->where("id_parent", 0)
+            ->orderBy("sort")
             ->get() ;
 
         foreach ($lines as &$line) {
@@ -91,7 +92,9 @@ class DeliveryLines extends Model {
     }
 
     public static function getSubLine($idLine) {
-        $sublines = DeliveryLines::where("id_parent", $idLine)->orderBy("sort")->get() ;
+        $sublines = DeliveryLines::where("id_parent", $idLine)
+            ->orderBy("sort")
+            ->get() ;
 
         foreach ($sublines as &$subline) {
             $subline->sublines = self::getSubLine($subline->id) ;

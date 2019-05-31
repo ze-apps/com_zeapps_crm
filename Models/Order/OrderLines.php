@@ -58,6 +58,7 @@ class OrderLines extends Model {
     public static function getFromOrder($id_order) {
         $lines = OrderLines::where('id_order', $id_order)
             ->where("id_parent", 0)
+            ->orderBy("sort")
             ->get() ;
 
         foreach ($lines as &$line) {
@@ -92,7 +93,9 @@ class OrderLines extends Model {
     }
 
     public static function getSubLine($idLine) {
-        $sublines = OrderLines::where("id_parent", $idLine)->orderBy("sort")->get() ;
+        $sublines = OrderLines::where("id_parent", $idLine)
+            ->orderBy("sort")
+            ->get() ;
 
         foreach ($sublines as &$subline) {
             $subline->sublines = self::getSubLine($subline->id) ;

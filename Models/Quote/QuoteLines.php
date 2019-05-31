@@ -58,6 +58,7 @@ class QuoteLines extends Model
     public static function getFromQuote($id_quote) {
         $lines = QuoteLines::where('id_quote', $id_quote)
             ->where("id_parent", 0)
+            ->orderBy("sort")
             ->orderBy("sort")->get() ;
 
         foreach ($lines as &$line) {
@@ -94,7 +95,9 @@ class QuoteLines extends Model
     }
 
     public static function getSubLine($idLine) {
-        $sublines = QuoteLines::where("id_parent", $idLine)->orderBy("sort")->get() ;
+        $sublines = QuoteLines::where("id_parent", $idLine)
+            ->orderBy("sort")
+            ->get() ;
 
         foreach ($sublines as &$subline) {
             $subline->sublines = self::getSubLine($subline->id) ;

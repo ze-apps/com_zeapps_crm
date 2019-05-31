@@ -56,6 +56,7 @@ class InvoiceLines extends Model {
     public static function getFromInvoice($id_invoice) {
         $lines = InvoiceLines::where('id_invoice', $id_invoice)
             ->where("id_parent", 0)
+            ->orderBy("sort")
             ->get() ;
 
         foreach ($lines as &$line) {
@@ -90,7 +91,9 @@ class InvoiceLines extends Model {
     }
 
     public static function getSubLine($idLine) {
-        $sublines = InvoiceLines::where("id_parent", $idLine)->orderBy("sort")->get() ;
+        $sublines = InvoiceLines::where("id_parent", $idLine)
+            ->orderBy("sort")
+            ->get() ;
 
         foreach ($sublines as &$subline) {
             $subline->sublines = self::getSubLine($subline->id) ;
