@@ -47,6 +47,7 @@ class Products extends Model
         $this->fieldModelInfo->integer('sort')->default(0);
         $this->fieldModelInfo->mediumtext('extra');
         $this->fieldModelInfo->tinyInteger('active')->default(1);
+        $this->fieldModelInfo->tinyInteger('is_updated')->default(0);
         $this->fieldModelInfo->timestamps();
         $this->fieldModelInfo->softDeletes();
 
@@ -60,6 +61,8 @@ class Products extends Model
 
     public function save(array $options = [])
     {
+        $this->is_updated = 1 ;
+
 
         /******** clean data **********/
         $this->fieldModelInfo->cleanData($this);

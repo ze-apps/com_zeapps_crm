@@ -14,27 +14,15 @@ use App\com_zeapps_crm\Models\Product\ProductCategories;
 
 class Cron extends Controller
 {
-    public function updatePriceList()
-    {
+    public function updatePriceProduct() {
         // check if we need to update Product price
         $isNeedUpdate = false ;
 
 
-        $priceList = PriceList::where("is_updated", 1)->where("type_pricelist", 1)->get();
-        if ($priceList && count($priceList)) {
+        $products = Products::where("is_updated", 1)->get();
+        if ($products && count($products)) {
             $isNeedUpdate = true ;
         }
-
-
-        if (!$isNeedUpdate) {
-            $priceListRate = PriceListRate::where("is_updated", 1)->get();
-            if ($priceListRate && count($priceListRate)) {
-                $isNeedUpdate = true;
-            }
-        }
-
-
-
 
         if ($isNeedUpdate) {
             // charge les grilles de prix de type %
@@ -92,11 +80,9 @@ class Cron extends Controller
 
 
 
-            // charge les produits
-            $products = Products::get();
 
-
-
+            // charge les produits à mettre à jour
+            $products = Products::where("is_updated", 1)->limit(300)->get();
 
 
             // Ecrit la remise, compte compta, TVA (vérifie les catégories parent et si rien prendre le taux par defaut)
@@ -114,16 +100,6 @@ class Cron extends Controller
 
                     // recherche la catégorie du produit
                     $rate = null ;
-                    /*if ($product->id_cat) {
-                        foreach ($productCategories as $productCategorie) {
-                            if ($productCategorie->id == $product->id_cat) {
-                                if (isset($productCategorie->priceLists) && isset($productCategorie->priceLists[$priceList->id])) {
-                                    $rate = $productCategorie->priceLists[$priceList->id] ;
-                                }
-                                break;
-                            }
-                        }
-                    }*/
 
                     if ($product->id_cat) {
                         if(isset($productCategoriesArray[$product->id_cat])) {
@@ -134,9 +110,6 @@ class Cron extends Controller
                         }
                     }
 
-
-
-
                     // applique la remise
                     $objProductPriceList->price_ht = $product->price_ht;
                     $objProductPriceList->id_taxe = ($rate && isset($rate["id_taxe"]) && $rate["id_taxe"] != -1) ? $rate["id_taxe"]:$product->id_taxe;
@@ -144,14 +117,38 @@ class Cron extends Controller
                     $objProductPriceList->accounting_number = ($rate && isset($rate["accounting_number"]) && $rate["accounting_number"] != "") ? $rate["accounting_number"] : $product->accounting_number;
                     $objProductPriceList->percentage_discount = ($rate && isset($rate["percentage"])) ? $rate["percentage"] : 0;
                     $objProductPriceList->price_ttc = round($objProductPriceList->price_ht * (1 + $objProductPriceList->value_taxe/100), 2);
-
-
-
                     $objProductPriceList->save();
                 }
+
+                Products::where("id", $product->id)->update(["is_updated" => 0]);
             }
+        }
+    }
 
 
+    public function updatePriceList()
+    {
+        // check if we need to update Product price
+        $isNeedUpdate = false ;
+
+
+        $priceList = PriceList::where("is_updated", 1)->where("type_pricelist", 1)->get();
+        if ($priceList && count($priceList)) {
+            $isNeedUpdate = true ;
+        }
+
+
+        if (!$isNeedUpdate) {
+            $priceListRate = PriceListRate::where("is_updated", 1)->get();
+            if ($priceListRate && count($priceListRate)) {
+                $isNeedUpdate = true;
+            }
+        }
+
+
+        if ($isNeedUpdate) {
+            // update to disable update
+            Products::where("id", ">", 0)->update(["is_updated" => 1]);
 
             // update to disable update
             PriceList::where("id", ">", 0)->update(["is_updated"=>0]);

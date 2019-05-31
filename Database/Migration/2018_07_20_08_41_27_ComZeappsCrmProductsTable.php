@@ -31,6 +31,7 @@ class ComZeappsCrmProductsTable extends Migration
             $table->decimal('price_unit_ttc_subline', 8, 2)->default(0);
             $table->integer('sort')->default(0);
             $table->tinyInteger('active')->default(1);
+            $table->tinyInteger('is_updated')->default(0);
             $table->mediumtext('extra');
             $table->timestamps();
             $table->softDeletes();

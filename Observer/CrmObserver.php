@@ -154,6 +154,12 @@ class CrmObserver implements iObserver
         $cron->command = "App\\com_zeapps_crm\\Controllers\\Cron@updatePriceList" ;
         $retour[] = $cron ;
 
+
+        // to update prices following a change in the price grid
+        $cron = new CronModel() ;
+        $cron->command = "App\\com_zeapps_crm\\Controllers\\Cron@updatePriceProduct" ;
+        $retour[] = $cron ;
+
         return $retour ;
     }
 }
