@@ -1,12 +1,9 @@
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-?>
-<div id="breadcrumb">Config > commande</div>
+<div id="breadcrumb">Config > devis</div>
 <div id="content">
 
     <div class="row">
         <div class="col-md-12">
-            <button type="button" class="btn btn-primary" ng-click="test()">Tester le format</button> {{ result }}
+            <button type="button" class="btn btn-primary" ng-click="test()">Tester le format</button> @{{ result }}
         </div>
     </div>
 
@@ -14,7 +11,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label>Format de numérotation des commandes</label>
+                    <label>Format de numérotation des devis</label>
                     <input class="form-control" type="text" ng-model="format">
                     <p class="help-block">
                         Les elements de formats sont encadrés par des crochets (ex: [xxxxx][dmY] ou [dmY-XXXXXX]) <br/>
@@ -44,8 +41,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
             <div class="col-md-6">
                 <div class="form-group">
-                    <label>Numérotation de la prochain commande</label>
-                    <input type="number" class="form-control" ng-model="numerotation">
+                    <label>Numérotation du prochain devis</label>
+                    <input type="text" class="form-control" ng-model="numerotation">
                 </div>
             </div>
         </div>

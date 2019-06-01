@@ -36,7 +36,7 @@ app.config(["$routeProvider",
 				controller: "ComZeappsCrmQuoteViewCtrl"
 			})
 
-			.when("/ng/com_zeapps/quote", {
+			.when("/ng/com_zeapps/quote/config", {
 				templateUrl: "/com_zeapps_crm/quotes/config",
 				controller: "ComZeappsCrmQuoteConfigCtrl"
 			})
@@ -56,7 +56,7 @@ app.config(["$routeProvider",
 				controller: "ComZeappsCrmOrderViewCtrl"
 			})
 
-			.when("/ng/com_zeapps/order", {
+			.when("/ng/com_zeapps/order/config", {
 				templateUrl: "/com_zeapps_crm/orders/config",
 				controller: "ComZeappsCrmOrderConfigCtrl"
 			})
@@ -72,7 +72,7 @@ app.config(["$routeProvider",
 				controller: "ComZeappsCrmDeliveryViewCtrl"
 			})
 
-			.when("/ng/com_zeapps/delivery", {
+			.when("/ng/com_zeapps/delivery/config", {
 				templateUrl: "/com_zeapps_crm/deliveries/config",
 				controller: "ComZeappsCrmDeliveryConfigCtrl"
 			})
@@ -88,7 +88,7 @@ app.config(["$routeProvider",
                 controller: "ComZeappsCrmInvoiceViewCtrl"
             })
 
-			.when("/ng/com_zeapps/invoice", {
+			.when("/ng/com_zeapps/invoice/config", {
 				templateUrl: "/com_zeapps_crm/invoices/config",
 				controller: "ComZeappsCrmInvoiceConfigCtrl"
 			})

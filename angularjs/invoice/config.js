@@ -17,7 +17,7 @@ app.controller("ComZeappsCrmInvoiceConfigCtrl", ["$scope", "zeHttp", "menu",
 
 		zhttp.config.invoice.get.numerotation().then(function(response){
 			if(response.data && response.data != "false"){
-                $scope.numerotation = parseInt(response.data.value);
+                $scope.numerotation = parseInt(angular.fromJson(response.data));
 			}
 		});
 

@@ -16,3 +16,8 @@ Routeur::get("/com_zeapps_crm/config/get/crm_delivery_format", 'App\\com_zeapps_
 Routeur::get("/com_zeapps_crm/config/get/crm_product_attributes", 'App\\com_zeapps_crm\\Controllers\\Config@crm_product_attributes');
 
 
+Routeur::get("/com_zeapps_crm/quotes/config", 'App\\com_zeapps_crm\\Controllers\\Config@quotes');
+Routeur::get("/com_zeapps_crm/orders/config", 'App\\com_zeapps_crm\\Controllers\\Config@orders');
+Routeur::get("/com_zeapps_crm/invoices/config", 'App\\com_zeapps_crm\\Controllers\\Config@invoice');
+Routeur::get("/com_zeapps_crm/deliveries/config", 'App\\com_zeapps_crm\\Controllers\\Config@delivery');
+

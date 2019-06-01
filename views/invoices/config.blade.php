@@ -1,9 +1,9 @@
-<div id="breadcrumb">Config > bon de livraison</div>
+<div id="breadcrumb">Config > facture</div>
 <div id="content">
 
     <div class="row">
         <div class="col-md-12">
-            <button type="button" class="btn btn-primary" ng-click="test()">Tester le format</button> {{ result }}
+            <button type="button" class="btn btn-primary" ng-click="test()">Tester le format</button> @{{ result }}
         </div>
     </div>
 
@@ -11,7 +11,7 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label>Format de numérotation des bons de livraison</label>
+                    <label>Format de numérotation des factures</label>
                     <input class="form-control" type="text" ng-model="format">
                     <p class="help-block">
                         Les elements de formats sont encadrés par des crochets (ex: [xxxxx][dmY] ou [dmY-XXXXXX]) <br/>
@@ -41,7 +41,7 @@
 
             <div class="col-md-6">
                 <div class="form-group">
-                    <label>Numérotation de la prochain bon de livraison</label>
+                    <label>Numérotation de la prochain facture</label>
                     <input type="number" class="form-control" ng-model="numerotation">
                 </div>
             </div>
