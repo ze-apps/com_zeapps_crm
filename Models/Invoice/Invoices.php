@@ -857,8 +857,8 @@ class Invoices extends Model
                     $line["amount_tva"] = round($line["total_ht"] * ($line["value_taxe"] / 100), 2) ;
                     $line["total_ttc"] = $line["total_ht"] + $line["amount_tva"] ;
 
-                    $line["total_ht_before_discount"] += $line["total_ht_before_discount"] ;
-                    $line["total_ttc_before_discount"] += $line["total_ttc_before_discount"] ;
+                    $line["total_ht_before_discount"] += $lineAdd["total_ht_before_discount"] ;
+                    $line["total_ttc_before_discount"] += $lineAdd["total_ttc_before_discount"] ;
 
                     break;
                 }

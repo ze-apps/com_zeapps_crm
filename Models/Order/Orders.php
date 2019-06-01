@@ -250,15 +250,12 @@ class Orders extends Model
     {
         $isFinalized = false;
 
-
         if ((!isset($this->original["finalized"]) && isset($this->finalized) && $this->finalized) || (isset($this->original["finalized"]) && isset($this->finalized) && $this->original["finalized"] != $this->finalized && $this->finalized)) {
             $isFinalized = true;
         }
 
-
         /******** clean data **********/
         $this->fieldModelInfo->cleanData($this);
-
 
         /**** set a document number ****/
         if (!isset($this->numerotation) || !$this->numerotation || $this->numerotation == "") {
@@ -267,25 +264,20 @@ class Orders extends Model
             $this->numerotation = self::parseFormat($format, $num);
         }
 
-
         /**** to delete unwanted field ****/
         $this->fieldModelInfo->removeFieldUnwanted($this);
 
-
         $result = parent::save($options);
-
 
         // update price
         if ($updatePrice) {
             $this->updatePrice($this);
         }
 
-
         if ($sendEventFinalized && $isFinalized) {
             $dataEvent = array('id_order' => $this->id);
             Event::sendAction('com_zeapps_crm_order', 'finalized', $dataEvent);
         }
-
 
         return $result;
     }
@@ -359,8 +351,6 @@ class Orders extends Model
                 $total_ht_before_discount += $ecriture["total_ht_before_discount"] ;
                 $total_ttc_before_discount += $ecriture["total_ttc_before_discount"] ;
             }
-
-
 
             // calcul le montant total du document
             self::where('id', $order->id)->update(
@@ -533,8 +523,8 @@ class Orders extends Model
                     $line["amount_tva"] = round($line["total_ht"] * ($line["value_taxe"] / 100), 2) ;
                     $line["total_ttc"] = $line["total_ht"] + $line["amount_tva"] ;
 
-                    $line["total_ht_before_discount"] += $line["total_ht_before_discount"] ;
-                    $line["total_ttc_before_discount"] += $line["total_ttc_before_discount"] ;
+                    $line["total_ht_before_discount"] += $lineAdd["total_ht_before_discount"] ;
+                    $line["total_ttc_before_discount"] += $lineAdd["total_ttc_before_discount"] ;
 
                     break;
                 }
