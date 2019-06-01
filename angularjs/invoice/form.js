@@ -200,7 +200,7 @@ app.controller("ComZeappsCrmInvoiceFormCtrl", ["$scope", "$routeParams", "$rootS
                     $scope.form.delivery_country_name = contact.country_name || "";
                 }
 
-                if(contact.id_company !== "0" && ($scope.form.id_company === undefined || $scope.form.id_company === 0)){
+                if(contact.id_company !== "0" && contact.id_company !== 0 && ($scope.form.id_company === undefined || $scope.form.id_company === 0)){
 					zhttp.contact.company.get(contact.id_company).then(function(response){
 						if(response.data && response.data != "false"){
                             loadCompany(response.data.company);
