@@ -18,9 +18,9 @@ class ComZeappsCrmAccountingEntriesTable
             $table->float('debit', 9, 2)->default(0.0);
             $table->float('credit', 9, 2)->default(0.0);
             $table->string('code_journal')->default("");
-            $table->timestamp('date_export');
-            $table->timestamp('date_writing');
-            $table->timestamp('date_limit');
+            $table->timestamp('date_export')->nullable();
+            $table->timestamp('date_writing')->nullable();
+            $table->timestamp('date_limit')->nullable();
 
             $table->timestamps();
             $table->softDeletes();
