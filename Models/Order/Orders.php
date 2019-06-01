@@ -109,6 +109,8 @@ class Orders extends Model
                 $order->$key = $src->$key;
             }
         }
+        $order->date_creation = date('Y-m-d');
+        $order->finalized = 0;
         $order->save();
         $id = $order->id;
 

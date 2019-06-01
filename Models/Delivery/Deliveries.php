@@ -109,6 +109,10 @@ class Deliveries extends Model
                 $delivery->$key = $src->$key;
             }
         }
+
+        $delivery->date_creation = date('Y-m-d');
+        $delivery->finalized = 0;
+
         $delivery->save();
         $id = $delivery->id;
 
@@ -118,6 +122,8 @@ class Deliveries extends Model
         if (isset($src->lines)) {
             self::createFromLine($src->lines, $id, 0, $src->id_warehouse, $src->numerotation, $src->date_creation);
         }
+
+
 
         $delivery->save();
 
