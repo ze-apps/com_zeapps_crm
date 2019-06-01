@@ -337,12 +337,6 @@ class Invoices extends Model
 
 
 
-
-
-
-
-
-
         // action before save
         Event::sendAction('com_zeapps_crm_invoice', 'beforeSave', $this);
 
@@ -381,6 +375,15 @@ class Invoices extends Model
 
         return $return;
     }
+
+
+    public function delete()
+    {
+        parent::delete();
+    }
+
+
+
 
     private function finalize()
     {

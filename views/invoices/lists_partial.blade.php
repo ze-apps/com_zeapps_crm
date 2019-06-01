@@ -1,7 +1,8 @@
 <div ng-controller="ComZeappsCrmInvoiceListsPartialCtrl">
     <div class="row">
         <div class="col-md-12">
-            <ze-filters class="pull-right" data-model="filter_model" data-filters="filters" data-update="loadList"></ze-filters>
+            <ze-filters class="pull-right" data-model="filter_model" data-filters="filters"
+                        data-update="loadList"></ze-filters>
 
             <ze-btn fa="plus" color="success" hint="Facture" always-on="true"
                     ze-modalform="add"
@@ -48,17 +49,24 @@
                     <td ng-click="goTo(invoice.id)">@{{invoice.libelle}}</td>
                     <td ng-click="goTo(invoice.id)" class="text-right">@{{invoice.total_ht | currency:'€':2}}</td>
                     <td ng-click="goTo(invoice.id)" class="text-right">@{{invoice.total_ttc | currency:'€':2}}</td>
-                    <td ng-click="goTo(invoice.id)" class="text-right"><span ng-class="invoice.due > 0 ? 'text-danger':''" ng-if="invoice.due != 0">@{{invoice.due | currency:'€':2}}</span></td>
+                    <td ng-click="goTo(invoice.id)" class="text-right"><span
+                                ng-class="invoice.due > 0 ? 'text-danger':''" ng-if="invoice.due != 0">@{{invoice.due | currency:'€':2}}</span>
+                    </td>
                     <td ng-click="goTo(invoice.id)">@{{invoice.date_limit || "-" | date:'dd/MM/yyyy'}}</td>
                     <td ng-click="goTo(invoice.id)">@{{invoice.name_user_account_manager}}</td>
-                    <td ng-click="goTo(invoice.id)"><span class="text-danger" ng-show="invoice.finalized">Clôturée</span><span class="text-success" ng-show="!invoice.finalized">Ouvert</span></td>
+                    <td ng-click="goTo(invoice.id)"><span class="text-danger"
+                                                          ng-show="invoice.finalized">Clôturée</span><span
+                                class="text-success" ng-show="!invoice.finalized">Ouvert</span></td>
                     <td class="text-right">
                         <ze-btn fa="edit" color="info" direction="left" hint="Editer"
                                 ze-modalform="edit"
                                 data-edit="invoice"
                                 data-title="Editer la facture"
                                 data-template="templateInvoice"></ze-btn>
-                        <ze-btn fa="trash" color="danger" hint="Supprimer" direction="left" ng-click="delete(invoice)" ze-confirmation></ze-btn>
+                        <span ng-show="!invoice.finalized">
+                            <ze-btn fa="trash" color="danger" hint="Supprimer" direction="left" ng-click="delete(invoice)"
+                                ze-confirmation></ze-btn>
+                        </span>
                     </td>
                 </tr>
                 </tbody>

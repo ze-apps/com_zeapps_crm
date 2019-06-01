@@ -273,21 +273,30 @@ class Invoices extends Controller
         $id = $request->input('id', 0);
 
         if ($id) {
-            InvoiceLines::where('id_invoice', $id)->delete();
+            $invoice = InvoicesModel::where("id", $id)->frist() ;
+            if ($invoice) {
+                if ($invoice->finalized != 1) {
+                    InvoiceLines::where('id_invoice', $id)->delete();
 
-            $documents = InvoiceDocuments::where('id_invoice', $id)->get();
+                    $documents = InvoiceDocuments::where('id_invoice', $id)->get();
 
-            $path = BASEPATH;
+                    $path = BASEPATH;
 
-            if ($documents && is_array($documents)) {
-                for ($i = 0; $i < sizeof($documents); $i++) {
-                    unlink($path . $documents[$i]->path);
+                    if ($documents && is_array($documents)) {
+                        for ($i = 0; $i < sizeof($documents); $i++) {
+                            unlink($path . $documents[$i]->path);
+                        }
+                    }
+
+                    InvoiceDocuments::where('id_invoice', $id)->delete();
+
+                    echo json_encode(InvoicesModel::where("id", $id)->delete());
+                } else {
+                    echo json_encode("ERROR");
                 }
+            } else {
+                echo json_encode("ERROR");
             }
-
-            InvoiceDocuments::where('id_invoice', $id)->delete();
-
-            echo json_encode(InvoicesModel::where("id", $id)->delete());
         } else {
             echo json_encode("ERROR");
         }

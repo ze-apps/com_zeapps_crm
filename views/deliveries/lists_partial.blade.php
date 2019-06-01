@@ -1,7 +1,8 @@
 <div ng-controller="ComZeappsCrmDeliveryListsPartialCtrl">
     <div class="row">
         <div class="col-md-12">
-            <ze-filters class="pull-right" data-model="filter_model" data-filters="filters" data-update="loadList"></ze-filters>
+            <ze-filters class="pull-right" data-model="filter_model" data-filters="filters"
+                        data-update="loadList"></ze-filters>
 
             <ze-btn fa="plus" color="success" hint="Bon de livraison" always-on="true"
                     ze-modalform="add"
@@ -47,14 +48,19 @@
                     <td ng-click="goTo(delivery.id)" class="text-right">@{{delivery.total_ht | currency:'€':2}}</td>
                     <td ng-click="goTo(delivery.id)" class="text-right">@{{delivery.total_ttc | currency:'€':2}}</td>
                     <td ng-click="goTo(delivery.id)">@{{delivery.name_user_account_manager}}</td>
-                    <td ng-click="goTo(delivery.id)"><span class="text-danger" ng-show="delivery.finalized">Clôturée</span><span class="text-success" ng-show="!delivery.finalized">Ouvert</span></td>
+                    <td ng-click="goTo(delivery.id)"><span class="text-danger"
+                                                           ng-show="delivery.finalized">Clôturée</span><span
+                                class="text-success" ng-show="!delivery.finalized">Ouvert</span></td>
                     <td class="text-right">
                         <ze-btn fa="edit" color="info" direction="left" hint="Editer"
                                 ze-modalform="edit"
                                 data-edit="delivery"
                                 data-title="Editer le bon de livraison"
                                 data-template="templateDelivery"></ze-btn>
-                        <ze-btn fa="trash" color="danger" hint="Supprimer" direction="left" ng-click="delete(delivery)" ze-confirmation></ze-btn>
+                        <span ng-show="!delivery.finalized">
+                            <ze-btn fa="trash" color="danger" hint="Supprimer" direction="left"
+                                    ng-click="delete(delivery)" ze-confirmation></ze-btn>
+                            </span>
                     </td>
                 </tr>
                 </tbody>

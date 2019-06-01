@@ -1,7 +1,8 @@
 <div ng-controller="ComZeappsCrmOrderListsPartialCtrl">
     <div class="row">
         <div class="col-md-12">
-            <ze-filters class="pull-right" data-model="filter_model" data-filters="filters" data-update="loadList"></ze-filters>
+            <ze-filters class="pull-right" data-model="filter_model" data-filters="filters"
+                        data-update="loadList"></ze-filters>
 
             <ze-btn fa="plus" color="success" hint="Commande" always-on="true"
                     ze-modalform="add"
@@ -51,14 +52,19 @@
                     <td ng-click="goTo(order.id)">@{{order.date_limit || "-" | date:'dd/MM/yyyy'}}</td>
                     <td ng-click="goTo(order.id)">@{{order.name_user_account_manager}}</td>
                     <td ng-click="goTo(order.id)" class="text-right">@{{order.probability | number:2}}</td>
-                    <td ng-click="goTo(order.id)"><span class="text-danger" ng-show="order.finalized">Clôturée</span><span class="text-success" ng-show="!order.finalized">Ouvert</span></td>
+                    <td ng-click="goTo(order.id)"><span class="text-danger"
+                                                        ng-show="order.finalized">Clôturée</span><span
+                                class="text-success" ng-show="!order.finalized">Ouvert</span></td>
                     <td class="text-right">
                         <ze-btn fa="edit" color="info" direction="left" hint="Editer"
                                 ze-modalform="edit"
                                 data-edit="order"
                                 data-title="Editer la commande"
                                 data-template="templateOrder"></ze-btn>
-                        <ze-btn fa="trash" color="danger" hint="Supprimer" direction="left" ng-click="delete(order)" ze-confirmation></ze-btn>
+                        <span ng-show="!order.finalized">
+                            <ze-btn fa="trash" color="danger" hint="Supprimer" direction="left" ng-click="delete(order)"
+                                    ze-confirmation></ze-btn>
+                        </span>
                     </td>
                 </tr>
                 </tbody>
