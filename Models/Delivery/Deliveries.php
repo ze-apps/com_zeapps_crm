@@ -188,29 +188,6 @@ class Deliveries extends Model
                     }
                 }
 
-
-
-
-
-
-
-                if ($line->type === 'product') {
-                    $product = Products::where("id", $line->id_product)->first();
-
-                    if ($product) {
-                        $stockMovement = new StockMovements();
-                        $stockMovement->id_warehouse = $id_warehouse;
-                        $stockMovement->id_product = $line->id_product;
-                        $stockMovement->label = "Bon de livraison n° " . $delivery_number;
-                        $stockMovement->qty = -1 * floatval($line->qty);
-                        $stockMovement->id_table = $idDocument;
-                        $stockMovement->name_table = "com_zeapps_crm_deliveries";
-                        $stockMovement->date_mvt = $mvt_date;
-                        $stockMovement->ignored = 0;
-                        $stockMovement->save();
-                    }
-                }
-
                 if ($sublines) {
                     self::createFromLine($sublines, $idDocument, $deliveryLine->id, $id_warehouse, $delivery_number, $mvt_date);
                 }
@@ -285,7 +262,7 @@ class Deliveries extends Model
 
     public function save(array $options = [], $updatePrice = true, $updateStock = true)
     {
-
+        $finalized_orignal = $this->getOriginal("finalized");
 
         /******** clean data **********/
         $this->fieldModelInfo->cleanData($this);
@@ -311,17 +288,43 @@ class Deliveries extends Model
 
 
 
-        // TODO : mettre à jour les stocks si le document est finalisé
+        // Mettre à jour les stocks si le document est finalisé
         if ($updateStock) {
-
+            if ($this->finalized == 1 && $finalized_orignal != 1 && $finalized_orignal !== null) {
+                $this->makeStockMovements($this, 0, 1) ;
+            }
         }
-
-
-
 
         return $return;
     }
 
+    private function makeStockMovements($delivery, $idParentLine, $quantity = 1) {
+        $DeliveryLines = DeliveryLines::where("id_delivery", $delivery->id)
+            ->where("id_parent", $idParentLine)
+            ->get();
+
+        foreach ($DeliveryLines as $DeliveryLine) {
+
+            if ($DeliveryLine->type === 'product') {
+                $product = Products::where("id", $DeliveryLine->id_product)->first();
+
+                if ($product) {
+                    $stockMovement = new StockMovements();
+                    $stockMovement->id_warehouse = $delivery->id_warehouse;
+                    $stockMovement->id_product = $DeliveryLine->id_product;
+                    $stockMovement->label = "Bon de livraison n° " . $delivery->numerotation ;
+                    $stockMovement->qty = -1 * floatval($DeliveryLine->qty) * $quantity ;
+                    $stockMovement->id_table = $delivery->id;
+                    $stockMovement->name_table = "com_zeapps_crm_deliveries";
+                    $stockMovement->date_mvt = $delivery->date_creation ;
+                    $stockMovement->ignored = 0;
+                    $stockMovement->save();
+                }
+            }
+
+            $this->makeStockMovements($delivery, $DeliveryLine->id, $quantity * $DeliveryLine->qty)  ;
+        }
+    }
 
 
     private function updatePrice($delivery)

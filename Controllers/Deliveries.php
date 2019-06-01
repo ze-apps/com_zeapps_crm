@@ -324,6 +324,25 @@ class Deliveries extends Controller
         }
     }
 
+    public function finalize(Request $request)
+    {
+        $id = $request->input('id', 0);
+
+        if ($id) {
+            if ($delivery = DeliveriesModel::where("id", $id)->first()) {
+                $delivery->finalized = 1;
+                $delivery->save();
+
+                echo json_encode(array(
+                    'numerotation' => $delivery->numerotation
+                ));
+            } else {
+                echo json_encode(false);
+            }
+        } else {
+            echo json_encode(false);
+        }
+    }
 
     public function saveLine()
     {

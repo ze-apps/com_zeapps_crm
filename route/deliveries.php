@@ -20,6 +20,9 @@ Routeur::post("/com_zeapps_crm/deliveries/save", 'App\\com_zeapps_crm\\Controlle
 Routeur::post("/com_zeapps_crm/deliveries/delete/{id}", 'App\\com_zeapps_crm\\Controllers\\Deliveries@delete');
 Routeur::post("/com_zeapps_crm/deliveries/transform/{id}", 'App\\com_zeapps_crm\\Controllers\\Deliveries@transform');
 
+Routeur::post("/com_zeapps_crm/deliveries/finalize/{id}", 'App\\com_zeapps_crm\\Controllers\\Deliveries@finalize');
+
+
 Routeur::post("/com_zeapps_crm/deliveries/saveLine", 'App\\com_zeapps_crm\\Controllers\\Deliveries@saveLine');
 Routeur::post("/com_zeapps_crm/deliveries/updateLinePosition/", 'App\\com_zeapps_crm\\Controllers\\Deliveries@updateLinePosition');
 Routeur::post("/com_zeapps_crm/deliveries/deleteLine/{id}", 'App\\com_zeapps_crm\\Controllers\\Deliveries@deleteLine');

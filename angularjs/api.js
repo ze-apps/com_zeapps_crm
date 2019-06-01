@@ -100,6 +100,7 @@ app.config(["$provide",
                     save: post_delivery,
                     del: del_delivery,
                     transform: transform_delivery,
+                    finalize: finalize_delivery,
                     test: test_delivery,
                     line: {
                         save: save_line_delivery,
@@ -544,6 +545,11 @@ app.config(["$provide",
             function transform_delivery(id, data) {
                 return zeHttp.post("/com_zeapps_crm/deliveries/transform/" + id, data);
             }
+
+            function finalize_delivery(id) {
+                return zeHttp.post("/com_zeapps_crm/deliveries/finalize/" + id);
+            }
+
 
             function save_line_delivery(data) {
                 return zeHttp.post("/com_zeapps_crm/deliveries/saveLine", data);

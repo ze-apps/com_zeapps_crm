@@ -55,6 +55,8 @@
                                 ng-click="sendByMail()"></ze-btn>
                         <ze-btn fa="copy" color="success" hint="Dupliquer" direction="left"
                                 ng-click="transform()"></ze-btn>
+                        <ze-btn fa="lock" color="danger" hint="Clôturer" direction="left" ng-click="finalize()"
+                                ng-hide="delivery.finalized"></ze-btn>
 
                         <div class="btn-group btn-group-xs" role="group" ng-if="nb_deliveries > 0">
                             <button type="button" class="btn btn-default"
