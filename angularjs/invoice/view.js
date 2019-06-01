@@ -287,7 +287,7 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
                     msg_toast += "un moyen de paiement";
                 }
 
-                if (!$scope.invoice.id_company && parseInt($scope.invoice.id_company, 10) == 0 || !$scope.invoice.id_contact || parseInt($scope.invoice.id_contact, 10) == 0) {
+                if ((!$scope.invoice.id_company || parseInt($scope.invoice.id_company, 10) == 0) && (!$scope.invoice.id_contact || parseInt($scope.invoice.id_contact, 10) == 0)) {
                     if (msg_toast != "") {
                         msg_toast += ", ";
                     }

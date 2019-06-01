@@ -314,21 +314,48 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
 
 
             if (isValid) {
-                zhttp.crm.order.finalize($scope.order.id).then(function (response) {
-                    if (response.data && response.data !== "false") {
-                        if (response.data.error) {
-                            toasts('danger', response.data.error);
-                        } else {
-                            $scope.order.numerotation = response.data.numerotation;
-                            $scope.order.final_pdf = response.data.final_pdf;
-                            $scope.order.finalized = '1';
-                            $scope.sortable.disabled = true;
+                if (($scope.order.id_modality || parseInt($scope.order.id_modality, 10) != 0) && (($scope.order.id_company && parseInt($scope.order.id_company, 10) != 0) || ($scope.order.id_contact && parseInt($scope.order.id_contact, 10) != 0))) {
+                    zhttp.crm.order.finalize($scope.order.id).then(function (response) {
+                        if (response.data && response.data !== "false") {
+                            if (response.data.error) {
+                                toasts('danger', response.data.error);
+                            } else {
+                                $scope.order.numerotation = response.data.numerotation;
+                                $scope.order.final_pdf = response.data.final_pdf;
+                                $scope.order.finalized = '1';
+                                $scope.sortable.disabled = true;
 
-                            // emit broadcast at finalize
-                            zeappsBroadcast.emit("ComZeappsCrmOrderFinalize", {"order":$scope.order, "zeapps_modal":zeapps_modal});
+                                // emit broadcast at finalize
+                                zeappsBroadcast.emit("ComZeappsCrmOrderFinalize", {
+                                    "order": $scope.order,
+                                    "zeapps_modal": zeapps_modal
+                                });
+                            }
                         }
+                    });
+                } else {
+                    var msg_toast = "";
+
+                    if (!$scope.order.id_modality || parseInt($scope.order.id_modality, 10) == 0) {
+                        if (msg_toast != "") {
+                            msg_toast += ", ";
+                        }
+                        msg_toast += "un moyen de paiement";
                     }
-                });
+
+                    if ((!$scope.order.id_company || parseInt($scope.order.id_company, 10) == 0) && (!$scope.order.id_contact || parseInt($scope.order.id_contact, 10) == 0)) {
+                        if (msg_toast != "") {
+                            msg_toast += ", ";
+                        }
+                        msg_toast += "une société ou un contact";
+                    }
+
+
+                    msg_toast = "Vous devez renseigner (" + msg_toast + ") pour pouvoir clôturer une commande";
+
+
+                    toasts('warning', msg_toast);
+                }
             }
 
 
