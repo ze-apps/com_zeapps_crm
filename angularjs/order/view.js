@@ -959,10 +959,8 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
             var pushedLine = false;
             data.id = $(ui.item[0]).attr("data-id");
 
-            console.log($scope.lines);
             for (var i = 0; i < $scope.lines.length; i++) {
                 if ($scope.lines[i].id == data.id && !pushedLine) {
-                    console.log($scope.lines[i].sort);
                     data.oldSort = $scope.lines[i].sort;
                     data.sort = i;
                     $scope.lines[i].sort = data.sort;
@@ -971,9 +969,6 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                     $scope.lines[i].sort++;
                 }
             }
-
-
-            console.log(data);
 
             var formatted_data = angular.toJson(data);
             zhttp.crm.order.line.position(formatted_data);
