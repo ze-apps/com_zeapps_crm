@@ -85,13 +85,13 @@ class DeliveryTaxes extends Model
             }
 
             if ($vat_not_found) {
-                $arrTaxe = array();
-                $arrTaxe["rate_tax"] = $accountingLine["value_rate_tax"] ;
-                $arrTaxe["base_tax"] = $accountingLine["base_tax"] ;
-                $arrTaxe["amount_tax"] = round($arrTaxe["base_tax"] * ($arrTaxe["rate_tax"] * 1) / 100, 2) ;
-                $arrTaxe["total_with_tax"] = $arrTaxe["base_tax"] + $arrTaxe["base_tax"] ;
+                $arrTaxeData = array();
+                $arrTaxeData["rate_tax"] = $accountingLine["value_rate_tax"] ;
+                $arrTaxeData["base_tax"] = $accountingLine["base_tax"] ;
+                $arrTaxeData["amount_tax"] = round($arrTaxeData["base_tax"] * ($arrTaxeData["rate_tax"] * 1) / 100, 2) ;
+                $arrTaxeData["total_with_tax"] = $arrTaxeData["base_tax"] + $arrTaxeData["base_tax"] ;
 
-                $arrTaxes[] = $arrTaxe ;
+                $arrTaxes[] = $arrTaxeData ;
             }
         }
 
