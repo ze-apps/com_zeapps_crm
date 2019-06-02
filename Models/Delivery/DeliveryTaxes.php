@@ -72,7 +72,7 @@ class DeliveryTaxes extends Model
         // calcul le résumé des taxes
         foreach ($accountingLines as $accountingLine) {
             $vat_not_found = true ;
-            foreach ($arrTaxes as $arrTaxe) {
+            foreach ($arrTaxes as &$arrTaxe) {
                 if ($arrTaxe["rate_tax"] == $accountingLine["value_rate_tax"]) {
                     $vat_not_found = false ;
 
