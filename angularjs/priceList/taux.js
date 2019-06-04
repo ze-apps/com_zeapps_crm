@@ -18,15 +18,12 @@ app.controller("ComZeappsCrmPriceListTauxCtrl", ["$scope", "$location", "$rootSc
                         if (response.status == 200) {
                             $scope.categories = generateCategories(response.data, 0) ;
 
-
                             zhttp.crm.price_list.rate($routeParams.id).then(function (response) {
                                 if (response.status == 200) {
                                     $scope.pricelist_rate = response.data ;
 
                                     angular.forEach($scope.categories, function (category) {
-
                                         var rate = getRate(category) ;
-
                                         if (rate) {
                                             category.taux_remise = rate.percentage ;
                                             category.compte_compta = rate.accounting_number ;
@@ -35,7 +32,6 @@ app.controller("ComZeappsCrmPriceListTauxCtrl", ["$scope", "$location", "$rootSc
                                     });
                                 }
                             });
-
                         }
                     });
                 }
@@ -82,14 +78,17 @@ app.controller("ComZeappsCrmPriceListTauxCtrl", ["$scope", "$location", "$rootSc
             $.each($scope.pricelist_rate, function (index, value) {
                 if (value.id_category == category.id) {
                     objRate = value ;
-                } else if (category.id_parent) {
-                    angular.forEach($scope.categories, function (subCategory) {
-                        if (subCategory.id == category.id_parent) {
-                            objRate = getRate(subCategory);
-                        }
-                    });
                 }
             }) ;
+
+
+            if (objRate == null && category.id_parent) {
+                angular.forEach($scope.categories, function (subCategory) {
+                    if (subCategory.id == category.id_parent) {
+                        objRate = getRate(subCategory);
+                    }
+                });
+            }
 
             return objRate ;
         };
