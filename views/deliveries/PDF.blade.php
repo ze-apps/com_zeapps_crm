@@ -102,6 +102,9 @@
                 echo $delivery->billing_address_3;
                 echo '<br>';
                 echo $delivery->billing_zipcode . ' ' . $delivery->billing_city;
+                if ($delivery->delivery_country_name != "") {
+                    echo '<br>' . $delivery->delivery_country_name;
+                }
                 ?>
             </td>
 
@@ -117,6 +120,9 @@
                 echo $delivery->delivery_address_3;
                 echo '<br>';
                 echo $delivery->delivery_zipcode . ' ' . $delivery->delivery_city;
+                if ($delivery->delivery_country_name != "") {
+                    echo '<br>' . $delivery->delivery_country_name;
+                }
                 ?>
             </td>
         </tr>

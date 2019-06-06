@@ -26,7 +26,8 @@
                     @{{ order.billing_address_1 }}<br ng-if="order.billing_address_1">
                     @{{ order.billing_address_2 }}<br ng-if="order.billing_address_2">
                     @{{ order.billing_address_3 }}<br ng-if="order.billing_address_3">
-                    @{{ order.billing_zipcode + ' ' + order.billing_city }}
+                    @{{ order.billing_zipcode + ' ' + order.billing_city }}<br ng-if="order.billing_country_name != ''">
+                    @{{ order.billing_country_name }}
                 </div>
 
                 <div class="col-md-3">
@@ -37,7 +38,8 @@
                     @{{ order.delivery_address_1 }}<br ng-if="order.delivery_address_1">
                     @{{ order.delivery_address_2 }}<br ng-if="order.delivery_address_2">
                     @{{ order.delivery_address_3 }}<br ng-if="order.delivery_address_3">
-                    @{{ order.delivery_zipcode + ' ' + order.delivery_city }}
+                    @{{ order.delivery_zipcode + ' ' + order.delivery_city }}<br ng-if="order.delivery_country_name != ''">
+                    @{{ order.delivery_country_name }}
                 </div>
 
                 <div class="col-md-4">

@@ -27,7 +27,8 @@
                     @{{ invoice.billing_address_1 }}<br ng-if="invoice.billing_address_1">
                     @{{ invoice.billing_address_2 }}<br ng-if="invoice.billing_address_2">
                     @{{ invoice.billing_address_3 }}<br ng-if="invoice.billing_address_3">
-                    @{{ invoice.billing_zipcode + ' ' + invoice.billing_city }}
+                    @{{ invoice.billing_zipcode + ' ' + invoice.billing_city }}<br ng-if="invoice.billing_country_name != ''">
+                    @{{ invoice.billing_country_name }}
                 </div>
 
                 <div class="col-md-3">
@@ -38,7 +39,8 @@
                     @{{ invoice.delivery_address_1 }}<br ng-if="invoice.delivery_address_1">
                     @{{ invoice.delivery_address_2 }}<br ng-if="invoice.delivery_address_2">
                     @{{ invoice.delivery_address_3 }}<br ng-if="invoice.delivery_address_3">
-                    @{{ invoice.delivery_zipcode + ' ' + invoice.delivery_city }}
+                    @{{ invoice.delivery_zipcode + ' ' + invoice.delivery_city }}<br ng-if="invoice.delivery_country_name != ''">
+                    @{{ invoice.delivery_country_name }}
                 </div>
 
                 <div class="col-md-4">

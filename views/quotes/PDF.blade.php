@@ -100,6 +100,9 @@
                 echo $quote->delivery_address_3;
                 echo '<br>';
                 echo $quote->delivery_zipcode . ' ' . $quote->delivery_city;
+                if ($quote->delivery_country_name != "") {
+                    echo '<br>' . $quote->delivery_country_name;
+                }
                 ?>
             </td>
             <td id="billing_address">
@@ -114,6 +117,9 @@
                 echo $quote->billing_address_3;
                 echo '<br>';
                 echo $quote->billing_zipcode . ' ' . $quote->billing_city;
+                if ($quote->delivery_country_name != "") {
+                    echo '<br>' . $quote->delivery_country_name;
+                }
                 ?>
             </td>
         </tr>

@@ -106,6 +106,9 @@
                 echo $invoice->delivery_address_3;
                 echo '<br>';
                 echo $invoice->delivery_zipcode . ' ' . $invoice->delivery_city;
+                if ($invoice->delivery_country_name != "") {
+                    echo '<br>' . $invoice->delivery_country_name;
+                }
                 ?>
             </td>
             <td id="billing_address">
@@ -120,6 +123,9 @@
                 echo $invoice->billing_address_3;
                 echo '<br>';
                 echo $invoice->billing_zipcode . ' ' . $invoice->billing_city;
+                if ($invoice->delivery_country_name != "") {
+                    echo '<br>' . $invoice->delivery_country_name;
+                }
                 ?>
             </td>
         </tr>
