@@ -318,6 +318,9 @@ app.controller("ComZeappsCrmOrderFormCtrl", ["$scope", "$routeParams", "$rootSco
                         }
                     });
                 } else {
+                    $scope.form.delivery_name_company = $scope.compagny_loaded.company_name;
+                    $scope.form.delivery_name_contact = "";
+
                     if ($scope.compagny_loaded && $scope.compagny_loaded.delivery_address_1) {
                         $scope.form.delivery_address_1 = $scope.compagny_loaded.delivery_address_1 || "";
                         $scope.form.delivery_address_2 = $scope.compagny_loaded.delivery_address_2 || "";
