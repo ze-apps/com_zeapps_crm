@@ -21,24 +21,26 @@
 
                 <div class="col-md-3">
                     <strong>Adresse de facturation :</strong><br>
-                    <a href="/ng/com_zeapps_contact/companies/@{{ company.id }}">@{{ company.company_name }}</a><br ng-if="company.company_name">
-                    <a href="/ng/com_zeapps_contact/contacts/@{{ contact.id }}">@{{ contact.last_name + ' ' + contact.first_name }}</a><br ng-if="contact.last_name || contact.first_name">
+                    <a href="/ng/com_zeapps_contact/companies/@{{ company.id }}">@{{ order.name_company }}</a><br ng-if="order.name_company">
+                    <a href="/ng/com_zeapps_contact/contacts/@{{ contact.id }}">@{{ order.name_contact }}</a><br ng-if="order.name_contact">
                     @{{ order.billing_address_1 }}<br ng-if="order.billing_address_1">
                     @{{ order.billing_address_2 }}<br ng-if="order.billing_address_2">
                     @{{ order.billing_address_3 }}<br ng-if="order.billing_address_3">
-                    @{{ order.billing_zipcode + ' ' + order.billing_city }}<br ng-if="order.billing_country_name != ''">
+                    @{{ order.billing_zipcode + ' ' + order.billing_city }}<br ng-if="order.billing_state != ''">
+                    @{{ order.billing_state }}<br ng-if="order.billing_country_name != ''">
                     @{{ order.billing_country_name }}
                 </div>
 
                 <div class="col-md-3">
                     <strong>Adresse de livraison :</strong><br>
-                    <a href="/ng/com_zeapps_contact/companies/@{{ company.id }}">@{{ company.company_name }}</a><br ng-if="company.company_name">
-                    <a href="/ng/com_zeapps_contact/contacts/@{{ contact.id }}">@{{ contact.last_name + ' ' + contact.first_name }}</a><br
-                            ng-if="contact.last_name && contact.first_name">
+                    <a href="/ng/com_zeapps_contact/companies/@{{ company.id }}">@{{ order.delivery_name_company }}</a><br ng-if="order.delivery_name_company">
+                    <a href="/ng/com_zeapps_contact/contacts/@{{ contact.id }}">@{{ order.delivery_name_contact }}</a><br
+                            ng-if="order.delivery_name_contact">
                     @{{ order.delivery_address_1 }}<br ng-if="order.delivery_address_1">
                     @{{ order.delivery_address_2 }}<br ng-if="order.delivery_address_2">
                     @{{ order.delivery_address_3 }}<br ng-if="order.delivery_address_3">
-                    @{{ order.delivery_zipcode + ' ' + order.delivery_city }}<br ng-if="order.delivery_country_name != ''">
+                    @{{ order.delivery_zipcode + ' ' + order.delivery_city }}<br ng-if="order.delivery_state != ''">
+                    @{{ order.delivery_state }}<br ng-if="order.delivery_country_name != ''">
                     @{{ order.delivery_country_name }}
                 </div>
 

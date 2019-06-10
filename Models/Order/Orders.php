@@ -50,6 +50,10 @@ class Orders extends Model
         $this->fieldModelInfo->integer('id_contact_address_billing')->default(0);
         $this->fieldModelInfo->integer('id_company_address_delivery')->default(0);
         $this->fieldModelInfo->integer('id_contact_address_delivery')->default(0);
+
+        $this->fieldModelInfo->string('delivery_name_company', false, true)->default("");
+        $this->fieldModelInfo->string('delivery_name_contact', false, true)->default("");
+
         $this->fieldModelInfo->string('billing_address_1', 100)->default("");
         $this->fieldModelInfo->string('billing_address_2', 100)->default("");
         $this->fieldModelInfo->string('billing_address_3', 100)->default("");

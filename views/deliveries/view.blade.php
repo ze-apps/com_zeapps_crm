@@ -21,9 +21,8 @@
 
                 <div class="col-md-3">
                     <strong>Adresse de facturation :</strong><br>
-                    <a href="/ng/com_zeapps_contact/companies/@{{ company.id }}">@{{ company.company_name }}</a><br ng-if="company.company_name">
-                    <a href="/ng/com_zeapps_contact/contacts/@{{ contact.id }}">@{{ contact.last_name + ' ' + contact.first_name }}</a><br
-                            ng-if="contact.last_name || contact.first_name">
+                    <a href="/ng/com_zeapps_contact/companies/@{{ company.id }}">@{{ delivery.name_company }}</a><br ng-if="delivery.name_company">
+                    <a href="/ng/com_zeapps_contact/contacts/@{{ contact.id }}">@{{ delivery.name_contact }}</a><br ng-if="delivery.name_contact">
                     @{{ delivery.billing_address_1 }}<br ng-if="delivery.billing_address_1">
                     @{{ delivery.billing_address_2 }}<br ng-if="delivery.billing_address_2">
                     @{{ delivery.billing_address_3 }}<br ng-if="delivery.billing_address_3">
@@ -33,9 +32,9 @@
 
                 <div class="col-md-3">
                     <strong>Adresse de livraison :</strong><br>
-                    <a href="/ng/com_zeapps_contact/companies/@{{ company.id }}">@{{ company.company_name }}</a><br ng-if="company.company_name">
-                    <a href="/ng/com_zeapps_contact/contacts/@{{ contact.id }}">@{{ contact.last_name + ' ' + contact.first_name }}</a><br
-                            ng-if="contact.last_name && contact.first_name">
+                    <a href="/ng/com_zeapps_contact/companies/@{{ company.id }}">@{{ delivery.delivery_name_company }}</a><br ng-if="delivery.delivery_name_company">
+                    <a href="/ng/com_zeapps_contact/contacts/@{{ contact.id }}">@{{ delivery.delivery_name_contact }}</a><br
+                            ng-if="delivery.delivery_name_contact">
                     @{{ delivery.delivery_address_1 }}<br ng-if="delivery.delivery_address_1">
                     @{{ delivery.delivery_address_2 }}<br ng-if="delivery.delivery_address_2">
                     @{{ delivery.delivery_address_3 }}<br ng-if="delivery.delivery_address_3">

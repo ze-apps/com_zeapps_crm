@@ -91,15 +91,20 @@
             <td id="delivery_address">
                 <b>Adresse de livraison</b><br>
                 <?php
-                echo $quote->name_company . '<br>';
-                echo $quote->last_name . '<br>';
+                if ($quote->delivery_name_company != "") {
+                    echo $quote->delivery_name_company . '<br>';
+                }
+                if ($quote->delivery_name_contact != "") {
+                    echo $quote->delivery_name_contact . '<br>';
+                }
                 echo $quote->delivery_address_1;
-                echo $quote->delivery_address_2 ? '<br>' : '';
-                echo $quote->delivery_address_2;
-                echo $quote->delivery_address_3 ? '<br>' : '';
-                echo $quote->delivery_address_3;
+                echo $quote->delivery_address_2 ? '<br>' . $quote->delivery_address_2 : '';
+                echo $quote->delivery_address_3 ? '<br>' . $quote->delivery_address_3 : '';
                 echo '<br>';
                 echo $quote->delivery_zipcode . ' ' . $quote->delivery_city;
+                if ($quote->delivery_state != "") {
+                    echo '<br>' . $quote->delivery_state;
+                }
                 if ($quote->delivery_country_name != "") {
                     echo '<br>' . $quote->delivery_country_name;
                 }
@@ -108,17 +113,22 @@
             <td id="billing_address">
                 <b>Adresse de facturation</b><br>
                 <?php
-                echo $quote->name_company . '<br>';
-                echo $quote->last_name . '<br>';
+                if ($quote->name_company != "") {
+                    echo $quote->name_company . '<br>';
+                }
+                if ($quote->name_contact != "") {
+                    echo $quote->name_contact . '<br>';
+                }
                 echo $quote->billing_address_1;
-                echo $quote->billing_address_2 ? '<br>' : '';
-                echo $quote->billing_address_2;
-                echo $quote->billing_address_3 ? '<br>' : '';
-                echo $quote->billing_address_3;
+                echo $quote->billing_address_2 ? '<br>' . $quote->billing_address_2 : '';
+                echo $quote->billing_address_3 ? '<br>' . $quote->billing_address_3 : '';
                 echo '<br>';
                 echo $quote->billing_zipcode . ' ' . $quote->billing_city;
-                if ($quote->delivery_country_name != "") {
-                    echo '<br>' . $quote->delivery_country_name;
+                if ($quote->billing_state != "") {
+                    echo '<br>' . $quote->billing_state;
+                }
+                if ($quote->billing_country_name != "") {
+                    echo '<br>' . $quote->billing_country_name;
                 }
                 ?>
             </td>

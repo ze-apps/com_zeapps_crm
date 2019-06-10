@@ -97,15 +97,20 @@
             <td id="delivery_address">
                 <b>Adresse de livraison</b><br>
                 <?php
-                echo $invoice->name_company . '<br>';
-                echo $invoice->last_name . '<br>';
+                if ($invoice->delivery_name_company != "") {
+                    echo $invoice->delivery_name_company . '<br>';
+                }
+                if ($invoice->delivery_name_contact != "") {
+                    echo $invoice->delivery_name_contact . '<br>';
+                }
                 echo $invoice->delivery_address_1;
-                echo $invoice->delivery_address_2 ? '<br>' : '';
-                echo $invoice->delivery_address_2;
-                echo $invoice->delivery_address_3 ? '<br>' : '';
-                echo $invoice->delivery_address_3;
+                echo $invoice->delivery_address_2 ? '<br>' . $invoice->delivery_address_2 : '';
+                echo $invoice->delivery_address_3 ? '<br>' . $invoice->delivery_address_3 : '';
                 echo '<br>';
                 echo $invoice->delivery_zipcode . ' ' . $invoice->delivery_city;
+                if ($invoice->delivery_state != "") {
+                    echo '<br>' . $invoice->delivery_state;
+                }
                 if ($invoice->delivery_country_name != "") {
                     echo '<br>' . $invoice->delivery_country_name;
                 }
@@ -114,17 +119,22 @@
             <td id="billing_address">
                 <b>Adresse de facturation</b><br>
                 <?php
-                echo $invoice->name_company . '<br>';
-                echo $invoice->last_name . '<br>';
+                if ($invoice->name_company != "") {
+                    echo $invoice->name_company . '<br>';
+                }
+                if ($invoice->name_contact != "") {
+                    echo $invoice->name_contact . '<br>';
+                }
                 echo $invoice->billing_address_1;
-                echo $invoice->billing_address_2 ? '<br>' : '';
-                echo $invoice->billing_address_2;
-                echo $invoice->billing_address_3 ? '<br>' : '';
-                echo $invoice->billing_address_3;
+                echo $invoice->billing_address_2 ? '<br>' . $invoice->billing_address_2 : '';
+                echo $invoice->billing_address_3 ? '<br>' . $invoice->billing_address_3 : '';
                 echo '<br>';
                 echo $invoice->billing_zipcode . ' ' . $invoice->billing_city;
-                if ($invoice->delivery_country_name != "") {
-                    echo '<br>' . $invoice->delivery_country_name;
+                if ($invoice->billing_state != "") {
+                    echo '<br>' . $invoice->billing_state;
+                }
+                if ($invoice->billing_country_name != "") {
+                    echo '<br>' . $invoice->billing_country_name;
                 }
                 ?>
             </td>

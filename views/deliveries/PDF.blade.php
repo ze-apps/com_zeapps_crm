@@ -93,17 +93,22 @@
             <td id="delivery_address">
                 <b>Adresse de facturation</b><br>
                 <?php
-                echo $delivery->name_company . '<br>';
-                echo $delivery->last_name . '<br>';
+                if ($delivery->name_company != "") {
+                    echo $delivery->name_company . '<br>';
+                }
+                if ($delivery->name_contact != "") {
+                    echo $delivery->name_contact . '<br>';
+                }
                 echo $delivery->billing_address_1;
-                echo $delivery->billing_address_2 ? '<br>' : '';
-                echo $delivery->billing_address_2;
-                echo $delivery->billing_address_3 ? '<br>' : '';
-                echo $delivery->billing_address_3;
+                echo $delivery->billing_address_2 ? '<br>' . $delivery->billing_address_2 : '';
+                echo $delivery->billing_address_3 ? '<br>' . $delivery->billing_address_3 : '';
                 echo '<br>';
                 echo $delivery->billing_zipcode . ' ' . $delivery->billing_city;
-                if ($delivery->delivery_country_name != "") {
-                    echo '<br>' . $delivery->delivery_country_name;
+                if ($delivery->billing_state != "") {
+                    echo '<br>' . $delivery->billing_state;
+                }
+                if ($delivery->billing_country_name != "") {
+                    echo '<br>' . $delivery->billing_country_name;
                 }
                 ?>
             </td>
@@ -111,15 +116,20 @@
             <td id="billing_address">
                 <b>Adresse de livraison</b><br>
                 <?php
-                echo $delivery->name_company . '<br>';
-                echo $delivery->last_name . '<br>';
+                if ($delivery->delivery_name_company != "") {
+                    echo $delivery->delivery_name_company . '<br>';
+                }
+                if ($delivery->delivery_name_contact != "") {
+                    echo $delivery->delivery_name_contact . '<br>';
+                }
                 echo $delivery->delivery_address_1;
-                echo $delivery->delivery_address_2 ? '<br>' : '';
-                echo $delivery->delivery_address_2;
-                echo $delivery->delivery_address_3 ? '<br>' : '';
-                echo $delivery->delivery_address_3;
+                echo $delivery->delivery_address_2 ? '<br>' . $delivery->delivery_address_2 : '';
+                echo $delivery->delivery_address_3 ? '<br>' . $delivery->delivery_address_3 : '';
                 echo '<br>';
                 echo $delivery->delivery_zipcode . ' ' . $delivery->delivery_city;
+                if ($delivery->delivery_state != "") {
+                    echo '<br>' . $delivery->delivery_state;
+                }
                 if ($delivery->delivery_country_name != "") {
                     echo '<br>' . $delivery->delivery_country_name;
                 }

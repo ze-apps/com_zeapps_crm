@@ -133,7 +133,7 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
 
 
 
-                    crmTotal.init($scope.order, $scope.lines);
+                    crmTotal.init($scope.quote, $scope.lines);
 
 
 
