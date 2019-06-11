@@ -137,14 +137,6 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                     $scope.lines = lines;
 
                     crmTotal.init($scope.order, $scope.lines);
-                    /*$scope.tvas = crmTotal.get.tvas;
-                    var totals = crmTotal.get.totals;
-                    $scope.order.total_prediscount_ht = totals.total_prediscount_ht;
-                    $scope.order.total_prediscount_ttc = totals.total_prediscount_ttc;
-                    $scope.order.total_discount = totals.total_discount;
-                    $scope.order.total_ht = totals.total_ht;
-                    $scope.order.total_tva = totals.total_tva;
-                    $scope.order.total_ttc = totals.total_ttc;*/
 
 
                     // charge l'entreprise associée à la commande
@@ -167,6 +159,18 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                             }
                         });
                     }
+
+
+
+
+                    // envoi les données aux hooks
+                    $rootScope.$broadcast("comZeappsCrm_dataOrderHook",
+                        {
+                            order: $scope.order,
+                            lines: $scope.lines,
+                        }
+                    );
+
 
 
                     // call Callback
