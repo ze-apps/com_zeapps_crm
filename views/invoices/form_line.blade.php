@@ -93,8 +93,8 @@
                 </div>
             </div>
         </div>
-        <div class="row" ng-if="form.sublines.length == 0">
-            <div class="col-md-6">
+        <div class="row">
+            <div class="col-md-6" ng-if="form.sublines.length == 0">
                 <div class="form-group">
                     <label>Compte comptable</label>
                     <span   ze-modalsearch="loadAccountingNumber"
@@ -104,6 +104,15 @@
                             data-template-new="accountingNumberTplNew"
                             data-title="Choisir un compte comptable"></span>
                 </div>
+            </div>
+            <div class="col-md-6">
+                <label>
+                    Remise interdite
+                </label>
+                <input type="checkbox" ng-model="form.discount_prohibited"
+                       ng-true-value="1"
+                       ng-false-value="0"
+                       ng-checked="form.discount_prohibited*1">
             </div>
         </div>
     </div>

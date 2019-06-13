@@ -47,6 +47,7 @@ class Products extends Model
         $this->fieldModelInfo->integer('sort')->default(0);
         $this->fieldModelInfo->mediumtext('extra');
         $this->fieldModelInfo->tinyInteger('active')->default(1);
+        $this->fieldModelInfo->tinyInteger('discount_prohibited')->default(0);
         $this->fieldModelInfo->tinyInteger('is_updated')->default(0);
         $this->fieldModelInfo->timestamps();
         $this->fieldModelInfo->softDeletes();

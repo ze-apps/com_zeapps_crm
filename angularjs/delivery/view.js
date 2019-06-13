@@ -324,6 +324,7 @@ app.controller("ComZeappsCrmDeliveryViewCtrl", ["$scope", "$routeParams", "$loca
                         if (response.data.active) {
                             var line = {
                                 id_delivery: $routeParams.id,
+                                discount_prohibited: response.data.discount_prohibited,
                                 type: response.data.type_product,
                                 id_product: response.data.id,
                                 ref: response.data.ref,

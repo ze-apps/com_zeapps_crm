@@ -21,7 +21,7 @@ app.factory("crmTotal", [function () {
     return service;
 
 
-    function getPriceLine(line, remise) {
+    function getPriceLine(line, remise, discount_prohibited) {
         var dataPrice = {};
         dataPrice.priceUnitHT = 0;
         dataPrice.priceUnitTTC = 0;
@@ -29,6 +29,13 @@ app.factory("crmTotal", [function () {
         dataPrice.priceTotalTTC = 0;
         dataPrice.data = [];
 
+        if (!discount_prohibited) {
+            discount_prohibited = 0 ;
+        }
+
+        if (line.discount_prohibited) {
+            discount_prohibited = 1 ;
+        }
 
         // calcul de la remise
         var remiseLigne = (1 - (parseFloat(line.discount) / 100)) ;
@@ -36,12 +43,16 @@ app.factory("crmTotal", [function () {
             remiseLigne = remiseLigne * (1 - (parseFloat(remise) / 100)) ;
         }
 
+        if (discount_prohibited) {
+            remiseLigne = 1 ;
+        }
+
 
         // recherche s'il y a des sous ligne
         if (line.sublines && line.sublines.length) {
             // 1) Récupérer les écritures des sous niveaux
             for (var i = 0; i < line.sublines.length; i++) {
-                var dataPriceSubline = getPriceLine(line.sublines[i]);
+                var dataPriceSubline = getPriceLine(line.sublines[i], 0, discount_prohibited);
 
                 for (var i_data = 0; i_data < dataPriceSubline.data.length; i_data++) {
                     dataPrice.data.push(dataPriceSubline.data[i_data]);

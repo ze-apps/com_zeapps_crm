@@ -47,6 +47,7 @@ class QuoteLines extends Model
         $this->fieldModelInfo->tinyInteger('show_subline', false)->default(0);
         $this->fieldModelInfo->decimal('price_unit_ttc_subline', 8, 2)->default(0);
         $this->fieldModelInfo->integer('sort')->default(0);
+        $this->fieldModelInfo->tinyInteger('discount_prohibited')->default(0);
         $this->fieldModelInfo->text('json')->default('');
 
         $this->fieldModelInfo->timestamps();

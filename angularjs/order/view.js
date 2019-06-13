@@ -441,6 +441,7 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                             var line = {
                                 id_order: $routeParams.id,
                                 type: response.data.type_product,
+                                discount_prohibited: response.data.discount_prohibited,
                                 id_product: response.data.id,
                                 ref: response.data.ref,
                                 designation_title: response.data.name,

@@ -228,7 +228,11 @@
                                 <td class="text-center"><?php echo floatval($line->qty) === round(floatval($line->qty)) ? intval($line->qty) : number_format(floatval($line->qty), 3, ',', ' '); ?></td>
                                 <td class="text-right"><?php echo number_format(floatval($line->price_unit), 2, ',', ' '); ?></td>
                                 <td class="text-right"><?php echo number_format(floatval($line->value_taxe), 2, ',', ' ') . '%'; ?></td>
-                                <?php if($showDiscount){ ?>
+                                <?php if($showDiscount) {
+                                    if ($line->discount_prohibited == 1) {
+                                        $line->discount = 0 ;
+                                    }
+                                    ?>
                                     <td class="text-right"><?php echo number_format(floatval($line->discount), 2, ',', ' ') . '%'; ?></td>
                                 <?php } ?>
                                 <td class="text-right"><?php echo number_format(floatval($line->total_ht), 2, ',', ' '); ?></td>

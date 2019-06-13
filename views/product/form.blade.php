@@ -23,7 +23,7 @@
             <div class="well" ng-show="navigationState =='body'">
 
                 <div class="row">
-                    <div class="col-md-10">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label>Type de produit <span class="required">*</span></label>
                             <select ng-model="form.type_product" class="form-control"
@@ -36,7 +36,7 @@
                     </div>
 
 
-                    <div class="col-md-2">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label>
                                  Actif
@@ -45,6 +45,16 @@
                                    ng-true-value="1"
                                    ng-false-value="0"
                                    ng-checked="form.active*1">
+                            <br>
+                            <label>
+                                Remise interdite
+                            </label>
+                            <input type="checkbox" ng-model="form.discount_prohibited"
+                                   ng-true-value="1"
+                                   ng-false-value="0"
+                                   ng-checked="form.discount_prohibited*1">
+
+
                         </div>
                     </div>
 

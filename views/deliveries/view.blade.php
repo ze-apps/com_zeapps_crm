@@ -195,7 +195,7 @@
                             </td>
 
                             <td class="text-right" ng-if="line.type != 'subTotal' && line.type != 'comment'">
-                                @{{ line.discount != 0 ? ((0-line.discount) | currency:'%':2) : ''}}
+                                @{{ line.discount != 0 && line.discount_prohibited == 0 ? ((0-line.discount) | currency:'%':2) : ''}}
                             </td>
 
                             <td class="text-right" ng-if="line.type != 'subTotal' && line.type != 'comment'">

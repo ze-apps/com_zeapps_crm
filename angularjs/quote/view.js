@@ -296,6 +296,7 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                         if (response.data.active) {
                             var line = {
                                 id_quote: $routeParams.id,
+                                discount_prohibited: response.data.discount_prohibited,
                                 type: response.data.type_product,
                                 id_product: response.data.id,
                                 ref: response.data.ref,

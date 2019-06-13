@@ -706,14 +706,14 @@ class Invoices extends Model
         }
     }
 
-    private function updateLine($invoice, $line, $taxes) {
+    private function updateLine($invoice, $line, $taxes, $discount_prohibited = 0) {
         $ecritureComptable = [] ;
 
 
         // si c'est une ligne composée
         if (isset($line->sublines) && count($line->sublines)) {
             foreach ($line->sublines as $subline) {
-                $ecritureComptable = $this->fuisionTableTaxe($ecritureComptable, $this->updateLine($invoice, $subline, $taxes));
+                $ecritureComptable = $this->fuisionTableTaxe($ecritureComptable, $this->updateLine($invoice, $subline, $taxes, $discount_prohibited || $line->discount_prohibited));
             }
 
             // recalcul le tableau en fonction du montant souhaité sur la ligne
@@ -728,7 +728,7 @@ class Invoices extends Model
 
 
             // applique la remise
-            $ecritureComptable = $this->appliqueRemise($ecritureComptable, $line->discount);
+            $ecritureComptable = $this->appliqueRemise($ecritureComptable, $line->discount, $discount_prohibited || $line->discount_prohibited);
 
 
             // si c'est une ligne simple
@@ -737,7 +737,7 @@ class Invoices extends Model
 
             // applique la remise de la ligne
             if ($line->discount > 0) {
-                $ecritureComptable = $this->appliqueRemise($ecritureComptable, $line->discount);
+                $ecritureComptable = $this->appliqueRemise($ecritureComptable, $line->discount, $discount_prohibited || $line->discount_prohibited);
             }
         }
 
@@ -768,7 +768,7 @@ class Invoices extends Model
 
         // applique la remise du document si la ligne à un parent = 0
         if ($invoice->global_discount > 0 && $line->id_parent == 0) {
-            $ecritureComptable = $this->appliqueRemise($ecritureComptable, $invoice->global_discount);
+            $ecritureComptable = $this->appliqueRemise($ecritureComptable, $invoice->global_discount, $discount_prohibited || $line->discount_prohibited);
         }
 
 
@@ -809,7 +809,11 @@ class Invoices extends Model
         return $ecritureComptable ;
     }
 
-    private function appliqueRemise($ecritureComptable = [], $remise = 0) {
+    private function appliqueRemise($ecritureComptable = [], $remise = 0, $discount_prohibited = 0) {
+        if ($discount_prohibited) {
+            $remise = 0 ;
+        }
+
         foreach ($ecritureComptable as &$ecriture) {
             $ecriture["total_ht"] = round($ecriture["total_ht"] * 1 * (1 - $remise / 100), 2);
             $ecriture["amount_tva"] = round($ecriture["total_ht"] * (($ecriture["value_taxe"]*1) / 100), 2) ;
