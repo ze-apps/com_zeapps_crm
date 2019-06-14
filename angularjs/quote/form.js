@@ -263,7 +263,7 @@ app.controller("ComZeappsCrmQuoteFormCtrl", ["$scope", "$routeParams", "$rootSco
             $scope.form.delivery_country_name = "";
 
 
-            if ($scope.form.id_company != 0) {
+            if ($scope.form.id_company && $scope.form.id_company != 0) {
 
                 if ($scope.form.id_company_address_billing) {
                     angular.forEach($scope.compagny_addresses, function (compagny_address) {
@@ -318,10 +318,11 @@ app.controller("ComZeappsCrmQuoteFormCtrl", ["$scope", "$routeParams", "$rootSco
                         }
                     });
                 } else {
-                    $scope.form.delivery_name_company = $scope.compagny_loaded.company_name;
+                    $scope.form.delivery_name_company = "";
                     $scope.form.delivery_name_contact = "";
 
                     if ($scope.compagny_loaded && $scope.compagny_loaded.delivery_address_1) {
+                        $scope.form.delivery_name_company = $scope.compagny_loaded.company_name;
                         $scope.form.delivery_address_1 = $scope.compagny_loaded.delivery_address_1 || "";
                         $scope.form.delivery_address_2 = $scope.compagny_loaded.delivery_address_2 || "";
                         $scope.form.delivery_address_3 = $scope.compagny_loaded.delivery_address_3 || "";
@@ -332,6 +333,7 @@ app.controller("ComZeappsCrmQuoteFormCtrl", ["$scope", "$routeParams", "$rootSco
                         $scope.form.delivery_country_id = $scope.compagny_loaded.delivery_country_id || "";
                         $scope.form.delivery_country_name = $scope.compagny_loaded.delivery_country_name || "";
                     } else if ($scope.compagny_loaded) {
+                        $scope.form.delivery_name_company = $scope.compagny_loaded.company_name;
                         $scope.form.delivery_address_1 = $scope.compagny_loaded.billing_address_1 || "";
                         $scope.form.delivery_address_2 = $scope.compagny_loaded.billing_address_2 || "";
                         $scope.form.delivery_address_3 = $scope.compagny_loaded.billing_address_3 || "";
@@ -347,8 +349,8 @@ app.controller("ComZeappsCrmQuoteFormCtrl", ["$scope", "$routeParams", "$rootSco
 
 
 
-            } else if ($scope.form.id_contact != 0) {
-                if ($scope.form.id_contact_address_billing != 0) {
+            } else if ($scope.form.id_contact && $scope.form.id_contact != 0) {
+                if ($scope.form.id_contact_address_billing && $scope.form.id_contact_address_billing != 0) {
                     angular.forEach($scope.contact_addresses, function (contact_address) {
                         if (contact_address.id == $scope.form.id_contact_address_billing) {
                             $scope.form.name_company = contact_address.company_name;
@@ -379,7 +381,7 @@ app.controller("ComZeappsCrmQuoteFormCtrl", ["$scope", "$routeParams", "$rootSco
                     $scope.form.billing_country_name = $scope.contact_loaded.country_name || "";
                 }
 
-                if ($scope.form.id_contact_address_delivery != 0) {
+                if ($scope.form.id_contact_address_delivery && $scope.form.id_contact_address_delivery != 0) {
                     angular.forEach($scope.contact_addresses, function (contact_address) {
                         if (contact_address.id == $scope.form.id_contact_address_delivery) {
                             $scope.form.delivery_name_company = contact_address.company_name;
