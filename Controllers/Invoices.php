@@ -337,10 +337,15 @@ class Invoices extends Controller
                                 $return->invoices = InvoicesModel::createFrom($src);
                                 $idTo = $return->invoices["id"];
 
+                            } elseif ($document == "credit") {
+                                $return->invoices = InvoicesModel::createFrom($src, true);
+                                $idTo = $return->invoices["id"];
+
                             } elseif ($document == "deliveries") {
                                 $return->deliveries = DeliveriesModel::createFrom($src);
                                 $idTo = $return->deliveries["id"];
                             }
+
 
                             $objDocumentRelated = new DocumentRelated() ;
                             $objDocumentRelated->type_document_from = "invoices" ;

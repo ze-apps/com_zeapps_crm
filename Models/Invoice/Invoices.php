@@ -110,7 +110,7 @@ class Invoices extends Model
     }
 
 
-    public static function createFrom($src)
+    public static function createFrom($src, $isCredit = false)
     {
         unset($src->id);
         unset($src->numerotation);
@@ -150,7 +150,7 @@ class Invoices extends Model
 
 
         if (isset($src->lines) && $src->lines) {
-            self::createFromLine($src->lines, $id, 0);
+            self::createFromLine($src->lines, $id, 0, $isCredit);
         }
 
         $invoice->save();
@@ -161,7 +161,7 @@ class Invoices extends Model
         );
     }
 
-    private static function createFromLine($lines, $idDocument, $idParent)
+    private static function createFromLine($lines, $idDocument, $idParent, $isCredit = false)
     {
         if ($lines) {
             foreach ($lines as $line) {
@@ -184,6 +184,16 @@ class Invoices extends Model
                         $invoiceLine->$key = $line->$key;
                     }
                 }
+
+
+                if (!isset($invoiceLine->qty)) {
+                    $invoiceLine->qty = 1 ;
+                }
+
+                if ($isCredit) {
+                    $invoiceLine->qty *= -1 ;
+                }
+
                 $invoiceLine->id_invoice = $idDocument;
                 $invoiceLine->id_parent = $idParent;
                 $invoiceLine->save();

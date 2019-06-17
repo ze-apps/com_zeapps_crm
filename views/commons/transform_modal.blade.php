@@ -29,6 +29,12 @@
         </div>
         <div class="col-md-12">
             <label>
+                <input type='checkbox' ng-model="form.credit">
+                Avoir
+            </label>
+        </div>
+        <div class="col-md-12">
+            <label>
                 <input type='checkbox' ng-model="form.deliveries">
                 Bon de Livraison
             </label>
