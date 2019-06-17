@@ -273,7 +273,7 @@ class Invoices extends Controller
         $id = $request->input('id', 0);
 
         if ($id) {
-            $invoice = InvoicesModel::where("id", $id)->frist() ;
+            $invoice = InvoicesModel::where("id", $id)->first() ;
             if ($invoice) {
                 if ($invoice->finalized != 1) {
                     InvoiceLines::where('id_invoice', $id)->delete();
