@@ -247,21 +247,30 @@ class Deliveries extends Controller
         $id = $request->input('id', 0);
 
         if ($id) {
-            DeliveryLines::where('id_delivery', $id)->delete();
+            $deliveriy = DeliveriesModel::where("id", $id)->first() ;
+            if ($deliveriy) {
+                if ($deliveriy->finalized != 1) {
+                    DeliveryLines::where('id_delivery', $id)->delete();
 
-            $documents = DeliveryDocuments::where('id_delivery', $id)->get();
+                    $documents = DeliveryDocuments::where('id_delivery', $id)->get();
 
-            $path = BASEPATH;
+                    $path = BASEPATH;
 
-            if ($documents && is_array($documents)) {
-                for ($i = 0; $i < sizeof($documents); $i++) {
-                    unlink($path . $documents[$i]->path);
+                    if ($documents && is_array($documents)) {
+                        for ($i = 0; $i < sizeof($documents); $i++) {
+                            unlink($path . $documents[$i]->path);
+                        }
+                    }
+
+                    DeliveryDocuments::where('id_delivery', $id)->delete();
+
+                    echo json_encode(DeliveriesModel::where("id", $id)->delete());
+                } else {
+                    echo json_encode("ERROR");
                 }
+            } else {
+                echo json_encode("ERROR");
             }
-
-            DeliveryDocuments::where('id_delivery', $id)->delete();
-
-            echo json_encode(DeliveriesModel::where("id", $id)->delete());
         } else {
             echo json_encode("ERROR");
         }

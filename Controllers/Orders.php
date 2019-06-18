@@ -245,21 +245,30 @@ class Orders extends Controller
         $id = $request->input('id', 0);
 
         if ($id) {
-            OrderLines::where('id_order', $id)->delete();
+            $order = OrdersModel::where("id", $id)->first() ;
+            if ($order) {
+                if ($order->finalized != 1) {
+                    OrderLines::where('id_order', $id)->delete();
 
-            $documents = OrderDocuments::where('id_order', $id)->get();
+                    $documents = OrderDocuments::where('id_order', $id)->get();
 
-            $path = BASEPATH;
+                    $path = BASEPATH;
 
-            if ($documents && is_array($documents)) {
-                for ($i = 0; $i < sizeof($documents); $i++) {
-                    unlink($path . $documents[$i]->path);
+                    if ($documents && is_array($documents)) {
+                        for ($i = 0; $i < sizeof($documents); $i++) {
+                            unlink($path . $documents[$i]->path);
+                        }
+                    }
+
+                    OrderDocuments::where('id_order', $id)->delete();
+
+                    echo json_encode(OrdersModel::where("id", $id)->delete());
+                } else {
+                    echo json_encode("ERROR");
                 }
+            } else {
+                echo json_encode("ERROR");
             }
-
-            OrderDocuments::where('id_order', $id)->delete();
-
-            echo json_encode(OrdersModel::where("id", $id)->delete());
         } else {
             echo json_encode("ERROR");
         }
