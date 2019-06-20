@@ -44,8 +44,8 @@
                     @{{ order.delivery_country_name }}
                 </div>
 
-                <div class="col-md-4">
-                    <div class="pull-right">
+                <div class="col-md-4" style="text-align: right">
+                    <div>
                         <ze-btn fa="arrow-left" color="primary" hint="Retour" direction="left"
                                 ng-click="back()"></ze-btn>
                         <ze-btn fa="edit" color="info" hint="Editer" direction="left"
@@ -75,6 +75,10 @@
                             <button type="button" class="btn btn-default" ng-class="order_last == 0 ? 'disabled' :''"
                                     ng-click="last_order()"><span class="fa fa-fw fa-fast-forward"></span></button>
                         </div>
+                    </div>
+                    <div style="font-size: 4em;">
+                        <i class="fa fa-lock-open text-success" ng-hide="order.finalized"></i>
+                        <i class="fa fa-lock text-danger" ng-show="order.finalized"></i>
                     </div>
                 </div>
             </div>
