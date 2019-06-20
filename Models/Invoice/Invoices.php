@@ -550,6 +550,24 @@ class Invoices extends Model
                 $debit = 0 ;
                 $credit = 0 ;
 
+                $label = "" ;
+
+                if (trim($invoice->name_company) != "") {
+                    $label = trim($invoice->name_company) ;
+                } elseif (trim($invoice->name_contact) != "") {
+                    $label = trim($invoice->name_contact) ;
+                }
+
+                if ($label != "" && trim($invoice->libelle) != "") {
+                    $label .= " - " ;
+                }
+
+                $label .= trim($invoice->libelle);
+
+                if (strlen($label) > 255) {
+                    $label = substr($label, 0, 255);
+                }
+
                 if ($amount != 0) {
                     if ($amount > 0) {
                         $credit = $amount;
@@ -561,7 +579,7 @@ class Invoices extends Model
                     $objAccountingEntries->id_invoice = $invoice->id;
                     $objAccountingEntries->accounting_number = $accounting_number;
                     $objAccountingEntries->number_document = $invoice->numerotation;
-                    $objAccountingEntries->label = $invoice->libelle;
+                    $objAccountingEntries->label = $label;
                     $objAccountingEntries->debit = $debit;
                     $objAccountingEntries->credit = $credit;
                     $objAccountingEntries->code_journal = "VE";
@@ -593,7 +611,7 @@ class Invoices extends Model
                         $objAccountingEntries->id_invoice = $invoice->id;
                         $objAccountingEntries->accounting_number = $accounting_number;
                         $objAccountingEntries->number_document = $invoice->numerotation;
-                        $objAccountingEntries->label = $invoice->libelle;
+                        $objAccountingEntries->label = $label;
                         $objAccountingEntries->debit = $debit;
                         $objAccountingEntries->credit = $credit;
                         $objAccountingEntries->code_journal = "VE";
@@ -621,7 +639,7 @@ class Invoices extends Model
                 $objAccountingEntries->id_invoice = $invoice->id;
                 $objAccountingEntries->accounting_number = $invoice->accounting_number;
                 $objAccountingEntries->number_document = $invoice->numerotation;
-                $objAccountingEntries->label = $invoice->libelle;
+                $objAccountingEntries->label = $label;
                 $objAccountingEntries->debit = $debit;
                 $objAccountingEntries->credit = $credit;
                 $objAccountingEntries->code_journal = "VE";
