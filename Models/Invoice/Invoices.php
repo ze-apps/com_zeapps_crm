@@ -340,6 +340,11 @@ class Invoices extends Model
 
 
         if ($finalized && $this->finalized == 1 && $finalized_orignal != 1 && $finalized_orignal !== null) {
+            if ($isSavePayment == false) {
+                $this->due = $this->total_ttc ;
+            }
+
+
             parent::save($options);
             $this->finalize();
         }
