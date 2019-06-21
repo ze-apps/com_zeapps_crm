@@ -373,23 +373,27 @@ class Invoices extends Model
 
 
         if ($savePayment && $isSavePayment) {
-            $objPayment = new Payment() ;
-            $objPayment->id_company = $this->id_company ;
-            $objPayment->id_contact = $this->id_contact ;
-            $objPayment->total = $this->total_ttc ;
-            $objPayment->date_payment = $this->date_creation ;
-            $objPayment->type_payment = $this->id_modality ;
-            $objPayment->type_payment_label = $this->label_modality ;
-            $objPayment->bank_check_number = $this->bank_check_number ;
-            $objPayment->check_issuer = $this->check_issuer ;
-            $objPayment->id_deposit_checks = 0 ;
-            $objPayment->save() ;
+            // controle si le paiement n'a pas déjà été enregistré
+            $objPaymentLine = PaymentLine::where("id_invoice", $this->id)->first();
+            if (!$objPaymentLine) {
+                $objPayment = new Payment();
+                $objPayment->id_company = $this->id_company;
+                $objPayment->id_contact = $this->id_contact;
+                $objPayment->total = $this->total_ttc;
+                $objPayment->date_payment = $this->date_creation;
+                $objPayment->type_payment = $this->id_modality;
+                $objPayment->type_payment_label = $this->label_modality;
+                $objPayment->bank_check_number = $this->bank_check_number;
+                $objPayment->check_issuer = $this->check_issuer;
+                $objPayment->id_deposit_checks = 0;
+                $objPayment->save();
 
-            $objPaymentLine = new PaymentLine() ;
-            $objPaymentLine->id_payment = $objPayment->id ;
-            $objPaymentLine->id_invoice = $this->id ;
-            $objPaymentLine->amount = $this->total_ttc ;
-            $objPaymentLine->save() ;
+                $objPaymentLine = new PaymentLine();
+                $objPaymentLine->id_payment = $objPayment->id;
+                $objPaymentLine->id_invoice = $this->id;
+                $objPaymentLine->amount = $this->total_ttc;
+                $objPaymentLine->save();
+            }
         }
 
         return $return;
