@@ -508,7 +508,7 @@ class Invoices extends Model
 
 
 
-    private function getEcritureComptable($invoice) {
+    public function getEcritureComptable($invoice) {
         if ($invoice && $invoice->id) {
             $ecritureComptable = [];
             $lines = InvoiceLines::getFromInvoice($invoice->id);
@@ -525,7 +525,6 @@ class Invoices extends Model
             $ecritureTVA = array();
 
             foreach ($ecritureComptable as $ecriture) {
-
                 if (!isset($ecritureProduit[$ecriture["accounting_number"]])) {
                     $ecritureProduit[$ecriture["accounting_number"]] = $ecriture["total_ht"] * 1 ;
                 } else {
@@ -576,7 +575,7 @@ class Invoices extends Model
                     if ($amount > 0) {
                         $credit = $amount;
                     } else {
-                        $debit = $amount;
+                        $debit = $amount * -1;
                     }
 
                     $objAccountingEntries = new AccountingEntries();
