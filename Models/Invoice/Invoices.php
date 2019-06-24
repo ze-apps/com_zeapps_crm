@@ -632,7 +632,7 @@ class Invoices extends Model
                 $debit = 0;
                 $credit = 0;
 
-                if ($amount < 0) {
+                if ($total < 0) {
                     $credit = $total * -1;
                 } else {
                     $debit = $total;
