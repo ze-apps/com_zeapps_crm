@@ -288,6 +288,24 @@ app.controller("ComZeappsCrmProductFormCtrl", ["$scope", "$routeParams", "$locat
             });
         }
 
+
+        function convertFloat(value) {
+            if (value && typeof value == 'string') {
+                if (!value.endsWith(',') && !value.endsWith('.')) {
+                    value = value.replace(",", ".");
+                    value = value * 1;
+                }
+            }
+
+            return value;
+        }
+
+
+
+        String.prototype.endsWith = function(suffix) {
+            return this.indexOf(suffix, this.length - suffix.length) !== -1;
+        };
+
         function updatePrice(indexPriceList, price) {
 
             if (indexPriceList == undefined) {
@@ -296,12 +314,10 @@ app.controller("ComZeappsCrmProductFormCtrl", ["$scope", "$routeParams", "$locat
                 });
             }
 
-
-
-
             if (!indexPriceList || indexPriceList == -1) {
-                $scope.form.price_ht = parseFloat($scope.form.price_ht);
-                $scope.form.price_ttc = parseFloat($scope.form.price_ttc);
+                $scope.form.price_ht = convertFloat($scope.form.price_ht);
+                $scope.form.price_ttc = convertFloat($scope.form.price_ttc);
+
             } else {
                 if (!$scope.form.priceList[indexPriceList]) {
                     $scope.form.priceList[indexPriceList] = {};
@@ -315,8 +331,8 @@ app.controller("ComZeappsCrmProductFormCtrl", ["$scope", "$routeParams", "$locat
                     $scope.form.priceList[indexPriceList].price_ttc = 0;
                 }
 
-                $scope.form.priceList[indexPriceList].price_ht = parseFloat($scope.form.priceList[indexPriceList].price_ht);
-                $scope.form.priceList[indexPriceList].price_ttc = parseFloat($scope.form.priceList[indexPriceList].price_ttc);
+                $scope.form.priceList[indexPriceList].price_ht = convertFloat($scope.form.priceList[indexPriceList].price_ht);
+                $scope.form.priceList[indexPriceList].price_ttc = convertFloat($scope.form.priceList[indexPriceList].price_ttc);
             }
 
 
@@ -343,15 +359,15 @@ app.controller("ComZeappsCrmProductFormCtrl", ["$scope", "$routeParams", "$locat
 
 
                     if ($scope.form.update_price_from_subline) {
-                        $scope.form.price_ht = round2(parseFloat(montantHT));
-                        $scope.form.price_ttc = round2(parseFloat(montantTTC));
+                        $scope.form.price_ht = round2(convertFloat(montantHT));
+                        $scope.form.price_ttc = round2(convertFloat(montantTTC));
                     } else {
                         if (price === "ht") {
-                            var coef = parseFloat($scope.form.price_ttc) / montantTTC;
-
+                            var coef = convertFloat($scope.form.price_ttc) / montantTTC;
                             $scope.form.price_ht = round2(montantHT * coef);
+
                         } else if (price === "ttc") {
-                            var coef = parseFloat($scope.form.price_ht) / montantHT;
+                            var coef = convertFloat($scope.form.price_ht) / montantHT;
                             $scope.form.price_ttc = round2(montantTTC * coef);
                         }
                     }
@@ -391,15 +407,15 @@ app.controller("ComZeappsCrmProductFormCtrl", ["$scope", "$routeParams", "$locat
 
 
                     if ($scope.form.update_price_from_subline) {
-                        $scope.form.priceList[indexPriceList].price_ht = round2(parseFloat(montantHT));
-                        $scope.form.priceList[indexPriceList].price_ttc = round2(parseFloat(montantTTC));
+                        $scope.form.priceList[indexPriceList].price_ht = round2(convertFloat(montantHT));
+                        $scope.form.priceList[indexPriceList].price_ttc = round2(convertFloat(montantTTC));
                     } else {
                         if (price === "ht") {
-                            var coef = parseFloat($scope.form.priceList[indexPriceList].price_ttc) / montantTTC;
-
+                            var coef = convertFloat($scope.form.priceList[indexPriceList].price_ttc) / montantTTC;
                             $scope.form.priceList[indexPriceList].price_ht = round2(montantHT * coef);
+
                         } else if (price === "ttc") {
-                            var coef = parseFloat($scope.form.priceList[indexPriceList].price_ht) / montantHT;
+                            var coef = convertFloat($scope.form.priceList[indexPriceList].price_ht) / montantHT;
                             $scope.form.priceList[indexPriceList].price_ttc = round2(montantTTC * coef);
                         }
                     }
@@ -415,20 +431,20 @@ app.controller("ComZeappsCrmProductFormCtrl", ["$scope", "$routeParams", "$locat
                 if (!value_taxe) {
                     value_taxe = 0;
                 } else {
-                    value_taxe = parseFloat(value_taxe);
+                    value_taxe = convertFloat(value_taxe);
                 }
 
                 if (price === "ht") {
                     if (!indexPriceList || indexPriceList == -1) {
-                        $scope.form.price_ht = round2(parseFloat($scope.form.price_ttc) / (1 + value_taxe / 100));
+                        $scope.form.price_ht = round2(convertFloat($scope.form.price_ttc) / (1 + value_taxe / 100));
                     } else {
-                        $scope.form.priceList[indexPriceList].price_ht = round2(parseFloat($scope.form.priceList[indexPriceList].price_ttc) / (1 + value_taxe / 100));
+                        $scope.form.priceList[indexPriceList].price_ht = round2(convertFloat($scope.form.priceList[indexPriceList].price_ttc) / (1 + value_taxe / 100));
                     }
                 } else if (price === "ttc") {
                     if (!indexPriceList || indexPriceList == -1) {
-                        $scope.form.price_ttc = round2(parseFloat($scope.form.price_ht) * (1 + value_taxe / 100));
+                        $scope.form.price_ttc = round2(convertFloat($scope.form.price_ht) * (1 + value_taxe / 100));
                     } else {
-                        $scope.form.priceList[indexPriceList].price_ttc = round2(parseFloat($scope.form.priceList[indexPriceList].price_ht) * (1 + value_taxe / 100));
+                        $scope.form.priceList[indexPriceList].price_ttc = round2(convertFloat($scope.form.priceList[indexPriceList].price_ht) * (1 + value_taxe / 100));
                     }
                 }
             }

@@ -117,7 +117,7 @@
                                 <input type="text" min="0" step="0.01" ng-model="form.price_ht" class="form-control"
                                        ng-change="updatePrice(-1, 'ttc')" ng-required="true"
                                        ng-disabled="form.type_product=='pack' && form.update_price_from_subline"
-                                       ng-value="form.price_ht*1">
+                                       ng-value="form.price_ht">
                                 <span class="input-group-addon">€</span>
                             </div>
                         </div>
@@ -130,7 +130,7 @@
                                        ng-change="updatePrice(-1, 'ht')"
                                        ng-required="true"
                                        ng-disabled="form.type_product=='pack' && form.update_price_from_subline"
-                                       ng-value="form.price_ttc*1">
+                                       ng-value="form.price_ttc">
                                 <span class="input-group-addon">€</span>
                             </div>
                         </div>
