@@ -2,6 +2,7 @@ app.controller("ComZeappsCrmQuoteFormLineCtrl", ["$scope", "zeHttp", "zeapps_mod
     function ($scope, zhttp, zeapps_modal, crmTotal, toasts) {
 
         $scope.form.price_unit = $scope.form.price_unit * 1;
+        $scope.form.price_unit_ttc_calculated = 0;
         $scope.form.price_unit_ttc_subline = $scope.form.price_unit_ttc_subline * 1;
         $scope.form.qty = $scope.form.qty * 1;
         $scope.form.discount = $scope.form.discount * 1;
@@ -19,6 +20,35 @@ app.controller("ComZeappsCrmQuoteFormLineCtrl", ["$scope", "zeHttp", "zeapps_mod
 
 
         $scope.quoteLineTplUrl = "/com_zeapps_crm/quotes/form_line";
+
+        $scope.updatePriceUnit = updatePriceUnit ;
+
+
+        function convertFloat(value) {
+            if (value && typeof value == 'string') {
+                if (!value.endsWith(',') && !value.endsWith('.')) {
+                    value = value.replace(",", ".");
+                    value = value * 1;
+                }
+            }
+
+            return value;
+        }
+
+        function updatePriceUnit(typePrice) {
+            if (typePrice == 'HT') {
+                $scope.form.price_unit = convertFloat($scope.form.price_unit);
+                if (!isNaN($scope.form.price_unit)) {
+                    $scope.form.price_unit_ttc_calculated = round2($scope.form.price_unit * (1 + $scope.form.value_taxe / 100)) ;
+                }
+            } else {
+                $scope.form.price_unit_ttc_calculated = convertFloat($scope.form.price_unit_ttc_calculated);
+                if (!isNaN($scope.form.price_unit_ttc_calculated)) {
+                    $scope.form.price_unit = round2($scope.form.price_unit_ttc_calculated / (1 + $scope.form.value_taxe / 100)) ;
+                }
+            }
+        }
+        updatePriceUnit('HT');
 
 
         $scope.editLine = function () {
@@ -263,7 +293,8 @@ app.controller("ComZeappsCrmQuoteFormLineCtrl", ["$scope", "zeHttp", "zeapps_mod
                 if (taxe.id === $scope.form.id_taxe) {
                     $scope.form.value_taxe = taxe.value;
                 }
-            })
+            });
+            updatePriceUnit('HT');
         }
 
         function loadAccountingNumber(accounting_number) {
@@ -272,6 +303,10 @@ app.controller("ComZeappsCrmQuoteFormLineCtrl", ["$scope", "zeHttp", "zeapps_mod
             } else {
                 $scope.form.accounting_number = "";
             }
+        }
+
+        function round2(num) {
+            return +(Math.round(num + "e+2") + "e-2");
         }
 
     }]);

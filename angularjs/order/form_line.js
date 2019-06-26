@@ -38,9 +38,6 @@ app.controller("ComZeappsCrmOrderFormLineCtrl", ["$scope", "zeHttp", "zeapps_mod
         }
 
         function updatePriceUnit(typePrice) {
-            // recupère le taux de TVA
-            console.log($scope.form.value_taxe);
-
             if (typePrice == 'HT') {
                 $scope.form.price_unit = convertFloat($scope.form.price_unit);
                 if (!isNaN($scope.form.price_unit)) {

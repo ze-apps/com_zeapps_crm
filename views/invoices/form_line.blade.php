@@ -32,14 +32,14 @@
         </div>
 
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <div class="form-group">
                     <label>Quantité</label>
                     <input type="number" class="form-control" ng-model="form.qty" ng-keyup="updatePriceSubLineKeyUp()">
                 </div>
             </div>
 
-            <div class="col-md-6" ng-if="form.sublines.length != 0">
+            <div class="col-md-8" ng-if="form.sublines.length != 0">
                 <div class="form-group">
                     <label class="text-danger">Prix Unit. TTC (tarif cumulé des articles composés)</label>
                     <div class="input-group">
@@ -68,12 +68,12 @@
                 <div class="form-group">
                     <label>Prix Unit. HT</label>
                     <div class="input-group">
-                        <input type="number" class="form-control" ng-model="form.price_unit">
+                        <input type="number" class="form-control" ng-model="form.price_unit" ng-change="updatePriceUnit('HT')">
                         <div class="input-group-addon">€</div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3" ng-if="form.sublines.length == 0">
+            <div class="col-md-2" ng-if="form.sublines.length == 0">
                 <div class="form-group">
                     <label>Taxe</label>
                     <select ng-model="form.id_taxe" class="form-control" ng-change="updateTaxe()">
@@ -83,7 +83,18 @@
                     </select>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3" ng-if="form.sublines.length == 0">
+                <div class="form-group">
+                    <label>Prix Unit. TTC</label>
+                    <div class="input-group">
+                        <input type="number" class="form-control" ng-model="form.price_unit_ttc_calculated" ng-change="updatePriceUnit('TTC')">
+                        <div class="input-group-addon">€</div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-md-2">
                 <div class="form-group">
                     <label>Remise</label>
                     <div class="input-group">
