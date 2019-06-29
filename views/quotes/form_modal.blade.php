@@ -31,11 +31,19 @@
             </div>
 
 
+
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-6">
                     <div class="form-group">
                         <label>Libellé du devis</label>
                         <input type="text" ng-model="form.libelle" name="test" class="form-control">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Référence client</label>
+                        <input type="text" ng-model="form.reference_client" class="form-control">
                     </div>
                 </div>
             </div>
@@ -121,13 +129,6 @@
                                 @{{ modality.label }}
                             </option>
                         </select>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Référence client</label>
-                        <input type="text" ng-model="form.reference_client" class="form-control">
                     </div>
                 </div>
             </div>
