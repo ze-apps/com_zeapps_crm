@@ -10,7 +10,7 @@ app.controller("ComZeappsCrmQuoteFormCtrl", ["$scope", "$routeParams", "$rootSco
         ];
 
         $scope.companyHttp = zhttp.contact.company;
-        $scope.companyTplNew = '/com_zeapps_contact/companies/form_modal/';
+        $scope.companyTplNew = '/com_zeapps_contact/companies/form_modal';
         $scope.companyFields = [
             {label:'Nom',key:'company_name'},
             {label:'Téléphone',key:'phone'},
@@ -19,7 +19,7 @@ app.controller("ComZeappsCrmQuoteFormCtrl", ["$scope", "$routeParams", "$rootSco
         ];
 
         $scope.contactHttp = zhttp.contact.contact;
-        $scope.contactTplNew = '/com_zeapps_contact/contacts/form_modal/';
+        $scope.contactTplNew = '/com_zeapps_contact/contacts/form_modal';
         $scope.contactFields = [
             {label:'Nom',key:'last_name'},
             {label:'Prénom',key:'first_name'},
