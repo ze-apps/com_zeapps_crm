@@ -26,6 +26,7 @@ class Cron extends Controller
 
         if ($isNeedUpdate) {
             // charge les grilles de prix de type %
+            $priceListsDefault = PriceList::where("default", 1)->first();
             $priceLists = PriceList::where("type_pricelist", 1)->get();
 
             // charge les catégories
@@ -87,6 +88,23 @@ class Cron extends Controller
 
             // Ecrit la remise, compte compta, TVA (vérifie les catégories parent et si rien prendre le taux par defaut)
             foreach ($products as $product) {
+
+                // recherche s'il y a une grille par defaut
+
+                if ($priceListsDefault) {
+                    $objProductPriceList = ProductPriceList::where("id_product", $product->id)->where("id_price_list", $priceListsDefault->id)->first();
+
+                    if ($objProductPriceList) {
+                        $product->price_ht = $objProductPriceList->price_ht ;
+                        $product->id_taxe = $objProductPriceList->id_taxe ;
+                        $product->value_taxe = $objProductPriceList->value_taxe ;
+                        $product->accounting_number = $objProductPriceList->accounting_number ;
+                        $product->price_ttc = round($objProductPriceList->price_ht * (1 + $objProductPriceList->value_taxe/100), 2) ;
+                        $product->save();
+                    }
+                }
+
+
                 foreach ($priceLists as $priceList) {
                     // recherche si le produit a un grille de tarif
                     $objProductPriceList = ProductPriceList::where("id_product", $product->id)->where("id_price_list", $priceList->id)->first();
