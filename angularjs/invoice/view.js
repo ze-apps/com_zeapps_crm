@@ -1,5 +1,5 @@
-app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$location", "$rootScope", "zeHttp", "zeapps_modal", "Upload", "crmTotal", "zeHooks", "toasts", "menu",
-    function ($scope, $routeParams, $location, $rootScope, zhttp, zeapps_modal, Upload, crmTotal, zeHooks, toasts, menu) {
+app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$location", "$rootScope", "zeHttp", "zeapps_modal", "Upload", "crmTotal", "zeHooks", "toasts", "menu", "$uibModal",
+    function ($scope, $routeParams, $location, $rootScope, zhttp, zeapps_modal, Upload, crmTotal, zeHooks, toasts, menu, $uibModal) {
 
         menu("com_ze_apps_sales", "com_zeapps_crm_invoice");
 
@@ -257,18 +257,52 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
 
 
             if (($scope.invoice.accounting_number && $scope.invoice.accounting_number != "") && ($scope.invoice.id_modality || parseInt($scope.invoice.id_modality, 10) != 0) && (($scope.invoice.id_company && parseInt($scope.invoice.id_company, 10) != 0) || ($scope.invoice.id_contact && parseInt($scope.invoice.id_contact, 10) != 0))) {
-                zhttp.crm.invoice.finalize($scope.invoice.id).then(function (response) {
-                    if (response.data && response.data !== "false") {
-                        if (response.data.error) {
-                            toasts('danger', response.data.error);
-                        } else {
-                            $scope.invoice.numerotation = response.data.numerotation;
-                            $scope.invoice.final_pdf = response.data.final_pdf;
-                            $scope.invoice.finalized = '1';
-                            $scope.sortable.disabled = true;
+
+                var modalInstance = $uibModal.open({
+                    animation: true,
+                    templateUrl: "/assets/angular/popupModalDeBase.html",
+                    controller: "ZeAppsPopupModalDeBaseCtrl",
+                    size: "lg",
+                    resolve: {
+                        titre: function () {
+                            return "Confirmation";
+                        },
+                        msg: function () {
+                            return "Souhaitez-vous clôture cette facture ?";
+                        },
+                        action_danger: function () {
+                            return "Annuler";
+                        },
+                        action_primary: function () {
+                            return false;
+                        },
+                        action_success: function () {
+                            return "Je confirme la clôture";
                         }
                     }
                 });
+
+
+                modalInstance.result.then(function (selectedItem) {
+                    if (selectedItem.action == "success") {
+                        zhttp.crm.invoice.finalize($scope.invoice.id).then(function (response) {
+                            if (response.data && response.data !== "false") {
+                                if (response.data.error) {
+                                    toasts('danger', response.data.error);
+                                } else {
+                                    $scope.invoice.numerotation = response.data.numerotation;
+                                    $scope.invoice.final_pdf = response.data.final_pdf;
+                                    $scope.invoice.finalized = '1';
+                                    $scope.sortable.disabled = true;
+                                }
+                            }
+                        });
+                    }
+                }, function () {
+                    //console.log("rien");
+                });
+
+
             } else {
 
                 var msg_toast = "";

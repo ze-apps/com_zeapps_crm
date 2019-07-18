@@ -1,11 +1,11 @@
-app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$location", "$rootScope", "zeHttp", "zeapps_modal", "Upload", "crmTotal", "zeHooks", "toasts", "menu",
-    function ($scope, $routeParams, $location, $rootScope, zhttp, zeapps_modal, Upload, crmTotal, zeHooks, toasts, menu) {
+app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$location", "$rootScope", "zeHttp", "zeapps_modal", "Upload", "crmTotal", "zeHooks", "toasts", "menu", "$uibModal",
+    function ($scope, $routeParams, $location, $rootScope, zhttp, zeapps_modal, Upload, crmTotal, zeHooks, toasts, menu, $uibModal) {
 
         menu("com_ze_apps_sales", "com_zeapps_crm_order");
 
         // call all module to get function to control data on finalize
         var listControlFinalize = [];
-        zeappsBroadcast.emit("ComZeappsCrmOrderFinalizeControlFunction", {listControlFinalize:listControlFinalize});
+        zeappsBroadcast.emit("ComZeappsCrmOrderFinalizeControlFunction", {listControlFinalize: listControlFinalize});
 
 
         var code_exists = 0;
@@ -161,8 +161,6 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                     }
 
 
-
-
                     // envoi les données aux hooks
                     $rootScope.$broadcast("comZeappsCrm_dataOrderHook",
                         {
@@ -170,7 +168,6 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                             lines: $scope.lines,
                         }
                     );
-
 
 
                     // call Callback
@@ -305,7 +302,7 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
         function finalize() {
 
 
-            var isValid = true ;
+            var isValid = true;
             angular.forEach(listControlFinalize, function (controlFinalize) {
                 if (controlFinalize($scope.order, toasts) == false) {
                     isValid = false;
@@ -313,29 +310,57 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
             });
 
 
-
-
-
-
             if (isValid) {
-                if (($scope.order.id_modality || parseInt($scope.order.id_modality, 10) != 0) && (($scope.order.id_company && parseInt($scope.order.id_company, 10) != 0) || ($scope.order.id_contact && parseInt($scope.order.id_contact, 10) != 0))) {
-                    zhttp.crm.order.finalize($scope.order.id).then(function (response) {
-                        if (response.data && response.data !== "false") {
-                            if (response.data.error) {
-                                toasts('danger', response.data.error);
-                            } else {
-                                $scope.order.numerotation = response.data.numerotation;
-                                $scope.order.final_pdf = response.data.final_pdf;
-                                $scope.order.finalized = '1';
-                                $scope.sortable.disabled = true;
 
-                                // emit broadcast at finalize
-                                zeappsBroadcast.emit("ComZeappsCrmOrderFinalize", {
-                                    "order": $scope.order,
-                                    "zeapps_modal": zeapps_modal
-                                });
+                if (($scope.order.id_modality || parseInt($scope.order.id_modality, 10) != 0) && (($scope.order.id_company && parseInt($scope.order.id_company, 10) != 0) || ($scope.order.id_contact && parseInt($scope.order.id_contact, 10) != 0))) {
+
+                    var modalInstance = $uibModal.open({
+                        animation: true,
+                        templateUrl: "/assets/angular/popupModalDeBase.html",
+                        controller: "ZeAppsPopupModalDeBaseCtrl",
+                        size: "lg",
+                        resolve: {
+                            titre: function () {
+                                return "Confirmation";
+                            },
+                            msg: function () {
+                                return "Souhaitez-vous clôture cette commande ?";
+                            },
+                            action_danger: function () {
+                                return "Annuler";
+                            },
+                            action_primary: function () {
+                                return false;
+                            },
+                            action_success: function () {
+                                return "Je confirme la clôture";
                             }
                         }
+                    });
+
+                    modalInstance.result.then(function (selectedItem) {
+                        if (selectedItem.action == "success") {
+                            zhttp.crm.order.finalize($scope.order.id).then(function (response) {
+                                if (response.data && response.data !== "false") {
+                                    if (response.data.error) {
+                                        toasts('danger', response.data.error);
+                                    } else {
+                                        $scope.order.numerotation = response.data.numerotation;
+                                        $scope.order.final_pdf = response.data.final_pdf;
+                                        $scope.order.finalized = '1';
+                                        $scope.sortable.disabled = true;
+
+                                        // emit broadcast at finalize
+                                        zeappsBroadcast.emit("ComZeappsCrmOrderFinalize", {
+                                            "order": $scope.order,
+                                            "zeapps_modal": zeapps_modal
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                    }, function () {
+                        //console.log("rien");
                     });
                 } else {
                     var msg_toast = "";
@@ -361,58 +386,6 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                     toasts('warning', msg_toast);
                 }
             }
-
-
-
-
-
-
-
-
-            /*if (($scope.order.accounting_number && $scope.order.accounting_number != "") && ($scope.order.id_modality || parseInt($scope.order.id_modality, 10) != 0) && (($scope.order.id_company && parseInt($scope.order.id_company, 10) != 0) || ($scope.order.id_contact && parseInt($scope.order.id_contact, 10) != 0))) {
-                zhttp.crm.order.finalize($scope.order.id).then(function (response) {
-                    if (response.data && response.data !== "false") {
-                        if (response.data.error) {
-                            toasts('danger', response.data.error);
-                        } else {
-                            $scope.order.numerotation = response.data.numerotation;
-                            $scope.order.final_pdf = response.data.final_pdf;
-                            $scope.order.finalized = '1';
-                            $scope.sortable.disabled = true;
-                        }
-                    }
-                });
-            } else {
-
-                var msg_toast = "";
-
-                if (!$scope.order.accounting_number || $scope.order.accounting_number == "") {
-                    if (msg_toast != "") {
-                        msg_toast += ", ";
-                    }
-                    msg_toast += "un compte comptable";
-                }
-
-                if (!$scope.order.id_modality || parseInt($scope.order.id_modality, 10) == 0) {
-                    if (msg_toast != "") {
-                        msg_toast += ", ";
-                    }
-                    msg_toast += "un moyen de paiement";
-                }
-
-                if (!$scope.order.id_company && parseInt($scope.order.id_company, 10) == 0 || !$scope.order.id_contact || parseInt($scope.order.id_contact, 10) == 0) {
-                    if (msg_toast != "") {
-                        msg_toast += ", ";
-                    }
-                    msg_toast += "une société ou un contact";
-                }
-
-
-                msg_toast = "Vous devez renseigner (" + msg_toast + ") pour pouvoir clôturer une facture";
-
-
-                toasts('warning', msg_toast);
-            }*/
         }
 
 

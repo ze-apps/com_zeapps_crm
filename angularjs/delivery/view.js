@@ -1,5 +1,5 @@
-app.controller("ComZeappsCrmDeliveryViewCtrl", ["$scope", "$routeParams", "$location", "$rootScope", "zeHttp", "zeapps_modal", "Upload", "crmTotal", "zeHooks", "toasts", "menu",
-    function ($scope, $routeParams, $location, $rootScope, zhttp, zeapps_modal, Upload, crmTotal, zeHooks, toasts, menu) {
+app.controller("ComZeappsCrmDeliveryViewCtrl", ["$scope", "$routeParams", "$location", "$rootScope", "zeHttp", "zeapps_modal", "Upload", "crmTotal", "zeHooks", "toasts", "menu", "$uibModal",
+    function ($scope, $routeParams, $location, $rootScope, zhttp, zeapps_modal, Upload, crmTotal, zeHooks, toasts, menu, $uibModal) {
 
         menu("com_ze_apps_sales", "com_zeapps_crm_delivery");
 
@@ -273,17 +273,49 @@ app.controller("ComZeappsCrmDeliveryViewCtrl", ["$scope", "$routeParams", "$loca
 
 
             if ((($scope.delivery.id_company && parseInt($scope.delivery.id_company, 10) != 0) || ($scope.delivery.id_contact && parseInt($scope.delivery.id_contact, 10) != 0))) {
-                zhttp.crm.delivery.finalize($scope.delivery.id).then(function (response) {
-                    if (response.data && response.data !== "false") {
-                        if (response.data.error) {
-                            toasts('danger', response.data.error);
-                        } else {
-                            $scope.delivery.numerotation = response.data.numerotation;
-                            $scope.delivery.finalized = '1';
-                            $scope.delivery.disabled = true;
+
+                var modalInstance = $uibModal.open({
+                    animation: true,
+                    templateUrl: "/assets/angular/popupModalDeBase.html",
+                    controller: "ZeAppsPopupModalDeBaseCtrl",
+                    size: "lg",
+                    resolve: {
+                        titre: function () {
+                            return "Confirmation";
+                        },
+                        msg: function () {
+                            return "Souhaitez-vous clôture ce bon de livraison ?";
+                        },
+                        action_danger: function () {
+                            return "Annuler";
+                        },
+                        action_primary: function () {
+                            return false;
+                        },
+                        action_success: function () {
+                            return "Je confirme la clôture";
                         }
                     }
                 });
+
+                modalInstance.result.then(function (selectedItem) {
+                    if (selectedItem.action == "success") {
+                        zhttp.crm.delivery.finalize($scope.delivery.id).then(function (response) {
+                            if (response.data && response.data !== "false") {
+                                if (response.data.error) {
+                                    toasts('danger', response.data.error);
+                                } else {
+                                    $scope.delivery.numerotation = response.data.numerotation;
+                                    $scope.delivery.finalized = '1';
+                                    $scope.delivery.disabled = true;
+                                }
+                            }
+                        });
+                    }
+                }, function () {
+                    //console.log("rien");
+                });
+
             } else {
                 var msg_toast = "";
 
