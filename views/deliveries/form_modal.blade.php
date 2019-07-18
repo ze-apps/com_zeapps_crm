@@ -141,9 +141,16 @@
                     <div class="form-group">
                         <label>Modalités de règlement</label>
                         <select ng-model="form.id_modality" class="form-control" ng-change="updateModality()">
-                            <option ng-repeat="modality in modalities" ng-value="@{{modality.id}}">
-                                @{{ modality.label }}
-                            </option>
+                            <optgroup label="Paiement à recevoir">
+                                <option ng-repeat="modality in modalities" ng-value="@{{modality.id}}" ng-if="modality.situation == 0">
+                                    @{{ modality.label }}
+                                </option>
+                            </optgroup>
+                            <optgroup label="Paiement reçu">
+                                <option ng-repeat="modality in modalities" ng-value="@{{modality.id}}" ng-if="modality.situation != 0">
+                                    @{{ modality.label }}
+                                </option>
+                            </optgroup>
                         </select>
                     </div>
                 </div>
