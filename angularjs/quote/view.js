@@ -116,7 +116,7 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                     var i;
 
                     for (i = 0; i < $scope.activities.length; i++) {
-                        $scoloadDocumentpe.activities[i].reminder = new Date($scope.activities[i].reminder);
+                        $scope.activities[i].reminder = new Date($scope.activities[i].reminder);
                     }
 
                     for (i = 0; i < $scope.documents.length; i++) {
