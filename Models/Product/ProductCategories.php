@@ -156,11 +156,10 @@ class ProductCategories extends Model
     }
 
 
-    public static function turnover($year = null, $where = array())
+    public static function turnover($dateDebut, $dateFin, $where = array())
     {
         $query = "SELECT SUM(l.total_ht) as total_ht,
-                         SUM(l.qty) as qty,
-                         YEAR(i.date_creation) as year
+                         SUM(l.qty) as qty
                   FROM com_zeapps_crm_product_categories ca
                   LEFT JOIN com_zeapps_crm_products p ON p.id_cat = ca.id
                   LEFT JOIN com_zeapps_crm_invoice_lines l ON l.id_product = p.id
@@ -168,15 +167,19 @@ class ProductCategories extends Model
                   WHERE i.finalized = '1'
                         AND l.type = 'product'
                         AND i.deleted_at IS NULL
-                        AND l.deleted_at IS NULL
-                        AND YEAR(i.date_creation) in (" . ($year - 1) . "," . $year . ")";
+                        AND l.deleted_at IS NULL" ;
+
+        if ($dateDebut) {
+            $query .= " AND i.date_creation >= '" . $dateDebut . "'";
+        }
+
+        if ($dateFin) {
+            $query .= " AND i.date_creation <= '" . $dateFin . "'";
+        }
 
         if (isset($where['id_cat'])) {
             $query .= " AND ca.id IN (" . implode(',', $where['id_cat']) . ")";
         }
-
-
-
 
 
         if (isset($where['id_price_list'])) {
@@ -194,13 +197,6 @@ class ProductCategories extends Model
         if (isset($where['delivery_country_id'])) {
             $query .= " AND i.delivery_country_id = " . $where['delivery_country_id'] ;
         }
-
-
-
-
-
-
-        $query .= " GROUP BY YEAR(i.date_creation)";
 
         return Capsule::select(Capsule::raw($query));
     }

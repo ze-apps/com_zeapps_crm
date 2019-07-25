@@ -85,7 +85,7 @@ class Products extends Model
         return;
     }
 
-    public static function top10($year = null, $where = array())
+    public static function top10($dateDebut, $dateFin, $where = array())
     {
         $query = "SELECT SUM(l.total_ht) as total_ht,
                          SUM(l.qty) as qty,
@@ -98,7 +98,15 @@ class Products extends Model
                         AND l.type = 'product'
                         AND i.deleted_at IS NULL
                         AND l.deleted_at IS NULL
-                        AND YEAR(i.date_creation) = " . $year;
+                        ";
+
+        if ($dateDebut) {
+            $query .= " AND i.date_creation >= '" . $dateDebut . "'";
+        }
+
+        if ($dateFin) {
+            $query .= " AND i.date_creation <= '" . $dateFin . "'";
+        }
 
 
         if (isset($where['id_cat'])) {
