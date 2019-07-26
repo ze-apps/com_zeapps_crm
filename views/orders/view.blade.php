@@ -21,8 +21,10 @@
 
                 <div class="col-md-3">
                     <strong>Adresse de facturation :</strong><br>
-                    <a href="/ng/com_zeapps_contact/companies/@{{ company.id }}">@{{ order.name_company }}</a><br ng-if="order.name_company">
-                    <a href="/ng/com_zeapps_contact/contacts/@{{ contact.id }}">@{{ order.name_contact }}</a><br ng-if="order.name_contact">
+                    <a href="/ng/com_zeapps_contact/companies/@{{ company.id }}">@{{ order.name_company }}</a><br
+                            ng-if="order.name_company">
+                    <a href="/ng/com_zeapps_contact/contacts/@{{ contact.id }}">@{{ order.name_contact }}</a><br
+                            ng-if="order.name_contact">
                     @{{ order.billing_address_1 }}<br ng-if="order.billing_address_1">
                     @{{ order.billing_address_2 }}<br ng-if="order.billing_address_2">
                     @{{ order.billing_address_3 }}<br ng-if="order.billing_address_3">
@@ -33,8 +35,10 @@
 
                 <div class="col-md-3">
                     <strong>Adresse de livraison :</strong><br>
-                    <a href="/ng/com_zeapps_contact/companies/@{{ company.id }}">@{{ order.delivery_name_company }}</a><br ng-if="order.delivery_name_company">
-                    <a href="/ng/com_zeapps_contact/contacts/@{{ contact.id }}">@{{ order.delivery_name_contact }}</a><br
+                    <a href="/ng/com_zeapps_contact/companies/@{{ company.id }}">@{{ order.delivery_name_company
+                        }}</a><br ng-if="order.delivery_name_company">
+                    <a href="/ng/com_zeapps_contact/contacts/@{{ contact.id }}">@{{ order.delivery_name_contact
+                        }}</a><br
                             ng-if="order.delivery_name_contact">
                     @{{ order.delivery_address_1 }}<br ng-if="order.delivery_address_1">
                     @{{ order.delivery_address_2 }}<br ng-if="order.delivery_address_2">
@@ -119,7 +123,8 @@
         </div>
 
 
-        <div class="alert alert-danger" role="alert" ng-show="(order.id_price_list != company.id_price_list && company.id) || (!company.id && order.id_price_list != contact.id_price_list && contact.id)">
+        <div class="alert alert-danger" role="alert"
+             ng-show="(order.id_price_list != company.id_price_list && company.id) || (!company.id && order.id_price_list != contact.id_price_list && contact.id)">
             Attention : la grille de prix appliquée sur ce document ne correspond pas à la grille de prix du client.
         </div>
 
@@ -153,15 +158,13 @@
                     <ze-btn fa="tags" color="success" hint="produit" always-on="true" ng-click="addLine()"></ze-btn>
 
 
-
-
-                    <div ng-include="hook.template" ng-repeat="hook in hooksComZeappsCRM_OrderBtnTopBodyHook" style="display: inline-block">
+                    <div ng-include="hook.template" ng-repeat="hook in hooksComZeappsCRM_OrderBtnTopBodyHook"
+                         style="display: inline-block">
                     </div>
 
 
-
-
-                    <ze-btn fa="dollar-sign" color="info" hint="sous-total" always-on="true" ng-click="addSubTotal()"></ze-btn>
+                    <ze-btn fa="dollar-sign" color="info" hint="sous-total" always-on="true"
+                            ng-click="addSubTotal()"></ze-btn>
                     <ze-btn fa="comments" color="warning" hint="commentaire" always-on="true"
                             ze-modalform="addComment"
                             data-title="Ajouter un commentaire"
@@ -206,11 +209,13 @@
                             </td>
 
                             <td class="text-right" ng-if="line.type != 'subTotal' && line.type != 'comment'">
-                                @{{ line.taxeLabel != "*" ? (line.taxeLabel != 0 ? (line.taxeLabel | currency:'%':2) : ''): "*" }}
+                                @{{ line.taxeLabel != "*" ? (line.taxeLabel != 0 ? (line.taxeLabel | currency:'%':2) :
+                                ''): "*" }}
                             </td>
 
                             <td class="text-right" ng-if="line.type != 'subTotal' && line.type != 'comment'">
-                                @{{ line.discount != 0 && line.discount_prohibited == 0 ? ((0-line.discount) | currency:'%':2) : ''}}
+                                @{{ line.discount != 0 && line.discount_prohibited == 0 ? ((0-line.discount) |
+                                currency:'%':2) : ''}}
                             </td>
 
                             <td class="text-right" ng-if="line.type != 'subTotal' && line.type != 'comment'">
@@ -237,7 +242,11 @@
                             </td>
 
                             <td class="text-right">
-                                    <span ng-if="(line.type === 'product' || line.type === 'service' || line.type === 'pack') && order.finalized != 1">
+                                 <span ng-if="(line.type != 'product' && line.type != 'service' && line.type != 'pack' && line.type != 'comment' && line.type != 'subTotal') && order.finalized != 1">
+                                    <button class="btn btn-info btn-xs" ng-click="editLigneSpecial(line)"><i class="fa fa-edit"></i></button>
+                                </span>
+
+                                <span ng-if="(line.type === 'product' || line.type === 'service' || line.type === 'pack') && order.finalized != 1">
                                         <ze-btn fa="edit" color="info" direction="left" hint="editer"
                                                 ze-modalform="editLine"
                                                 data-edit="line"
@@ -253,7 +262,8 @@
                                                 ng-hide="order.finalized"></ze-btn>
                                     </span>
                                 <ze-btn fa="trash" color="danger" direction="left" hint="Supprimer"
-                                        ng-click="deleteLine(line)" ze-confirmation ng-if="line && order.finalized != 1"></ze-btn>
+                                        ng-click="deleteLine(line)" ze-confirmation
+                                        ng-if="line && order.finalized != 1"></ze-btn>
                             </td>
                         </tr>
                         </tbody>

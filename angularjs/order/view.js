@@ -77,6 +77,20 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
         $scope.sendByMail = sendByMail;
 
 
+        $scope.editLigneSpecial = editLigneSpecial ;
+
+
+        function editLigneSpecial(line) {
+            // emit broadcast at finalize
+            zeappsBroadcast.emit("ComZeappsCrmOrderEditSpecialLine", {
+                "order": $scope.order,
+                "zeapps_modal": zeapps_modal,
+                "line": line,
+                "scope": $scope
+            });
+        };
+
+
         //////////////////// INIT ////////////////////
         if ($rootScope.orders === undefined || $rootScope.orders.ids === undefined) {
             $rootScope.orders = {};
@@ -219,11 +233,19 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
         function broadcastOrderAddLineHook(event, line) {
             crmTotal.line.update(line);
 
+            var isNewLine = true ;
+            if (line.id) {
+                isNewLine = false ;
+            }
+
             var formatted_data = angular.toJson(line);
             zhttp.crm.order.line.save(formatted_data).then(function (response) {
                 if (response.data && response.data != "false") {
-                    line.id = response.data;
-                    $scope.lines.push(line);
+                    if (isNewLine) {
+                        line.id = response.data;
+                        $scope.lines.push(line);
+                    }
+
                     updateOrder();
                 }
             });
