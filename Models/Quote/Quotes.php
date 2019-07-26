@@ -101,6 +101,9 @@ class Quotes extends Model
         unset($src->created_at);
         unset($src->updated_at);
         unset($src->deleted_at);
+        if (isset($src->final_pdf)) {
+            unset($src->final_pdf);
+        }
 
         $quotes = new Quotes();
         foreach (self::getSchema() as $key) {

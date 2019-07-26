@@ -117,6 +117,9 @@ class Invoices extends Model
         unset($src->created_at);
         unset($src->updated_at);
         unset($src->deleted_at);
+        if (isset($src->final_pdf)) {
+            unset($src->final_pdf);
+        }
 
         if (isset($src->id_modality)) {
             if ($modality = Modalities::where("id", $src->id_modality)->first()) {
