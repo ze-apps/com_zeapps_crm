@@ -65,8 +65,8 @@
                 <div class="row">
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label>Reference</label>
-                            <input type="text" ng-model="form.ref" class="form-control">
+                            <label>Reference <span class="required">*</span></label>
+                            <input type="text" ng-model="form.ref" class="form-control" ng-required="true">
                         </div>
                     </div>
                     <div class="col-md-10">
