@@ -20,45 +20,55 @@
             background-color: #ffffff;
             border-collapse: collapse;
         }
-        td{
+
+        td {
             vertical-align: top;
         }
-        .taxes{
+
+        .taxes {
             float: left;
             width: 80%;
         }
-        .total{
+
+        .total {
             float: right;
             width: 80%;
         }
+
         .lines th,
         .lines td,
         .taxes th,
         .taxes td,
         .total th,
         .total td,
-        .border{
+        .border {
             border: solid 1px #000000;
             padding: 5px 8px;
             vertical-align: middle;
         }
-        #logo{
+
+        #logo {
             padding: 10px 0;
         }
+
         #billing_address,
-        #delivery_address{
+        #delivery_address {
             padding: 0 0 10px 0;
         }
+
         .text-left {
             text-align: left;
         }
+
         .text-center {
             text-align: center;
         }
-        .text-right{
+
+        .text-right {
             text-align: right;
         }
-        .object{
+
+        .object {
             padding: 10px 0;
         }
 
@@ -66,12 +76,12 @@
             font-size: 1.5em;
             font-weight: bold;
         }
+
         .mention_pied_page {
             font-size: 7pt;
         }
     </style>
 </header>
-
 
 
 <body>
@@ -91,44 +101,52 @@
             <td id="delivery_address">
                 <b>Adresse de livraison</b><br>
                 <?php
-                if ($quote->delivery_name_company != "") {
-                    echo $quote->delivery_name_company . '<br>';
-                }
-                if ($quote->delivery_name_contact != "") {
-                    echo $quote->delivery_name_contact . '<br>';
-                }
-                echo $quote->delivery_address_1;
-                echo $quote->delivery_address_2 ? '<br>' . $quote->delivery_address_2 : '';
-                echo $quote->delivery_address_3 ? '<br>' . $quote->delivery_address_3 : '';
-                echo '<br>';
-                echo $quote->delivery_zipcode . ' ' . $quote->delivery_city;
-                if ($quote->delivery_state != "") {
-                    echo '<br>' . $quote->delivery_state;
-                }
-                if ($quote->delivery_country_name != "") {
-                    echo '<br>' . $quote->delivery_country_name;
+                if ($quote->delivery_address_full_text != "") {
+                    echo nl2br($quote->delivery_address_full_text) . '<br>';
+                } else {
+                    if ($quote->delivery_name_company != "") {
+                        echo $quote->delivery_name_company . '<br>';
+                    }
+                    if ($quote->delivery_name_contact != "") {
+                        echo $quote->delivery_name_contact . '<br>';
+                    }
+                    echo $quote->delivery_address_1;
+                    echo $quote->delivery_address_2 ? '<br>' . $quote->delivery_address_2 : '';
+                    echo $quote->delivery_address_3 ? '<br>' . $quote->delivery_address_3 : '';
+                    echo '<br>';
+                    echo $quote->delivery_zipcode . ' ' . $quote->delivery_city;
+                    if ($quote->delivery_state != "") {
+                        echo '<br>' . $quote->delivery_state;
+                    }
+                    if ($quote->delivery_country_name != "") {
+                        echo '<br>' . $quote->delivery_country_name;
+                    }
                 }
                 ?>
             </td>
             <td id="billing_address">
                 <b>Adresse de facturation</b><br>
                 <?php
-                if ($quote->name_company != "") {
-                    echo $quote->name_company . '<br>';
-                }
-                if ($quote->name_contact != "") {
-                    echo $quote->name_contact . '<br>';
-                }
-                echo $quote->billing_address_1;
-                echo $quote->billing_address_2 ? '<br>' . $quote->billing_address_2 : '';
-                echo $quote->billing_address_3 ? '<br>' . $quote->billing_address_3 : '';
-                echo '<br>';
-                echo $quote->billing_zipcode . ' ' . $quote->billing_city;
-                if ($quote->billing_state != "") {
-                    echo '<br>' . $quote->billing_state;
-                }
-                if ($quote->billing_country_name != "") {
-                    echo '<br>' . $quote->billing_country_name;
+                if ($quote->billing_address_full_text != "") {
+                    echo nl2br($quote->billing_address_full_text) . '<br>';
+                } else {
+                    if ($quote->name_company != "") {
+                        echo $quote->name_company . '<br>';
+                    }
+                    if ($quote->name_contact != "") {
+                        echo $quote->name_contact . '<br>';
+                    }
+                    echo $quote->billing_address_1;
+                    echo $quote->billing_address_2 ? '<br>' . $quote->billing_address_2 : '';
+                    echo $quote->billing_address_3 ? '<br>' . $quote->billing_address_3 : '';
+                    echo '<br>';
+                    echo $quote->billing_zipcode . ' ' . $quote->billing_city;
+                    if ($quote->billing_state != "") {
+                        echo '<br>' . $quote->billing_state;
+                    }
+                    if ($quote->billing_country_name != "") {
+                        echo '<br>' . $quote->billing_country_name;
+                    }
                 }
                 ?>
             </td>
@@ -158,13 +176,14 @@
 <htmlpagefooter name="MyFooter1">
 
     <div class="mention_pied_page">
-        En cas de retard de paiement, il sera appliqué des pénalités à un taux égal à 12% sans que celui-ci ne puisse être inférieur à une fois et demi le taux d'intérêt légal en vigueur en France. Pas d'escompte en cas de paiement anticipé. Une indemnité forfaitaire de 40 € pour frais de recouvrement sera appliquée en cas de retard de paiement conformément aux articles L441-3 et L441-6 du Code de commerce.
+        En cas de retard de paiement, il sera appliqué des pénalités à un taux égal à 12% sans que celui-ci ne puisse
+        être inférieur à une fois et demi le taux d'intérêt légal en vigueur en France. Pas d'escompte en cas de
+        paiement anticipé. Une indemnité forfaitaire de 40 € pour frais de recouvrement sera appliquée en cas de retard
+        de paiement conformément aux articles L441-3 et L441-6 du Code de commerce.
     </div>
 
     <div class="text-right" style="border-top: 1px solid #000000;">{PAGENO}/{nbpg}</div>
 </htmlpagefooter>
-
-
 
 
 <table>
@@ -179,7 +198,7 @@
                     <th>P.U. HT</th>
                     <th>Taxe</th>
                     <?php if($showDiscount){ ?>
-                        <th>Remise</th>
+                    <th>Remise</th>
                     <?php } ?>
                     <th>T. HT</th>
                     <th>T. TTC</th>
@@ -190,53 +209,54 @@
                 $subtotal_ht = 0;
                 $subtotal_ttc = 0;
                 if($lines) {
-                    foreach ($lines as $line) {
-                        if ($line->type == 'subTotal') {
-                            ?>
-                            <tr>
-                                <td colspan="<?php echo $showDiscount ? 6 : 5; ?>" class="text-right">
-                                    <b>Sous-Total</b>
-                                </td>
-                                <td class="text-right"><b><?php echo number_format(floatval($subtotal_ht), 2, ',', ' '); ?></b></td>
-                                <td class="text-right"><b><?php echo number_format(floatval($subtotal_ttc), 2, ',', ' '); ?></b></td>
-                            </tr>
-                            <?php
-                            $subtotal_ht = 0;
-                            $subtotal_ttc = 0;
-                        } elseif ($line->type == 'comment') {
-                            ?>
-                            <tr>
-                                <td class="text-left" colspan="<?php echo $showDiscount ? 8 : 7; ?>">
-                                    <?php echo nl2br($line->designation_desc); ?>
-                                </td>
-                            </tr>
-                            <?php
-                        } else {
-                            $subtotal_ht += floatval($line->total_ht);
-                            $subtotal_ttc += floatval($line->total_ttc);
-                            ?>
-                            <tr>
-                                <td class="text-left"><?php echo $line->ref; ?></td>
-                                <td class="text-left">
-                                    <strong><?php echo $line->designation_title; ?></strong><br/>
-                                    <?php echo nl2br($line->designation_desc); ?>
-                                </td>
-                                <td class="text-center"><?php echo floatval($line->qty) === round(floatval($line->qty)) ? intval($line->qty) : number_format(floatval($line->qty), 3, ',', ' '); ?></td>
-                                <td class="text-right"><?php echo number_format(floatval($line->price_unit), 2, ',', ' '); ?></td>
-                                <td class="text-right"><?php echo number_format(floatval($line->value_taxe), 2, ',', ' ') . '%'; ?></td>
-                                <?php if($showDiscount) {
-                                    if ($line->discount_prohibited == 1) {
-                                        $line->discount = 0 ;
-                                    }
-                                    ?>
-                                    <td class="text-right"><?php echo number_format(floatval($line->discount), 2, ',', ' ') . '%'; ?></td>
-                                <?php } ?>
-                                <td class="text-right"><?php echo number_format(floatval($line->total_ht), 2, ',', ' '); ?></td>
-                                <td class="text-right"><?php echo number_format(floatval($line->total_ttc), 2, ',', ' '); ?></td>
-                            </tr>
-                            <?php
-                        }
+                foreach ($lines as $line) {
+                if ($line->type == 'subTotal') {
+                ?>
+                <tr>
+                    <td colspan="<?php echo $showDiscount ? 6 : 5; ?>" class="text-right">
+                        <b>Sous-Total</b>
+                    </td>
+                    <td class="text-right"><b><?php echo number_format(floatval($subtotal_ht), 2, ',', ' '); ?></b></td>
+                    <td class="text-right"><b><?php echo number_format(floatval($subtotal_ttc), 2, ',', ' '); ?></b>
+                    </td>
+                </tr>
+                <?php
+                $subtotal_ht = 0;
+                $subtotal_ttc = 0;
+                } elseif ($line->type == 'comment') {
+                ?>
+                <tr>
+                    <td class="text-left" colspan="<?php echo $showDiscount ? 8 : 7; ?>">
+                        <?php echo nl2br($line->designation_desc); ?>
+                    </td>
+                </tr>
+                <?php
+                } else {
+                $subtotal_ht += floatval($line->total_ht);
+                $subtotal_ttc += floatval($line->total_ttc);
+                ?>
+                <tr>
+                    <td class="text-left"><?php echo $line->ref; ?></td>
+                    <td class="text-left">
+                        <strong><?php echo $line->designation_title; ?></strong><br/>
+                        <?php echo nl2br($line->designation_desc); ?>
+                    </td>
+                    <td class="text-center"><?php echo floatval($line->qty) === round(floatval($line->qty)) ? intval($line->qty) : number_format(floatval($line->qty), 3, ',', ' '); ?></td>
+                    <td class="text-right"><?php echo number_format(floatval($line->price_unit), 2, ',', ' '); ?></td>
+                    <td class="text-right"><?php echo number_format(floatval($line->value_taxe), 2, ',', ' ') . '%'; ?></td>
+                    <?php if($showDiscount) {
+                    if ($line->discount_prohibited == 1) {
+                        $line->discount = 0;
                     }
+                    ?>
+                    <td class="text-right"><?php echo number_format(floatval($line->discount), 2, ',', ' ') . '%'; ?></td>
+                    <?php } ?>
+                    <td class="text-right"><?php echo number_format(floatval($line->total_ht), 2, ',', ' '); ?></td>
+                    <td class="text-right"><?php echo number_format(floatval($line->total_ttc), 2, ',', ' '); ?></td>
+                </tr>
+                <?php
+                }
+                }
                 }
                 ?>
                 </tbody>
@@ -256,57 +276,58 @@
                 <tbody>
                 <?php
                 foreach ($tableTaxes as $tableTax) {
-                    ?>
-                    <tr>
-                        <td class="text-right"><?php echo number_format(floatval($tableTax['base_tax']), 2, ',', ' '); ?></td>
-                        <td class="text-right"><?php echo number_format(floatval($tableTax['rate_tax']), 2, ',', ' '); ?>%</td>
-                        <td class="text-right"><?php echo number_format(floatval($tableTax['amount_tax']), 2, ',', ' '); ?></td>
-                    </tr>
-                    <?php
+                ?>
+                <tr>
+                    <td class="text-right"><?php echo number_format(floatval($tableTax['base_tax']), 2, ',', ' '); ?></td>
+                    <td class="text-right"><?php echo number_format(floatval($tableTax['rate_tax']), 2, ',', ' '); ?>%
+                    </td>
+                    <td class="text-right"><?php echo number_format(floatval($tableTax['amount_tax']), 2, ',', ' '); ?></td>
+                </tr>
+                <?php
                 }
                 ?>
                 </tbody>
             </table>
         </td>
         <td class="text-right">
-                <?php if(floatval($quote->total_discount_ht) > 0){ ?>
-                <table class="total">
-                    <tr>
-                        <td class="text-left">
-                            Total HT av remise
-                        </td>
-                        <td class="text-right">
-                            <?php echo number_format(floatval($quote->total_prediscount_ht), 2, ',', ' '); ?>
-                        </td>
-                    </tr>
-                    <?php if(floatval($quote->global_discount) > 0){ ?>
-                    <tr>
-                        <td class="text-left">
-                            Remise globable
-                        </td>
-                        <td class="text-right">
-                            <?php echo number_format(floatval($quote->global_discount), 2, ',', ' ') . '%'; ?>
-                        </td>
-                    </tr>
-                    <?php } ?>
-                    <tr>
-                        <td class="text-left">
-                            Total remises HT
-                        </td>
-                        <td class="text-right">
-                            <?php echo number_format(floatval($quote->total_discount_ht), 2, ',', ' ') ? : '0,00'; ?>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="text-left">
-                            Total remises TTC
-                        </td>
-                        <td class="text-right">
-                            <?php echo number_format(floatval($quote->total_discount_ttc), 2, ',', ' ') ? : '0,00'; ?>
-                        </td>
-                    </tr>
-                </table>
-                <?php }?>
+            <?php if(floatval($quote->total_discount_ht) > 0){ ?>
+            <table class="total">
+                <tr>
+                    <td class="text-left">
+                        Total HT av remise
+                    </td>
+                    <td class="text-right">
+                        <?php echo number_format(floatval($quote->total_prediscount_ht), 2, ',', ' '); ?>
+                    </td>
+                </tr>
+                <?php if(floatval($quote->global_discount) > 0){ ?>
+                <tr>
+                    <td class="text-left">
+                        Remise globable
+                    </td>
+                    <td class="text-right">
+                        <?php echo number_format(floatval($quote->global_discount), 2, ',', ' ') . '%'; ?>
+                    </td>
+                </tr>
+                <?php } ?>
+                <tr>
+                    <td class="text-left">
+                        Total remises HT
+                    </td>
+                    <td class="text-right">
+                        <?php echo number_format(floatval($quote->total_discount_ht), 2, ',', ' ') ?: '0,00'; ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-left">
+                        Total remises TTC
+                    </td>
+                    <td class="text-right">
+                        <?php echo number_format(floatval($quote->total_discount_ttc), 2, ',', ' ') ?: '0,00'; ?>
+                    </td>
+                </tr>
+            </table>
+            <?php }?>
             <table class="total">
                 <tr>
                     <td class="text-left">
@@ -337,8 +358,6 @@
         </td>
     </tr>
 </table>
-
-
 
 
 </body>
