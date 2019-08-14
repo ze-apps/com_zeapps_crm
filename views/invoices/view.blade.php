@@ -21,27 +21,60 @@
 
                 <div class="col-md-3">
                     <strong>Adresse de facturation :</strong><br>
-                    <a href="/ng/com_zeapps_contact/companies/@{{ company.id }}">@{{ invoice.name_company }}</a><br ng-if="invoice.name_company">
-                    <a href="/ng/com_zeapps_contact/contacts/@{{ contact.id }}">@{{ invoice.name_contact }}</a><br ng-if="invoice.name_contact">
-                    @{{ invoice.billing_address_1 }}<br ng-if="invoice.billing_address_1">
-                    @{{ invoice.billing_address_2 }}<br ng-if="invoice.billing_address_2">
-                    @{{ invoice.billing_address_3 }}<br ng-if="invoice.billing_address_3">
-                    @{{ invoice.billing_zipcode + ' ' + invoice.billing_city }}<br ng-if="invoice.billing_state != ''">
-                    @{{ invoice.billing_state }}<br ng-if="invoice.billing_country_name != ''">
-                    @{{ invoice.billing_country_name }}
+
+                    <div ng-show="invoice.billing_address_full_text"
+                         ng-bind-html="invoice.billing_address_full_text | nl2br"></div>
+                    <div ng-show="invoice.billing_address_full_text && invoice.id_company"><a
+                                href="/ng/com_zeapps_contact/companies/@{{ invoice.id_company }}" class="btn btn-info btn-xs">Voir
+                            l'entreprise</a></div>
+
+                    <div ng-show="invoice.billing_address_full_text && invoice.id_contact"><a
+                                href="/ng/com_zeapps_contact/contacts/@{{ invoice.id_contact }}" class="btn btn-info btn-xs">Voir
+                            le contact</a></div>
+
+
+                    <div ng-hide="invoice.billing_address_full_text">
+                        <a href="/ng/com_zeapps_contact/companies/@{{ company.id }}">@{{ invoice.name_company }}</a><br
+                                ng-if="invoice.name_company">
+                        <a href="/ng/com_zeapps_contact/contacts/@{{ contact.id }}">@{{ invoice.name_contact }}</a><br
+                                ng-if="invoice.name_contact">
+                        @{{ invoice.billing_address_1 }}<br ng-if="invoice.billing_address_1">
+                        @{{ invoice.billing_address_2 }}<br ng-if="invoice.billing_address_2">
+                        @{{ invoice.billing_address_3 }}<br ng-if="invoice.billing_address_3">
+                        @{{ invoice.billing_zipcode + ' ' + invoice.billing_city }}<br ng-if="invoice.billing_state != ''">
+                        @{{ invoice.billing_state }}<br ng-if="invoice.billing_country_name != ''">
+                        @{{ invoice.billing_country_name }}
+                    </div>
+
                 </div>
 
                 <div class="col-md-3">
                     <strong>Adresse de livraison :</strong><br>
-                    <a href="/ng/com_zeapps_contact/companies/@{{ company.id }}">@{{ invoice.delivery_name_company }}</a><br ng-if="invoice.delivery_name_company">
-                    <a href="/ng/com_zeapps_contact/contacts/@{{ contact.id }}">@{{ invoice.delivery_name_contact }}</a><br
-                            ng-if="invoice.delivery_name_contact">
-                    @{{ invoice.delivery_address_1 }}<br ng-if="invoice.delivery_address_1">
-                    @{{ invoice.delivery_address_2 }}<br ng-if="invoice.delivery_address_2">
-                    @{{ invoice.delivery_address_3 }}<br ng-if="invoice.delivery_address_3">
-                    @{{ invoice.delivery_zipcode + ' ' + invoice.delivery_city }}<br ng-if="invoice.delivery_state != ''">
-                    @{{ invoice.delivery_state }}<br ng-if="invoice.delivery_country_name != ''">
-                    @{{ invoice.delivery_country_name }}
+
+                    <div ng-show="invoice.delivery_address_full_text"
+                         ng-bind-html="invoice.delivery_address_full_text | nl2br"></div>
+                    <div ng-show="invoice.delivery_address_full_text && invoice.id_company_delivery"><a
+                                href="/ng/com_zeapps_contact/companies/@{{ invoice.id_company_delivery }}" class="btn btn-info btn-xs">Voir
+                            l'entreprise</a></div>
+
+                    <div ng-show="invoice.delivery_address_full_text && invoice.id_contact_delivery"><a
+                                href="/ng/com_zeapps_contact/contacts/@{{ invoice.id_contact_delivery }}" class="btn btn-info btn-xs">Voir
+                            le contact</a></div>
+
+                    <div ng-hide="invoice.delivery_address_full_text">
+                        <a href="/ng/com_zeapps_contact/companies/@{{ company.id }}">@{{ invoice.delivery_name_company
+                            }}</a><br ng-if="invoice.delivery_name_company">
+                        <a href="/ng/com_zeapps_contact/contacts/@{{ contact.id }}">@{{ invoice.delivery_name_contact
+                            }}</a><br
+                                ng-if="invoice.delivery_name_contact">
+                        @{{ invoice.delivery_address_1 }}<br ng-if="invoice.delivery_address_1">
+                        @{{ invoice.delivery_address_2 }}<br ng-if="invoice.delivery_address_2">
+                        @{{ invoice.delivery_address_3 }}<br ng-if="invoice.delivery_address_3">
+                        @{{ invoice.delivery_zipcode + ' ' + invoice.delivery_city }}<br ng-if="invoice.delivery_state != ''">
+                        @{{ invoice.delivery_state }}<br ng-if="invoice.delivery_country_name != ''">
+                        @{{ invoice.delivery_country_name }}
+                    </div>
+
                 </div>
 
                 <div class="col-md-4" style="text-align: right">

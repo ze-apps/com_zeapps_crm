@@ -10,11 +10,13 @@
          -->
 
 
-
         <ul role="tablist" class="nav nav-tabs">
-            <li ng-class="navigationState =='body' ? 'active' : ''"><a href="#" ng-click="setTab('body')">Entête</a></li>
-            <li ng-class="navigationState =='invoice' ? 'active' : ''"><a href="#" ng-click="setTab('invoice')">Adresse de facturation</a></li>
-            <li ng-class="navigationState =='delivery' ? 'active' : ''"><a href="#" ng-click="setTab('delivery')">Adresse de livraison</a></li>
+            <li ng-class="navigationState =='body' ? 'active' : ''"><a href="#" ng-click="setTab('body')">Entête</a>
+            </li>
+            <li ng-class="navigationState =='invoice' ? 'active' : ''"><a href="#" ng-click="setTab('invoice')">Adresse
+                    de facturation</a></li>
+            <li ng-class="navigationState =='delivery' ? 'active' : ''"><a href="#" ng-click="setTab('delivery')">Adresse
+                    de livraison</a></li>
         </ul>
 
         <div ng-show="navigationState =='body'">
@@ -66,7 +68,6 @@
             </div>
 
 
-
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
@@ -81,7 +82,8 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Date de création <span class="required">*</span></label>
-                        <input type="date" ng-model="form.date_creation" name="date_creation" ng-change="updateDateLimit()" class="form-control"
+                        <input type="date" ng-model="form.date_creation" name="date_creation"
+                               ng-change="updateDateLimit()" class="form-control"
                                ng-required="true">
                     </div>
                 </div>
@@ -89,7 +91,8 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Date de validité <span class="required">*</span></label>
-                        <input type="date" ng-model="form.date_limit" name="date_limit" class="form-control" ng-required="true">
+                        <input type="date" ng-model="form.date_limit" name="date_limit" class="form-control"
+                               ng-required="true">
                     </div>
                 </div>
             </div>
@@ -100,12 +103,14 @@
                         <label>Modalités de règlement</label>
                         <select ng-model="form.id_modality" class="form-control" ng-change="updateModality()">
                             <optgroup label="Paiement à recevoir">
-                                <option ng-repeat="modality in modalities" ng-value="@{{ modality.id }}" ng-if="modality.situation == 0">
+                                <option ng-repeat="modality in modalities" ng-value="@{{ modality.id }}"
+                                        ng-if="modality.situation == 0">
                                     @{{ modality.label }}
                                 </option>
                             </optgroup>
                             <optgroup label="Paiement reçu">
-                                <option ng-repeat="modality in modalities" ng-value="@{{ modality.id }}" ng-if="modality.situation != 0">
+                                <option ng-repeat="modality in modalities" ng-value="@{{ modality.id }}"
+                                        ng-if="modality.situation != 0">
                                     @{{ modality.label }}
                                 </option>
                             </optgroup>
@@ -126,14 +131,16 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Numéro de chèque <span class="required">*</span></label>
-                        <input type="text" ng-model="form.bank_check_number" class="form-control" ng-required="showCheckArea">
+                        <input type="text" ng-model="form.bank_check_number" class="form-control"
+                               ng-required="showCheckArea">
                     </div>
                 </div>
 
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Émetteur du chèque <span class="required">*</span></label>
-                        <input type="text" ng-model="form.check_issuer" class="form-control" ng-required="showCheckArea">
+                        <input type="text" ng-model="form.check_issuer" class="form-control"
+                               ng-required="showCheckArea">
                     </div>
                 </div>
             </div>
@@ -142,7 +149,8 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Entrepôts <span class="required">*</span></label>
-                        <select ng-model="form.id_warehouse" name="id_warehouse" class="form-control" ng-required="true">
+                        <select ng-model="form.id_warehouse" name="id_warehouse" class="form-control"
+                                ng-required="true">
                             <option ng-repeat="warehouse in warehouses" ng-value="@{{warehouse.id}}">
                                 @{{ warehouse.label }}
                             </option>
@@ -157,9 +165,6 @@
                 </div>
             </div>
         </div>
-
-
-
 
 
         <div ng-show="navigationState =='invoice'">
@@ -207,20 +212,27 @@
                 <div class="col-md-12">
                     <div class="form-group">
                         <label>Adresse</label>
-                        <select ng-model="form.id_company_address_billing" class="form-control" ng-if="form.id_company != 0" ng-change="updateAdresse()">
-                            <option ng-repeat="compagny_address in compagny_addresses" ng-value="@{{compagny_address.id}}">
-                                @{{ compagny_address.company_name }} - @{{ compagny_address.first_name }} @{{ compagny_address.last_name }}
-                                - @{{ compagny_address.address_1 }} @{{ compagny_address.address_2 }} @{{ compagny_address.address_3 }}
+                        <select ng-model="form.id_company_address_billing" class="form-control"
+                                ng-if="form.id_company != 0" ng-change="updateAdresse()">
+                            <option ng-repeat="compagny_address in compagny_addresses"
+                                    ng-value="@{{compagny_address.id}}">
+                                @{{ compagny_address.company_name }} - @{{ compagny_address.first_name }} @{{
+                                compagny_address.last_name }}
+                                - @{{ compagny_address.address_1 }} @{{ compagny_address.address_2 }} @{{
+                                compagny_address.address_3 }}
                                 @{{ compagny_address.zipcode }} @{{ compagny_address.city }} -
                                 @{{ compagny_address.state }} -
                                 @{{ compagny_address.country_name }}
                             </option>
                         </select>
 
-                        <select ng-model="form.id_contact_address_billing" class="form-control" ng-if="form.id_company == 0 && form.id_contact != 0" ng-change="updateAdresse()">
+                        <select ng-model="form.id_contact_address_billing" class="form-control"
+                                ng-if="form.id_company == 0 && form.id_contact != 0" ng-change="updateAdresse()">
                             <option ng-repeat="contact_address in contact_addresses" ng-value="@{{contact_address.id}}">
-                                @{{ contact_address.company_name }} - @{{ contact_address.first_name }} @{{ contact_address.last_name }}
-                                - @{{ contact_address.address_1 }} @{{ contact_address.address_2 }} @{{ contact_address.address_3 }}
+                                @{{ contact_address.company_name }} - @{{ contact_address.first_name }} @{{
+                                contact_address.last_name }}
+                                - @{{ contact_address.address_1 }} @{{ contact_address.address_2 }} @{{
+                                contact_address.address_3 }}
                                 @{{ contact_address.zipcode }} @{{ contact_address.city }} -
                                 @{{ contact_address.state }} -
                                 @{{ contact_address.country_name }}
@@ -229,32 +241,68 @@
                     </div>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col-md-12" ng-bind-html="form.billing_address_full_text | nl2br"></div>
+            </div>
         </div>
 
 
-
-
-
-
         <div ng-show="navigationState =='delivery'">
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Société <span class="required">**</span></label>
+                        <span ze-modalsearch="loadCompanyDelivery"
+                              data-http="companyHttp"
+                              data-model="form.name_company_delivery"
+                              data-fields="companyFields"
+                              data-template-new="companyTplNew"
+                              data-title="Choisir une entreprise"></span>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Contact <span class="required">**</span></label>
+                        <span ze-modalsearch="loadContactDelivery"
+                              data-http="contactHttp"
+                              data-model="form.name_contact_delivery"
+                              data-fields="contactFields"
+                              data-template-new="contactTplNew"
+                              data-title="Choisir un contact"></span>
+                    </div>
+                </div>
+            </div>
+
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
                         <label>Adresse</label>
-                        <select ng-model="form.id_company_address_delivery" class="form-control" ng-if="form.id_company != 0" ng-change="updateAdresse()">
-                            <option ng-repeat="compagny_address in compagny_addresses" ng-value="@{{compagny_address.id}}">
-                                @{{ compagny_address.company_name }} - @{{ compagny_address.first_name }} @{{ compagny_address.last_name }}
-                                - @{{ compagny_address.address_1 }} @{{ compagny_address.address_2 }} @{{ compagny_address.address_3 }}
+                        <select ng-model="form.id_company_address_delivery" class="form-control"
+                                ng-if="(form.id_company != 0 && form.id_company_delivery == 0 && form.id_contact_delivery == 0) || (form.id_company_delivery != 0)"
+                                ng-change="updateAdresse()">
+                            <option ng-repeat="compagny_address in compagny_delivery_addresses"
+                                    ng-value="@{{compagny_address.id}}">
+                                @{{ compagny_address.company_name }} - @{{ compagny_address.first_name }} @{{
+                                compagny_address.last_name }}
+                                - @{{ compagny_address.address_1 }} @{{ compagny_address.address_2 }} @{{
+                                compagny_address.address_3 }}
                                 @{{ compagny_address.zipcode }} @{{ compagny_address.city }} -
                                 @{{ compagny_address.state }} -
                                 @{{ compagny_address.country_name }}
                             </option>
                         </select>
 
-                        <select ng-model="form.id_contact_address_delivery" class="form-control" ng-if="form.id_company == 0 && form.id_contact != 0" ng-change="updateAdresse()">
-                            <option ng-repeat="contact_address in contact_addresses" ng-value="@{{contact_address.id}}">
-                                @{{ contact_address.company_name }} - @{{ contact_address.first_name }} @{{ contact_address.last_name }}
-                                - @{{ contact_address.address_1 }} @{{ contact_address.address_2 }} @{{ contact_address.address_3 }}
+                        <select ng-model="form.id_contact_address_delivery" class="form-control"
+                                ng-if="(form.id_company == 0 && form.id_contact != 0 && form.id_company_delivery == 0 && form.id_contact_delivery == 0) || (form.id_company_delivery == 0 && form.id_contact_delivery != 0)"
+                                ng-change="updateAdresse()">
+                            <option ng-repeat="contact_address in contact_delivery_addresses" ng-value="@{{contact_address.id}}">
+                                @{{ contact_address.company_name }} - @{{ contact_address.first_name }} @{{
+                                contact_address.last_name }}
+                                - @{{ contact_address.address_1 }} @{{ contact_address.address_2 }} @{{
+                                contact_address.address_3 }}
                                 @{{ contact_address.zipcode }} @{{ contact_address.city }} -
                                 @{{ contact_address.state }} -
                                 @{{ contact_address.country_name }}
@@ -263,10 +311,12 @@
                     </div>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col-md-12" ng-bind-html="form.delivery_address_full_text | nl2br"></div>
+            </div>
+
         </div>
-
-
-
 
 
     </form>

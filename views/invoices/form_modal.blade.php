@@ -275,6 +275,10 @@
                     </div>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col-md-12" ng-bind-html="form.billing_address_full_text | nl2br"></div>
+            </div>
         </div>
 
 
@@ -284,11 +288,37 @@
 
         <div ng-show="navigationState =='delivery'">
             <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Société <span class="required">**</span></label>
+                        <span ze-modalsearch="loadCompanyDelivery"
+                              data-http="companyHttp"
+                              data-model="form.name_company_delivery"
+                              data-fields="companyFields"
+                              data-template-new="companyTplNew"
+                              data-title="Choisir une entreprise"></span>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Contact <span class="required">**</span></label>
+                        <span ze-modalsearch="loadContactDelivery"
+                              data-http="contactHttp"
+                              data-model="form.name_contact_delivery"
+                              data-fields="contactFields"
+                              data-template-new="contactTplNew"
+                              data-title="Choisir un contact"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
                         <label>Adresse</label>
                         <select ng-model="form.id_company_address_delivery" class="form-control" ng-if="form.id_company != 0" ng-change="updateAdresse()">
-                            <option ng-repeat="compagny_address in compagny_addresses" ng-value="@{{compagny_address.id}}">
+                            <option ng-repeat="compagny_address in compagny_delivery_addresses" ng-value="@{{compagny_address.id}}">
                                 @{{ compagny_address.company_name }} - @{{ compagny_address.first_name }} @{{ compagny_address.last_name }}
                                 - @{{ compagny_address.address_1 }} @{{ compagny_address.address_2 }} @{{ compagny_address.address_3 }}
                                 @{{ compagny_address.zipcode }} @{{ compagny_address.city }} -
@@ -298,7 +328,7 @@
                         </select>
 
                         <select ng-model="form.id_contact_address_delivery" class="form-control" ng-if="form.id_company == 0 && form.id_contact != 0" ng-change="updateAdresse()">
-                            <option ng-repeat="contact_address in contact_addresses" ng-value="@{{contact_address.id}}">
+                            <option ng-repeat="contact_address in contact_delivery_addresses" ng-value="@{{contact_address.id}}">
                                 @{{ contact_address.company_name }} - @{{ contact_address.first_name }} @{{ contact_address.last_name }}
                                 - @{{ contact_address.address_1 }} @{{ contact_address.address_2 }} @{{ contact_address.address_3 }}
                                 @{{ contact_address.zipcode }} @{{ contact_address.city }} -
@@ -308,6 +338,10 @@
                         </select>
                     </div>
                 </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12" ng-bind-html="form.delivery_address_full_text | nl2br"></div>
             </div>
         </div>
 

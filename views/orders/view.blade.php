@@ -21,31 +21,60 @@
 
                 <div class="col-md-3">
                     <strong>Adresse de facturation :</strong><br>
-                    <a href="/ng/com_zeapps_contact/companies/@{{ company.id }}">@{{ order.name_company }}</a><br
-                            ng-if="order.name_company">
-                    <a href="/ng/com_zeapps_contact/contacts/@{{ contact.id }}">@{{ order.name_contact }}</a><br
-                            ng-if="order.name_contact">
-                    @{{ order.billing_address_1 }}<br ng-if="order.billing_address_1">
-                    @{{ order.billing_address_2 }}<br ng-if="order.billing_address_2">
-                    @{{ order.billing_address_3 }}<br ng-if="order.billing_address_3">
-                    @{{ order.billing_zipcode + ' ' + order.billing_city }}<br ng-if="order.billing_state != ''">
-                    @{{ order.billing_state }}<br ng-if="order.billing_country_name != ''">
-                    @{{ order.billing_country_name }}
+
+                    <div ng-show="order.billing_address_full_text"
+                         ng-bind-html="order.billing_address_full_text | nl2br"></div>
+                    <div ng-show="order.billing_address_full_text && order.id_company"><a
+                                href="/ng/com_zeapps_contact/companies/@{{ order.id_company }}" class="btn btn-info btn-xs">Voir
+                            l'entreprise</a></div>
+
+                    <div ng-show="order.billing_address_full_text && order.id_contact"><a
+                                href="/ng/com_zeapps_contact/contacts/@{{ order.id_contact }}" class="btn btn-info btn-xs">Voir
+                            le contact</a></div>
+
+
+                    <div ng-hide="order.billing_address_full_text">
+                        <a href="/ng/com_zeapps_contact/companies/@{{ company.id }}">@{{ order.name_company }}</a><br
+                                ng-if="order.name_company">
+                        <a href="/ng/com_zeapps_contact/contacts/@{{ contact.id }}">@{{ order.name_contact }}</a><br
+                                ng-if="order.name_contact">
+                        @{{ order.billing_address_1 }}<br ng-if="order.billing_address_1">
+                        @{{ order.billing_address_2 }}<br ng-if="order.billing_address_2">
+                        @{{ order.billing_address_3 }}<br ng-if="order.billing_address_3">
+                        @{{ order.billing_zipcode + ' ' + order.billing_city }}<br ng-if="order.billing_state != ''">
+                        @{{ order.billing_state }}<br ng-if="order.billing_country_name != ''">
+                        @{{ order.billing_country_name }}
+                    </div>
+
                 </div>
 
                 <div class="col-md-3">
                     <strong>Adresse de livraison :</strong><br>
-                    <a href="/ng/com_zeapps_contact/companies/@{{ company.id }}">@{{ order.delivery_name_company
-                        }}</a><br ng-if="order.delivery_name_company">
-                    <a href="/ng/com_zeapps_contact/contacts/@{{ contact.id }}">@{{ order.delivery_name_contact
-                        }}</a><br
-                            ng-if="order.delivery_name_contact">
-                    @{{ order.delivery_address_1 }}<br ng-if="order.delivery_address_1">
-                    @{{ order.delivery_address_2 }}<br ng-if="order.delivery_address_2">
-                    @{{ order.delivery_address_3 }}<br ng-if="order.delivery_address_3">
-                    @{{ order.delivery_zipcode + ' ' + order.delivery_city }}<br ng-if="order.delivery_state != ''">
-                    @{{ order.delivery_state }}<br ng-if="order.delivery_country_name != ''">
-                    @{{ order.delivery_country_name }}
+
+                    <div ng-show="order.delivery_address_full_text"
+                         ng-bind-html="order.delivery_address_full_text | nl2br"></div>
+                    <div ng-show="order.delivery_address_full_text && order.id_company_delivery"><a
+                                href="/ng/com_zeapps_contact/companies/@{{ order.id_company_delivery }}" class="btn btn-info btn-xs">Voir
+                            l'entreprise</a></div>
+
+                    <div ng-show="order.delivery_address_full_text && order.id_contact_delivery"><a
+                                href="/ng/com_zeapps_contact/contacts/@{{ order.id_contact_delivery }}" class="btn btn-info btn-xs">Voir
+                            le contact</a></div>
+
+                    <div ng-hide="order.delivery_address_full_text">
+                        <a href="/ng/com_zeapps_contact/companies/@{{ company.id }}">@{{ order.delivery_name_company
+                            }}</a><br ng-if="order.delivery_name_company">
+                        <a href="/ng/com_zeapps_contact/contacts/@{{ contact.id }}">@{{ order.delivery_name_contact
+                            }}</a><br
+                                ng-if="order.delivery_name_contact">
+                        @{{ order.delivery_address_1 }}<br ng-if="order.delivery_address_1">
+                        @{{ order.delivery_address_2 }}<br ng-if="order.delivery_address_2">
+                        @{{ order.delivery_address_3 }}<br ng-if="order.delivery_address_3">
+                        @{{ order.delivery_zipcode + ' ' + order.delivery_city }}<br ng-if="order.delivery_state != ''">
+                        @{{ order.delivery_state }}<br ng-if="order.delivery_country_name != ''">
+                        @{{ order.delivery_country_name }}
+                    </div>
+
                 </div>
 
                 <div class="col-md-4" style="text-align: right">
@@ -243,7 +272,8 @@
 
                             <td class="text-right">
                                  <span ng-if="(line.type != 'product' && line.type != 'service' && line.type != 'pack' && line.type != 'comment' && line.type != 'subTotal') && order.finalized != 1">
-                                    <button class="btn btn-info btn-xs" ng-click="editLigneSpecial(line)"><i class="fa fa-edit"></i></button>
+                                    <button class="btn btn-info btn-xs" ng-click="editLigneSpecial(line)"><i
+                                                class="fa fa-edit"></i></button>
                                 </span>
 
                                 <span ng-if="(line.type === 'product' || line.type === 'service' || line.type === 'pack') && order.finalized != 1">

@@ -47,11 +47,21 @@ app.controller("ComZeappsCrmOrderFormCtrl", ["$scope", "$routeParams", "$rootSco
         $scope.compagny_loaded = null;
         $scope.contact_loaded = null;
 
+        $scope.compagny_delivery_loaded = null;
+        $scope.contact_delivery_loaded = null;
+
 
         $scope.updateDateLimit = updateDateLimit;
         $scope.loadAccountManager = loadAccountManager;
+
         $scope.loadCompany = loadCompany;
         $scope.loadContact = loadContact;
+
+        $scope.loadCompanyDelivery = loadCompanyDelivery;
+        $scope.loadContactDelivery = loadContactDelivery;
+
+
+
         $scope.updateAdresse = updateAdresse;
         $scope.loadAccountingNumber = loadAccountingNumber;
         $scope.updateModality = updateModality;
@@ -107,14 +117,14 @@ app.controller("ComZeappsCrmOrderFormCtrl", ["$scope", "$routeParams", "$rootSco
                 if ($routeParams.id_company !== undefined && $routeParams.id_company !== 0) {
                     zhttp.contact.company.get($routeParams.id_company).then(function (response) {
                         if (response.data && response.data != "false") {
-                            loadCompany(response.data.company);
+                            loadCompany(response.data.company, false);
                         }
                     });
                 }
                 if ($routeParams.id_contact !== undefined && $routeParams.id_contact !== 0) {
                     zhttp.contact.contact.get($routeParams.id_contact).then(function (response) {
                         if (response.data && response.data != "false") {
-                            loadContact(response.data.contact);
+                            loadContact(response.data.contact, false);
                         }
                     });
                 }
@@ -122,11 +132,11 @@ app.controller("ComZeappsCrmOrderFormCtrl", ["$scope", "$routeParams", "$rootSco
                 if ($scope.form.id_contact != 0) {
                     zhttp.contact.contact.get($scope.form.id_contact).then(function (response) {
                         if (response.data && response.data != "false") {
-                            loadContact(response.data.contact, function () {
+                            loadContact(response.data.contact, false, function () {
                                 if ($scope.form.id_company != 0) {
                                     zhttp.contact.company.get($scope.form.id_company).then(function (response) {
                                         if (response.data && response.data != "false") {
-                                            loadCompany(response.data.company);
+                                            loadCompany(response.data.company, false);
                                         }
                                     });
                                 }
@@ -136,11 +146,37 @@ app.controller("ComZeappsCrmOrderFormCtrl", ["$scope", "$routeParams", "$rootSco
                 } else if ($scope.form.id_company != 0) {
                     zhttp.contact.company.get($scope.form.id_company).then(function (response) {
                         if (response.data && response.data != "false") {
-                            loadCompany(response.data.company);
+                            loadCompany(response.data.company, false);
+                        }
+                    });
+                }
+
+                if ($scope.form.id_contact_delivery != 0) {
+                    zhttp.contact.contact.get($scope.form.id_contact_delivery).then(function (response) {
+                        if (response.data && response.data != "false") {
+                            loadContactDelivery(response.data.contact, false, function () {
+                                if ($scope.form.id_company_delivery != 0) {
+                                    zhttp.contact.company.get($scope.form.id_company_delivery).then(function (response) {
+                                        if (response.data && response.data != "false") {
+                                            loadCompanyDelivery(response.data.company, false);
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                } else if ($scope.form.id_company_delivery != 0) {
+                    zhttp.contact.company.get($scope.form.id_company_delivery).then(function (response) {
+                        if (response.data && response.data != "false") {
+                            loadCompanyDelivery(response.data.company, false);
                         }
                     });
                 }
             }
+
+            setTimeout(function () {
+                updateAdresse()
+            }, 1500);
         }
 
         function setTab(tab) {
@@ -162,7 +198,16 @@ app.controller("ComZeappsCrmOrderFormCtrl", ["$scope", "$routeParams", "$rootSco
             }
         }
 
-        function loadCompany(company) {
+        function loadCompany(company, resetAddress) {
+            if (resetAddress == undefined) {
+                resetAddress = true ;
+            }
+
+            if (resetAddress) {
+                $scope.form.id_company_address_billing = 0;
+                $scope.form.id_contact_address_billing  = 0;
+            }
+
             $scope.compagny_loaded = company ;
             $scope.compagny_addresses = [{id:0, company_name: "--"}] ;
 
@@ -190,10 +235,21 @@ app.controller("ComZeappsCrmOrderFormCtrl", ["$scope", "$routeParams", "$rootSco
                 $scope.form.id_company_address_billing = 0;
             }
 
-            updateAdresse();
+            if (resetAddress) {
+                updateAdresse();
+            }
         }
 
-        function loadContact(contact, next) {
+        function loadContact(contact, resetAddress, next) {
+            if (resetAddress == undefined) {
+                resetAddress = true ;
+            }
+
+            if (resetAddress && $scope.form.id_company == 0) {
+                $scope.form.id_company_address_billing = 0;
+                $scope.form.id_contact_address_billing  = 0;
+            }
+
             $scope.contact_loaded = contact ;
             $scope.contact_addresses = [{id:0, company_name: "--"}];
 
@@ -229,19 +285,96 @@ app.controller("ComZeappsCrmOrderFormCtrl", ["$scope", "$routeParams", "$rootSco
                 $scope.form.id_contact_address_billing = 0;
             }
 
-            updateAdresse();
+            if (resetAddress) {
+                updateAdresse();
+            }
 
             if(next) {
                 next();
             }
         }
 
-        function updateAdresse() {
-            $scope.form.name_company = "";
-            $scope.form.name_contact = "";
-            $scope.form.delivery_name_company = "";
-            $scope.form.delivery_name_contact = "";
 
+
+
+        function loadCompanyDelivery(company, resetAddress) {
+            if (resetAddress == undefined) {
+                resetAddress = true ;
+            }
+
+            if (resetAddress) {
+                $scope.form.id_company_address_delivery = 0;
+                $scope.form.id_contact_address_delivery = 0;
+            }
+
+            $scope.compagny_delivery_loaded = company ;
+            $scope.compagny_delivery_addresses = [{id:0, company_name: "--"}] ;
+
+            if (company) {
+                if (company.sub_adresses) {
+                    $scope.compagny_delivery_addresses = $scope.compagny_delivery_addresses.concat(company.sub_adresses);
+                }
+
+                $scope.form.id_company_delivery = company.id;
+                $scope.form.name_company_delivery = company.company_name;
+            } else {
+                $scope.form.id_company_delivery = 0;
+                $scope.form.name_company_delivery = "";
+            }
+
+            if (resetAddress) {
+                updateAdresse();
+            }
+        }
+
+        function loadContactDelivery(contact, resetAddress, next) {
+            if (resetAddress == undefined) {
+                resetAddress = true ;
+            }
+
+            if (resetAddress && $scope.form.id_company_delivery == 0) {
+                $scope.form.id_company_address_delivery = 0;
+                $scope.form.id_contact_address_delivery = 0;
+            }
+
+            $scope.contact_delivery_loaded = contact ;
+            $scope.contact_delivery_addresses = [{id:0, company_name: "--"}];
+
+            if (contact) {
+                if (contact.sub_adresses) {
+                    $scope.contact_delivery_addresses = $scope.contact_delivery_addresses.concat(contact.sub_adresses);
+                }
+
+                $scope.form.id_contact_delivery = contact.id;
+                $scope.form.name_contact_delivery = contact.last_name + " " + contact.first_name;
+
+                if (contact.id_company_delivery !== "0" && contact.id_company_delivery !== 0 && ($scope.form.id_company_delivery === undefined || $scope.form.id_company_delivery === 0)) {
+                    zhttp.contact.company.get(contact.id_company_delivery).then(function (response) {
+                        if (response.data && response.data != "false") {
+                            loadCompanyDelivery(response.data.company);
+                        }
+                    })
+                }
+            } else {
+                $scope.form.id_contact_delivery = 0;
+                $scope.form.name_contact_delivery = "";
+                $scope.form.id_contact_address_delivery = 0;
+            }
+
+            if (resetAddress) {
+                updateAdresse();
+            }
+
+            if(next) {
+                next();
+            }
+        }
+
+
+
+
+
+        function updateAdresse() {
             $scope.form.billing_address_1 = "";
             $scope.form.billing_address_2 = "";
             $scope.form.billing_address_3 = "";
@@ -251,6 +384,7 @@ app.controller("ComZeappsCrmOrderFormCtrl", ["$scope", "$routeParams", "$rootSco
             $scope.form.billing_state = "";
             $scope.form.billing_country_id = "";
             $scope.form.billing_country_name = "";
+            $scope.form.billing_address_full_text = "";
 
             $scope.form.delivery_address_1 = "";
             $scope.form.delivery_address_2 = "";
@@ -261,156 +395,53 @@ app.controller("ComZeappsCrmOrderFormCtrl", ["$scope", "$routeParams", "$rootSco
             $scope.form.delivery_state = "";
             $scope.form.delivery_country_id = "";
             $scope.form.delivery_country_name = "";
+            $scope.form.delivery_address_full_text = "";
 
 
-            if ($scope.form.id_company && $scope.form.id_company != 0) {
-                if ($scope.form.id_company_address_billing) {
-                    angular.forEach($scope.compagny_addresses, function (compagny_address) {
-                        if (compagny_address.id == $scope.form.id_company_address_billing) {
-                            $scope.form.name_company = compagny_address.company_name;
-                            if (compagny_address.first_name != "" || compagny_address.last_name != "") {
-                                $scope.form.name_contact = compagny_address.first_name + " " + compagny_address.last_name;
-                            }
-                            $scope.form.billing_address_1 = compagny_address.address_1 || "";
-                            $scope.form.billing_address_2 = compagny_address.address_2 || "";
-                            $scope.form.billing_address_3 = compagny_address.address_3 || "";
-                            $scope.form.billing_city = compagny_address.city || "";
-                            $scope.form.billing_zipcode = compagny_address.zipcode || "";
-                            $scope.form.billing_state_id = compagny_address.state_id || 0;
-                            $scope.form.billing_state = compagny_address.state || "";
-                            $scope.form.billing_country_id = compagny_address.country_id || "";
-                            $scope.form.billing_country_name = compagny_address.country_name || "";
-                        }
-                    });
-                } else if ($scope.compagny_loaded && $scope.compagny_loaded.billing_address_1) {
-                    $scope.form.name_company = $scope.compagny_loaded.company_name;
-                    $scope.form.name_contact = "";
-                    $scope.form.billing_address_1 = $scope.compagny_loaded.billing_address_1 || "";
-                    $scope.form.billing_address_2 = $scope.compagny_loaded.billing_address_2 || "";
-                    $scope.form.billing_address_3 = $scope.compagny_loaded.billing_address_3 || "";
-                    $scope.form.billing_city = $scope.compagny_loaded.billing_city || "";
-                    $scope.form.billing_zipcode = $scope.compagny_loaded.billing_zipcode || "";
-                    $scope.form.billing_state_id = $scope.compagny_loaded.billing_state_id || 0;
-                    $scope.form.billing_state = $scope.compagny_loaded.billing_state || "";
-                    $scope.form.billing_country_id = $scope.compagny_loaded.billing_country_id || "";
-                    $scope.form.billing_country_name = $scope.compagny_loaded.billing_country_name || "";
+            zhttp.contact.address.get($scope.form.id_company, $scope.form.id_company_address_billing, $scope.form.id_contact, $scope.form.id_contact_address_billing, "billing").then(function (response) {
+                if (response.status == 200) {
+                    $scope.form.billing_address_full_text = response.data.full_text;
+
+                    $scope.form.billing_address_1 = response.data.address_1;
+                    $scope.form.billing_address_2 = response.data.address_2;
+                    $scope.form.billing_address_3 = response.data.address_3;
+                    $scope.form.billing_city = response.data.city;
+                    $scope.form.billing_zipcode = response.data.zipcode;
+                    $scope.form.billing_state_id = response.data.state_id;
+                    $scope.form.billing_state = response.data.state;
+                    $scope.form.billing_country_id = response.data.country_id;
+                    $scope.form.billing_country_name = response.data.country_name;
                 }
+            });
 
 
 
-                if ($scope.form.id_company_address_delivery) {
-                    angular.forEach($scope.compagny_addresses, function (compagny_address) {
-                        if (compagny_address.id == $scope.form.id_company_address_delivery) {
-                            $scope.form.delivery_name_company = compagny_address.company_name;
-                            if (compagny_address.first_name != "" || compagny_address.last_name != "") {
-                                $scope.form.delivery_name_contact = compagny_address.first_name + " " + compagny_address.last_name;
-                            }
-                            $scope.form.delivery_address_1 = compagny_address.address_1 || "";
-                            $scope.form.delivery_address_2 = compagny_address.address_2 || "";
-                            $scope.form.delivery_address_3 = compagny_address.address_3 || "";
-                            $scope.form.delivery_city = compagny_address.city || "";
-                            $scope.form.delivery_zipcode = compagny_address.zipcode || "";
-                            $scope.form.delivery_state_id = compagny_address.state_id || 0;
-                            $scope.form.delivery_state = compagny_address.state || "";
-                            $scope.form.delivery_country_id = compagny_address.country_id || "";
-                            $scope.form.delivery_country_name = compagny_address.country_name || "";
-                        }
-                    });
-                } else {
-                    $scope.form.delivery_name_company = "";
-                    $scope.form.delivery_name_contact = "";
+            var id_company_delivery = $scope.form.id_company_delivery ;
+            var id_company_address_delivery = $scope.form.id_company_address_delivery ;
+            var id_contact_delivery = $scope.form.id_contact_delivery ;
+            var id_contact_address_delivery = $scope.form.id_contact_address_delivery ;
 
-                    if ($scope.compagny_loaded && $scope.compagny_loaded.delivery_address_1) {
-                        $scope.form.delivery_name_company = $scope.compagny_loaded.company_name;
-                        $scope.form.delivery_address_1 = $scope.compagny_loaded.delivery_address_1 || "";
-                        $scope.form.delivery_address_2 = $scope.compagny_loaded.delivery_address_2 || "";
-                        $scope.form.delivery_address_3 = $scope.compagny_loaded.delivery_address_3 || "";
-                        $scope.form.delivery_city = $scope.compagny_loaded.delivery_city || "";
-                        $scope.form.delivery_zipcode = $scope.compagny_loaded.delivery_zipcode || "";
-                        $scope.form.delivery_state_id = $scope.compagny_loaded.delivery_state_id || "";
-                        $scope.form.delivery_state = $scope.compagny_loaded.delivery_state || "";
-                        $scope.form.delivery_country_id = $scope.compagny_loaded.delivery_country_id || "";
-                        $scope.form.delivery_country_name = $scope.compagny_loaded.delivery_country_name || "";
-                    } else if ($scope.compagny_loaded) {
-                        $scope.form.delivery_name_company = $scope.compagny_loaded.company_name;
-                        $scope.form.delivery_address_1 = $scope.compagny_loaded.billing_address_1 || "";
-                        $scope.form.delivery_address_2 = $scope.compagny_loaded.billing_address_2 || "";
-                        $scope.form.delivery_address_3 = $scope.compagny_loaded.billing_address_3 || "";
-                        $scope.form.delivery_city = $scope.compagny_loaded.billing_city || "";
-                        $scope.form.delivery_zipcode = $scope.compagny_loaded.billing_zipcode || "";
-                        $scope.form.delivery_state_id = $scope.compagny_loaded.billing_state_id || "";
-                        $scope.form.delivery_state = $scope.compagny_loaded.billing_state || "";
-                        $scope.form.delivery_country_id = $scope.compagny_loaded.billing_country_id || "";
-                        $scope.form.delivery_country_name = $scope.compagny_loaded.billing_country_name || "";
-                    }
-                }
-
-
-
-
-            } else if ($scope.form.id_contact && $scope.form.id_contact != 0) {
-                if ($scope.form.id_contact_address_billing && $scope.form.id_contact_address_billing != 0) {
-                    angular.forEach($scope.contact_addresses, function (contact_address) {
-                        if (contact_address.id == $scope.form.id_contact_address_billing) {
-                            $scope.form.name_company = contact_address.company_name;
-                            if (contact_address.first_name != "" || contact_address.last_name != "") {
-                                $scope.form.name_contact = contact_address.first_name + " " + contact_address.last_name;
-                            }
-                            $scope.form.billing_address_1 = contact_address.address_1 || "";
-                            $scope.form.billing_address_2 = contact_address.address_2 || "";
-                            $scope.form.billing_address_3 = contact_address.address_3 || "";
-                            $scope.form.billing_city = contact_address.city || "";
-                            $scope.form.billing_zipcode = contact_address.zipcode || "";
-                            $scope.form.billing_state_id = contact_address.state_id || 0;
-                            $scope.form.billing_state = contact_address.state || "";
-                            $scope.form.billing_country_id = contact_address.country_id || "";
-                            $scope.form.billing_country_name = contact_address.country_name || "";
-                        }
-                    });
-                } else if ($scope.contact_loaded) {
-                    $scope.form.name_contact = $scope.contact_loaded.first_name + " " + $scope.contact_loaded.last_name;
-                    $scope.form.billing_address_1 = $scope.contact_loaded.address_1 || "";
-                    $scope.form.billing_address_2 = $scope.contact_loaded.address_2 || "";
-                    $scope.form.billing_address_3 = $scope.contact_loaded.address_3 || "";
-                    $scope.form.billing_city = $scope.contact_loaded.city || "";
-                    $scope.form.billing_zipcode = $scope.contact_loaded.zipcode || "";
-                    $scope.form.billing_state_id = $scope.contact_loaded.state || 0;
-                    $scope.form.billing_state = $scope.contact_loaded.state || "";
-                    $scope.form.billing_country_id = $scope.contact_loaded.country_id || 0;
-                    $scope.form.billing_country_name = $scope.contact_loaded.country_name || "";
-                }
-
-                if ($scope.form.id_contact_address_delivery && $scope.form.id_contact_address_delivery != 0) {
-                    angular.forEach($scope.contact_addresses, function (contact_address) {
-                        if (contact_address.id == $scope.form.id_contact_address_delivery) {
-                            $scope.form.delivery_name_company = contact_address.company_name;
-                            if (contact_address.first_name != "" || contact_address.last_name != "") {
-                                $scope.form.delivery_name_contact = contact_address.first_name + " " + contact_address.last_name;
-                            }
-                            $scope.form.delivery_address_1 = contact_address.address_1 || "";
-                            $scope.form.delivery_address_2 = contact_address.address_2 || "";
-                            $scope.form.delivery_address_3 = contact_address.address_3 || "";
-                            $scope.form.delivery_city = contact_address.city || "";
-                            $scope.form.delivery_zipcode = contact_address.zipcode || "";
-                            $scope.form.delivery_state_id = contact_address.state_id || 0;
-                            $scope.form.delivery_state = contact_address.state || "";
-                            $scope.form.delivery_country_id = contact_address.country_id || "";
-                            $scope.form.delivery_country_name = contact_address.country_name || "";
-                        }
-                    });
-                } else if ($scope.contact_loaded) {
-                    $scope.form.delivery_name_contact = $scope.contact_loaded.first_name + " " + $scope.contact_loaded.last_name;
-                    $scope.form.delivery_address_1 = $scope.contact_loaded.address_1 || "";
-                    $scope.form.delivery_address_2 = $scope.contact_loaded.address_2 || "";
-                    $scope.form.delivery_address_3 = $scope.contact_loaded.address_3 || "";
-                    $scope.form.delivery_city = $scope.contact_loaded.city || "";
-                    $scope.form.delivery_zipcode = $scope.contact_loaded.zipcode || "";
-                    $scope.form.delivery_state_id = $scope.contact_loaded.state || 0;
-                    $scope.form.delivery_state = $scope.contact_loaded.state || "";
-                    $scope.form.delivery_country_id = $scope.contact_loaded.country_id || 0;
-                    $scope.form.delivery_country_name = $scope.contact_loaded.country_name || "";
-                }
+            if (id_company_delivery == 0 && id_contact_delivery == 0) {
+                id_company_delivery = $scope.form.id_company ;
+                id_contact_delivery = $scope.form.id_contact ;
             }
+
+            zhttp.contact.address.get(id_company_delivery, id_company_address_delivery, id_contact_delivery, id_contact_address_delivery, "delivery").then(function (response) {
+                if (response.status == 200) {
+                    $scope.form.delivery_address_full_text = response.data.full_text;
+
+                    //$scope.form.delivery_name_company = response.data.company;
+                    $scope.form.delivery_address_1 = response.data.address_1;
+                    $scope.form.delivery_address_2 = response.data.address_2;
+                    $scope.form.delivery_address_3 = response.data.address_3;
+                    $scope.form.delivery_city = response.data.city;
+                    $scope.form.delivery_zipcode = response.data.zipcode;
+                    $scope.form.delivery_state_id = response.data.state_id;
+                    $scope.form.delivery_state = response.data.state;
+                    $scope.form.delivery_country_id = response.data.country_id;
+                    $scope.form.delivery_country_name = response.data.country_name;
+                }
+            });
         }
 
         function loadAccountingNumber(accounting_number) {
