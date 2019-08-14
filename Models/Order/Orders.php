@@ -51,8 +51,8 @@ class Orders extends Model
         $this->fieldModelInfo->integer('id_company_address_delivery')->default(0);
         $this->fieldModelInfo->integer('id_contact_address_delivery')->default(0);
 
-        $this->fieldModelInfo->string('delivery_name_company', false, true)->default("");
-        $this->fieldModelInfo->string('delivery_name_contact', false, true)->default("");
+        $this->fieldModelInfo->string('delivery_name_company', 255)->default("");
+        $this->fieldModelInfo->string('delivery_name_contact', 255)->default("");
 
         $this->fieldModelInfo->string('billing_address_1', 100)->default("");
         $this->fieldModelInfo->string('billing_address_2', 100)->default("");
@@ -88,6 +88,14 @@ class Orders extends Model
         $this->fieldModelInfo->string('bank_check_number', 255)->default("");
         $this->fieldModelInfo->string('check_issuer', 255)->default("");
         $this->fieldModelInfo->string('reference_client', 255)->default("");
+
+        $this->fieldModelInfo->integer('id_company_delivery')->default(0);
+        $this->fieldModelInfo->string('name_company_delivery', 255)->default("");
+        $this->fieldModelInfo->integer('id_contact_delivery')->default(0);
+        $this->fieldModelInfo->string('name_contact_delivery', 255)->default("");
+        $this->fieldModelInfo->text('delivery_address_full_text')->default("");
+        $this->fieldModelInfo->text('billing_address_full_text')->default("");
+
         $this->fieldModelInfo->timestamps();
         $this->fieldModelInfo->softDeletes();
 

@@ -67,8 +67,8 @@ class Invoices extends Model
         $this->fieldModelInfo->integer('id_company_address_delivery')->default(0);
         $this->fieldModelInfo->integer('id_contact_address_delivery')->default(0);
 
-        $this->fieldModelInfo->string('delivery_name_company', false, true)->default("");
-        $this->fieldModelInfo->string('delivery_name_contact', false, true)->default("");
+        $this->fieldModelInfo->string('delivery_name_company', 255)->default("");
+        $this->fieldModelInfo->string('delivery_name_contact', 255)->default("");
 
         $this->fieldModelInfo->string('billing_address_1', 100)->default("");
         $this->fieldModelInfo->string('billing_address_2', 100)->default("");
@@ -97,14 +97,22 @@ class Invoices extends Model
         $this->fieldModelInfo->decimal('total_ht', 9, 2)->default(0);
         $this->fieldModelInfo->decimal('total_tva', 9, 2)->default(0);
         $this->fieldModelInfo->decimal('total_ttc', 9, 2)->default(0);
-        $this->fieldModelInfo->timestamp('date_creation')->nullable();
-        $this->fieldModelInfo->timestamp('date_limit')->nullable();
+
         $this->fieldModelInfo->integer('id_modality', false)->default(0);
         $this->fieldModelInfo->string('label_modality', 255)->default("");
         $this->fieldModelInfo->string('bank_check_number', 255)->default("");
         $this->fieldModelInfo->string('check_issuer', 255)->default("");
         $this->fieldModelInfo->string('reference_client', 255)->default("");
 
+        $this->fieldModelInfo->integer('id_company_delivery')->default(0);
+        $this->fieldModelInfo->string('name_company_delivery', 255)->default("");
+        $this->fieldModelInfo->integer('id_contact_delivery')->default(0);
+        $this->fieldModelInfo->string('name_contact_delivery', 255)->default("");
+        $this->fieldModelInfo->text('delivery_address_full_text')->default("");
+        $this->fieldModelInfo->text('billing_address_full_text')->default("");
+
+        $this->fieldModelInfo->timestamp('date_creation')->nullable();
+        $this->fieldModelInfo->timestamp('date_limit')->nullable();
 
         parent::__construct($attributes);
     }
