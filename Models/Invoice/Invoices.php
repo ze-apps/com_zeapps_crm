@@ -503,6 +503,20 @@ class Invoices extends Model
     }
 
 
+
+
+    public static function getCurrentDue($id = 0, $src = 'contact')
+    {
+        $invoices = Capsule::table('com_zeapps_crm_invoices')
+            ->select(Capsule::raw('SUM(due) as total_due'))
+            ->where("finalized", 1)
+            ->where("id_" . $src, $id)
+            ->where("deleted_at", null)
+            ->first();
+
+        return $invoices->total_due;
+    }
+
     public static function turnoverByYearsOf($id = 0, $src = 'contact')
     {
         $invoices = Capsule::table('com_zeapps_crm_invoices')
