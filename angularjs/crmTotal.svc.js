@@ -83,7 +83,7 @@ app.factory("crmTotal", [function () {
 
                 line.price_unit = dataPrice.priceUnitHT ;
                 line.total_ht = dataPrice.priceTotalHT ;
-                line.total_ttc = dataPrice.priceTotalTTC ;
+                //line.total_ttc = dataPrice.priceTotalTTC ;
             } else {
                 if (isNaN(line.price_unit_ttc_subline)) {
                     if (line.price_unit_ttc_subline && line.price_unit_ttc_subline != "") {
@@ -114,7 +114,7 @@ app.factory("crmTotal", [function () {
 
                 line.price_unit = dataPrice.priceUnitHT ;
                 line.total_ht = dataPrice.priceTotalHT ;
-                line.total_ttc = dataPrice.priceTotalTTC ;
+                //line.total_ttc = dataPrice.priceTotalTTC ;
             }
         } else {
             // on applique le prix du produit unitaire
@@ -136,9 +136,10 @@ app.factory("crmTotal", [function () {
 
             line.price_unit = dataPrice.priceUnitHT ;
             line.total_ht = dataPrice.priceTotalHT ;
-            line.total_ttc = dataPrice.priceTotalTTC ;
+            //line.total_ttc = dataPrice.priceTotalTTC ;
         }
 
+        line.total_ttc = parseFloat(line.total_ttc);
 
         return dataPrice;
     }
