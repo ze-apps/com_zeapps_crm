@@ -35,6 +35,9 @@ class DeliveryLinePriceList extends Model
         $this->fieldModelInfo->decimal('value_taxe', 8, 2)->default(0);
         $this->fieldModelInfo->decimal('percentage_discount', 8, 2)->default(0);
 
+        $this->fieldModelInfo->decimal('maximum_discount_allowed', 5, 2)->default(100);
+        $this->fieldModelInfo->decimal('weight', 11, 2)->default(0);
+
         $this->fieldModelInfo->timestamps();
         $this->fieldModelInfo->softDeletes();
 

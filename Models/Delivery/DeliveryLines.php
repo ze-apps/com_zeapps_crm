@@ -48,6 +48,10 @@ class DeliveryLines extends Model {
         $this->fieldModelInfo->integer('sort')->default(0);
         $this->fieldModelInfo->tinyInteger('discount_prohibited')->default(0);
         $this->fieldModelInfo->text('json')->default('');
+
+        $this->fieldModelInfo->decimal('maximum_discount_allowed', 5, 2)->default(100);
+        $this->fieldModelInfo->decimal('weight', 11, 2)->default(0);
+
         $this->fieldModelInfo->timestamps();
         $this->fieldModelInfo->softDeletes();
 

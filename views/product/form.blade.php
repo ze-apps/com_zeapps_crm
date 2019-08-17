@@ -23,7 +23,7 @@
             <div class="well" ng-show="navigationState =='body'">
 
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label>Type de produit <span class="required">*</span></label>
                             <select ng-model="form.type_product" class="form-control"
@@ -36,7 +36,7 @@
                     </div>
 
 
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label>
                                  Actif
@@ -53,8 +53,13 @@
                                    ng-true-value="1"
                                    ng-false-value="0"
                                    ng-checked="form.discount_prohibited*1">
+                        </div>
+                    </div>
 
-
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Remise max. autorisée <span class="required">*</span></label>
+                            <input type="text" ng-model="form.maximum_discount_allowed" class="form-control" ng-required="true">
                         </div>
                     </div>
 
@@ -79,7 +84,7 @@
 
 
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label>Catégorie <span class="required">*</span></label>
 
@@ -87,6 +92,13 @@
                                 <option ng-repeat="tree in tree_select" ng-value="@{{tree.id}}"
                                         ng-bind-html="tree.name | trusted"/>
                             </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Poids (en grammes)</label>
+                            <input type="text" ng-model="form.weight" class="form-control">
                         </div>
                     </div>
                 </div>

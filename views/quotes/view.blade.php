@@ -87,36 +87,43 @@
                 </div>
 
                 <div class="col-md-4">
-                    <div class="pull-right">
-                        <ze-btn fa="arrow-left" color="primary" hint="Retour" direction="left"
-                                ng-click="back()"></ze-btn>
-                        <ze-btn fa="edit" color="info" hint="Editer" direction="left"
-                                ze-modalform="updateQuote"
-                                data-edit="quote"
-                                data-template="templateEdit"
-                                data-title="Modifier le devis"></ze-btn>
-                        <ze-btn fa="download" color="primary" hint="PDF" direction="left" ng-click="print()"></ze-btn>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="pull-right">
+                                <ze-btn fa="arrow-left" color="primary" hint="Retour" direction="left"
+                                        ng-click="back()"></ze-btn>
+                                <ze-btn fa="edit" color="info" hint="Editer" direction="left"
+                                        ze-modalform="updateQuote"
+                                        data-edit="quote"
+                                        data-template="templateEdit"
+                                        data-title="Modifier le devis"></ze-btn>
+                                <ze-btn fa="download" color="primary" hint="PDF" direction="left" ng-click="print()"></ze-btn>
 
 
 
-                        <ze-btn fa="envelope" color="primary" hint="Envoyer par email" direction="left" ng-click="sendByMail()"></ze-btn>
+                                <ze-btn fa="envelope" color="primary" hint="Envoyer par email" direction="left" ng-click="sendByMail()"></ze-btn>
 
 
-                        <ze-btn fa="copy" color="success" hint="Dupliquer" direction="left"
-                                ng-click="transform()"></ze-btn>
+                                <ze-btn fa="copy" color="success" hint="Dupliquer" direction="left"
+                                        ng-click="transform()"></ze-btn>
 
-                        <div class="btn-group btn-group-xs" role="group" ng-if="nb_quotes > 0">
-                            <button type="button" class="btn btn-default" ng-class="quote_first == 0 ? 'disabled' :''"
-                                    ng-click="first_quote()"><span class="fa fa-fw fa-fast-backward"></span></button>
-                            <button type="button" class="btn btn-default"
-                                    ng-class="quote_previous == 0 ? 'disabled' :''" ng-click="previous_quote()"><span
-                                        class="fa fa-fw fa-chevron-left"></span></button>
-                            <button type="button" class="btn btn-default disabled">@{{quote_order}}/@{{nb_quotes}}
-                            </button>
-                            <button type="button" class="btn btn-default" ng-class="quote_next == 0 ? 'disabled' :''"
-                                    ng-click="next_quote()"><span class="fa fa-fw fa-chevron-right"></span></button>
-                            <button type="button" class="btn btn-default" ng-class="quote_last == 0 ? 'disabled' :''"
-                                    ng-click="last_quote()"><span class="fa fa-fw fa-fast-forward"></span></button>
+                                <div class="btn-group btn-group-xs" role="group" ng-if="nb_quotes > 0">
+                                    <button type="button" class="btn btn-default" ng-class="quote_first == 0 ? 'disabled' :''"
+                                            ng-click="first_quote()"><span class="fa fa-fw fa-fast-backward"></span></button>
+                                    <button type="button" class="btn btn-default"
+                                            ng-class="quote_previous == 0 ? 'disabled' :''" ng-click="previous_quote()"><span
+                                                class="fa fa-fw fa-chevron-left"></span></button>
+                                    <button type="button" class="btn btn-default disabled">@{{quote_order}}/@{{nb_quotes}}
+                                    </button>
+                                    <button type="button" class="btn btn-default" ng-class="quote_next == 0 ? 'disabled' :''"
+                                            ng-click="next_quote()"><span class="fa fa-fw fa-chevron-right"></span></button>
+                                    <button type="button" class="btn btn-default" ng-class="quote_last == 0 ? 'disabled' :''"
+                                            ng-click="last_quote()"><span class="fa fa-fw fa-fast-forward"></span></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="pull-right" style="margin-top: 50px;">Poids : @{{ quote.weight | weight }}</div>
                         </div>
                     </div>
                 </div>
@@ -240,6 +247,7 @@
 
                             <td class="text-right" ng-if="line.type != 'subTotal' && line.type != 'comment'">
                                 @{{ line.discount != 0 && line.discount_prohibited == 0 ? ((0-line.discount) | currency:'%':2) : ''}}
+                                <span ng-show="line.discount > line.maximum_discount_allowed" class="text-danger"><br><i class="fas fa-exclamation-triangle"></i> Remise max. autorisée : @{{ line.maximum_discount_allowed }} %</span>
                             </td>
 
                             <td class="text-right" ng-if="line.type != 'subTotal' && line.type != 'comment'">

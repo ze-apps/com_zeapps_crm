@@ -50,6 +50,9 @@ class QuoteLines extends Model
         $this->fieldModelInfo->tinyInteger('discount_prohibited')->default(0);
         $this->fieldModelInfo->text('json')->default('');
 
+        $this->fieldModelInfo->decimal('maximum_discount_allowed', 5, 2)->default(100);
+        $this->fieldModelInfo->decimal('weight', 11, 2)->default(0);
+
         $this->fieldModelInfo->timestamps();
         $this->fieldModelInfo->softDeletes();
 

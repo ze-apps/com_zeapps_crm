@@ -111,6 +111,8 @@ class Invoices extends Model
         $this->fieldModelInfo->text('delivery_address_full_text')->default("");
         $this->fieldModelInfo->text('billing_address_full_text')->default("");
 
+        $this->fieldModelInfo->decimal('weight', 11, 2)->default(0);
+
         $this->fieldModelInfo->timestamp('date_creation')->nullable();
         $this->fieldModelInfo->timestamp('date_limit')->nullable();
 
@@ -679,6 +681,17 @@ class Invoices extends Model
     }
 
 
+    private function getWeight($lines) {
+        $weight = 0 ;
+        foreach ($lines as $line) {
+            $weight += $line->weight * $line->qty ;
+            if (isset($line->sublines) && count($line->sublines)) {
+                $weight += $this->getWeight($line->sublines) * $line->qty ;
+            }
+        }
+        return $weight ;
+    }
+
     private function updatePrice($invoice)
     {
         if ($invoice && $invoice->id) {
@@ -698,6 +711,8 @@ class Invoices extends Model
 
             $total_ht_before_discount = 0 ;
             $total_ttc_before_discount = 0 ;
+
+            $total_weight = $this->getWeight($lines) ;
 
 
 
@@ -756,7 +771,9 @@ class Invoices extends Model
 
             // calcul le montant total du document
             self::where('id', $invoice->id)->update(
-                ['total_ht' => $total_ht,
+                [
+                    'weight' => $total_weight,
+                    'total_ht' => $total_ht,
                     'total_tva' => $total_tva,
                     'total_ttc' => $total_ttc,
                     'total_prediscount_ht' => $total_ht_before_discount,

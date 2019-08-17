@@ -374,6 +374,9 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
                                 accounting_number: response.data.accounting_number,
                                 sort: $scope.lines.length,
 
+                                maximum_discount_allowed: response.data.maximum_discount_allowed,
+                                weight: response.data.weight,
+
                                 total_ht: response.data.price_ht,
                                 total_ttc: response.data.price_ttc,
                                 price_unit_ht_indicated: response.data.price_ht,
@@ -452,6 +455,9 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
                                 accounting_number: parseFloat(objReturn.accounting_number),
                                 sort: $scope.lines.length,
 
+                                maximum_discount_allowed: objReturn.maximum_discount_allowed,
+                                weight: objReturn.weight,
+
                                 total_ht: objReturn.price_ht,
                                 total_ttc: objReturn.price_ttc,
                                 price_unit_ht_indicated: objReturn.price_ht,
@@ -517,6 +523,9 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
                         id_taxe: parseFloat(sublines[i].id_taxe),
                         value_taxe: parseFloat(sublines[i].value_taxe),
                         accounting_number: parseFloat(sublines[i].accounting_number),
+
+                        maximum_discount_allowed: sublines[i].maximum_discount_allowed,
+                        weight: sublines[i].weight,
 
                         total_ht: sublines[i].price_ht,
                         total_ttc: sublines[i].price_ttc,
@@ -676,6 +685,7 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
                                             line.accounting_number = priceList.accounting_number;
                                         }
 
+                                        line.maximum_discount_allowed = priceList.maximum_discount_allowed;
                                         line.discount = priceList.percentage_discount;
                                         line.price_unit = priceList.price_ht;
                                         line.id_taxe = priceList.id_taxe;

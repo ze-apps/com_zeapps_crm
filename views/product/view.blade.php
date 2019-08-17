@@ -65,8 +65,10 @@
                                 <th class="text-right">Prix HT</th>
                                 <th class="text-right">TVA (%)</th>
                                 <th class="text-right">Prix TTC</th>
+                                <th class="text-right">Poids</th>
                                 <th class="text-center">Actif</th>
                                 <th class="text-center">Remise interdite</th>
+                                <th class="text-center">Remise max. autorisée</th>
                                 <th class="text-right">Actions</th>
                             </tr>
                             </thead>
@@ -82,8 +84,10 @@
                                 <td ng-click="goTo(product.id)" class="text-right">@{{ product.price_ht | currency:'€':2 }}</td>
                                 <td ng-click="goTo(product.id)" class="text-right"><span ng-if="product.type_product != 'pack'">@{{ product.value_taxe | currency:'%':2 }}</span></td>
                                 <td ng-click="goTo(product.id)" class="text-right">@{{ product.price_ttc | currency:'€':2 }}</td>
+                                <td ng-click="goTo(product.id)" class="text-right"><span ng-show="product.weight != 0">@{{ product.weight | weight }}</span></td>
                                 <td ng-click="goTo(product.id)" class="text-center"><span ng-if="product.active">OUI</span><span ng-if="!product.active">NON</span></td>
                                 <td ng-click="goTo(product.id)" class="text-center"><span ng-if="product.discount_prohibited">OUI</span></td>
+                                <td ng-click="goTo(product.id)" class="text-center">@{{ product.maximum_discount_allowed }}</td>
                                 <td class="text-right">
                                     <button type="button" class="btn btn-xs btn-danger" ng-click="delete(product)">
                                         <i class="fa fa-trash fa-fw"></i>

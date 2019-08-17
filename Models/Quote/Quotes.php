@@ -96,6 +96,8 @@ class Quotes extends Model
         $this->fieldModelInfo->text('delivery_address_full_text')->default("");
         $this->fieldModelInfo->text('billing_address_full_text')->default("");
 
+        $this->fieldModelInfo->decimal('weight', 11, 2)->default(0);
+
         $this->fieldModelInfo->timestamps();
         $this->fieldModelInfo->softDeletes();
 
@@ -261,7 +263,16 @@ class Quotes extends Model
 
 
 
-
+    private function getWeight($lines) {
+        $weight = 0 ;
+        foreach ($lines as $line) {
+            $weight += $line->weight * $line->qty ;
+            if (isset($line->sublines) && count($line->sublines)) {
+                $weight += $this->getWeight($line->sublines) * $line->qty ;
+            }
+        }
+        return $weight ;
+    }
 
     private function updatePrice($quote)
     {
@@ -279,6 +290,7 @@ class Quotes extends Model
             $total_ht = 0 ;
             $total_tva = 0 ;
             $total_ttc = 0 ;
+            $total_weight = $this->getWeight($lines) ;
 
             $total_ht_before_discount = 0 ;
             $total_ttc_before_discount = 0 ;
@@ -300,7 +312,6 @@ class Quotes extends Model
                 $objQuoteTaxes->total_ttc = $ecriture["total_ttc"] ;
                 $objQuoteTaxes->save();
 
-
                 $total_ht += $objQuoteTaxes->base_tax * 1 ;
                 $total_tva += $objQuoteTaxes->amount_tax * 1 ;
                 $total_ttc += $objQuoteTaxes->base_tax * 1 + $objQuoteTaxes->amount_tax * 1 ;
@@ -313,7 +324,9 @@ class Quotes extends Model
 
             // calcul le montant total du document
             self::where('id', $quote->id)->update(
-                ['total_ht' => $total_ht,
+                [
+                    'weight' => $total_weight,
+                    'total_ht' => $total_ht,
                     'total_tva' => $total_tva,
                     'total_ttc' => $total_ttc,
                     'total_prediscount_ht' => $total_ht_before_discount,

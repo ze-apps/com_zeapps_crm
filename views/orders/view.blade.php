@@ -25,11 +25,13 @@
                     <div ng-show="order.billing_address_full_text"
                          ng-bind-html="order.billing_address_full_text | nl2br"></div>
                     <div ng-show="order.billing_address_full_text && order.id_company"><a
-                                href="/ng/com_zeapps_contact/companies/@{{ order.id_company }}" class="btn btn-info btn-xs">Voir
+                                href="/ng/com_zeapps_contact/companies/@{{ order.id_company }}"
+                                class="btn btn-info btn-xs">Voir
                             l'entreprise</a></div>
 
                     <div ng-show="order.billing_address_full_text && order.id_contact"><a
-                                href="/ng/com_zeapps_contact/contacts/@{{ order.id_contact }}" class="btn btn-info btn-xs">Voir
+                                href="/ng/com_zeapps_contact/contacts/@{{ order.id_contact }}"
+                                class="btn btn-info btn-xs">Voir
                             le contact</a></div>
 
 
@@ -54,11 +56,13 @@
                     <div ng-show="order.delivery_address_full_text"
                          ng-bind-html="order.delivery_address_full_text | nl2br"></div>
                     <div ng-show="order.delivery_address_full_text && order.id_company_delivery"><a
-                                href="/ng/com_zeapps_contact/companies/@{{ order.id_company_delivery }}" class="btn btn-info btn-xs">Voir
+                                href="/ng/com_zeapps_contact/companies/@{{ order.id_company_delivery }}"
+                                class="btn btn-info btn-xs">Voir
                             l'entreprise</a></div>
 
                     <div ng-show="order.delivery_address_full_text && order.id_contact_delivery"><a
-                                href="/ng/com_zeapps_contact/contacts/@{{ order.id_contact_delivery }}" class="btn btn-info btn-xs">Voir
+                                href="/ng/com_zeapps_contact/contacts/@{{ order.id_contact_delivery }}"
+                                class="btn btn-info btn-xs">Voir
                             le contact</a></div>
 
                     <div ng-hide="order.delivery_address_full_text">
@@ -78,40 +82,55 @@
                 </div>
 
                 <div class="col-md-4" style="text-align: right">
-                    <div>
-                        <ze-btn fa="arrow-left" color="primary" hint="Retour" direction="left"
-                                ng-click="back()"></ze-btn>
-                        <ze-btn fa="edit" color="info" hint="Editer" direction="left"
-                                ze-modalform="updateOrder"
-                                data-edit="order"
-                                data-template="templateEdit"
-                                data-title="Modifier la commande"
-                                ng-hide="order.finalized"></ze-btn>
-                        <ze-btn fa="download" color="primary" hint="PDF" direction="left" ng-click="print()"></ze-btn>
-                        <ze-btn fa="envelope" color="primary" hint="Envoyer par email" direction="left"
-                                ng-click="sendByMail()"></ze-btn>
-                        <ze-btn fa="copy" color="success" hint="Dupliquer" direction="left"
-                                ng-click="transform()"></ze-btn>
-                        <ze-btn fa="lock" color="danger" hint="Clôturer" direction="left" ng-click="finalize()"
-                                ng-hide="order.finalized"></ze-btn>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div>
+                                <ze-btn fa="arrow-left" color="primary" hint="Retour" direction="left"
+                                        ng-click="back()"></ze-btn>
+                                <ze-btn fa="edit" color="info" hint="Editer" direction="left"
+                                        ze-modalform="updateOrder"
+                                        data-edit="order"
+                                        data-template="templateEdit"
+                                        data-title="Modifier la commande"
+                                        ng-hide="order.finalized"></ze-btn>
+                                <ze-btn fa="download" color="primary" hint="PDF" direction="left"
+                                        ng-click="print()"></ze-btn>
+                                <ze-btn fa="envelope" color="primary" hint="Envoyer par email" direction="left"
+                                        ng-click="sendByMail()"></ze-btn>
+                                <ze-btn fa="copy" color="success" hint="Dupliquer" direction="left"
+                                        ng-click="transform()"></ze-btn>
+                                <ze-btn fa="lock" color="danger" hint="Clôturer" direction="left" ng-click="finalize()"
+                                        ng-hide="order.finalized"></ze-btn>
 
-                        <div class="btn-group btn-group-xs" role="group" ng-if="nb_orders > 0">
-                            <button type="button" class="btn btn-default" ng-class="order_first == 0 ? 'disabled' :''"
-                                    ng-click="first_order()"><span class="fa fa-fw fa-fast-backward"></span></button>
-                            <button type="button" class="btn btn-default"
-                                    ng-class="order_previous == 0 ? 'disabled' :''" ng-click="previous_order()"><span
-                                        class="fa fa-fw fa-chevron-left"></span></button>
-                            <button type="button" class="btn btn-default disabled">@{{order_order}}/@{{nb_orders}}
-                            </button>
-                            <button type="button" class="btn btn-default" ng-class="order_next == 0 ? 'disabled' :''"
-                                    ng-click="next_order()"><span class="fa fa-fw fa-chevron-right"></span></button>
-                            <button type="button" class="btn btn-default" ng-class="order_last == 0 ? 'disabled' :''"
-                                    ng-click="last_order()"><span class="fa fa-fw fa-fast-forward"></span></button>
+                                <div class="btn-group btn-group-xs" role="group" ng-if="nb_orders > 0">
+                                    <button type="button" class="btn btn-default"
+                                            ng-class="order_first == 0 ? 'disabled' :''"
+                                            ng-click="first_order()"><span class="fa fa-fw fa-fast-backward"></span>
+                                    </button>
+                                    <button type="button" class="btn btn-default"
+                                            ng-class="order_previous == 0 ? 'disabled' :''" ng-click="previous_order()"><span
+                                                class="fa fa-fw fa-chevron-left"></span></button>
+                                    <button type="button" class="btn btn-default disabled">
+                                        @{{order_order}}/@{{nb_orders}}
+                                    </button>
+                                    <button type="button" class="btn btn-default"
+                                            ng-class="order_next == 0 ? 'disabled' :''"
+                                            ng-click="next_order()"><span class="fa fa-fw fa-chevron-right"></span>
+                                    </button>
+                                    <button type="button" class="btn btn-default"
+                                            ng-class="order_last == 0 ? 'disabled' :''"
+                                            ng-click="last_order()"><span class="fa fa-fw fa-fast-forward"></span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div style="font-size: 4em;">
+                                <i class="fa fa-lock-open text-success" ng-hide="order.finalized"></i>
+                                <i class="fa fa-lock text-danger" ng-show="order.finalized"></i>
+                            </div>
                         </div>
-                    </div>
-                    <div style="font-size: 4em;">
-                        <i class="fa fa-lock-open text-success" ng-hide="order.finalized"></i>
-                        <i class="fa fa-lock text-danger" ng-show="order.finalized"></i>
+                        <div class="col-md-12">
+                            <div class="pull-right" style="margin-top: 50px;">Poids : @{{ order.weight | weight }}</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -245,6 +264,7 @@
                             <td class="text-right" ng-if="line.type != 'subTotal' && line.type != 'comment'">
                                 @{{ line.discount != 0 && line.discount_prohibited == 0 ? ((0-line.discount) |
                                 currency:'%':2) : ''}}
+                                <span ng-show="line.discount > line.maximum_discount_allowed" class="text-danger"><br><i class="fas fa-exclamation-triangle"></i> Remise max. autorisée : @{{ line.maximum_discount_allowed }} %</span>
                             </td>
 
                             <td class="text-right" ng-if="line.type != 'subTotal' && line.type != 'comment'">

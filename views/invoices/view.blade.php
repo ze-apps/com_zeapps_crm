@@ -25,11 +25,13 @@
                     <div ng-show="invoice.billing_address_full_text"
                          ng-bind-html="invoice.billing_address_full_text | nl2br"></div>
                     <div ng-show="invoice.billing_address_full_text && invoice.id_company"><a
-                                href="/ng/com_zeapps_contact/companies/@{{ invoice.id_company }}" class="btn btn-info btn-xs">Voir
+                                href="/ng/com_zeapps_contact/companies/@{{ invoice.id_company }}"
+                                class="btn btn-info btn-xs">Voir
                             l'entreprise</a></div>
 
                     <div ng-show="invoice.billing_address_full_text && invoice.id_contact"><a
-                                href="/ng/com_zeapps_contact/contacts/@{{ invoice.id_contact }}" class="btn btn-info btn-xs">Voir
+                                href="/ng/com_zeapps_contact/contacts/@{{ invoice.id_contact }}"
+                                class="btn btn-info btn-xs">Voir
                             le contact</a></div>
 
 
@@ -41,7 +43,8 @@
                         @{{ invoice.billing_address_1 }}<br ng-if="invoice.billing_address_1">
                         @{{ invoice.billing_address_2 }}<br ng-if="invoice.billing_address_2">
                         @{{ invoice.billing_address_3 }}<br ng-if="invoice.billing_address_3">
-                        @{{ invoice.billing_zipcode + ' ' + invoice.billing_city }}<br ng-if="invoice.billing_state != ''">
+                        @{{ invoice.billing_zipcode + ' ' + invoice.billing_city }}<br
+                                ng-if="invoice.billing_state != ''">
                         @{{ invoice.billing_state }}<br ng-if="invoice.billing_country_name != ''">
                         @{{ invoice.billing_country_name }}
                     </div>
@@ -54,11 +57,13 @@
                     <div ng-show="invoice.delivery_address_full_text"
                          ng-bind-html="invoice.delivery_address_full_text | nl2br"></div>
                     <div ng-show="invoice.delivery_address_full_text && invoice.id_company_delivery"><a
-                                href="/ng/com_zeapps_contact/companies/@{{ invoice.id_company_delivery }}" class="btn btn-info btn-xs">Voir
+                                href="/ng/com_zeapps_contact/companies/@{{ invoice.id_company_delivery }}"
+                                class="btn btn-info btn-xs">Voir
                             l'entreprise</a></div>
 
                     <div ng-show="invoice.delivery_address_full_text && invoice.id_contact_delivery"><a
-                                href="/ng/com_zeapps_contact/contacts/@{{ invoice.id_contact_delivery }}" class="btn btn-info btn-xs">Voir
+                                href="/ng/com_zeapps_contact/contacts/@{{ invoice.id_contact_delivery }}"
+                                class="btn btn-info btn-xs">Voir
                             le contact</a></div>
 
                     <div ng-hide="invoice.delivery_address_full_text">
@@ -70,7 +75,8 @@
                         @{{ invoice.delivery_address_1 }}<br ng-if="invoice.delivery_address_1">
                         @{{ invoice.delivery_address_2 }}<br ng-if="invoice.delivery_address_2">
                         @{{ invoice.delivery_address_3 }}<br ng-if="invoice.delivery_address_3">
-                        @{{ invoice.delivery_zipcode + ' ' + invoice.delivery_city }}<br ng-if="invoice.delivery_state != ''">
+                        @{{ invoice.delivery_zipcode + ' ' + invoice.delivery_city }}<br
+                                ng-if="invoice.delivery_state != ''">
                         @{{ invoice.delivery_state }}<br ng-if="invoice.delivery_country_name != ''">
                         @{{ invoice.delivery_country_name }}
                     </div>
@@ -78,41 +84,56 @@
                 </div>
 
                 <div class="col-md-4" style="text-align: right">
-                    <div>
-                        <ze-btn fa="arrow-left" color="primary" hint="Retour" direction="left"
-                                ng-click="back()"></ze-btn>
-                        <ze-btn fa="edit" color="info" hint="Editer" direction="left"
-                                ze-modalform="updateInvoice"
-                                data-edit="invoice"
-                                data-template="templateEdit"
-                                data-title="Modifier la facture"
-                                ng-hide="invoice.finalized"></ze-btn>
-                        <ze-btn fa="download" color="primary" hint="PDF" direction="left" ng-click="print()"></ze-btn>
-                        <ze-btn fa="envelope" color="primary" hint="Envoyer par email" direction="left"
-                                ng-click="sendByMail()"></ze-btn>
-                        <ze-btn fa="copy" color="success" hint="Dupliquer" direction="left"
-                                ng-click="transform()"></ze-btn>
-                        <ze-btn fa="lock" color="danger" hint="Clôturer" direction="left" ng-click="finalize()"
-                                ng-hide="invoice.finalized"></ze-btn>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div>
+                                <ze-btn fa="arrow-left" color="primary" hint="Retour" direction="left"
+                                        ng-click="back()"></ze-btn>
+                                <ze-btn fa="edit" color="info" hint="Editer" direction="left"
+                                        ze-modalform="updateInvoice"
+                                        data-edit="invoice"
+                                        data-template="templateEdit"
+                                        data-title="Modifier la facture"
+                                        ng-hide="invoice.finalized"></ze-btn>
+                                <ze-btn fa="download" color="primary" hint="PDF" direction="left"
+                                        ng-click="print()"></ze-btn>
+                                <ze-btn fa="envelope" color="primary" hint="Envoyer par email" direction="left"
+                                        ng-click="sendByMail()"></ze-btn>
+                                <ze-btn fa="copy" color="success" hint="Dupliquer" direction="left"
+                                        ng-click="transform()"></ze-btn>
+                                <ze-btn fa="lock" color="danger" hint="Clôturer" direction="left" ng-click="finalize()"
+                                        ng-hide="invoice.finalized"></ze-btn>
 
-                        <div class="btn-group btn-group-xs" role="group" ng-if="nb_invoices > 0">
-                            <button type="button" class="btn btn-default" ng-class="invoice_first == 0 ? 'disabled' :''"
-                                    ng-click="first_invoice()"><span class="fa fa-fw fa-fast-backward"></span></button>
-                            <button type="button" class="btn btn-default"
-                                    ng-class="invoice_previous == 0 ? 'disabled' :''" ng-click="previous_invoice()">
-                                <span class="fa fa-fw fa-chevron-left"></span></button>
-                            <button type="button" class="btn btn-default disabled">
-                                @{{invoice_invoice}}/@{{nb_invoices}}
-                            </button>
-                            <button type="button" class="btn btn-default" ng-class="invoice_next == 0 ? 'disabled' :''"
-                                    ng-click="next_invoice()"><span class="fa fa-fw fa-chevron-right"></span></button>
-                            <button type="button" class="btn btn-default" ng-class="invoice_last == 0 ? 'disabled' :''"
-                                    ng-click="last_invoice()"><span class="fa fa-fw fa-fast-forward"></span></button>
+                                <div class="btn-group btn-group-xs" role="group" ng-if="nb_invoices > 0">
+                                    <button type="button" class="btn btn-default"
+                                            ng-class="invoice_first == 0 ? 'disabled' :''"
+                                            ng-click="first_invoice()"><span class="fa fa-fw fa-fast-backward"></span>
+                                    </button>
+                                    <button type="button" class="btn btn-default"
+                                            ng-class="invoice_previous == 0 ? 'disabled' :''"
+                                            ng-click="previous_invoice()">
+                                        <span class="fa fa-fw fa-chevron-left"></span></button>
+                                    <button type="button" class="btn btn-default disabled">
+                                        @{{invoice_invoice}}/@{{nb_invoices}}
+                                    </button>
+                                    <button type="button" class="btn btn-default"
+                                            ng-class="invoice_next == 0 ? 'disabled' :''"
+                                            ng-click="next_invoice()"><span class="fa fa-fw fa-chevron-right"></span>
+                                    </button>
+                                    <button type="button" class="btn btn-default"
+                                            ng-class="invoice_last == 0 ? 'disabled' :''"
+                                            ng-click="last_invoice()"><span class="fa fa-fw fa-fast-forward"></span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div style="font-size: 4em;">
+                                <i class="fa fa-lock-open text-success" ng-hide="invoice.finalized"></i>
+                                <i class="fa fa-lock text-danger" ng-show="invoice.finalized"></i>
+                            </div>
                         </div>
-                    </div>
-                    <div style="font-size: 4em;">
-                        <i class="fa fa-lock-open text-success" ng-hide="invoice.finalized"></i>
-                        <i class="fa fa-lock text-danger" ng-show="invoice.finalized"></i>
+                        <div class="col-md-12">
+                            <div class="pull-right" style="margin-top: 50px;">Poids : @{{ invoice.weight | weight }}</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -153,7 +174,8 @@
         </div>
 
 
-        <div class="alert alert-danger" role="alert" ng-show="(invoice.id_price_list != company.id_price_list && company.id) || (!company.id && invoice.id_price_list != contact.id_price_list && contact.id)">
+        <div class="alert alert-danger" role="alert"
+             ng-show="(invoice.id_price_list != company.id_price_list && company.id) || (!company.id && invoice.id_price_list != contact.id_price_list && contact.id)">
             Attention : la grille de prix appliquée sur ce document ne correspond pas à la grille de prix du client.
         </div>
 
@@ -185,7 +207,8 @@
                         </span>
                     </span>
                     <ze-btn fa="tags" color="success" hint="produit" always-on="true" ng-click="addLine()"></ze-btn>
-                    <ze-btn fa="dollar-sign" color="info" hint="sous-total" always-on="true" ng-click="addSubTotal()"></ze-btn>
+                    <ze-btn fa="dollar-sign" color="info" hint="sous-total" always-on="true"
+                            ng-click="addSubTotal()"></ze-btn>
                     <ze-btn fa="comments" color="warning" hint="commentaire" always-on="true"
                             ze-modalform="addComment"
                             data-title="Ajouter un commentaire"
@@ -230,11 +253,14 @@
                             </td>
 
                             <td class="text-right" ng-if="line.type != 'subTotal' && line.type != 'comment'">
-                                @{{ line.taxeLabel != "*" ? (line.taxeLabel != 0 ? (line.taxeLabel | currency:'%':2) : ''): "*" }}
+                                @{{ line.taxeLabel != "*" ? (line.taxeLabel != 0 ? (line.taxeLabel | currency:'%':2) :
+                                ''): "*" }}
                             </td>
 
                             <td class="text-right" ng-if="line.type != 'subTotal' && line.type != 'comment'">
-                                @{{ line.discount != 0 && line.discount_prohibited == 0 ? ((0-line.discount) | currency:'%':2) : ''}}
+                                @{{ line.discount != 0 && line.discount_prohibited == 0 ? ((0-line.discount) |
+                                currency:'%':2) : ''}}
+                                <span ng-show="line.discount > line.maximum_discount_allowed" class="text-danger"><br><i class="fas fa-exclamation-triangle"></i> Remise max. autorisée : @{{ line.maximum_discount_allowed }} %</span>
                             </td>
 
                             <td class="text-right" ng-if="line.type != 'subTotal' && line.type != 'comment'">

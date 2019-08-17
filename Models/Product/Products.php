@@ -49,6 +49,9 @@ class Products extends Model
         $this->fieldModelInfo->tinyInteger('active')->default(1);
         $this->fieldModelInfo->tinyInteger('discount_prohibited')->default(0);
         $this->fieldModelInfo->tinyInteger('is_updated')->default(0);
+        $this->fieldModelInfo->decimal('maximum_discount_allowed', 5, 2)->default(100);
+        $this->fieldModelInfo->decimal('weight', 11, 2)->default(0);
+
         $this->fieldModelInfo->timestamps();
         $this->fieldModelInfo->softDeletes();
 
