@@ -2,20 +2,10 @@
 
 /********** insert in left menu ************/
 $tabMenu = array () ;
-$tabMenu["id"] = "com_ze_apps_modalities" ;
-$tabMenu["space"] = "com_ze_apps_config" ;
-$tabMenu["label"] = "Modalités" ;
-$tabMenu["fa-icon"] = "credit-card-alt" ;
-$tabMenu["url"] = "/ng/com_zeapps/modalities" ;
-$tabMenu["access"] = "com_zeapps_crm_read" ;
-$tabMenu["order"] = 40 ;
-$menuLeft[] = $tabMenu ;
-
-$tabMenu = array () ;
 $tabMenu["id"] = "com_ze_apps_taxes" ;
 $tabMenu["space"] = "com_ze_apps_config" ;
 $tabMenu["label"] = "Taxes" ;
-$tabMenu["fa-icon"] = "money" ;
+$tabMenu["fa-icon"] = "percentage" ;
 $tabMenu["url"] = "/ng/com_zeapps/taxes" ;
 $tabMenu["access"] = "com_zeapps_crm_read" ;
 $tabMenu["order"] = 41 ;
