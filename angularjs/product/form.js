@@ -488,18 +488,35 @@ app.controller("ComZeappsCrmProductFormCtrl", ["$scope", "$routeParams", "$locat
 
             var formatted_data = angular.toJson(data);
 
-            zhttp.crm.product.save(formatted_data).then(function (response) {
-                if (typeof (response.data.error) === "undefined") {
-                    // pour que la page puisse être redirigé
-                    if ($routeParams.url_retour) {
-                        $location.path($routeParams.url_retour.replace(charSepUrlSlashRegExp, "/"));
+
+
+
+            zhttp.crm.product.checkref(formatted_data).then(function (responseCheckref) {
+                if (responseCheckref.status == 200) {
+                    var data_return = angular.fromJson(responseCheckref.data);
+                    if (data_return) {
+                        toasts("danger", "La référence : " + $scope.form.ref + " est déjà attribuée à un autre produit");
                     } else {
-                        $location.path("/ng/com_zeapps_crm/product/category/" + $scope.form.id_cat);
+                        zhttp.crm.product.save(formatted_data).then(function (response) {
+                            if (typeof (response.data.error) === "undefined") {
+                                // pour que la page puisse être redirigé
+                                if ($routeParams.url_retour) {
+                                    $location.path($routeParams.url_retour.replace(charSepUrlSlashRegExp, "/"));
+                                } else {
+                                    $location.path("/ng/com_zeapps_crm/product/category/" + $scope.form.id_cat);
+                                }
+                            } else {
+                                $scope.error = response.data.error;
+                            }
+                        });
                     }
-                } else {
-                    $scope.error = response.data.error;
                 }
             });
+
+
+
+
+
         }
 
         function cancel() {

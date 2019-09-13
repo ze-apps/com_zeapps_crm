@@ -188,6 +188,29 @@ class Product extends Controller
         echo json_encode(Products::get());
     }
 
+    public function checkref() {
+        if (strcasecmp($_SERVER['REQUEST_METHOD'], 'post') === 0 && stripos($_SERVER['CONTENT_TYPE'], 'application/json') !== FALSE) {
+            $data = json_decode(file_get_contents('php://input'), true);
+
+            if (isset($data["id"]) && is_numeric($data["id"])) {
+                $product = Products::where('id', "!=", $data["id"])->where('ref', trim($data["ref"]))->first();
+            } else {
+                $product = Products::where('ref', trim($data["ref"]))->first();
+            }
+
+            if ($product) {
+                echo json_encode(true);
+                return;
+            } else {
+                echo json_encode(false);
+                return;
+            }
+        }
+
+        echo json_encode(true);
+        return;
+    }
+
     public function save()
     {
         $error = NULL;
@@ -201,6 +224,11 @@ class Product extends Controller
             if (isset($data["id"]) && is_numeric($data["id"])) {
                 $product = Products::where('id', $data["id"])->first();
             }
+
+            if (isset($data["ref"])) {
+                $data["ref"] = trim($data["ref"]) ;
+            }
+
 
             foreach ($data as $key => $value) {
                 $product->$key = $value;
@@ -278,7 +306,6 @@ class Product extends Controller
 
         echo json_encode("OK");
         return;
-
     }
 
     public function delete(Request $request)

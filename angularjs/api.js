@@ -178,7 +178,8 @@ app.config(["$provide",
                     modal: modal_product,
                     save: save_product,
                     updateRatio: updateRatio,
-                    del: delete_product
+                    del: delete_product,
+                    checkref: checkref_product
                 },
                 category: {
                     tree: get_categories_tree,
@@ -759,6 +760,12 @@ app.config(["$provide",
             function delete_product(id) {
                 return zeHttp.post("/com_zeapps_crm/product/delete/" + id);
             }
+
+            function checkref_product(data) {
+                return zeHttp.post("/com_zeapps_crm/product/checkref", data);
+            }
+
+
 
 
             // CATEGORIES
