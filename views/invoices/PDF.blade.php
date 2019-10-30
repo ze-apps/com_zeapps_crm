@@ -193,83 +193,80 @@
 </htmlpagefooter>
 
 
-<table>
+<table class="lines">
+    <thead>
     <tr>
-        <td colspan="2">
-            <table class="lines">
-                <thead>
-                <tr>
-                    <th class="text-left">#</th>
-                    <th class="text-left">Désignation</th>
-                    <th>Qte</th>
-                    <th>P.U. HT</th>
-                    <th>Taxe</th>
-                    <?php if($showDiscount){ ?>
-                    <th>Remise</th>
-                    <?php } ?>
-                    <th>T. HT</th>
-                    <th>T. TTC</th>
-                </tr>
-                </thead>
-                <tbody>
-                <?php
-                $subtotal_ht = 0;
-                $subtotal_ttc = 0;
-                if($lines) {
-                foreach ($lines as $line) {
-                if ($line->type == 'subTotal') {
-                ?>
-                <tr>
-                    <td colspan="<?php echo $showDiscount ? 6 : 5; ?>" class="text-right">
-                        <b>Sous-Total</b>
-                    </td>
-                    <td class="text-right"><b><?php echo number_format(floatval($subtotal_ht), 2, ',', ' '); ?></b></td>
-                    <td class="text-right"><b><?php echo number_format(floatval($subtotal_ttc), 2, ',', ' '); ?></b>
-                    </td>
-                </tr>
-                <?php
-                $subtotal_ht = 0;
-                $subtotal_ttc = 0;
-                } elseif ($line->type == 'comment') {
-                ?>
-                <tr>
-                    <td class="text-left" colspan="<?php echo $showDiscount ? 8 : 7; ?>">
-                        <?php echo nl2br($line->designation_desc); ?>
-                    </td>
-                </tr>
-                <?php
-                } else {
-                $subtotal_ht += floatval($line->total_ht);
-                $subtotal_ttc += floatval($line->total_ttc);
-                ?>
-                <tr>
-                    <td class="text-left"><?php echo $line->ref; ?></td>
-                    <td class="text-left">
-                        <strong><?php echo $line->designation_title; ?></strong><br/>
-                        <?php echo nl2br($line->designation_desc); ?>
-                    </td>
-                    <td class="text-center"><?php echo floatval($line->qty) === round(floatval($line->qty)) ? intval($line->qty) : number_format(floatval($line->qty), 3, ',', ' '); ?></td>
-                    <td class="text-right"><?php echo number_format(floatval($line->price_unit), 2, ',', ' '); ?></td>
-                    <td class="text-right"><?php echo number_format(floatval($line->value_taxe), 2, ',', ' ') . '%'; ?></td>
-                    <?php if($showDiscount) {
-                    if ($line->discount_prohibited == 1) {
-                        $line->discount = 0;
-                    }
-                    ?>
-                    <td class="text-right"><?php echo number_format(floatval($line->discount), 2, ',', ' ') . '%'; ?></td>
-                    <?php } ?>
-                    <td class="text-right"><?php echo number_format(floatval($line->total_ht), 2, ',', ' '); ?></td>
-                    <td class="text-right"><?php echo number_format(floatval($line->total_ttc), 2, ',', ' '); ?></td>
-                </tr>
-                <?php
-                }
-                }
-                }
-                ?>
-                </tbody>
-            </table>
+        <th class="text-left">#</th>
+        <th class="text-left">Désignation</th>
+        <th>Qte</th>
+        <th>P.U. HT</th>
+        <th>Taxe</th>
+        <?php if($showDiscount){ ?>
+        <th>Remise</th>
+        <?php } ?>
+        <th>T. HT</th>
+        <th>T. TTC</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php
+    $subtotal_ht = 0;
+    $subtotal_ttc = 0;
+    if($lines) {
+    foreach ($lines as $line) {
+    if ($line->type == 'subTotal') {
+    ?>
+    <tr>
+        <td colspan="<?php echo $showDiscount ? 6 : 5; ?>" class="text-right">
+            <b>Sous-Total</b>
+        </td>
+        <td class="text-right"><b><?php echo number_format(floatval($subtotal_ht), 2, ',', ' '); ?></b></td>
+        <td class="text-right"><b><?php echo number_format(floatval($subtotal_ttc), 2, ',', ' '); ?></b>
         </td>
     </tr>
+    <?php
+    $subtotal_ht = 0;
+    $subtotal_ttc = 0;
+    } elseif ($line->type == 'comment') {
+    ?>
+    <tr>
+        <td class="text-left" colspan="<?php echo $showDiscount ? 8 : 7; ?>">
+            <?php echo nl2br($line->designation_desc); ?>
+        </td>
+    </tr>
+    <?php
+    } else {
+    $subtotal_ht += floatval($line->total_ht);
+    $subtotal_ttc += floatval($line->total_ttc);
+    ?>
+    <tr>
+        <td class="text-left"><?php echo $line->ref; ?></td>
+        <td class="text-left">
+            <strong><?php echo $line->designation_title; ?></strong><br/>
+            <?php echo nl2br($line->designation_desc); ?>
+        </td>
+        <td class="text-center"><?php echo floatval($line->qty) === round(floatval($line->qty)) ? intval($line->qty) : number_format(floatval($line->qty), 3, ',', ' '); ?></td>
+        <td class="text-right"><?php echo number_format(floatval($line->price_unit), 2, ',', ' '); ?></td>
+        <td class="text-right"><?php echo number_format(floatval($line->value_taxe), 2, ',', ' ') . '%'; ?></td>
+        <?php if($showDiscount) {
+        if ($line->discount_prohibited == 1) {
+            $line->discount = 0;
+        }
+        ?>
+        <td class="text-right"><?php echo number_format(floatval($line->discount), 2, ',', ' ') . '%'; ?></td>
+        <?php } ?>
+        <td class="text-right"><?php echo number_format(floatval($line->total_ht), 2, ',', ' '); ?></td>
+        <td class="text-right"><?php echo number_format(floatval($line->total_ttc), 2, ',', ' '); ?></td>
+    </tr>
+    <?php
+    }
+    }
+    }
+    ?>
+    </tbody>
+</table>
+
+<table>
     <tr>
         <td class="text-left">
             <table class="taxes">
