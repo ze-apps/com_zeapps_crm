@@ -177,6 +177,11 @@ class ProductCategories extends Model
             $query .= " AND i.date_creation <= '" . $dateFin . "'";
         }
 
+
+        if (isset($where['ref'])) {
+            $query .= " AND p.ref like '" . str_replace('\'', '\'\'', $where['ref']) . "'";
+        }
+
         if (isset($where['id_cat'])) {
             $query .= " AND ca.id IN (" . implode(',', $where['id_cat']) . ")";
         }
@@ -195,7 +200,7 @@ class ProductCategories extends Model
         }
 
         if (isset($where['delivery_country_id'])) {
-            $query .= " AND i.delivery_country_id = " . $where['delivery_country_id'] ;
+            $query .= " AND i.delivery_country_id = " . $where['delivery_country_id'];
         }
 
         return Capsule::select(Capsule::raw($query));

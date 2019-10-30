@@ -88,9 +88,9 @@ class Products extends Model
         return;
     }
 
-    public static function top10($dateDebut, $dateFin, $where = array())
+    public static function top10($dateDebut, $dateFin, $where = array(), $limitAffichage = 10)
     {
-        $query = "SELECT SUM(l.total_ht) as total_ht,
+        $query = "SELECT p.id as id_product, p.ref, SUM(l.total_ht) as total_ht,
                          SUM(l.qty) as qty,
                          p.name as name
                   FROM com_zeapps_crm_product_categories ca
@@ -111,12 +111,13 @@ class Products extends Model
             $query .= " AND i.date_creation <= '" . $dateFin . "'";
         }
 
+        if (isset($where['ref'])) {
+            $query .= " AND p.ref like '" . str_replace('\'', '\'\'', $where['ref']) . "'";
+        }
 
         if (isset($where['id_cat'])) {
             $query .= " AND ca.id IN (" . implode(',', $where['id_cat']) . ")";
         }
-
-
 
         if (isset($where['id_price_list'])) {
             $query .= " AND i.id_price_list = " . $where['id_price_list'];
@@ -134,10 +135,11 @@ class Products extends Model
             $query .= " AND i.delivery_country_id = " . $where['delivery_country_id'] ;
         }
 
+        $query .= " GROUP BY p.id ORDER BY total_ht DESC" ;
 
-        $query .= " GROUP BY p.id ORDER BY total_ht DESC LIMIT 10";
-
-        //echo $query . "\n" ;
+        if ($limitAffichage) {
+            $query .= " LIMIT " . $limitAffichage;
+        }
 
         return Capsule::select(Capsule::raw($query));
     }
