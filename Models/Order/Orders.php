@@ -427,7 +427,7 @@ class Orders extends Model
             $ecritureComptable[] = $this->getEcritureLigne($line, $taxes) ;
 
             // applique la remise de la ligne
-            if ($line->discount > 0) {
+            if ($line->discount != 0) {
                 $ecritureComptable = $this->appliqueRemise($ecritureComptable, $line->discount, $discount_prohibited || $line->discount_prohibited);
             }
         }
@@ -458,7 +458,7 @@ class Orders extends Model
 
 
         // applique la remise du document si la ligne à un parent = 0
-        if ($order->global_discount > 0 && $line->id_parent == 0) {
+        if ($order->global_discount != 0 && $line->id_parent == 0) {
             $ecritureComptable = $this->appliqueRemise($ecritureComptable, $order->global_discount, $discount_prohibited || $line->discount_prohibited);
         }
 
