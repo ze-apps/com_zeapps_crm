@@ -12,6 +12,7 @@ use App\com_zeapps_crm\Models\Stock\StockMovements;
 use App\com_zeapps_crm\Models\Product\Products;
 use App\com_zeapps_crm\Models\Taxes;
 
+use Zeapps\Core\Event;
 use Zeapps\Models\Config;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
@@ -106,8 +107,14 @@ class Deliveries extends Model
         parent::__construct($attributes);
     }
 
-    public static function createFrom($src)
+    public static function createFrom($src, $typeSource)
     {
+        $dataEvent = [];
+        $dataEvent["id_src"] = $src->id ;
+        $dataEvent["numerotation_src"] = $src->numerotation ;
+        $dataEvent["src"] = $src ;
+        $dataEvent["typeSource"] = $typeSource ;
+
         unset($src->id);
         unset($src->numerotation);
         unset($src->created_at);
@@ -130,7 +137,12 @@ class Deliveries extends Model
         $delivery->date_creation = date('Y-m-d');
         $delivery->finalized = 0;
 
+        $dataEvent["delivery"] = $delivery ;
+        Event::sendAction('com_zeapps_crm_delivery', 'create_from_before_save', $dataEvent);
+        $delivery = $dataEvent["delivery"] ;
         $delivery->save();
+        Event::sendAction('com_zeapps_crm_delivery', 'create_from_after_save', $delivery);
+
         $id = $delivery->id;
 
 

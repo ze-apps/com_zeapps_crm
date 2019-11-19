@@ -104,8 +104,14 @@ class Orders extends Model
         parent::__construct($attributes);
     }
 
-    public static function createFrom($src)
+    public static function createFrom($src, $typeSource)
     {
+        $dataEvent = [];
+        $dataEvent["id_src"] = $src->id ;
+        $dataEvent["numerotation_src"] = $src->numerotation ;
+        $dataEvent["src"] = $src ;
+        $dataEvent["typeSource"] = $typeSource ;
+
         unset($src->id);
         unset($src->numerotation);
         unset($src->created_at);
@@ -128,7 +134,13 @@ class Orders extends Model
         }
         $order->date_creation = date('Y-m-d');
         $order->finalized = 0;
+
+        $dataEvent["order"] = $order ;
+        Event::sendAction('com_zeapps_crm_order', 'create_from_before_save', $order);
+        $order = $dataEvent["order"] ;
         $order->save();
+        Event::sendAction('com_zeapps_crm_order', 'create_from_after_save', $order);
+
         $id = $order->id;
 
 

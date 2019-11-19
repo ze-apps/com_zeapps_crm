@@ -300,19 +300,19 @@ class Deliveries extends Controller
                             $idTo = 0 ;
 
                             if ($document == "quotes") {
-                                $return->quotes = QuotesModel::createFrom($src);
+                                $return->quotes = QuotesModel::createFrom($src, DeliveriesModel::class);
                                 $idTo = $return->quotes["id"];
 
                             } elseif ($document == "orders") {
-                                $return->orders = OrdersModel::createFrom($src);
+                                $return->orders = OrdersModel::createFrom($src, DeliveriesModel::class);
                                 $idTo = $return->orders["id"];
 
                             } elseif ($document == "invoices") {
-                                $return->invoices = InvoicesModel::createFrom($src);
+                                $return->invoices = InvoicesModel::createFrom($src, DeliveriesModel::class);
                                 $idTo = $return->invoices["id"];
 
                             } elseif ($document == "deliveries") {
-                                $return->deliveries = DeliveriesModel::createFrom($src);
+                                $return->deliveries = DeliveriesModel::createFrom($src, DeliveriesModel::class);
                                 $idTo = $return->deliveries["id"];
                             }
 

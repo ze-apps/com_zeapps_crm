@@ -120,8 +120,14 @@ class Invoices extends Model
     }
 
 
-    public static function createFrom($src, $isCredit = false)
+    public static function createFrom($src, $typeSource, $isCredit = false)
     {
+        $dataEvent = [];
+        $dataEvent["id_src"] = $src->id ;
+        $dataEvent["numerotation_src"] = $src->numerotation ;
+        $dataEvent["src"] = $src ;
+        $dataEvent["typeSource"] = $typeSource ;
+
         unset($src->id);
         unset($src->numerotation);
         unset($src->created_at);
@@ -158,7 +164,13 @@ class Invoices extends Model
         }
         $invoice->date_creation = date('Y-m-d');
         $invoice->finalized = 0;
+
+        $dataEvent["invoice"] = $invoice ;
+        Event::sendAction('com_zeapps_crm_invoice', 'create_from_before_save', $invoice);
+        $invoice = $dataEvent["invoice"] ;
         $invoice->save();
+        Event::sendAction('com_zeapps_crm_invoice', 'create_from_after_save', $invoice);
+
         $id = $invoice->id;
 
 

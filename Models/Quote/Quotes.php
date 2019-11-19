@@ -11,6 +11,7 @@ use App\com_zeapps_crm\Models\Taxes;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 
+use Zeapps\Core\Event;
 use Zeapps\Models\Config;
 
 use Zeapps\Core\ModelHelper;
@@ -104,8 +105,14 @@ class Quotes extends Model
         parent::__construct($attributes);
     }
 
-    public static function createFrom($src)
+    public static function createFrom($src, $typeSource)
     {
+        $dataEvent = [];
+        $dataEvent["id_src"] = $src->id ;
+        $dataEvent["numerotation_src"] = $src->numerotation ;
+        $dataEvent["src"] = $src ;
+        $dataEvent["typeSource"] = $typeSource ;
+
         unset($src->id);
         unset($src->numerotation);
         unset($src->created_at);
@@ -123,7 +130,13 @@ class Quotes extends Model
         }
         $quotes->date_creation = date('Y-m-d');
         $quotes->date_limit = date("Y-m-d", strtotime("+1 month", time()));
+
+        $dataEvent["quote"] = $quotes ;
+        Event::sendAction('com_zeapps_crm_quote', 'create_from_before_save', $quotes);
+        $quotes = $dataEvent["quote"] ;
         $quotes->save();
+        Event::sendAction('com_zeapps_crm_quote', 'create_from_after_save', $quotes);
+
         $id = $quotes->id;
 
         if (isset($src->lines)) {
