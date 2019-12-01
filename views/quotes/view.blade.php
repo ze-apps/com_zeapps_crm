@@ -6,10 +6,10 @@
         <div class="well">
             <div class="row">
                 <div class="col-md-2">
-                    <div class="titleWell">
+                    <div class="titleWell" style="font-weight: bold;">
                         Devis : @{{ quote.libelle }}
                     </div>
-                    <p class="small">
+                    <p class="small" style="font-weight: bold; font-size: 1.2em;">
                         n° @{{ quote.numerotation }}
                     </p>
                     <p>
@@ -125,6 +125,22 @@
                         <div class="col-md-12">
                             <div class="pull-right" style="margin-top: 50px;">Poids : @{{ quote.weight | weight }}</div>
                         </div>
+
+
+                        <div class="col-md-12">
+                            <div ng-include="hook.template" ng-repeat="hook in hooksComZeappsCRM_QuoteHeaderRightHook"
+                                 style="display: inline-block" class="pull-right">
+                            </div>
+                        </div>
+
+
+
+
+
+
+
+
+
                     </div>
                 </div>
             </div>

@@ -6,6 +6,13 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
         $scope.$on("comZeappsCrm_triggerQuoteHook", broadcast);
         $scope.hooks = zeHooks.get("comZeappsCrm_QuoteHook");
 
+
+
+        // to activate hook function
+        $scope.hooksComZeappsCRM_QuoteHeaderRightHook = zeHooks.get("comZeappsCRM_QuoteHeaderRightHook");
+
+
+
         $scope.progress = 0;
         $scope.activities = [];
         $scope.documents = [];
@@ -160,6 +167,14 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                     }
 
 
+                    // envoi les données aux hooks
+                    $rootScope.$broadcast("comZeappsCrm_dataQuoteHook",
+                        {
+                            quote: $scope.quote,
+                            lines: $scope.lines,
+                        }
+                    );
+
                     // call Callback
                     if (next) {
                         next();
@@ -188,7 +203,7 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
             } else {
                 $rootScope.$broadcast("comZeappsCrm_dataQuoteHook",
                     {
-                        order: $scope.order
+                        quote: $scope.quote
                     }
                 );
             }

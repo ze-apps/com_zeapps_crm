@@ -19,6 +19,8 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
         $scope.hooksComZeappsCRM_OrderBtnTopBodyHook = zeHooks.get("comZeappsCRM_OrderBtnTopBodyHook");
 
 
+
+
         $scope.progress = 0;
         $scope.activities = [];
         $scope.documents = [];

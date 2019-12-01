@@ -6,10 +6,10 @@
         <div class="well">
             <div class="row">
                 <div class="col-md-2">
-                    <div class="titleWell">
+                    <div class="titleWell" style="font-weight: bold;">
                         Commande : @{{ order.libelle }}
                     </div>
-                    <p class="small">
+                    <p class="small" style="font-weight: bold; font-size: 1.2em;">
                         n° @{{ order.numerotation }}
                     </p>
 
