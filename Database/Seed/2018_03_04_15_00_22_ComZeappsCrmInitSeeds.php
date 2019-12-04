@@ -332,16 +332,5 @@ class ComZeappsCrmInitSeeds
 
             $obj_data->save();
         }
-
-
-
-
-
-        UPDATE fr_abeko_plan_plan_produits
-INNER JOIN fr_abeko_plan_plan_articles_composes ON fr_abeko_plan_plan_articles_composes.id = fr_abeko_plan_plan_produits.id_article_compose
-INNER JOIN fr_abeko_plan_articles_composes ON fr_abeko_plan_articles_composes.ref = fr_abeko_plan_plan_articles_composes.ref
-SET fr_abeko_plan_plan_produits.id_produit = fr_abeko_plan_articles_composes.id
-
-
     }
 }
