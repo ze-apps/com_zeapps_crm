@@ -98,7 +98,8 @@ class Products extends Model
                   LEFT JOIN com_zeapps_crm_invoice_lines l ON l.id_product = p.id
                   LEFT JOIN com_zeapps_crm_invoices i ON i.id = l.id_invoice
                   WHERE i.finalized = '1'
-                        AND l.type = 'product'
+                        AND l.type not in ('subscription', 'subscription_pack')
+                        AND l.id_parent = 0
                         AND i.deleted_at IS NULL
                         AND l.deleted_at IS NULL
                         ";
@@ -128,7 +129,11 @@ class Products extends Model
         }
 
         if (isset($where['delivery_country_id IN'])) {
-            $query .= " AND i.delivery_country_id IN (" . $where['delivery_country_id IN'] . ")";
+            if (strpos($where['delivery_country_id IN'], "-")!== false) {
+                $query .= " AND i.delivery_country_id NOT IN (" . str_replace("-","", $where['delivery_country_id IN']) . ")";
+            } else {
+                $query .= " AND i.delivery_country_id IN (" . $where['delivery_country_id IN'] . ")";
+            }
         }
 
         if (isset($where['delivery_country_id'])) {
@@ -136,6 +141,65 @@ class Products extends Model
         }
 
         $query .= " GROUP BY p.id ORDER BY total_ht DESC" ;
+
+        if ($limitAffichage) {
+            $query .= " LIMIT " . $limitAffichage;
+        }
+
+        return Capsule::select(Capsule::raw($query));
+    }
+
+    public static function top10Autre($dateDebut, $dateFin, $where = array(), $limitAffichage = 10)
+    {
+        $query = "SELECT com_zeapps_crm_invoice_lines.ref as id_product, com_zeapps_crm_invoice_lines.ref, SUM(com_zeapps_crm_invoice_lines.total_ht) as total_ht,
+                         SUM(com_zeapps_crm_invoice_lines.qty) as qty,
+                         com_zeapps_crm_invoice_lines.designation_title as name
+                  FROM com_zeapps_crm_invoice_lines
+                  LEFT JOIN com_zeapps_crm_invoices i ON i.id = com_zeapps_crm_invoice_lines.id_invoice
+                  WHERE i.finalized = '1'
+                        AND com_zeapps_crm_invoice_lines.type in ('subscription', 'subscription_pack')
+                        AND com_zeapps_crm_invoice_lines.id_parent = 0
+                        AND i.deleted_at IS NULL
+                        AND com_zeapps_crm_invoice_lines.deleted_at IS NULL
+                        ";
+
+        if ($dateDebut) {
+            $query .= " AND i.date_creation >= '" . $dateDebut . "'";
+        }
+
+        if ($dateFin) {
+            $query .= " AND i.date_creation <= '" . $dateFin . "'";
+        }
+
+        if (isset($where['ref'])) {
+            $query .= " AND com_zeapps_crm_invoice_lines.ref like '" . str_replace('\'', '\'\'', $where['ref']) . "'";
+        }
+
+//        if (isset($where['id_cat'])) {
+//            $query .= " AND ca.id IN (" . implode(',', $where['id_cat']) . ")";
+//        }
+
+        if (isset($where['id_price_list'])) {
+            $query .= " AND i.id_price_list = " . $where['id_price_list'];
+        }
+
+        if (isset($where['id_origin'])) {
+            $query .= " AND i.id_origin = " . $where['id_origin'];
+        }
+
+        if (isset($where['delivery_country_id IN'])) {
+            if (strpos($where['delivery_country_id IN'], "-")!== false) {
+                $query .= " AND i.delivery_country_id NOT IN (" . str_replace("-","", $where['delivery_country_id IN']) . ")";
+            } else {
+                $query .= " AND i.delivery_country_id IN (" . $where['delivery_country_id IN'] . ")";
+            }
+        }
+
+        if (isset($where['delivery_country_id'])) {
+            $query .= " AND i.delivery_country_id = " . $where['delivery_country_id'] ;
+        }
+
+        $query .= " GROUP BY com_zeapps_crm_invoice_lines.ref ORDER BY total_ht DESC" ;
 
         if ($limitAffichage) {
             $query .= " LIMIT " . $limitAffichage;

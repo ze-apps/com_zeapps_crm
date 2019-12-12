@@ -159,15 +159,15 @@ class ProductCategories extends Model
     public static function turnover($dateDebut, $dateFin, $where = array())
     {
         $query = "SELECT SUM(l.total_ht) as total_ht,
-                         SUM(l.qty) as qty
-                  FROM com_zeapps_crm_product_categories ca
-                  LEFT JOIN com_zeapps_crm_products p ON p.id_cat = ca.id
-                  LEFT JOIN com_zeapps_crm_invoice_lines l ON l.id_product = p.id
-                  LEFT JOIN com_zeapps_crm_invoices i ON i.id = l.id_invoice
-                  WHERE i.finalized = '1'
-                        AND l.type = 'product'
-                        AND i.deleted_at IS NULL
-                        AND l.deleted_at IS NULL" ;
+                     SUM(l.qty) as qty
+              FROM com_zeapps_crm_product_categories ca
+              LEFT JOIN com_zeapps_crm_products p ON p.id_cat = ca.id
+              LEFT JOIN com_zeapps_crm_invoice_lines l ON l.id_product = p.id
+              LEFT JOIN com_zeapps_crm_invoices i ON i.id = l.id_invoice
+              WHERE i.finalized = '1'
+                    AND l.type = 'product'
+                    AND i.deleted_at IS NULL
+                    AND l.deleted_at IS NULL";
 
         if ($dateDebut) {
             $query .= " AND i.date_creation >= '" . $dateDebut . "'";
@@ -196,7 +196,12 @@ class ProductCategories extends Model
         }
 
         if (isset($where['delivery_country_id IN'])) {
-            $query .= " AND i.delivery_country_id IN (" . $where['delivery_country_id IN'] . ")";
+            if (strpos($where['delivery_country_id IN'], "-") !== false) {
+                $query .= " AND i.delivery_country_id NOT IN (" . str_replace("-", "", $where['delivery_country_id IN']) . ")";
+            } else {
+                $query .= " AND i.delivery_country_id IN (" . $where['delivery_country_id IN'] . ")";
+            }
+
         }
 
         if (isset($where['delivery_country_id'])) {
