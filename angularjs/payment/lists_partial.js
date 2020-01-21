@@ -86,8 +86,6 @@ app.controller("ComZeappsCrmPaymentListsPartialCtrl", ["$scope", "$location", "$
         }
 
         function add(payment) {
-            console.log(payment);
-
             var data = payment;
 
             var formatted_data = angular.toJson(data);
