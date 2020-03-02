@@ -182,6 +182,14 @@ class ProductCategories extends Model
             $query .= " AND p.ref like '" . str_replace('\'', '\'\'', $where['ref']) . "'";
         }
 
+        if (isset($where['type_client'])) {
+            if ($where['type_client'] == 1) {
+                $query .= " AND i.id_company = 0 ";
+            } elseif ($where['type_client'] == 2)  {
+                $query .= " AND i.id_company != 0 ";
+            }
+        }
+
         if (isset($where['id_cat'])) {
             $query .= " AND ca.id IN (" . implode(',', $where['id_cat']) . ")";
         }

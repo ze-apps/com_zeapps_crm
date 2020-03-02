@@ -104,6 +104,15 @@ class Products extends Model
                         AND l.deleted_at IS NULL
                         ";
 
+
+        if (isset($where['type_client'])) {
+            if ($where['type_client'] == 1) {
+                $query .= " AND i.id_company = 0 ";
+            } elseif ($where['type_client'] == 2)  {
+                $query .= " AND i.id_company != 0 ";
+            }
+        }
+
         if ($dateDebut) {
             $query .= " AND i.date_creation >= '" . $dateDebut . "'";
         }
@@ -162,6 +171,14 @@ class Products extends Model
                         AND i.deleted_at IS NULL
                         AND com_zeapps_crm_invoice_lines.deleted_at IS NULL
                         ";
+
+        if (isset($where['type_client'])) {
+            if ($where['type_client'] == 1) {
+                $query .= " AND i.id_company = 0 ";
+            } elseif ($where['type_client'] == 2)  {
+                $query .= " AND i.id_company != 0 ";
+            }
+        }
 
         if ($dateDebut) {
             $query .= " AND i.date_creation >= '" . $dateDebut . "'";
