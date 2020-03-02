@@ -268,6 +268,15 @@ class Stock extends Controller
         }
 
 
+        $nomEntrepot = "Tous les entrepôts" ;
+        if ($id_warehouse) {
+            $objWarehouses = Warehouses::find($id_warehouse);
+            if ($objWarehouses) {
+                $nomEntrepot = $objWarehouses->label ;
+            }
+        }
+
+
         $product_stocks = Products::select("id", "ref", "name", "price_unit_stock")
             ->where("type_product", "product")
             ->where("active", 1)
@@ -328,7 +337,7 @@ class Stock extends Controller
         // génération du fichier Excel
         $header = array("string");
 
-        $row1 = array("Stock au " . date("d/m/Y", $dateStock));
+        $row1 = array("Stock au " . date("d/m/Y", $dateStock) . " (" . $nomEntrepot . ")");
         $row2 = array("Ref", "Libellé", "Qté", "Valeur Unitaire", "Valeur du Stock");
 
         $writer = new XLSXWriter();
