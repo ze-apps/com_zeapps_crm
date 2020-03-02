@@ -24,6 +24,22 @@ app.controller("ComZeappsCrmStockViewCtrl", ["$scope", "$location", "$rootScope"
             showSubCats = false;
         };
 
+        $scope.export = function () {
+            var id = $scope.currentBranch ? $scope.currentBranch.id : 0;
+            var offset = ($scope.page - 1) * $scope.pageSize;
+            var formatted_filters = angular.toJson($scope.filter_model);
+
+            $rootScope.current_warehouse = $scope.filter_model.id_warehouse;
+
+            zhttp.crm.product_stock.export(id, $scope.pageSize, offset, "", formatted_filters).then(function(response){
+                if(response.data && response.data != "false"){
+                    if (response.status == 200 && response.data) {
+                        window.document.location.href = zhttp.crm.product_stock.get_export(response.data.link);
+                    }
+                }
+            });
+        };
+
 
 
 
@@ -69,6 +85,13 @@ app.controller("ComZeappsCrmStockViewCtrl", ["$scope", "$location", "$rootScope"
                     type: 'text',
                     label: 'Entrepôt',
                     options: []
+                },
+                {
+                    format: 'input',
+                    field: 'date_stock',
+                    type: 'date',
+                    label: 'Date analyse',
+                    size: 3
                 }
             ]
         };

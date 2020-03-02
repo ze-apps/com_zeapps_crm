@@ -193,6 +193,8 @@ app.config(["$provide",
                     get: get_product_stock,
                     get_mvt: get_product_stock_mvt,
                     get_all: getAll_product_stock,
+                    export: export_product_stock,
+                    get_export: get_export_product_stock,
                     save: save_product_stock,
                     del: delete_product_stock,
                     add_mvt: add_mvt,
@@ -821,6 +823,14 @@ app.config(["$provide",
 
             function getAll_product_stock(id, limit, offset, context, filters) {
                 return zeHttp.post("/com_zeapps_crm/stock/getAll/" + id + "/" + limit + "/" + offset + "/" + context, filters);
+            }
+
+            function export_product_stock(id, limit, offset, context, filters) {
+                return zeHttp.post("/com_zeapps_crm/stock/export/" + id + "/" + limit + "/" + offset + "/" + context, filters);
+            }
+
+            function get_export_product_stock(link) {
+                return "/com_zeapps_crm/stock/get_export/" + link;
             }
 
             function save_product_stock(data, id_warehouse) {

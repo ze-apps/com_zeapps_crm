@@ -10,8 +10,9 @@
             <form>
 
                 <div class="row">
-                    <div class="col-md-12">
-                        <ze-filters class="pull-right" data-model="filter_model" data-filters="filters"
+                    <div class="col-md-4"><button type="button" class="btn btn-success btn-sm" ng-click="export()">Exporter</button></div>
+                    <div class="col-md-8">
+                        <ze-filters data-model="filter_model" data-filters="filters"
                                     data-update="loadList"></ze-filters>
                     </div>
                 </div>
