@@ -88,7 +88,7 @@ class Products extends Model
         return;
     }
 
-    public static function top10($dateDebut, $dateFin, $where = array(), $limitAffichage = 10)
+    public static function top10($dateDebut, $dateFin, $where = array(), $limitAffichage = 10, $onlySubscription = false)
     {
         $query = "SELECT p.id as id_product, p.ref, SUM(l.total_ht) as total_ht,
                          SUM(l.qty) as qty,
@@ -97,9 +97,14 @@ class Products extends Model
                   LEFT JOIN com_zeapps_crm_products p ON p.id_cat = ca.id
                   LEFT JOIN com_zeapps_crm_invoice_lines l ON l.id_product = p.id
                   LEFT JOIN com_zeapps_crm_invoices i ON i.id = l.id_invoice
-                  WHERE i.finalized = '1'
-                        AND l.type not in ('subscription', 'subscription_pack')
-                        AND l.id_parent = 0
+                  WHERE i.finalized = '1'" ;
+
+        if ($onlySubscription) {
+            $query .= " AND l.type in ('subscription', 'subscription_pack') ";
+        } else {
+            $query .= " AND l.type not in ('subscription', 'subscription_pack') ";
+        }
+        $query .= " AND l.id_parent = 0
                         AND i.deleted_at IS NULL
                         AND l.deleted_at IS NULL
                         ";
@@ -158,16 +163,21 @@ class Products extends Model
         return Capsule::select(Capsule::raw($query));
     }
 
-    public static function top10Autre($dateDebut, $dateFin, $where = array(), $limitAffichage = 10)
+    public static function top10Autre($dateDebut, $dateFin, $where = array(), $limitAffichage = 10, $onlySubscription = false)
     {
         $query = "SELECT com_zeapps_crm_invoice_lines.ref as id_product, com_zeapps_crm_invoice_lines.ref, SUM(com_zeapps_crm_invoice_lines.total_ht) as total_ht,
                          SUM(com_zeapps_crm_invoice_lines.qty) as qty,
                          com_zeapps_crm_invoice_lines.designation_title as name
                   FROM com_zeapps_crm_invoice_lines
                   LEFT JOIN com_zeapps_crm_invoices i ON i.id = com_zeapps_crm_invoice_lines.id_invoice
-                  WHERE i.finalized = '1'
-                        AND com_zeapps_crm_invoice_lines.type in ('subscription', 'subscription_pack')
-                        AND com_zeapps_crm_invoice_lines.id_parent = 0
+                  WHERE i.finalized = '1'" ;
+
+        if ($onlySubscription) {
+            $query .= " AND com_zeapps_crm_invoice_lines.type in ('subscription', 'subscription_pack') ";
+        } else {
+            $query .= " AND com_zeapps_crm_invoice_lines.type not in ('subscription', 'subscription_pack') ";
+        }
+        $query .= " AND com_zeapps_crm_invoice_lines.id_parent = 0
                         AND i.deleted_at IS NULL
                         AND com_zeapps_crm_invoice_lines.deleted_at IS NULL
                         ";
