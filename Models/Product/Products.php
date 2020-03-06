@@ -96,7 +96,7 @@ class Products extends Model
                   FROM com_zeapps_crm_product_categories ca
                   LEFT JOIN com_zeapps_crm_products p ON p.id_cat = ca.id
                   LEFT JOIN com_zeapps_crm_invoice_lines l ON l.id_product = p.id
-                  LEFT JOIN com_zeapps_crm_invoices i ON i.id = l.id_invoice
+                  INNER JOIN com_zeapps_crm_invoices i ON i.id = l.id_invoice
                   WHERE i.finalized = '1'" ;
 
         if ($onlySubscription) {
