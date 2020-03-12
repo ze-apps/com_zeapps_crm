@@ -126,11 +126,15 @@ class Products extends Model
             $query .= " AND i.date_creation <= '" . $dateFin . "'";
         }
 
+        if (isset($where['id_product'])) {
+            $query .= " AND l.id_product = " . $where['id_product'] ;
+        }
+
         if (isset($where['ref'])) {
             $query .= " AND p.ref like '" . str_replace('\'', '\'\'', $where['ref']) . "'";
         }
 
-        if (isset($where['id_cat'])) {
+        if (isset($where['id_cat']) && count($where['id_cat'])) {
             $query .= " AND ca.id IN (" . implode(',', $where['id_cat']) . ")";
         }
 
@@ -160,6 +164,8 @@ class Products extends Model
             $query .= " LIMIT " . $limitAffichage;
         }
 
+//        echo $query . "\n" ;
+
         return Capsule::select(Capsule::raw($query));
     }
 
@@ -177,6 +183,8 @@ class Products extends Model
         } else {
             $query .= " AND com_zeapps_crm_invoice_lines.type not in ('subscription', 'subscription_pack') ";
         }
+
+
         $query .= " AND com_zeapps_crm_invoice_lines.id_parent = 0
                         AND i.deleted_at IS NULL
                         AND com_zeapps_crm_invoice_lines.deleted_at IS NULL
@@ -202,9 +210,13 @@ class Products extends Model
             $query .= " AND com_zeapps_crm_invoice_lines.ref like '" . str_replace('\'', '\'\'', $where['ref']) . "'";
         }
 
-//        if (isset($where['id_cat'])) {
+//        if (isset($where['id_cat']) && count($where['id_cat'])) {
 //            $query .= " AND ca.id IN (" . implode(',', $where['id_cat']) . ")";
 //        }
+
+        if (isset($where['id_product'])) {
+            $query .= " AND com_zeapps_crm_invoice_lines.id_product = " . $where['id_product'] ;
+        }
 
         if (isset($where['id_price_list'])) {
             $query .= " AND i.id_price_list = " . $where['id_price_list'];
@@ -231,6 +243,8 @@ class Products extends Model
         if ($limitAffichage) {
             $query .= " LIMIT " . $limitAffichage;
         }
+
+//        echo $query . "\n" ;
 
         return Capsule::select(Capsule::raw($query));
     }
