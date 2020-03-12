@@ -156,7 +156,7 @@ class ProductCategories extends Model
     }
 
 
-    public static function turnover($dateDebut, $dateFin, $where = array())
+    public static function turnover($dateDebut, $dateFin, $where = array(), $onlySubscription = false)
     {
         $query = "SELECT SUM(l.total_ht) as total_ht,
                      SUM(l.qty) as qty
@@ -166,9 +166,15 @@ class ProductCategories extends Model
               INNER JOIN com_zeapps_crm_invoices i ON i.id = l.id_invoice
               WHERE i.finalized = '1'
                     AND l.id_parent = 0
-                    AND l.type = 'product'
                     AND i.deleted_at IS NULL
                     AND l.deleted_at IS NULL";
+
+
+        if ($onlySubscription) {
+            $query .= " AND l.type in ('subscription', 'subscription_pack') ";
+        } else {
+            $query .= " AND l.type not in ('subscription', 'subscription_pack') ";
+        }
 
         if ($dateDebut) {
             $query .= " AND i.date_creation >= '" . $dateDebut . "'";
@@ -178,6 +184,11 @@ class ProductCategories extends Model
             $query .= " AND i.date_creation <= '" . $dateFin . "'";
         }
 
+
+
+        if (isset($where['id_product'])) {
+            $query .= " AND l.id_product = " . $where['id_product'] ;
+        }
 
         if (isset($where['ref'])) {
             $query .= " AND p.ref like '" . str_replace('\'', '\'\'', $where['ref']) . "'";
@@ -191,9 +202,13 @@ class ProductCategories extends Model
             }
         }
 
-        if (isset($where['id_cat'])) {
+        if (isset($where['id_cat']) && count($where['id_cat'])) {
             $query .= " AND ca.id IN (" . implode(',', $where['id_cat']) . ")";
         }
+
+//        if (isset($where['id_cat not'])) {
+//            $query .= " AND ca.id NOT IN (" . implode(',', $where['id_cat not']) . ")";
+//        }
 
 
         if (isset($where['id_price_list'])) {
@@ -216,6 +231,7 @@ class ProductCategories extends Model
         if (isset($where['delivery_country_id'])) {
             $query .= " AND i.delivery_country_id = " . $where['delivery_country_id'];
         }
+//echo $query . "\n" ;
 
         return Capsule::select(Capsule::raw($query));
     }
