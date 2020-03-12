@@ -9,6 +9,13 @@ app.config(["$routeProvider",
 				controller: "ComZeappsCrmTaxeConfigCtrl"
 			})
 
+			// config modele email
+			.when("/ng/com_zeapps_crm/model_email", {
+				templateUrl: "/com_zeapps_crm/model_email/liste",
+				controller: "ComZeappsCrmTaxeConfigCtrl"
+			})
+
+
 
 
 		// QUOTE

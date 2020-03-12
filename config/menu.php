@@ -1,15 +1,15 @@
 <?php
 
 /********** insert in left menu ************/
-$tabMenu = array () ;
-$tabMenu["id"] = "com_ze_apps_taxes" ;
-$tabMenu["space"] = "com_ze_apps_config" ;
-$tabMenu["label"] = "Taxes" ;
-$tabMenu["fa-icon"] = "percentage" ;
-$tabMenu["url"] = "/ng/com_zeapps/taxes" ;
-$tabMenu["access"] = "com_zeapps_crm_read" ;
-$tabMenu["order"] = 41 ;
-$menuLeft[] = $tabMenu ;
+//$tabMenu = array () ;
+//$tabMenu["id"] = "com_ze_apps_taxes" ;
+//$tabMenu["space"] = "com_ze_apps_config" ;
+//$tabMenu["label"] = "Taxes" ;
+//$tabMenu["fa-icon"] = "percentage" ;
+//$tabMenu["url"] = "/ng/com_zeapps/taxes" ;
+//$tabMenu["access"] = "com_zeapps_crm_read" ;
+//$tabMenu["order"] = 41 ;
+//$menuLeft[] = $tabMenu ;
 
 $tabMenu = array () ;
 $tabMenu["id"] = "com_ze_apps_quotes" ;
@@ -63,12 +63,22 @@ $tabMenu["access"] = "com_zeapps_crm_read" ;
 $tabMenu["order"] = 49 ;
 $menuLeft[] = $tabMenu ;
 
+//$tabMenu = array () ;
+//$tabMenu["id"] = "com_ze_apps_warehouses" ;
+//$tabMenu["space"] = "com_ze_apps_config" ;
+//$tabMenu["label"] = "Entrepôts" ;
+//$tabMenu["fa-icon"] = "building" ;
+//$tabMenu["url"] = "/ng/com_zeapps/warehouses" ;
+//$tabMenu["access"] = "com_zeapps_crm_read" ;
+//$tabMenu["order"] = 50 ;
+//$menuLeft[] = $tabMenu ;
+
 $tabMenu = array () ;
-$tabMenu["id"] = "com_ze_apps_warehouses" ;
+$tabMenu["id"] = "com_zeapps_crm_config_model_email" ;
 $tabMenu["space"] = "com_ze_apps_config" ;
-$tabMenu["label"] = "Entrepôts" ;
-$tabMenu["fa-icon"] = "building" ;
-$tabMenu["url"] = "/ng/com_zeapps/warehouses" ;
+$tabMenu["label"] = "Modele email" ;
+$tabMenu["fa-icon"] = "tags" ;
+$tabMenu["url"] = "/ng/com_zeapps_crm/model_email" ;
 $tabMenu["access"] = "com_zeapps_crm_read" ;
 $tabMenu["order"] = 50 ;
 $menuLeft[] = $tabMenu ;
