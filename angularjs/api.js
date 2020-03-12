@@ -4,6 +4,12 @@ app.config(["$provide",
             var zeHttp = $delegate;
 
             zeHttp.crm = {
+                model_email : {
+                    get : get_model_email,
+                    get_all : getAll_model_email,
+                    save : save_model_email,
+                    del : delete_model_email
+                },
                 price_list: {
                     get: get_pricelist,
                     get_all: getAll_pricelist,
@@ -259,6 +265,26 @@ app.config(["$provide",
             });
 
             return zeHttp;
+
+
+
+            function get_model_email(id){
+                id = id || 0;
+                return zeHttp.get("/com_zeapps_crm/model_email/get/" + id);
+            }
+            function getAll_model_email(){
+                return zeHttp.get("/com_zeapps_crm/model_email/getAll");
+            }
+            function save_model_email(data){
+                return zeHttp.post("/com_zeapps_crm/model_email/save", data);
+            }
+            function delete_model_email(id){
+                return zeHttp.delete("/com_zeapps_crm/model_email/delete/" + id);
+            }
+
+
+
+
 
 
             function getall_statuts() {

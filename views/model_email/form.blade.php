@@ -1,32 +1,139 @@
 <div id="content">
     <form>
 
-        *********** TODO ***********<br>
-        *********** TODO ***********<br>
-        *********** TODO ***********<br>
-        *********** TODO ***********<br>
-        *********** TODO ***********<br>
-        *********** TODO ***********<br>
+        <h3>Modèle email</h3>
+
 
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-12">
                 <div class="form-group">
-                    <label>Publication <span class="required">*</span></label>
-                    <select class="form-control" ng-model="form.id_publication" ng-required="true">
-                        <option value="">Choisissez une publication...</option>
-                        <option ng-repeat="publication in publications" ng-value="publication.id">
-                            @{{publication.label}}
-                        </option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label>Numéro <span class="required">*</span></label>
-                    <input type="number" class="form-control" ng-model="form.numero">
+                    <label>Nom du modèle <span class="required">*</span></label>
+                    <input type="text" class="form-control" ng-model="form.name">
                 </div>
             </div>
         </div>
+
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label>Destinetaire par défaut (séparer les adresses par une virgule)</label>
+                    <input type="text" class="form-control" ng-model="form.default_to">
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label>Objet de l'email <span class="required">*</span></label>
+                    <input type="text" class="form-control" ng-model="form.subject">
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label>Contenu de l'email <span class="required">*</span></label>
+                    <textarea class="form-control" ng-model="form.message" rows="10"></textarea>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label>Pièces jointes</label>
+                    {{--                    <input type="text" class="form-control" ng-model="form.attachments">--}}
+                    <button type="file" ngf-select="uploadFiles($file, $invalidFiles)" class="btn btn-success btn-xs"
+                            {{-- accept="image/*" ngf-max-height="1000" ngf-max-size="1MB"--}}>
+                        Ajouter
+                    </button>
+                    <br>
+                    <div style="font:smaller">@{{errFile.$error}} @{{errFile.$errorParam}}
+                        <span class="progress" ng-show="f.progress >= 0 && f.progress < 100">
+                          <div style="width:@{{f.progress}}%"
+                               ng-bind="f.progress + '%'"></div>
+                      </span>
+                    </div>
+                    @{{errorMsg}}
+
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Fichier</th>
+                            <th>Path</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="attachment in form.attachments">
+                            <td>@{{ attachment.name }}</td>
+                            <td>@{{ attachment.path }}</td>
+                            <td class="text-right"><button type="button" class="btn btn-xs btn-danger" ng-click="deleteFile(attachment.path)"><i class="fa fa-trash"></i> Supprimer</button></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" class="checkbox" ng-model="form.to_quote"
+                               ng-true-value="1" ng-false-value="0" ng-checked="form.to_quote == 1">
+                        Pour les devis
+                    </label>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" class="checkbox" ng-model="form.to_order"
+                               ng-true-value="1" ng-false-value="0" ng-checked="form.to_order == 1">
+                        Pour les commandes
+                    </label>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" class="checkbox" ng-model="form.to_invoice"
+                               ng-true-value="1" ng-false-value="0" ng-checked="form.to_invoice == 1">
+                        Pour les factures
+                    </label>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" class="checkbox" ng-model="form.to_delivery"
+                               ng-true-value="1" ng-false-value="0" ng-checked="form.to_delivery == 1">
+                        Pour les bons de livraison
+                    </label>
+                </div>
+            </div>
+        </div>
+
 
         <form-buttons></form-buttons>
 
