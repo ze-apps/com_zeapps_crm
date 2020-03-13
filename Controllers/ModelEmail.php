@@ -81,21 +81,7 @@ class ModelEmail extends Controller
                         }
 
                         if ($trouve == false) {
-                            // todo : supprimer le fichier
-                            // todo : supprimer le fichier
-                            // todo : supprimer le fichier
-                            // todo : supprimer le fichier
-                            // todo : supprimer le fichier
-                            // todo : supprimer le fichier
-                            // todo : supprimer le fichier
-
-                            // todo : ajouter une methode dans Storage pour supprimer le fichier
-                            // todo : ajouter une methode dans Storage pour supprimer le fichier
-                            // todo : ajouter une methode dans Storage pour supprimer le fichier
-                            // todo : ajouter une methode dans Storage pour supprimer le fichier
-                            // todo : ajouter une methode dans Storage pour supprimer le fichier
-                            // todo : ajouter une methode dans Storage pour supprimer le fichier
-                            // todo : ajouter une methode dans Storage pour supprimer le fichier
+                            Storage::deleteFile($ancienAttachments["path"]);
                         }
                     }
                 }
