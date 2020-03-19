@@ -46,7 +46,6 @@ app.controller("ComZeappsCrmModelEmailConfigFormCtrl", ["$scope", "$route", "$ro
 			});
 
 			$scope.form.attachments = contenuPieceJointe ;
-			console.log(pathFile);
 		};
 
 

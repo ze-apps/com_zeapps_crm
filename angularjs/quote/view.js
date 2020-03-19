@@ -7,10 +7,8 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
         $scope.hooks = zeHooks.get("comZeappsCrm_QuoteHook");
 
 
-
         // to activate hook function
         $scope.hooksComZeappsCRM_QuoteHeaderRightHook = zeHooks.get("comZeappsCRM_QuoteHeaderRightHook");
-
 
 
         $scope.progress = 0;
@@ -87,22 +85,17 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
         }
 
 
-
-        var _id_price_list_before_update =  0 ;
+        var _id_price_list_before_update = 0;
         var loadDocument = function (idDocument, next) {
             zhttp.crm.quote.get(idDocument).then(function (response) {
                 if (response.data && response.data != "false") {
                     $scope.quote = response.data.quote;
-                    _id_price_list_before_update = $scope.quote.id_price_list ;
+                    _id_price_list_before_update = $scope.quote.id_price_list;
 
                     $scope.credits = response.data.credits;
 
 
-
                     $scope.tableTaxes = response.data.tableTaxes;
-
-
-
 
 
                     $scope.activities = response.data.activities || [];
@@ -139,10 +132,7 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                     $scope.lines = lines;
 
 
-
                     crmTotal.init($scope.quote, $scope.lines);
-
-
 
 
                     // charge l'entreprise associée à la commande
@@ -351,10 +341,10 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                                             line.accounting_number = priceList.accounting_number;
                                         }
 
-                                        line.discount = priceList.percentage_discount ;
-                                        line.price_unit = priceList.price_ht ;
-                                        line.id_taxe = priceList.id_taxe ;
-                                        line.value_taxe = priceList.value_taxe ;
+                                        line.discount = priceList.percentage_discount;
+                                        line.price_unit = priceList.price_ht;
+                                        line.id_taxe = priceList.id_taxe;
+                                        line.value_taxe = priceList.value_taxe;
                                     }
                                 });
                             }
@@ -430,10 +420,10 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                                         line.accounting_number = priceList.accounting_number;
                                     }
 
-                                    line.discount = priceList.percentage_discount ;
-                                    line.price_unit = priceList.price_ht ;
-                                    line.id_taxe = priceList.id_taxe ;
-                                    line.value_taxe = priceList.value_taxe ;
+                                    line.discount = priceList.percentage_discount;
+                                    line.price_unit = priceList.price_ht;
+                                    line.id_taxe = priceList.id_taxe;
+                                    line.value_taxe = priceList.value_taxe;
                                 }
                             });
                         }
@@ -501,10 +491,10 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                                     line.accounting_number = priceList.accounting_number;
                                 }
 
-                                line.discount = priceList.percentage_discount ;
-                                line.price_unit = priceList.price_ht ;
-                                line.id_taxe = priceList.id_taxe ;
-                                line.value_taxe = priceList.value_taxe ;
+                                line.discount = priceList.percentage_discount;
+                                line.price_unit = priceList.price_ht;
+                                line.id_taxe = priceList.id_taxe;
+                                line.value_taxe = priceList.value_taxe;
                             }
                         });
                     }
@@ -632,9 +622,7 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
 
 
                 // to save price list state
-                _id_price_list_before_update = $scope.quote.id_price_list ;
-
-
+                _id_price_list_before_update = $scope.quote.id_price_list;
 
 
                 var data = $scope.quote;
@@ -751,6 +739,16 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
 
             var options = {};
 
+
+            // TODO : mettre ici l'adresse email du contact
+            // TODO : mettre ici l'adresse email du contact
+            // TODO : mettre ici l'adresse email du contact
+            // TODO : mettre ici l'adresse email du contact
+            // TODO : mettre ici l'adresse email du contact
+            // TODO : mettre ici l'adresse email du contact
+            // TODO : mettre ici l'adresse email du contact
+            options.to = ["nicolas.ramel@gmail.com"] ;
+
             options.subject = "Devis : " + $scope.quote.numerotation;
 
             options.content = "Bonjour,\n"
@@ -774,15 +772,59 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
 
 
             options.attachments = [];
+            options.templates = [];
+            options.data_templates = [];
+
+
+            options.templates.push({
+                name: "Test",
+                default_to: "nicolas.ramel@gmail.com, nicolas.ramel@preview-communication.fr",
+                subject: "Votre [type_doc] ABEKO N°[number_doc]",
+                message: "Bonjour [contact],\n" +
+                    "\n" +
+                    "vous trouverez ci-joint notre [type_doc] N°[number_doc] d'un montant de [amount_without_taxes] € HT.\n" +
+                    "\n" +
+                    "Nous vous en souhaitons bonne réception\n" +
+                    "\n" +
+                    "[doc_manager]\n" +
+                    "Abeko",
+                attachments: [{"name": "Abeko-CGV.pdf", "path": "storage/2020/03/19/10/27/25/5e733afd5c13a.pdf"},
+                    {"name": "Abeko-CGV2.pdf", "path": "storage/2020/03/19/10/27/25/5e733afd5c13a.pdf"},
+                    {"name": "Abeko-CGV3.pdf", "path": "storage/2020/03/19/10/27/25/5e733afd5c13a.pdf"}]
+            });
+
+            options.templates.push({
+                name: "Test 2",
+                default_to: "contact@preview-communication.fr",
+                subject: "Votre test 222222 [type_doc] ABEKO N°[number_doc]",
+                message: "Bonjour test 222222 [contact],\n" +
+                    "\n" +
+                    "vous trouverez ci-joint notre [type_doc] N°[number_doc] d'un montant de [amount_without_taxes] € HT.\n" +
+                    "\n" +
+                    "Nous vous en souhaitons bonne réception\n" +
+                    "\n" +
+                    "[doc_manager]\n" +
+                    "Abeko",
+                attachments: [{"name": "Abeko-CGV-222222.pdf", "path": "storage/2020/03/19/10/27/25/5e733afd5c13a.pdf"}]
+            });
+
+            options.data_templates.push({tag: "[type_doc]", value: "Devis"});
+            options.data_templates.push({tag: "[company]", value: $scope.quote.name_company});
+            options.data_templates.push({tag: "[contact]", value: $scope.quote.name_contact});
+            options.data_templates.push({tag: "[number_doc]", value: $scope.quote.numerotation});
+            options.data_templates.push({tag: "[amount]", value: $scope.quote.total_ttc});
+            options.data_templates.push({tag: "[amount_without_taxes]", value: $scope.quote.total_ht});
+            options.data_templates.push({tag: "[reference]", value: $scope.quote.reference_client});
+            options.data_templates.push({tag: "[label_doc]", value: $scope.quote.libelle});
+            options.data_templates.push({tag: "[doc_manager]", value: $scope.quote.name_user_account_manager});
+
             zhttp.crm.quote.pdf.make($scope.quote.id).then(function (response) {
                 if (response.data && response.data != "false") {
                     var url_file = angular.fromJson(response.data);
                     options.attachments.push({file: url_file, url: "/" + url_file, name: "quote.pdf"});
 
-
                     zeapps_modal.loadModule("zeapps", "email_writer", options, function (objReturn) {
                         if (objReturn) {
-
                         }
                     });
                 }

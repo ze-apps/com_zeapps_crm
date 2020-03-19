@@ -39,6 +39,16 @@
                 <div class="form-group">
                     <label>Contenu de l'email <span class="required">*</span></label>
                     <textarea class="form-control" ng-model="form.message" rows="10"></textarea>
+                    Vous pouvez insérer les codes suivants pour créer le contenu de l'email<br>
+                    [company] : Nom de l'entreprise<br>
+                    [contact] : Nom du contact<br>
+                    [number_doc] : N° du document<br>
+                    [type_doc] : Type de document (devis, commande, facture, bon de livraison)<br>
+                    [amount] : Montant toutes taxes comprise du document<br>
+                    [amount_without_taxes] : Montant hors taxes du document<br>
+                    [reference] : Référence du document<br>
+                    [label_doc] : Libellé du document<br>
+                    [doc_manager] : Responsable du document<br>
                 </div>
             </div>
         </div>
@@ -48,7 +58,6 @@
             <div class="col-md-12">
                 <div class="form-group">
                     <label>Pièces jointes</label>
-                    {{--                    <input type="text" class="form-control" ng-model="form.attachments">--}}
                     <button type="file" ngf-select="uploadFiles($file, $invalidFiles)" class="btn btn-success btn-xs"
                             {{-- accept="image/*" ngf-max-height="1000" ngf-max-size="1MB"--}}>
                         Ajouter
