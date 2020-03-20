@@ -447,6 +447,9 @@ class Invoices extends Model
     {
         $data = [];
 
+        $data['text_before_lines'] = Config::find("crm_invoice_text_before_lines") ;
+        $data['text_after_lines'] = Config::find("crm_invoice_text_after_lines") ;
+
         $data['invoice'] = self::where("id", $id)->first();
 
         if ($data['invoice']->finalized == 1 && $data['invoice']->final_pdf != "" && Storage::isFileExists($data['invoice']->final_pdf)) {

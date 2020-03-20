@@ -5,6 +5,8 @@ app.controller("ComZeappsCrmOrderConfigCtrl", ["$scope", "zeHttp", "menu",
 
 		$scope.format = "";
 		$scope.numerotation = 1;
+		$scope.textBefore = "";
+		$scope.textAfter = "";
 
 		$scope.success = success;
 		$scope.test = test;
@@ -21,6 +23,22 @@ app.controller("ComZeappsCrmOrderConfigCtrl", ["$scope", "zeHttp", "menu",
 			}
 		});
 
+		zhttp.config.get("crm_order_text_before_lines").then(function (response) {
+			if (response.data && response.data != "false") {
+				if (response.data && response.data.value) {
+					$scope.textBefore = response.data.value;
+				}
+			}
+		});
+
+		zhttp.config.get("crm_order_text_after_lines").then(function (response) {
+			if (response.data && response.data != "false") {
+				if (response.data && response.data.value) {
+					$scope.textAfter = response.data.value;
+				}
+			}
+		});
+
 		function success(){
 
 			var data = {};
@@ -32,6 +50,14 @@ app.controller("ComZeappsCrmOrderConfigCtrl", ["$scope", "zeHttp", "menu",
 			data[1] = {
 				id: "crm_order_numerotation",
 				value: $scope.numerotation
+			};
+			data[2] = {
+				id: "crm_order_text_before_lines",
+				value: $scope.textBefore
+			};
+			data[3] = {
+				id: "crm_order_text_after_lines",
+				value: $scope.textAfter
 			};
 
 			var formatted_data = angular.toJson(data);

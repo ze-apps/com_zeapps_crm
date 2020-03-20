@@ -546,6 +546,9 @@ class Orders extends Controller
 
         $data = [];
 
+        $data['text_before_lines'] = Config::find("crm_order_text_before_lines") ;
+        $data['text_after_lines'] = Config::find("crm_order_text_after_lines") ;
+
         $data['order'] = OrdersModel::where("id", $id)->first();
         $data['lines'] = OrderLines::getFromOrder($id);
         $data['tableTaxes'] = OrderTaxes::getTableTaxe($id);

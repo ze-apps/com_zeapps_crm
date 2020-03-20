@@ -47,6 +47,24 @@
             </div>
         </div>
 
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label>Texte AVANT les lignes imprimées sur le PDF</label>
+                    <textarea ck-editor ng-model="textBefore"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label>Texte APRÈS les lignes imprimées sur le PDF</label>
+                    <textarea ck-editor ng-model="textAfter"></textarea>
+                </div>
+            </div>
+        </div>
+
         <form-buttons></form-buttons>
     </form>
 

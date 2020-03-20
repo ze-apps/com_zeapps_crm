@@ -173,6 +173,11 @@
     <div class="text-right" style="border-top: 1px solid #000000;">{PAGENO}/{nbpg}</div>
 </htmlpagefooter>
 
+<?php if (isset($text_before_lines) && isset($text_before_lines->value) && trim($text_before_lines->value) != "") { ?>
+<div class="text_before_lines_pdf">
+    <?php echo $text_before_lines->value ; ?>
+</div>
+<?php } ?>
 
 <table class="lines">
     <thead>
@@ -218,5 +223,12 @@
     ?>
     </tbody>
 </table>
+
+<?php if (isset($text_after_lines) && isset($text_after_lines->value) && trim($text_after_lines->value) != "") { ?>
+<div class="text_after_lines_pdf">
+    <?php echo $text_after_lines->value ; ?>
+</div>
+<?php } ?>
+
 </body>
 </html>

@@ -544,6 +544,9 @@ class Deliveries extends Controller
 
         $data = [];
 
+        $data['text_before_lines'] = Config::find("crm_delivery_text_before_lines") ;
+        $data['text_after_lines'] = Config::find("crm_delivery_text_after_lines") ;
+
         $data['delivery'] = DeliveriesModel::where("id", $id)->first();
         $data['lines'] = DeliveryLines::getFromDelivery($id) ;
         $data['tableTaxes'] = DeliveryTaxes::getTableTaxe($id);

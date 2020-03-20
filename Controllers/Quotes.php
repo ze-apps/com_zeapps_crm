@@ -523,6 +523,10 @@ class Quotes extends Controller
 
         $data = [];
 
+        $data['text_before_lines'] = Config::find("crm_quote_text_before_lines") ;
+        $data['text_after_lines'] = Config::find("crm_quote_text_after_lines") ;
+
+
         $data['quote'] = QuotesModel::where("id", $id)->first();
         $data['lines'] = QuoteLines::getFromQuote($id);
         $data['tableTaxes'] = QuoteTaxes::getTableTaxe($id);
