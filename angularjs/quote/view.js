@@ -177,6 +177,15 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
             loadDocument($routeParams.id);
         }
 
+
+        // récupération des modèles d'email
+        var listeModleEmails = [];
+        zhttp.crm.model_email.get_all().then(function(response){
+            if(response.data && response.data != "false"){
+                listeModleEmails = response.data;
+            }
+        });
+
         //////////////////// FUNCTIONS ////////////////////
         function broadcast(event, data) {
             if (data.received) {
@@ -740,14 +749,13 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
             var options = {};
 
 
-            // TODO : mettre ici l'adresse email du contact
-            // TODO : mettre ici l'adresse email du contact
-            // TODO : mettre ici l'adresse email du contact
-            // TODO : mettre ici l'adresse email du contact
-            // TODO : mettre ici l'adresse email du contact
-            // TODO : mettre ici l'adresse email du contact
-            // TODO : mettre ici l'adresse email du contact
-            options.to = ["nicolas.ramel@gmail.com"] ;
+            var emailContact = "" ;
+            if ($scope.contact && $scope.contact.email && $scope.contact.email.trim() != "") {
+                emailContact = $scope.contact.email.trim() ;
+            } else if ($scope.company && $scope.company.email && $scope.company.email.trim() != "") {
+                emailContact = $scope.company.email.trim() ;
+            }
+            options.to = [emailContact] ;
 
             options.subject = "Devis : " + $scope.quote.numerotation;
 
@@ -776,37 +784,18 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
             options.data_templates = [];
 
 
-            options.templates.push({
-                name: "Test",
-                default_to: "nicolas.ramel@gmail.com, nicolas.ramel@preview-communication.fr",
-                subject: "Votre [type_doc] ABEKO N°[number_doc]",
-                message: "Bonjour [contact],\n" +
-                    "\n" +
-                    "vous trouverez ci-joint notre [type_doc] N°[number_doc] d'un montant de [amount_without_taxes] € HT.\n" +
-                    "\n" +
-                    "Nous vous en souhaitons bonne réception\n" +
-                    "\n" +
-                    "[doc_manager]\n" +
-                    "Abeko",
-                attachments: [{"name": "Abeko-CGV.pdf", "path": "storage/2020/03/19/10/27/25/5e733afd5c13a.pdf"},
-                    {"name": "Abeko-CGV2.pdf", "path": "storage/2020/03/19/10/27/25/5e733afd5c13a.pdf"},
-                    {"name": "Abeko-CGV3.pdf", "path": "storage/2020/03/19/10/27/25/5e733afd5c13a.pdf"}]
+            angular.forEach(listeModleEmails, function (template) {
+                if (template.to_quote) {
+                    options.templates.push({
+                        name: template.name,
+                        default_to: template.default_to,
+                        subject: template.subject,
+                        message: template.message,
+                        attachments: angular.fromJson(template.attachments)
+                    });
+                }
             });
 
-            options.templates.push({
-                name: "Test 2",
-                default_to: "contact@preview-communication.fr",
-                subject: "Votre test 222222 [type_doc] ABEKO N°[number_doc]",
-                message: "Bonjour test 222222 [contact],\n" +
-                    "\n" +
-                    "vous trouverez ci-joint notre [type_doc] N°[number_doc] d'un montant de [amount_without_taxes] € HT.\n" +
-                    "\n" +
-                    "Nous vous en souhaitons bonne réception\n" +
-                    "\n" +
-                    "[doc_manager]\n" +
-                    "Abeko",
-                attachments: [{"name": "Abeko-CGV-222222.pdf", "path": "storage/2020/03/19/10/27/25/5e733afd5c13a.pdf"}]
-            });
 
             options.data_templates.push({tag: "[type_doc]", value: "Devis"});
             options.data_templates.push({tag: "[company]", value: $scope.quote.name_company});

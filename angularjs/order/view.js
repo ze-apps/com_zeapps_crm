@@ -199,8 +199,15 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
             loadDocument($routeParams.id);
         }
 
-        //////////////////// FUNCTIONS ////////////////////
+        // récupération des modèles d'email
+        var listeModleEmails = [];
+        zhttp.crm.model_email.get_all().then(function(response){
+            if(response.data && response.data != "false"){
+                listeModleEmails = response.data;
+            }
+        });
 
+        //////////////////// FUNCTIONS ////////////////////
         function broadcast(event, data) {
             if (data.received) {
                 code_exists++;
@@ -872,6 +879,14 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
 
             var options = {};
 
+            var emailContact = "" ;
+            if ($scope.contact && $scope.contact.email && $scope.contact.email.trim() != "") {
+                emailContact = $scope.contact.email.trim() ;
+            } else if ($scope.company && $scope.company.email && $scope.company.email.trim() != "") {
+                emailContact = $scope.company.email.trim() ;
+            }
+            options.to = [emailContact] ;
+
             options.subject = "Commande : " + $scope.order.numerotation;
 
             options.content = "Bonjour,\n"
@@ -895,15 +910,41 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
 
 
             options.attachments = [];
+            options.templates = [];
+            options.data_templates = [];
+
+            angular.forEach(listeModleEmails, function (template) {
+                if (template.to_order) {
+                    options.templates.push({
+                        name: template.name,
+                        default_to: template.default_to,
+                        subject: template.subject,
+                        message: template.message,
+                        attachments: angular.fromJson(template.attachments)
+                    });
+                }
+            });
+
+
+            options.data_templates.push({tag: "[type_doc]", value: "Commande"});
+            options.data_templates.push({tag: "[company]", value: $scope.order.name_company});
+            options.data_templates.push({tag: "[contact]", value: $scope.order.name_contact});
+            options.data_templates.push({tag: "[number_doc]", value: $scope.order.numerotation});
+            options.data_templates.push({tag: "[amount]", value: $scope.order.total_ttc});
+            options.data_templates.push({tag: "[amount_without_taxes]", value: $scope.order.total_ht});
+            options.data_templates.push({tag: "[reference]", value: $scope.order.reference_client});
+            options.data_templates.push({tag: "[label_doc]", value: $scope.order.libelle});
+            options.data_templates.push({tag: "[doc_manager]", value: $scope.order.name_user_account_manager});
+
+            console.log(options);
+
             zhttp.crm.order.pdf.make($scope.order.id).then(function (response) {
                 if (response.data && response.data != "false") {
                     var url_file = angular.fromJson(response.data);
                     options.attachments.push({file: url_file, url: "/" + url_file, name: "order.pdf"});
 
-
                     zeapps_modal.loadModule("zeapps", "email_writer", options, function (objReturn) {
                         if (objReturn) {
-
                         }
                     });
                 }
