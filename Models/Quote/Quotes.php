@@ -90,6 +90,8 @@ class Quotes extends Model
         $this->fieldModelInfo->string('check_issuer', 255)->default("");
         $this->fieldModelInfo->string('reference_client', 255)->default("");
 
+        $this->fieldModelInfo->integer('default_template_email', false, true)->default(0);
+
         $this->fieldModelInfo->integer('id_company_delivery')->default(0);
         $this->fieldModelInfo->string('name_company_delivery', 255)->default("");
         $this->fieldModelInfo->integer('id_contact_delivery')->default(0);

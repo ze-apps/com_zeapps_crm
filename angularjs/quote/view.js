@@ -180,8 +180,8 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
 
         // récupération des modèles d'email
         var listeModleEmails = [];
-        zhttp.crm.model_email.get_all().then(function(response){
-            if(response.data && response.data != "false"){
+        zhttp.crm.model_email.get_all().then(function (response) {
+            if (response.data && response.data != "false") {
                 listeModleEmails = response.data;
             }
         });
@@ -786,12 +786,19 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
 
             angular.forEach(listeModleEmails, function (template) {
                 if (template.to_quote) {
+                    var default_template = false ;
+
+                    if ($scope.quote.default_template_email == template.id) {
+                        default_template = true ;
+                    }
+
                     options.templates.push({
                         name: template.name,
                         default_to: template.default_to,
                         subject: template.subject,
                         message: template.message,
-                        attachments: angular.fromJson(template.attachments)
+                        attachments: angular.fromJson(template.attachments),
+                        default_template: default_template
                     });
                 }
             });
