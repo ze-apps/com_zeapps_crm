@@ -174,9 +174,15 @@ class Products extends Model
         $query = "SELECT com_zeapps_crm_invoice_lines.ref as id_product, com_zeapps_crm_invoice_lines.ref, SUM(com_zeapps_crm_invoice_lines.total_ht) as total_ht,
                          SUM(com_zeapps_crm_invoice_lines.qty) as qty,
                          com_zeapps_crm_invoice_lines.designation_title as name
-                  FROM com_zeapps_crm_invoice_lines
-                  LEFT JOIN com_zeapps_crm_invoices i ON i.id = com_zeapps_crm_invoice_lines.id_invoice
-                  WHERE i.finalized = '1'" ;
+                  FROM com_zeapps_crm_invoice_lines";
+        if (!$onlySubscription) {
+            $query .= " LEFT JOIN com_zeapps_crm_products p ON com_zeapps_crm_invoice_lines . id_product = p . id";
+        }
+        $query .= " LEFT JOIN com_zeapps_crm_invoices i ON i.id = com_zeapps_crm_invoice_lines.id_invoice
+                  WHERE i.finalized = '1' ";
+        if (!$onlySubscription) {
+            $query .= " AND p.id is null";
+        }
 
         if ($onlySubscription) {
             $query .= " AND com_zeapps_crm_invoice_lines.type in ('subscription', 'subscription_pack') ";
