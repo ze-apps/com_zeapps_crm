@@ -212,7 +212,12 @@ class ProductCategories extends Model
 
 
         if (isset($where['id_price_list'])) {
-            $query .= " AND i.id_price_list = " . $where['id_price_list'];
+            if ($where['id_price_list'] == 999999) {
+                $query .= " AND i.id_price_list IN  (2,3)";
+            } else {
+                $query .= " AND i.id_price_list = " . $where['id_price_list'];
+            }
+
         }
 
         if (isset($where['id_origin'])) {
