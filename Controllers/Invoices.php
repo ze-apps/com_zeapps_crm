@@ -594,4 +594,84 @@ class Invoices extends Controller
     }
 
 
+    public function checkquiltmania() {
+        $ecritures = [] ;
+
+        $date_debut = "2014-11-01" ;
+        $date_fin = "2015-10-31" ;
+
+        $offset = 0 ;
+        $limit = 15 ;
+        $invoices = InvoicesModel::where("date_creation", ">=", $date_debut)->where("date_creation", "<=", $date_fin)->where("finalized", 1)->where("deleted_at", null)->limit($limit)->offset($offset)->get();
+        while(count($invoices)) {
+            foreach ($invoices as $invoice) {
+                $objInvoicesModel = new InvoicesModel();
+                $ecritures = $objInvoicesModel->fuisionTableTaxe($ecritures, $objInvoicesModel->getEcritureComptableSimulate($invoice));
+            }
+
+            $offset += $limit ;
+            $invoices = InvoicesModel::where("date_creation", ">=", $date_debut)->where("date_creation", "<=", $date_fin)->limit($limit)->offset($offset)->get();
+//            break;
+        }
+
+
+        $ecritureProduit = array();
+        $ecritureTVA = array();
+
+        foreach ($ecritures as $ecriture) {
+            $numCompte = $this->addZeroEnd($ecriture["accounting_number"]) ;
+            if (!isset($ecritureProduit[$numCompte])) {
+                $ecritureProduit[$numCompte] = $ecriture["total_ht"] * 1 ;
+            } else {
+                $ecritureProduit[$numCompte] += $ecriture["total_ht"] * 1 ;
+            }
+
+
+            $numCompteTva = $this->addZeroEnd($ecriture["accounting_number_taxe"]) ;
+            if (!isset($ecritureTVA[$numCompteTva])) {
+                $ecritureTVA[$numCompteTva] = 0;
+            }
+            $ecritureTVA[$numCompteTva] += $ecriture["amount_tva"] * 1;
+        }
+
+
+
+        echo "<style>body{font-family: arial;}</style>";
+        echo "<h1>Analyse " . date("d/m/Y", strtotime($date_debut)) . " au " . date("d/m/Y", strtotime($date_fin)) . "</h1>";
+        echo "<h2>Compte produit</h2>";
+        echo "<table border='1' cellspacing='0' cellpadding='3'>";
+        ksort($ecritureProduit);
+        $total = 0 ;
+        foreach ($ecritureProduit as $key => $ecriture) {
+            if ($ecriture != 0) {
+                echo "<tr><td>$key</td><td style='text-align: right;'>" . number_format($ecriture, 2, ".", " ") . "</td></tr>";
+                $total += $ecriture ;
+            }
+        }
+        echo "<tr><td><b>Total</b></td><td style='text-align: right;'><b>" . number_format($total, 2, ".", " ") . "</b></td></tr>";
+        echo "</table>";
+        echo "<br>" ;
+
+        echo "<h2>Compte TVA</h2>";
+        echo "<table border='1' cellspacing='0' cellpadding='3'>";
+        ksort($ecritureTVA);
+        $total = 0 ;
+        foreach ($ecritureTVA as $key => $ecriture) {
+            if ($ecriture != 0) {
+                echo "<tr><td>$key</td><td style='text-align: right;'>" . number_format($ecriture, 2, ".", " ") . "</td></tr>";
+                $total += $ecriture ;
+            }
+        }
+        echo "<tr><td><b>Total</b></td><td style='text-align: right;'><b>" . number_format($total, 2, ".", " ") . "</b></td></tr>";
+        echo "</table>";
+    }
+    private function addZeroEnd($numeroCompte) {
+        $numeroCompte = $numeroCompte . "";
+        if (strlen($numeroCompte) < 10) {
+            for ($i = strlen($numeroCompte); $i <= 10; $i++) {
+                $numeroCompte .= "0";
+            }
+        }
+        return $numeroCompte ;
+    }
 }

@@ -698,6 +698,22 @@ class Invoices extends Model
     }
 
 
+    public function getEcritureComptableSimulate($invoice) {
+        $ecritureComptable = [];
+        if ($invoice && $invoice->id) {
+            $lines = InvoiceLines::getFromInvoice($invoice->id);
+            $taxes = Taxes::all();
+
+            foreach ($lines as $line) {
+                $ecritureComptaRetour = $this->updateLine($invoice, $line, $taxes, 0, false);
+                $ecritureComptable = $this->fuisionTableTaxe($ecritureComptable, $ecritureComptaRetour);
+            }
+        }
+
+        return $ecritureComptable ;
+    }
+
+
     private function getWeight($lines) {
         $weight = 0 ;
         foreach ($lines as $line) {
@@ -801,14 +817,14 @@ class Invoices extends Model
         }
     }
 
-    private function updateLine($invoice, $line, $taxes, $discount_prohibited = 0) {
+    private function updateLine($invoice, $line, $taxes, $discount_prohibited = 0, $saveLine = true) {
         $ecritureComptable = [] ;
 
 
         // si c'est une ligne composée
         if (isset($line->sublines) && count($line->sublines)) {
             foreach ($line->sublines as $subline) {
-                $ecritureComptable = $this->fuisionTableTaxe($ecritureComptable, $this->updateLine($invoice, $subline, $taxes, $discount_prohibited || $line->discount_prohibited));
+                $ecritureComptable = $this->fuisionTableTaxe($ecritureComptable, $this->updateLine($invoice, $subline, $taxes, $discount_prohibited || $line->discount_prohibited, $saveLine));
             }
 
             // recalcul le tableau en fonction du montant souhaité sur la ligne
@@ -878,12 +894,14 @@ class Invoices extends Model
 
 
         // Sauvergarder le prix unitaire
-        $line = InvoiceLines::find($line->id) ;
-        if ($line) {
-            $line->price_unit = $price_unit ;
-            $line->total_ht = $total_ht ;
-            $line->total_ttc = $total_ttc ;
-            $line->save() ;
+        if ($saveLine) {
+            $line = InvoiceLines::find($line->id);
+            if ($line) {
+                $line->price_unit = $price_unit;
+                $line->total_ht = $total_ht;
+                $line->total_ttc = $total_ttc;
+                $line->save();
+            }
         }
 
         return $ecritureComptable ;
@@ -945,7 +963,7 @@ class Invoices extends Model
         return $dataLine ;
     }
 
-    private function fuisionTableTaxe($source, $ajout) {
+    public function fuisionTableTaxe($source, $ajout) {
         foreach ($ajout as $lineAdd) {
             $addToTable = true;
 

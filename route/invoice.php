@@ -55,3 +55,6 @@ Routeur::post("/com_zeapps_crm/invoices/del_document/{id}", 'App\\com_zeapps_crm
 
 Routeur::get("/com_zeapps_crm/invoices/getPDF/", 'App\\com_zeapps_crm\\Controllers\\Invoices@getPDF');
 
+
+Routeur::get("/com_zeapps_crm/invoices/checkquiltmania", 'App\\com_zeapps_crm\\Controllers\\Invoices@checkquiltmania');
+
