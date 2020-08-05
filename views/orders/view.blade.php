@@ -196,11 +196,16 @@
                     <span class="form-inline">
                         <label>Code produit :</label>
                         <span class="input-group">
-                            <input type="text" class="form-control input-sm" ng-model="codeProduct"
+                            <input type="text" id="comZeappsCrmCodeProduct" class="form-control input-sm" ng-model="codeProduct"
                                    ng-keydown="keyEventaddFromCode($event)">
                             <span class="input-group-addon" ng-click="addFromCode()">
                                 <i class="fa fa-fw fa-plus text-success"></i>
                             </span>
+                        </span>
+                        <label>Quantité :</label>
+                        <span class="input-group">
+                            <input type="text" id="comZeappsCrmQteCodeProduct" class="form-control input-sm" ng-model="qteCodeProduct"
+                                   ng-keydown="keyEventaddFromCodeQte($event)" style="width: 50px">
                         </span>
                     </span>
                     <ze-btn fa="tags" color="success" hint="produit" always-on="true" ng-click="addLine()"></ze-btn>

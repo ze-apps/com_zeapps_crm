@@ -20,7 +20,7 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
 
 
 
-
+        $scope.qteCodeProduct = 1 ;
         $scope.progress = 0;
         $scope.activities = [];
         $scope.documents = [];
@@ -56,6 +56,7 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
 
         $scope.addFromCode = addFromCode;
         $scope.keyEventaddFromCode = keyEventaddFromCode;
+        $scope.keyEventaddFromCodeQte = keyEventaddFromCodeQte;
         $scope.addLine = addLine;
         $scope.editLine = editLine;
         $scope.addSubTotal = addSubTotal;
@@ -423,93 +424,113 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
         function keyEventaddFromCode($event) {
             if ($event.which === 13) {
                 addFromCode();
-                setFocus($event.currentTarget);
+                setFocus("comZeappsCrmQteCodeProduct", true);
             } else if ($event.which === 9) {
                 addFromCode();
-                setFocus($event.currentTarget);
+                setFocus("comZeappsCrmQteCodeProduct", true);
             }
         }
 
-        function setFocus(element) {
-            setTimeout(function () {
-                jQuery(element).focus();
-            }, 500);
+        function keyEventaddFromCodeQte($event) {
+            if ($event.which === 13) {
+                addFromCode(true);
+                $scope.qteCodeProduct = 1 ;
+                setFocus("comZeappsCrmCodeProduct", true);
+            } else if ($event.which === 9) {
+                addFromCode(true);
+                $scope.qteCodeProduct = 1 ;
+                setFocus("comZeappsCrmCodeProduct", true);
+            }
         }
 
-        function addFromCode() {
+        function setFocus(element, isById) {
+            setTimeout(function () {
+                if (isById) {
+                    jQuery("#" + element).focus();
+                } else {
+                    jQuery(element).focus();
+                }
+            }, 200);
+        }
+
+        function addFromCode(save) {
+            var qte = convertFloat($scope.qteCodeProduct) ;
             if ($scope.codeProduct !== "") {
                 var code = $scope.codeProduct;
                 zhttp.crm.product.get_code(code).then(function (response) {
                     if (response.data && response.data != "false") {
-                        if (response.data.active) {
-                            var line = {
-                                id_order: $routeParams.id,
-                                type: response.data.type_product,
-                                discount_prohibited: response.data.discount_prohibited,
-                                id_product: response.data.id,
-                                ref: response.data.ref,
-                                designation_title: response.data.name,
-                                designation_desc: response.data.description,
-                                qty: 1,
-                                discount: 0.00,
-                                maximum_discount_allowed: response.data.maximum_discount_allowed,
-                                weight: response.data.weight,
-                                price_unit: parseFloat(response.data.price_ht) || parseFloat(response.data.price_ttc),
-                                id_taxe: parseFloat(response.data.id_taxe),
-                                value_taxe: parseFloat(response.data.value_taxe),
-                                accounting_number: response.data.accounting_number,
-                                sort: $scope.lines.length,
+                        if (save) {
+                            if (response.data.active) {
+                                var line = {
+                                    id_order: $routeParams.id,
+                                    type: response.data.type_product,
+                                    discount_prohibited: response.data.discount_prohibited,
+                                    id_product: response.data.id,
+                                    ref: response.data.ref,
+                                    designation_title: response.data.name,
+                                    designation_desc: response.data.description,
+                                    qty: qte,
+                                    discount: 0.00,
+                                    maximum_discount_allowed: response.data.maximum_discount_allowed,
+                                    weight: response.data.weight,
+                                    price_unit: parseFloat(response.data.price_ht) || parseFloat(response.data.price_ttc),
+                                    id_taxe: parseFloat(response.data.id_taxe),
+                                    value_taxe: parseFloat(response.data.value_taxe),
+                                    accounting_number: response.data.accounting_number,
+                                    sort: $scope.lines.length,
 
-                                total_ht: response.data.price_ht,
-                                total_ttc: response.data.price_ttc,
-                                price_unit_ht_indicated: response.data.price_ht,
-                                price_unit_ttc_subline: response.data.price_ttc,
+                                    total_ht: response.data.price_ht * qte,
+                                    total_ttc: response.data.price_ttc * qte,
+                                    price_unit_ht_indicated: response.data.price_ht,
+                                    price_unit_ttc_subline: response.data.price_ttc,
 
 
-                                update_price_from_subline: response.data.update_price_from_subline,
-                                show_subline: response.data.show_subline,
+                                    update_price_from_subline: response.data.update_price_from_subline,
+                                    show_subline: response.data.show_subline,
 
-                                sublines: addSublines(response.data.sublines),
+                                    sublines: addSublines(response.data.sublines),
 
-                                priceList: response.data.priceList,
-                            };
+                                    priceList: response.data.priceList,
+                                };
 
-                            // applique la grille de prix
-                            if (response.data.priceList) {
-                                angular.forEach(response.data.priceList, function (priceList) {
-                                    if (priceList.id_price_list == $scope.order.id_price_list) {
+                                // applique la grille de prix
+                                if (response.data.priceList) {
+                                    angular.forEach(response.data.priceList, function (priceList) {
+                                        if (priceList.id_price_list == $scope.order.id_price_list) {
 
-                                        if (priceList.accounting_number && priceList.accounting_number != "") {
-                                            line.accounting_number = priceList.accounting_number;
+                                            if (priceList.accounting_number && priceList.accounting_number != "") {
+                                                line.accounting_number = priceList.accounting_number;
+                                            }
+
+                                            line.discount = priceList.percentage_discount;
+                                            line.price_unit = priceList.price_ht;
+                                            line.id_taxe = priceList.id_taxe;
+                                            line.value_taxe = priceList.value_taxe;
                                         }
+                                    });
+                                }
 
-                                        line.discount = priceList.percentage_discount;
-                                        line.price_unit = priceList.price_ht;
-                                        line.id_taxe = priceList.id_taxe;
-                                        line.value_taxe = priceList.value_taxe;
+                                crmTotal.line.update(line);
+
+                                $scope.codeProduct = "";
+
+                                var formatted_data = angular.toJson(line);
+                                zhttp.crm.order.line.save(formatted_data).then(function (response) {
+                                    if (response.data && response.data != "false") {
+                                        line.id = response.data;
+                                        $scope.lines.push(line);
+                                        updateOrder();
                                     }
                                 });
+                            } else {
+                                toasts("danger", "Ce produit n'est plus actif");
                             }
-
-                            crmTotal.line.update(line);
-
-                            $scope.codeProduct = "";
-
-                            var formatted_data = angular.toJson(line);
-                            zhttp.crm.order.line.save(formatted_data).then(function (response) {
-                                if (response.data && response.data != "false") {
-                                    line.id = response.data;
-                                    $scope.lines.push(line);
-                                    updateOrder();
-                                }
-                            });
-                        } else {
-                            toasts("danger", "Ce produit n'est plus actif");
                         }
                     } else {
-                        if ($scope.hooks.length > 0) {
+                        if ($scope.hooks && $scope.hooks.length > 0) {
                             broadcast_code($scope.codeProduct);
                         } else {
+                            setFocus("comZeappsCrmCodeProduct", true);
                             toasts("danger", "Aucun produit avec le code " + code + " trouvé dans la base de données.");
                         }
                     }
@@ -949,6 +970,17 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                     });
                 }
             });
+        }
+
+        function convertFloat(value) {
+            if (value && typeof value == 'string') {
+                if (!value.endsWith(',') && !value.endsWith('.')) {
+                    value = value.replace(",", ".");
+                    value = value * 1;
+                }
+            }
+
+            return value;
         }
 
         function print() {
