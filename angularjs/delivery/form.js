@@ -209,14 +209,17 @@ app.controller("ComZeappsCrmDeliveryFormCtrl", ["$scope", "$routeParams", "$root
 
                 $scope.form.id_company = company.id;
                 $scope.form.name_company = company.company_name;
-                $scope.form.accounting_number = company.accounting_number || $scope.form.accounting_number;
-                $scope.form.global_discount = parseFloat(company.discount) || $scope.form.global_discount;
-                $scope.form.id_modality = company.id_modality || $scope.form.id_modality;
-                $scope.form.label_modality = company.label_modality || $scope.form.label_modality;
+                $scope.form.accounting_number = company.accounting_number || $scope.form.accounting_number;
 
-                // applique la grille de prix
-                if (company.id_price_list) {
-                    $scope.form.id_price_list = company.id_price_list;
+                if (resetAddress) {
+                    $scope.form.global_discount = parseFloat(company.discount);
+                    $scope.form.id_modality = company.id_modality;
+                    $scope.form.label_modality = company.label_modality;
+
+                    // applique la grille de prix
+                    if (company.id_price_list) {
+                        $scope.form.id_price_list = company.id_price_list;
+                    }
                 }
             } else {
                 $scope.form.id_company = 0;
@@ -250,20 +253,25 @@ app.controller("ComZeappsCrmDeliveryFormCtrl", ["$scope", "$routeParams", "$root
                 $scope.form.id_contact = contact.id;
                 $scope.form.name_contact = contact.last_name + " " + contact.first_name;
                 $scope.form.accounting_number = $scope.form.accounting_number || contact.accounting_number;
-                $scope.form.global_discount = $scope.form.global_discount || parseFloat(contact.discount);
-                $scope.form.id_modality = $scope.form.id_modality || contact.id_modality;
-                $scope.form.label_modality = $scope.form.label_modality || contact.label_modality;
+
+                if (resetAddress) {
+                    $scope.form.global_discount = parseFloat(contact.discount);
+                    $scope.form.id_modality = contact.id_modality;
+                    $scope.form.label_modality = contact.label_modality;
+                }
 
                 if(contact.id_company !== "0" && contact.id_company !== 0 && ($scope.form.id_company === undefined || $scope.form.id_company === 0)){
 					zhttp.contact.company.get(contact.id_company).then(function(response){
 						if(response.data && response.data != "false"){
-                            loadCompany(response.data.company);
+                            loadCompany(response.data.company, resetAddress);
 						}
 					})
 				} else {
                     // applique la grille de prix
-                    if (($scope.form.id_company === undefined || $scope.form.id_company === 0) && contact.id_price_list) {
-                        $scope.form.id_price_list = contact.id_price_list;
+                    if (resetAddress) {
+                        if (($scope.form.id_company === undefined || $scope.form.id_company === 0) && contact.id_price_list) {
+                            $scope.form.id_price_list = contact.id_price_list;
+                        }
                     }
 
                     $scope.form.check_issuer = contact.last_name + " " + contact.first_name;
