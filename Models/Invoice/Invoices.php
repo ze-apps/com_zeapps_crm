@@ -374,6 +374,10 @@ class Invoices extends Model
 
             parent::save($options);
             $this->finalize();
+
+
+            $dataEvent = $this;
+            Event::sendAction('com_zeapps_crm_invoice', 'finalized', $dataEvent);
         }
 
 
