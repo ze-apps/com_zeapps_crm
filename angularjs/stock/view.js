@@ -1,5 +1,5 @@
-app.controller("ComZeappsCrmStockViewCtrl", ["$scope", "$location", "$rootScope", "zeHttp", "menu",
-	function ($scope, $location, $rootScope, zhttp, menu) {
+app.controller("ComZeappsCrmStockViewCtrl", ["$scope", "$location", "$rootScope", "zeHttp", "menu", "toasts",
+	function ($scope, $location, $rootScope, zhttp, menu, toasts) {
 
         menu("com_ze_apps_sales", "com_zeapps_crm_stock");
 
@@ -8,6 +8,9 @@ app.controller("ComZeappsCrmStockViewCtrl", ["$scope", "$location", "$rootScope"
         $scope.tree = {
             branches: []
         };
+
+        $scope.modeInventaire = false ;
+        $scope.showSaveInventaire = false ;
 
 
         $scope.loadList = loadList;
@@ -23,6 +26,69 @@ app.controller("ComZeappsCrmStockViewCtrl", ["$scope", "$location", "$rootScope"
         $scope.closeSubCats = function () {
             showSubCats = false;
         };
+
+        $scope.activerInventaire = function () {
+            if ($scope.filter_model.id_warehouse && $scope.filter_model.date_stock) {
+                $scope.modeInventaire = true ;;
+            } else {
+                toasts("danger", "Pour activer le mode inventaire, vous devez définir un entrepôt et une date dans les filtres");
+            }
+        };
+
+        $scope.desactiverInventaire = function () {
+            $scope.modeInventaire = false ;
+        };
+
+        $scope.enregistrer_inventaire = function () {
+           angular.forEach($scope.product_stocks, function (product_stock) {
+                if (convertFloat(product_stock.qty_inventaire) != convertFloat(product_stock.qty)) {
+                    var y = $scope.filter_model.date_stock.getFullYear();
+                    var M = $scope.filter_model.date_stock.getMonth() + 1;
+                    var d = $scope.filter_model.date_stock.getDate();
+
+                    var qtyUpdate = convertFloat(product_stock.qty_inventaire) - convertFloat(product_stock.qty) ;
+
+
+                    if (qtyUpdate != 0) {
+                        var stock_mvt = {};
+                        stock_mvt.label = "Mise à jour inventaire : Qte theorique (" + convertFloat(product_stock.qty) + "), Qte relevé (" + convertFloat(product_stock.qty_inventaire) + ")";
+                        stock_mvt.qty = qtyUpdate;
+                        stock_mvt.id_warehouse = $scope.filter_model.id_warehouse;
+                        stock_mvt.id_product = product_stock.id;
+                        stock_mvt.date_mvt_field = y + "-" + M + "-" + d;
+
+                        var formatted_data = angular.toJson(stock_mvt);
+
+                        zhttp.crm.product_stock.add_mvt(formatted_data).then(function (response) {
+                            if (response.data && response.data != "false") {
+
+                            }
+                        });
+                    }
+
+                    product_stock.qty = product_stock.qty_inventaire ;
+                }
+            });
+
+            $scope.showSaveInventaire = false ;
+        };
+
+        $scope.keyEventInventaire = function () {
+            var afficheSaveInventaire = false ;
+            angular.forEach($scope.product_stocks, function (product_stock) {
+                if (convertFloat(product_stock.qty_inventaire) != convertFloat(product_stock.qty)) {
+                    afficheSaveInventaire = true ;
+                }
+            });
+
+            if (afficheSaveInventaire) {
+                $scope.showSaveInventaire = true ;
+            } else {
+                $scope.showSaveInventaire = false ;
+            }
+        };
+
+
 
         $scope.export = function () {
             var id = $scope.currentBranch ? $scope.currentBranch.id : 0;
@@ -97,7 +163,7 @@ app.controller("ComZeappsCrmStockViewCtrl", ["$scope", "$location", "$rootScope"
         };
 
         $scope.filter_model = {
-        	'id_warehouse': $rootScope.current_warehouse
+        	'id_warehouse': $rootScope.current_warehouse+""
 		};
         $scope.page = 1;
         $scope.pageSize = 15;
@@ -130,17 +196,26 @@ app.controller("ComZeappsCrmStockViewCtrl", ["$scope", "$location", "$rootScope"
 		$scope.goTo = goTo;
 
         function loadList(context){
+            $scope.showSaveInventaire = false ;
+
             context = context || "";
             var id = $scope.currentBranch ? $scope.currentBranch.id : 0;
             var offset = ($scope.page - 1) * $scope.pageSize;
             var formatted_filters = angular.toJson($scope.filter_model);
 
+
+            // désactive le mode inventaire si l'entrepot et la date ne sont pas définis
+            if (!$scope.filter_model.id_warehouse || !$scope.filter_model.date_stock) {
+                $scope.modeInventaire = false ;
+            }
+
             $rootScope.current_warehouse = $scope.filter_model.id_warehouse;
 
-            zhttp.crm.product_stock.get_all(id, $scope.pageSize, offset, context, formatted_filters).then(function(response){
-                if(response.data && response.data != "false"){
+            zhttp.crm.product_stock.get_all(id, $scope.pageSize, offset, context, formatted_filters).then(function (response) {
+                if (response.data && response.data != "false") {
                     $scope.product_stocks = response.data.product_stocks;
-                    angular.forEach($scope.product_stocks, function(product_stock){
+                    angular.forEach($scope.product_stocks, function (product_stock) {
+                        product_stock.qty_inventaire = product_stock.qty ;
                         product_stock.value_ht = parseFloat(product_stock.value_ht);
                         calcTimeLeft(product_stock);
                     });
@@ -183,4 +258,15 @@ app.controller("ComZeappsCrmStockViewCtrl", ["$scope", "$location", "$rootScope"
 				product_stock.classRupture = "text-info";
 			}
 		}
+
+        function convertFloat(value) {
+            if (value && typeof value == 'string') {
+                if (!value.endsWith(',') && !value.endsWith('.')) {
+                    value = value.replace(",", ".");
+                    value = value * 1;
+                }
+            }
+
+            return value;
+        }
 	}]);

@@ -10,7 +10,11 @@
             <form>
 
                 <div class="row">
-                    <div class="col-md-4"><button type="button" class="btn btn-success btn-sm" ng-click="export()">Exporter</button></div>
+                    <div class="col-md-4">
+                        <button type="button" class="btn btn-success btn-sm" ng-click="export()">Exporter</button>
+                        <button type="button" class="btn btn-default btn-sm" ng-click="activerInventaire()" ng-show="modeInventaire==false">Activer l'inventaire</button>
+                        <button type="button" class="btn btn-danger btn-sm" ng-click="desactiverInventaire()" ng-show="modeInventaire">Désactiver l'inventaire</button>
+                    </div>
                     <div class="col-md-8">
                         <ze-filters data-model="filter_model" data-filters="filters"
                                     data-update="loadList"></ze-filters>
@@ -39,6 +43,7 @@
                                 <th class="text-right" ng-if="filter_model.id_warehouse">Date Réapprovisionnement
                                     estimée
                                 </th>
+                                <th ng-show="modeInventaire">Qte relevée</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -73,6 +78,10 @@
                                         @{{ product_stock.timeResupply }}@{{ product_stock.dateResupply ? ' (' +  product_stock.dateResupply + ')' : '' }}
                                     </span>
                                 </td>
+                                <td ng-show="modeInventaire"><input type="text" class="form-control" ng-model="product_stock.qty_inventaire" ng-keyup="keyEventInventaire()"></td>
+                            </tr>
+                            <tr ng-show="showSaveInventaire">
+                                <td colspan="8" class="text-right"><button type="button" class="btn btn-success btn-sm" ng-click="enregistrer_inventaire()">Enregistrer l'inventaire</button></td>
                             </tr>
                             </tbody>
                         </table>
