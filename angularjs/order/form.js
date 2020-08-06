@@ -117,14 +117,14 @@ app.controller("ComZeappsCrmOrderFormCtrl", ["$scope", "$routeParams", "$rootSco
                 if ($routeParams.id_company !== undefined && $routeParams.id_company !== 0) {
                     zhttp.contact.company.get($routeParams.id_company).then(function (response) {
                         if (response.data && response.data != "false") {
-                            loadCompany(response.data.company, false);
+                            loadCompany(response.data.company, true);
                         }
                     });
                 }
                 if ($routeParams.id_contact !== undefined && $routeParams.id_contact !== 0) {
                     zhttp.contact.contact.get($routeParams.id_contact).then(function (response) {
                         if (response.data && response.data != "false") {
-                            loadContact(response.data.contact, false);
+                            loadContact(response.data.contact, true);
                         }
                     });
                 }
