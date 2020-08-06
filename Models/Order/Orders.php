@@ -355,6 +355,7 @@ class Orders extends Model
             $lines = OrderLines::getFromOrder($order->id);
             $taxes = Taxes::all();
 
+
             foreach ($lines as $line) {
                 $ecritureComptaRetour = $this->updateLine($order, $line, $taxes);
                 $ecritureComptable = $this->fuisionTableTaxe($ecritureComptable, $ecritureComptaRetour);
@@ -369,7 +370,6 @@ class Orders extends Model
             $total_ttc_before_discount = 0 ;
 
             $total_weight = $this->getWeight($lines) ;
-
 
 
             // sauvegarde les lignes comptables
@@ -490,10 +490,26 @@ class Orders extends Model
         // Sauvergarder le prix unitaire
         $line = OrderLines::find($line->id) ;
         if ($line) {
-            $line->price_unit = $price_unit ;
-            $line->total_ht = $total_ht ;
-            $line->total_ttc = $total_ttc ;
-            $line->save() ;
+            $miseAJour = false ;
+
+            if ($line->price_unit != $price_unit) {
+                $miseAJour = true ;
+            }
+
+            if ($line->total_ht != $total_ht) {
+                $miseAJour = true ;
+            }
+
+            if ($line->total_ttc != $total_ttc) {
+                $miseAJour = true ;
+            }
+
+            if ($miseAJour) {
+                $line->price_unit = $price_unit;
+                $line->total_ht = $total_ht;
+                $line->total_ttc = $total_ttc;
+                $line->save();
+            }
         }
 
         return $ecritureComptable ;
