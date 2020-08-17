@@ -29,7 +29,17 @@ app.controller("ComZeappsCrmOrderListsPartialCtrl", ["$scope", "$location", "$ro
                     field: 'name_contact LIKE',
                     type: 'text',
                     label: 'Contact'
+                },
+                {
+                    format: 'select',
+                    field: 'finalized',
+                    type: 'text',
+                    label: 'Statut',
+                    options: [{id:0,label:"Ouverte"}, {id:1,label:"Clôturée"}]
                 }
+
+
+
             ],
             secondaries: [
                 {

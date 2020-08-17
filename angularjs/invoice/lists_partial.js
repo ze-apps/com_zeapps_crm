@@ -36,7 +36,13 @@ app.controller("ComZeappsCrmInvoiceListsPartialCtrl", ["$scope", "$location", "$
                     field: 'unpaid',
                     type: 'text',
                     label: 'Impayé'
-
+                },
+                {
+                    format: 'select',
+                    field: 'finalized',
+                    type: 'text',
+                    label: 'Statut',
+                    options: [{id:0,label:"Ouverte"}, {id:1,label:"Clôturée"}]
                 }
             ],
             secondaries: [
