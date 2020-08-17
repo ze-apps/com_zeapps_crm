@@ -431,10 +431,26 @@ class Quotes extends Model
         // Sauvergarder le prix unitaire
         $line = QuoteLines::find($line->id) ;
         if ($line) {
-            $line->price_unit = $price_unit ;
-            $line->total_ht = $total_ht ;
-            $line->total_ttc = $total_ttc ;
-            $line->save() ;
+            $miseAJour = false ;
+
+            if ($line->price_unit != $price_unit) {
+                $miseAJour = true ;
+            }
+
+            if ($line->total_ht != $total_ht) {
+                $miseAJour = true ;
+            }
+
+            if ($line->total_ttc != $total_ttc) {
+                $miseAJour = true ;
+            }
+
+            if ($miseAJour) {
+                $line->price_unit = $price_unit;
+                $line->total_ht = $total_ht;
+                $line->total_ttc = $total_ttc;
+                $line->save();
+            }
         }
 
         return $ecritureComptable ;

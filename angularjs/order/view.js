@@ -780,7 +780,7 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                     });
                 }
 
-                $scope.order.global_discount = $scope.order.global_discount || 0;
+                $scope.order.global_discount = $scope.order.global_discount;
 
                 angular.forEach($scope.lines, function (line) {
                     var updateLineData = false;

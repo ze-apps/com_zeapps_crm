@@ -113,23 +113,16 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
                         $scope.documents[i].created_at = new Date($scope.documents[i].created_at);
                     }
 
-                    var lines = response.data.lines || [];
+                    var lines = response.data.lines ;
+                    if (!lines) {
+                        lines = [];
+                    }
                     angular.forEach(lines, function (line) {
                         line.price_unit = parseFloat(line.price_unit);
                         line.qty = parseFloat(line.qty);
                         line.discount = parseFloat(line.discount);
                     });
                     $scope.lines = lines;
-
-                    crmTotal.init($scope.invoice, $scope.lines);
-                    /*$scope.tvas = crmTotal.get.tvas;
-                    var totals = crmTotal.get.totals;
-                    $scope.invoice.total_prediscount_ht = totals.total_prediscount_ht;
-                    $scope.invoice.total_prediscount_ttc = totals.total_prediscount_ttc;
-                    $scope.invoice.total_discount = totals.total_discount;
-                    $scope.invoice.total_ht = totals.total_ht;
-                    $scope.invoice.total_tva = totals.total_tva;
-                    $scope.invoice.total_ttc = totals.total_ttc;*/
 
 
                     // charge l'entreprise associée à la commande
@@ -416,8 +409,6 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
                                 });
                             }
 
-                            crmTotal.line.update(line);
-
                             $scope.codeProduct = "";
 
                             var formatted_data = angular.toJson(line);
@@ -425,7 +416,7 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
                                 if (response.data && response.data != "false") {
                                     line.id = response.data;
                                     $scope.lines.push(line);
-                                    updateInvoice();
+                                    updateInvoice(null, line.id);
                                 }
                             });
                         } else {
@@ -496,14 +487,12 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
                                 });
                             }
 
-                            crmTotal.line.update(line);
-
                             var formatted_data = angular.toJson(line);
                             zhttp.crm.invoice.line.save(formatted_data).then(function (response) {
                                 if (response.data && response.data != "false") {
                                     line.id = response.data;
                                     $scope.lines.push(line);
-                                    updateInvoice();
+                                    updateInvoice(null, line.id);
                                 }
                             });
                         } else {
@@ -587,7 +576,7 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
                     if (response.data && response.data != "false") {
                         subTotal.id = response.data;
                         $scope.lines.push(subTotal);
-                        updateInvoice();
+                        updateInvoice(null, subTotal.id);
                     }
                 });
             }
@@ -621,9 +610,9 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
             }
         }
 
-        function editLine() {
+        function editLine(lineEdited) {
             if (parseInt($scope.invoice.finalized, 10) == 0) {
-                updateInvoice();
+                updateInvoice(null, lineEdited.id);
             }
         }
 
@@ -650,7 +639,7 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
                                 }
                             );
 
-                            updateInvoice();
+                            updateInvoice(null, line.id);
                         }
                     });
                 }
@@ -676,16 +665,59 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
             }
         }
 
-        function updateInvoice() {
+        function updateInvoice(objOrderToSave, id_line_update) {
             if (parseInt($scope.invoice.finalized, 10) == 0) {
                 if ($scope.invoice) {
-                    $scope.invoice.global_discount = $scope.invoice.global_discount || 0;
+                    var nbUpdateInvoiceLine = 0 ;
+                    var miseAjourImmediateInvoice = true ;
+                    var updateOrderExecute = function() {
+                        var data = $scope.invoice;
+
+                        var y = data.date_creation.getFullYear();
+                        var M = data.date_creation.getMonth();
+                        var d = data.date_creation.getDate();
+
+                        data.date_creation = new Date(Date.UTC(y, M, d));
+
+                        var y = data.date_limit.getFullYear();
+                        var M = data.date_limit.getMonth();
+                        var d = data.date_limit.getDate();
+
+                        data.date_limit = new Date(Date.UTC(y, M, d));
+
+                        var formatted_data = angular.toJson(data);
+                        zhttp.crm.invoice.save(formatted_data).then(function (response) {
+                            if (response.data && response.data != "false") {
+                                toasts('success', "Les informations de la facture ont bien été mises a jour");
+                            } else {
+                                toasts('danger', "Il y a eu une erreur lors de la mise a jour des informations de la facture");
+                            }
+                            // reaload document
+                            loadDocument($routeParams.id);
+                        });
+                    }
+
+
+
+
+
+                    $scope.invoice.global_discount = $scope.invoice.global_discount;
 
                     angular.forEach($scope.lines, function (line) {
+                        var updateLineData = false;
+
+                        if (line.id && id_line_update == line.id) {
+                            miseAjourImmediateInvoice = false ;
+                        }
+
+                        if (line.id && (!id_line_update || id_line_update == line.id)) {
+                            updateLineData = true ;
+                        }
 
                         // if must update price list
                         if (_id_price_list_before_update != $scope.invoice.id_price_list) {
                             if (line.priceList) {
+                                updateLineData = true ;
                                 angular.forEach(line.priceList, function (priceList) {
                                     if (priceList.id_price_list == $scope.invoice.id_price_list) {
 
@@ -704,43 +736,26 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
                         }
 
 
-                        crmTotal.line.update(line);
-                        if (line.id) {
+
+                        if (updateLineData) {
                             updateLine(line);
                         }
-                        var formatted_data = angular.toJson(line);
-                        zhttp.crm.invoice.line.save(formatted_data)
+
+                        if (!id_line_update || updateLineData) {
+                            nbUpdateInvoiceLine++ ;
+
+                            var formatted_data = angular.toJson(line);
+                            zhttp.crm.invoice.line.save(formatted_data).then(function (response) {
+                                if (!miseAjourImmediateInvoice) {
+                                    updateOrderExecute();
+                                }
+                            });
+                        }
                     });
 
 
                     // to save price list state
                     _id_price_list_before_update = $scope.invoice.id_price_list;
-
-
-                    var data = $scope.invoice;
-
-                    var y = data.date_creation.getFullYear();
-                    var M = data.date_creation.getMonth();
-                    var d = data.date_creation.getDate();
-
-                    data.date_creation = new Date(Date.UTC(y, M, d));
-
-                    var y = data.date_limit.getFullYear();
-                    var M = data.date_limit.getMonth();
-                    var d = data.date_limit.getDate();
-
-                    data.date_limit = new Date(Date.UTC(y, M, d));
-
-                    var formatted_data = angular.toJson(data);
-                    zhttp.crm.invoice.save(formatted_data).then(function (response) {
-                        if (response.data && response.data != "false") {
-                            toasts('success', "Les informations de la facture ont bien été mises a jour");
-                        } else {
-                            toasts('danger', "Il y a eu une erreur lors de la mise a jour des informations de la facture");
-                        }
-                        // reaload document
-                        loadDocument($routeParams.id);
-                    });
                 }
             }
         }
