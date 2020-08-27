@@ -1,4 +1,4 @@
-<div id="breadcrumb">Config > devis</div>
+<div id="breadcrumb">Config > {{ __t("quote") }}</div>
 <div id="content">
 
     <div class="row">

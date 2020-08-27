@@ -3,10 +3,10 @@
         <div class="col-md-12">
             <ze-filters class="pull-right" data-model="filter_model" data-filters="filters" data-update="loadList"></ze-filters>
 
-            <ze-btn fa="plus" color="success" hint="Devis" always-on="true"
+            <ze-btn fa="plus" color="success" hint="{{ __t("Quote") }}" always-on="true"
                     ze-modalform="add"
                     data-template="templateQuote"
-                    data-title="Créer un nouveau devis"></ze-btn>
+                    data-title="{{ __t("Create a new quote") }}"></ze-btn>
         </div>
     </div>
 
