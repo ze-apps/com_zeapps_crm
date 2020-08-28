@@ -3,10 +3,12 @@
         <div class="col-md-12">
             <ze-filters class="pull-right" data-model="filter_model" data-filters="filters" data-update="loadList"></ze-filters>
 
-            <ze-btn fa="plus" color="success" hint="Encaissement" always-on="true"
-                    ze-modalform="add"
-                    data-template="templatePayment"
-                    data-title="Ajouter un nouvel encaissement"></ze-btn>
+            @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
+                <ze-btn fa="plus" color="success" hint="Encaissement" always-on="true"
+                        ze-modalform="add"
+                        data-template="templatePayment"
+                        data-title="Ajouter un nouvel encaissement"></ze-btn>
+            @endif
         </div>
     </div>
 
@@ -24,7 +26,9 @@
                     <th>Date</th>
                     <th class="text-right">Montant</th>
                     <th>Type encaissement</th>
+                    @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
                     <th></th>
+                    @endif
                 </tr>
                 </thead>
                 <tbody>
@@ -32,9 +36,11 @@
                     <td ng-click="goTo(payment.id)">@{{ payment.date_payment || "-"  | date:'dd/MM/yyyy' }}</td>
                     <td ng-click="goTo(payment.id)" class="text-right">@{{ payment.total | currency:'€':2 }}</td>
                     <td ng-click="goTo(payment.id)">@{{ payment.type_payment_label }}</td>
-                    <td class="text-right">
-                        <ze-btn fa="trash" color="danger" hint="Supprimer" direction="left" ng-click="delete(payment)" ze-confirmation></ze-btn>
-                    </td>
+                    @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
+                        <td class="text-right">
+                            <ze-btn fa="trash" color="danger" hint="Supprimer" direction="left" ng-click="delete(payment)" ze-confirmation></ze-btn>
+                        </td>
+                    @endif
                 </tr>
                 </tbody>
             </table>

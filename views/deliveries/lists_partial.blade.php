@@ -4,10 +4,12 @@
             <ze-filters class="pull-right" data-model="filter_model" data-filters="filters"
                         data-update="loadList"></ze-filters>
 
-            <ze-btn fa="plus" color="success" hint="Bon de livraison" always-on="true"
-                    ze-modalform="add"
-                    data-template="templateDelivery"
-                    data-title="Créer un nouveau bon de livraison"></ze-btn>
+            @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
+                <ze-btn fa="plus" color="success" hint="Bon de livraisonx" always-on="true"
+                        ze-modalform="add"
+                        data-template="templateDelivery"
+                        data-title="Créer un nouveau bon de livraison"></ze-btn>
+            @endif
         </div>
     </div>
 
@@ -52,15 +54,17 @@
                                                            ng-show="delivery.finalized">Clôturée</span><span
                                 class="text-success" ng-show="!delivery.finalized">Ouvert</span></td>
                     <td class="text-right">
-                        <ze-btn fa="edit" color="info" direction="left" hint="Editer"
-                                ze-modalform="edit"
-                                data-edit="delivery"
-                                data-title="Editer le bon de livraison"
-                                data-template="templateDelivery"></ze-btn>
-                        <span ng-show="!delivery.finalized">
+                        @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
+                            <ze-btn fa="edit" color="info" direction="left" hint="Editer"
+                                    ze-modalform="edit"
+                                    data-edit="delivery"
+                                    data-title="Editer le bon de livraison"
+                                    data-template="templateDelivery"></ze-btn>
+                            <span ng-show="!delivery.finalized">
                             <ze-btn fa="trash" color="danger" hint="Supprimer" direction="left"
                                     ng-click="delete(delivery)" ze-confirmation></ze-btn>
                             </span>
+                        @endif
                     </td>
                 </tr>
                 </tbody>

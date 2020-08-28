@@ -13,10 +13,12 @@
                         n° @{{ invoice.numerotation }}
                     </p>
 
-                    <button type="button" class="btn btn-xs btn-info"
-                            ng-click="showDetailsEntreprise = !showDetailsEntreprise">
-                        @{{ showDetailsEntreprise ? 'Masquer' : 'Voir' }} en cours
-                    </button>
+                    @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
+                        <button type="button" class="btn btn-xs btn-info"
+                                ng-click="showDetailsEntreprise = !showDetailsEntreprise">
+                            @{{ showDetailsEntreprise ? 'Masquer' : 'Voir' }} en cours
+                        </button>
+                    @endif
                 </div>
 
                 <div class="col-md-3">
@@ -89,20 +91,30 @@
                             <div>
                                 <ze-btn fa="arrow-left" color="primary" hint="Retour" direction="left"
                                         ng-click="back()"></ze-btn>
-                                <ze-btn fa="edit" color="info" hint="Editer" direction="left"
-                                        ze-modalform="updateInvoice"
-                                        data-edit="invoice"
-                                        data-template="templateEdit"
-                                        data-title="Modifier la facture"
-                                        ng-hide="invoice.finalized"></ze-btn>
+
+                                @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
+                                    <ze-btn fa="edit" color="info" hint="Editer" direction="left"
+                                            ze-modalform="updateInvoice"
+                                            data-edit="invoice"
+                                            data-template="templateEdit"
+                                            data-title="Modifier la facture"
+                                            ng-hide="invoice.finalized"></ze-btn>
+                                @endif
+
                                 <ze-btn fa="download" color="primary" hint="PDF" direction="left"
                                         ng-click="print()"></ze-btn>
-                                <ze-btn fa="envelope" color="primary" hint="Envoyer par email" direction="left"
-                                        ng-click="sendByMail()"></ze-btn>
-                                <ze-btn fa="copy" color="success" hint="Dupliquer" direction="left"
-                                        ng-click="transform()"></ze-btn>
-                                <ze-btn fa="lock" color="danger" hint="Clôturer" direction="left" ng-click="finalize()"
-                                        ng-hide="invoice.finalized"></ze-btn>
+
+                                @if (in_array("com_zeapps_crm_sendemail", $zeapps_right_current_user))
+                                    <ze-btn fa="envelope" color="primary" hint="Envoyer par email" direction="left"
+                                            ng-click="sendByMail()"></ze-btn>
+                                @endif
+
+                                @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
+                                    <ze-btn fa="copy" color="success" hint="Dupliquer" direction="left"
+                                            ng-click="transform()"></ze-btn>
+                                    <ze-btn fa="lock" color="danger" hint="Clôturer" direction="left" ng-click="finalize()"
+                                            ng-hide="invoice.finalized"></ze-btn>
+                                @endif
 
                                 <div class="btn-group btn-group-xs" role="group" ng-if="nb_invoices > 0">
                                     <button type="button" class="btn btn-default"
@@ -195,25 +207,27 @@
 
         <div ng-show="navigationState =='body'">
             <div class="row">
-                <div class="col-md-12 text-right" ng-hide="invoice.finalized">
-                    <span class="form-inline">
-                        <label>Code produit :</label>
-                        <span class="input-group">
-                            <input type="text" class="form-control input-sm" ng-model="codeProduct"
-                                   ng-keydown="keyEventaddFromCode($event)">
-                            <span class="input-group-addon" ng-click="addFromCode()">
-                                <i class="fa fa-fw fa-plus text-success"></i>
+                @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
+                    <div class="col-md-12 text-right" ng-hide="invoice.finalized">
+                        <span class="form-inline">
+                            <label>Code produit :</label>
+                            <span class="input-group">
+                                <input type="text" class="form-control input-sm" ng-model="codeProduct"
+                                       ng-keydown="keyEventaddFromCode($event)">
+                                <span class="input-group-addon" ng-click="addFromCode()">
+                                    <i class="fa fa-fw fa-plus text-success"></i>
+                                </span>
                             </span>
                         </span>
-                    </span>
-                    <ze-btn fa="tags" color="success" hint="produit" always-on="true" ng-click="addLine()"></ze-btn>
-                    <ze-btn fa="dollar-sign" color="info" hint="sous-total" always-on="true"
-                            ng-click="addSubTotal()"></ze-btn>
-                    <ze-btn fa="comments" color="warning" hint="commentaire" always-on="true"
-                            ze-modalform="addComment"
-                            data-title="Ajouter un commentaire"
-                            data-template="invoiceCommentTplUrl"></ze-btn>
-                </div>
+                        <ze-btn fa="tags" color="success" hint="produit" always-on="true" ng-click="addLine()"></ze-btn>
+                        <ze-btn fa="dollar-sign" color="info" hint="sous-total" always-on="true"
+                                ng-click="addSubTotal()"></ze-btn>
+                        <ze-btn fa="comments" color="warning" hint="commentaire" always-on="true"
+                                ze-modalform="addComment"
+                                data-title="Ajouter un commentaire"
+                                data-template="invoiceCommentTplUrl"></ze-btn>
+                    </div>
+                @endif
                 <div class="col-md-12">
                     <table class="table table-striped table-condensed table-responsive">
                         <thead>
@@ -226,10 +240,12 @@
                             <th class="text-right">Remise</th>
                             <th class="text-right">Montant HT</th>
                             <th class="text-right">Montant TTC</th>
-                            <th></th>
+                            @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
+                                <th></th>
+                            @endif
                         </tr>
                         </thead>
-                        <tbody ui-sortable="sortable" class="sortableContainer" ng-model="lines">
+                        <tbody @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))ui-sortable="sortable" class="sortableContainer"@endif ng-model="lines">
                         <tr ng-repeat="line in lines"
                             ng-class="[line.type == 'subTotal' ? 'sous-total info' : '', line.type == 'comment' ? 'warning' : '']"
                             data-id="@{{ line.id }}">
@@ -286,28 +302,29 @@
                                 }}
                             </td>
 
-
-                            <td class="text-right">
-                                    <span ng-if="line.type === 'product' || line.type === 'service' || line.type === 'pack'">
-                                        <ze-btn fa="edit" color="info" direction="left" hint="editer"
-                                                ng-init="line.zeapps_modal_hide_save_btn = invoice.finalized"
-                                                ze-modalform="editLine"
-                                                data-edit="line"
-                                                data-title="Editer la ligne de facture"
-                                                data-template="invoiceLineTplUrl"></ze-btn>
-                                    </span>
-                                <span ng-show="line.type === 'comment'">
-                                        <ze-btn fa="edit" color="info" direction="left" hint="editer"
-                                                ze-modalform="editComment"
-                                                data-edit="line"
-                                                data-title="Modifier un commentaire"
-                                                data-template="invoiceCommentTplUrl"
-                                                ng-hide="invoice.finalized"></ze-btn>
-                                    </span>
-                                <ze-btn fa="trash" color="danger" direction="left" hint="Supprimer"
-                                        ng-click="deleteLine(line)" ze-confirmation
-                                        ng-if="line && !invoice.finalized"></ze-btn>
-                            </td>
+                            @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
+                                <td class="text-right">
+                                        <span ng-if="line.type === 'product' || line.type === 'service' || line.type === 'pack'">
+                                            <ze-btn fa="edit" color="info" direction="left" hint="editer"
+                                                    ng-init="line.zeapps_modal_hide_save_btn = invoice.finalized"
+                                                    ze-modalform="editLine"
+                                                    data-edit="line"
+                                                    data-title="Editer la ligne de facture"
+                                                    data-template="invoiceLineTplUrl"></ze-btn>
+                                        </span>
+                                    <span ng-show="line.type === 'comment'">
+                                            <ze-btn fa="edit" color="info" direction="left" hint="editer"
+                                                    ze-modalform="editComment"
+                                                    data-edit="line"
+                                                    data-title="Modifier un commentaire"
+                                                    data-template="invoiceCommentTplUrl"
+                                                    ng-hide="invoice.finalized"></ze-btn>
+                                        </span>
+                                    <ze-btn fa="trash" color="danger" direction="left" hint="Supprimer"
+                                            ng-click="deleteLine(line)" ze-confirmation
+                                            ng-if="line && !invoice.finalized"></ze-btn>
+                                </td>
+                            @endif
                         </tr>
                         </tbody>
                     </table>
@@ -426,31 +443,35 @@
         </div>
 
         <div ng-show="navigationState=='activity'">
-            <div class="row">
-                <div class="col-md-12" style="margin-bottom: 15px;">
-                    <div class="pull-right">
-                        <ze-btn data-fa="plus" data-hint="Activité" always-on="true" data-color="success"
-                                ze-modalform="addActivity"
-                                data-template="invoiceActivityTplUrl"
-                                data-title="Créer une activité"></ze-btn>
+            @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
+                <div class="row">
+                    <div class="col-md-12" style="margin-bottom: 15px;">
+                        <div class="pull-right">
+                            <ze-btn data-fa="plus" data-hint="Activité" always-on="true" data-color="success"
+                                    ze-modalform="addActivity"
+                                    data-template="invoiceActivityTplUrl"
+                                    data-title="Créer une activité"></ze-btn>
+                        </div>
                     </div>
                 </div>
-            </div>
+            @endif
             <div class="card_document" ng-repeat="activity in activities | orderBy:['-date','-id']">
                 <div class="well">
                     <div class="row">
                         <div class="col-md-12">
                             <div class="card_document-head clearfix">
-                                <div class="pull-right">
-                                    <ze-btn data-fa="edit" data-hint="Editer" data-direction="left" data-color="info"
-                                            ze-modalform="editActivity"
-                                            data-edit="activity"
-                                            data-template="invoiceActivityTplUrl"
-                                            data-title="Modifier l'activité"></ze-btn>
-                                    <ze-btn data-fa="trash" data-hint="Supprimer" data-direction="left"
-                                            data-color="danger" ng-click="deleteActivity(activity)"
-                                            ze-confirmation></ze-btn>
-                                </div>
+                                @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
+                                    <div class="pull-right">
+                                        <ze-btn data-fa="edit" data-hint="Editer" data-direction="left" data-color="info"
+                                                ze-modalform="editActivity"
+                                                data-edit="activity"
+                                                data-template="invoiceActivityTplUrl"
+                                                data-title="Modifier l'activité"></ze-btn>
+                                        <ze-btn data-fa="trash" data-hint="Supprimer" data-direction="left"
+                                                data-color="danger" ng-click="deleteActivity(activity)"
+                                                ze-confirmation></ze-btn>
+                                    </div>
+                                @endif
                                 <strong>@{{ activity.label_type ? activity.label_type + " : " : "" }}@{{
                                     activity.libelle }}</strong><br>
                                 Date limite : @{{ activity.deadline || "-" | date:'dd/MM/yyyy' }} - @{{ activity.status
@@ -470,23 +491,27 @@
         <div ng-show="navigationState=='document'">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="pull-right">
-                        <ze-btn data-fa="plus" data-hint="Document" always-on="true" data-color="success"
-                                ze-modalform="addDocument"
-                                data-template="invoiceDocumentTplUrl"
-                                data-title="Ajouter un document"></ze-btn>
-                    </div>
+                    @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
+                        <div class="pull-right">
+                            <ze-btn data-fa="plus" data-hint="Document" always-on="true" data-color="success"
+                                    ze-modalform="addDocument"
+                                    data-template="invoiceDocumentTplUrl"
+                                    data-title="Ajouter un document"></ze-btn>
+                        </div>
+                    @endif
                     <div class="card_document" ng-repeat="document in documents | orderBy:['-date','-id']">
                         <div class="card_document-head clearfix">
-                            <div class="pull-right">
-                                <ze-btn data-fa="edit" data-hint="Editer" data-direction="left" data-color="info"
-                                        ze-modalform="editDocument"
-                                        data-edit="document"
-                                        data-template="invoiceDocumentTplUrl"
-                                        data-title="Modifier le document"></ze-btn>
-                                <ze-btn data-fa="trash" data-hint="Supprimer" data-direction="left" data-color="danger"
-                                        ng-click="deleteDocument(document)" ze-confirmation></ze-btn>
-                            </div>
+                            @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
+                                <div class="pull-right">
+                                    <ze-btn data-fa="edit" data-hint="Editer" data-direction="left" data-color="info"
+                                            ze-modalform="editDocument"
+                                            data-edit="document"
+                                            data-template="invoiceDocumentTplUrl"
+                                            data-title="Modifier le document"></ze-btn>
+                                    <ze-btn data-fa="trash" data-hint="Supprimer" data-direction="left" data-color="danger"
+                                            ng-click="deleteDocument(document)" ze-confirmation></ze-btn>
+                                </div>
+                            @endif
                             <i class="fa fa-fw fa-file"></i>
                             <a ng-href="@{{ document.path }}" class="text-primary" target="_blank">
                                 <strong>@{{ document.label }}</strong>

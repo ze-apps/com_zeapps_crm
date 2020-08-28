@@ -4,10 +4,12 @@
             <ze-filters class="pull-right" data-model="filter_model" data-filters="filters"
                         data-update="loadList"></ze-filters>
 
-            <ze-btn fa="plus" color="success" hint="Facture" always-on="true"
-                    ze-modalform="add"
-                    data-template="templateInvoice"
-                    data-title="Créer une nouvelle facture"></ze-btn>
+            @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
+                <ze-btn fa="plus" color="success" hint="Facture" always-on="true"
+                        ze-modalform="add"
+                        data-template="templateInvoice"
+                        data-title="Créer une nouvelle facture"></ze-btn>
+            @endif
         </div>
     </div>
 
@@ -32,7 +34,9 @@
                     <th>Date limite</th>
                     <th>Responsable</th>
                     <th>Statut</th>
-                    <th></th>
+                    @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
+                        <th></th>
+                    @endif
                 </tr>
                 </thead>
                 <tbody>
@@ -57,17 +61,20 @@
                     <td ng-click="goTo(invoice.id)"><span class="text-danger"
                                                           ng-show="invoice.finalized">Clôturée</span><span
                                 class="text-success" ng-show="!invoice.finalized">Ouvert</span></td>
-                    <td class="text-right">
-                        <ze-btn fa="edit" color="info" direction="left" hint="Editer"
-                                ze-modalform="edit"
-                                data-edit="invoice"
-                                data-title="Editer la facture"
-                                data-template="templateInvoice"></ze-btn>
-                        <span ng-show="!invoice.finalized">
-                            <ze-btn fa="trash" color="danger" hint="Supprimer" direction="left" ng-click="delete(invoice)"
-                                ze-confirmation></ze-btn>
-                        </span>
-                    </td>
+
+                    @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
+                        <td class="text-right">
+                            <ze-btn fa="edit" color="info" direction="left" hint="Editer"
+                                    ze-modalform="edit"
+                                    data-edit="invoice"
+                                    data-title="Editer la facture"
+                                    data-template="templateInvoice"></ze-btn>
+                            <span ng-show="!invoice.finalized">
+                                <ze-btn fa="trash" color="danger" hint="Supprimer" direction="left" ng-click="delete(invoice)"
+                                    ze-confirmation></ze-btn>
+                            </span>
+                        </td>
+                    @endif
                 </tr>
                 </tbody>
             </table>

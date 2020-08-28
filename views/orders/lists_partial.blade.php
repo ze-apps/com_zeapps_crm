@@ -4,10 +4,12 @@
             <ze-filters class="pull-right" data-model="filter_model" data-filters="filters"
                         data-update="loadList"></ze-filters>
 
-            <ze-btn fa="plus" color="success" hint="Commande" always-on="true"
-                    ze-modalform="add"
-                    data-template="templateOrder"
-                    data-title="Créer une nouvelle commande"></ze-btn>
+            @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
+                <ze-btn fa="plus" color="success" hint="Commande" always-on="true"
+                        ze-modalform="add"
+                        data-template="templateOrder"
+                        data-title="Créer une nouvelle commande"></ze-btn>
+            @endif
         </div>
     </div>
 
@@ -32,7 +34,9 @@
                     <th>Responsable</th>
                     <th class="text-right">%</th>
                     <th>Statut</th>
-                    <th></th>
+                    @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
+                        <th></th>
+                    @endif
                 </tr>
                 </thead>
                 <tbody>
@@ -55,17 +59,20 @@
                     <td ng-click="goTo(order.id)"><span class="text-danger"
                                                         ng-show="order.finalized">Clôturée</span><span
                                 class="text-success" ng-show="!order.finalized">Ouvert</span></td>
-                    <td class="text-right">
-                        <ze-btn fa="edit" color="info" direction="left" hint="Editer"
-                                ze-modalform="edit"
-                                data-edit="order"
-                                data-title="Editer la commande"
-                                data-template="templateOrder"></ze-btn>
-                        <span ng-show="!order.finalized">
-                            <ze-btn fa="trash" color="danger" hint="Supprimer" direction="left" ng-click="delete(order)"
-                                    ze-confirmation></ze-btn>
-                        </span>
-                    </td>
+
+                    @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
+                        <td class="text-right">
+                            <ze-btn fa="edit" color="info" direction="left" hint="Editer"
+                                    ze-modalform="edit"
+                                    data-edit="order"
+                                    data-title="Editer la commande"
+                                    data-template="templateOrder"></ze-btn>
+                            <span ng-show="!order.finalized">
+                                <ze-btn fa="trash" color="danger" hint="Supprimer" direction="left" ng-click="delete(order)"
+                                        ze-confirmation></ze-btn>
+                            </span>
+                        </td>
+                    @endif
                 </tr>
                 </tbody>
             </table>
