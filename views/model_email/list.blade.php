@@ -1,10 +1,10 @@
-<div id="breadcrumb">Modèle Email</div>
+<div id="breadcrumb">{{ __t("Email template") }}</div>
 <div id="content">
     <div class="row">
         <div class="col-md-12">
             <div class="pull-right">
                 <a class="btn btn-xs btn-success" href="/ng/com_zeapps_crm/model_email/new">
-                    <i class="fa fa-fw fa-plus"></i> Créer un modèle
+                    <i class="fa fa-fw fa-plus"></i> {{ __t("Create a template") }}
                 </a>
             </div>
         </div>
@@ -15,8 +15,8 @@
             <table class="table table-hover table-condensed">
                 <thead>
                 <tr>
-                    <th>Nom du modèle</th>
-                    <th>Sujet</th>
+                    <th>{{ __t("Model name") }}</th>
+                    <th>{{ __t("Subject") }}</th>
                     <th></th>
                 </tr>
                 </thead>
@@ -30,7 +30,7 @@
                             <i class="fas fa-fw fa-edit"></i>
                         </a>
 
-                        <ze-btn fa="trash" color="danger" hint="Supprimer" direction="left" ng-click="delete(model_email)" ze-confirmation></ze-btn>
+                        <ze-btn fa="trash" color="danger" hint="{{ __t("Delete") }}" direction="left" ng-click="delete(model_email)" ze-confirmation></ze-btn>
                     </td>
                 </tr>
                 </tbody>

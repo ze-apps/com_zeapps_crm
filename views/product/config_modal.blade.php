@@ -1,18 +1,18 @@
 <div class="row">
     <div class="col-md-6">
         <div class="form-group">
-            <label>Libellé</label>
+            <label>{{ __t("Label") }}</label>
             <input type="text" ng-model="form.name" class="form-control">
         </div>
     </div>
     <div class="col-md-6">
         <div class="form-group">
-            <label>Type</label>
+            <label>{{ __t("Type") }}</label>
             <select class="form-control" ng-model="form.type">
-                <option value="text">Texte</option>
-                <option value="number">Numérique</option>
-                <option value="textarea">Texte Long</option>
-                <option value="checkbox">Booléen</option>
+                <option value="text">{{ __t("Text") }}</option>
+                <option value="number">{{ __t("Digital") }}</option>
+                <option value="textarea">{{ __t("Long Text") }}</option>
+                <option value="checkbox">{{ __t("Boolean") }}</option>
             </select>
         </div>
     </div>
@@ -23,7 +23,7 @@
         <div class="form-group">
             <label>
                 <input type="checkbox" ng-model="form.required">
-                obligatoire
+                {{ __t("Mandatory") }}
             </label>
         </div>
     </div>

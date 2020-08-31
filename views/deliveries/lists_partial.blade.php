@@ -5,10 +5,10 @@
                         data-update="loadList"></ze-filters>
 
             @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
-                <ze-btn fa="plus" color="success" hint="Bon de livraisonx" always-on="true"
+                <ze-btn fa="plus" color="success" hint="{{ __t("Delivery form") }}" always-on="true"
                         ze-modalform="add"
                         data-template="templateDelivery"
-                        data-title="Créer un nouveau bon de livraison"></ze-btn>
+                        data-title="{{ __t("Create a new delivery note") }}"></ze-btn>
             @endif
         </div>
     </div>
@@ -25,14 +25,16 @@
                 <thead>
                 <tr>
                     <th>#</th>
-                    <th>Date de création</th>
-                    <th>Destinataire</th>
-                    <th>Libelle</th>
-                    <th class="text-right">Total HT</th>
-                    <th class="text-right">Total TTC</th>
-                    <th>Responsable</th>
-                    <th>Statut</th>
-                    <th></th>
+                    <th>{{ __t("Creation date") }}</th>
+                    <th>{{ __t("Recipient") }}</th>
+                    <th>{{ __t("Label") }}</th>
+                    <th class="text-right">{{ __t("Total duty") }}</th>
+                    <th class="text-right">{{ __t("Total All taxes included") }}</th>
+                    <th>{{ __t("Manager") }}</th>
+                    <th>{{ __t("Status") }}</th>
+                    @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
+                        <th></th>
+                    @endif
                 </tr>
                 </thead>
                 <tbody>
@@ -53,19 +55,19 @@
                     <td ng-click="goTo(delivery.id)"><span class="text-danger"
                                                            ng-show="delivery.finalized">Clôturée</span><span
                                 class="text-success" ng-show="!delivery.finalized">Ouvert</span></td>
-                    <td class="text-right">
-                        @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
-                            <ze-btn fa="edit" color="info" direction="left" hint="Editer"
-                                    ze-modalform="edit"
-                                    data-edit="delivery"
-                                    data-title="Editer le bon de livraison"
-                                    data-template="templateDelivery"></ze-btn>
-                            <span ng-show="!delivery.finalized">
-                            <ze-btn fa="trash" color="danger" hint="Supprimer" direction="left"
-                                    ng-click="delete(delivery)" ze-confirmation></ze-btn>
-                            </span>
-                        @endif
-                    </td>
+                    @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
+                        <td class="text-right">
+                                <ze-btn fa="edit" color="info" direction="left" hint="{{ __t("Edit") }}"
+                                        ze-modalform="edit"
+                                        data-edit="delivery"
+                                        data-title="{{ __t("Edit the delivery note") }}"
+                                        data-template="templateDelivery"></ze-btn>
+                                <span ng-show="!delivery.finalized">
+                                <ze-btn fa="trash" color="danger" hint="{{ __t("Delete") }}" direction="left"
+                                        ng-click="delete(delivery)" ze-confirmation></ze-btn>
+                                </span>
+                        </td>
+                    @endif
                 </tr>
                 </tbody>
             </table>

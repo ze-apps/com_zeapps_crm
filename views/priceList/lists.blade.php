@@ -1,14 +1,14 @@
-<div id="breadcrumb">Grille de prix</div>
+<div id="breadcrumb">{{ __t("Price list") }}</div>
 
 
 
 <div id="content">
     <div class="row">
         <div class="col-md-12">
-            <ze-btn fa="plus" color="success" hint="Nouvelle grille" always-on="true"
+            <ze-btn fa="plus" color="success" hint="{{ __t("New price list") }}" always-on="true"
                     ze-modalform="add"
                     data-template="templatePriceList"
-                    data-title="Créer une nouvelle grille"></ze-btn>
+                    data-title="{{ __t("Create a new price list") }}"></ze-btn>
         </div>
     </div>
     <div class="row">
@@ -17,11 +17,11 @@
                 <thead>
                 <tr>
                     <th>#</th>
-                    <th>Libelle</th>
-                    <th>Par defaut</th>
-                    <th>Type</th>
-                    <th>% Remise</th>
-                    <th>Actif</th>
+                    <th>{{ __t("Label") }}</th>
+                    <th>{{ __t("By default") }}</th>
+                    <th>{{ __t("Type") }}</th>
+                    <th>{{ __t("% discount") }}</th>
+                    <th>{{ __t("Active") }}</th>
                     <th></th>
                 </tr>
                 </thead>
@@ -35,13 +35,13 @@
                     <td>@{{priceList.active}}</td>
 
                     <td class="text-right">
-                        <ze-btn fa="th-large" color="success" hint="taux" direction="left" ng-click="taux(priceList.id)" ng-if="priceList.type_pricelist == 1"></ze-btn>
-                        <ze-btn fa="edit" color="info" direction="left" hint="Editer"
+                        <ze-btn fa="th-large" color="success" hint="{{ __t("Rate") }}" direction="left" ng-click="taux(priceList.id)" ng-if="priceList.type_pricelist == 1"></ze-btn>
+                        <ze-btn fa="edit" color="info" direction="left" hint="{{ __t("Edit") }}"
                                 ze-modalform="edit"
                                 data-edit="priceList"
-                                data-title="Editer"
+                                data-title="{{ __t("Edit") }}"
                                 data-template="templatePriceList"></ze-btn>
-                        <ze-btn fa="trash" color="danger" hint="Supprimer" direction="left" ng-click="delete(priceList)" ze-confirmation></ze-btn>
+                        <ze-btn fa="trash" color="danger" hint="{{ __t("Delete") }}" direction="left" ng-click="delete(priceList)" ze-confirmation></ze-btn>
                     </td>
                 </tr>
                 </tbody>

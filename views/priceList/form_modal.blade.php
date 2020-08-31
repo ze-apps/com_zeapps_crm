@@ -15,7 +15,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
-                    <label>Libellé</label>
+                    <label>{{ __t("Label") }}</label>
                     <input type="text" ng-model="form.label" name="test" class="form-control" ng-required="true">
                 </div>
             </div>
@@ -27,7 +27,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
-                    <label>Par defaut</label>
+                    <label>{{ __t("By default") }}</label>
                     <select ng-model="form.default" class="form-control" name="id_origin" ng-required="true" ng-change="changeParDefaut()">
                         <option ng-repeat="valOuiNon in listOuiNon" ng-value="@{{valOuiNon.id}}">
                             @{{ valOuiNon.label }}
@@ -44,7 +44,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
-                    <label>Type grille</label>
+                    <label>{{ __t("Price list") }}</label>
                     <select ng-model="form.type_pricelist" class="form-control" name="id_origin" ng-required="true">
                         <option ng-repeat="(key, price_list_type) in price_list_types" ng-value="@{{key}}">
                             @{{ price_list_type }}
@@ -58,7 +58,7 @@
         <div class="row" ng-if="form.type_pricelist == 1">
             <div class="col-md-12">
                 <div class="form-group">
-                    <label>Pourcentage de remise par defaut</label>
+                    <label>{{ __t("Default discount percentage") }}</label>
                     <input type="text" ng-model="form.percentage" name="test" class="form-control">
                 </div>
             </div>
@@ -71,7 +71,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
-                    <label>Active</label>
+                    <label>{{ __t("Active") }}</label>
                     <select ng-model="form.active" class="form-control" name="id_origin" ng-required="true">
                         <option ng-repeat="valOuiNon in listOuiNon" ng-value="@{{valOuiNon.id}}">
                             @{{ valOuiNon.label }}

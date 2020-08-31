@@ -1,13 +1,13 @@
 <div id="content">
     <form>
 
-        <h3>Modèle email</h3>
+        <h3>{{ __t("Email template") }}</h3>
 
 
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
-                    <label>Nom du modèle <span class="required">*</span></label>
+                    <label>{{ __t("Model name") }} <span class="required">*</span></label>
                     <input type="text" class="form-control" ng-model="form.name">
                 </div>
             </div>
@@ -17,7 +17,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
-                    <label>Destinetaire par défaut (séparer les adresses par une virgule)</label>
+                    <label>{{ __t("Default recipient (separate addresses with a comma)") }}</label>
                     <input type="text" class="form-control" ng-model="form.default_to">
                 </div>
             </div>
@@ -27,7 +27,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
-                    <label>Objet de l'email <span class="required">*</span></label>
+                    <label>{{ __t("Email subject") }} <span class="required">*</span></label>
                     <input type="text" class="form-control" ng-model="form.subject">
                 </div>
             </div>
@@ -37,18 +37,18 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
-                    <label>Contenu de l'email <span class="required">*</span></label>
+                    <label>{{ __t("Email content") }} <span class="required">*</span></label>
                     <textarea class="form-control" ng-model="form.message" rows="10"></textarea>
-                    Vous pouvez insérer les codes suivants pour créer le contenu de l'email<br>
-                    [company] : Nom de l'entreprise<br>
-                    [contact] : Nom du contact<br>
-                    [number_doc] : N° du document<br>
-                    [type_doc] : Type de document (devis, commande, facture, bon de livraison)<br>
-                    [amount] : Montant toutes taxes comprise du document<br>
-                    [amount_without_taxes] : Montant hors taxes du document<br>
-                    [reference] : Référence du document<br>
-                    [label_doc] : Libellé du document<br>
-                    [doc_manager] : Responsable du document<br>
+                    {{ __t("You can insert the following codes to create the content of the email") }}<br>
+                    [company] : {{ __t("Company Name") }}<br>
+                    [contact] : {{ __t("Contact Name") }}<br>
+                    [number_doc] : {{ __t("Document number") }}<br>
+                    [type_doc] : {{ __t("Type of document (quote, order, invoice, delivery note)") }}<br>
+                    [amount] : {{ __t("Document amount including all taxes") }}<br>
+                    [amount_without_taxes] : {{ __t("Document amount excluding tax") }}<br>
+                    [reference] : {{ __t("Document reference") }}<br>
+                    [label_doc] : {{ __t("Wording of the document") }}<br>
+                    [doc_manager] : {{ __t("Document manager") }}<br>
                 </div>
             </div>
         </div>
@@ -57,10 +57,10 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
-                    <label>Pièces jointes</label>
+                    <label>{{ __t("Attachments") }}</label>
                     <button type="file" ngf-select="uploadFiles($file, $invalidFiles)" class="btn btn-success btn-xs"
                             {{-- accept="image/*" ngf-max-height="1000" ngf-max-size="1MB"--}}>
-                        Ajouter
+                        {{ __t("Add") }}
                     </button>
                     <br>
                     <div style="font:smaller">@{{errFile.$error}} @{{errFile.$errorParam}}
@@ -74,8 +74,8 @@
                     <table class="table table-striped">
                         <thead>
                         <tr>
-                            <th>Fichier</th>
-                            <th>Path</th>
+                            <th>{{ __t("File") }}</th>
+                            <th>{{ __t("Path") }}</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -83,7 +83,7 @@
                         <tr ng-repeat="attachment in form.attachments">
                             <td>@{{ attachment.name }}</td>
                             <td>@{{ attachment.path }}</td>
-                            <td class="text-right"><button type="button" class="btn btn-xs btn-danger" ng-click="deleteFile(attachment.path)"><i class="fa fa-trash"></i> Supprimer</button></td>
+                            <td class="text-right"><button type="button" class="btn btn-xs btn-danger" ng-click="deleteFile(attachment.path)"><i class="fa fa-trash"></i> {{ __t("Delete") }}</button></td>
                         </tr>
                         </tbody>
                     </table>
@@ -98,7 +98,7 @@
                     <label>
                         <input type="checkbox" class="checkbox" ng-model="form.to_quote"
                                ng-true-value="1" ng-false-value="0" ng-checked="form.to_quote == 1">
-                        Pour les devis
+                        {{ __t("For quotes") }}
                     </label>
                 </div>
             </div>
@@ -111,7 +111,7 @@
                     <label>
                         <input type="checkbox" class="checkbox" ng-model="form.to_order"
                                ng-true-value="1" ng-false-value="0" ng-checked="form.to_order == 1">
-                        Pour les commandes
+                        {{ __t("For orders") }}
                     </label>
                 </div>
             </div>
@@ -124,7 +124,7 @@
                     <label>
                         <input type="checkbox" class="checkbox" ng-model="form.to_invoice"
                                ng-true-value="1" ng-false-value="0" ng-checked="form.to_invoice == 1">
-                        Pour les factures
+                        {{ __t("For invoices") }}
                     </label>
                 </div>
             </div>
@@ -137,7 +137,7 @@
                     <label>
                         <input type="checkbox" class="checkbox" ng-model="form.to_delivery"
                                ng-true-value="1" ng-false-value="0" ng-checked="form.to_delivery == 1">
-                        Pour les bons de livraison
+                        {{ __t("For delivery notes") }}
                     </label>
                 </div>
             </div>

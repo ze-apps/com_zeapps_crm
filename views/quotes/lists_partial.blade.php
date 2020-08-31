@@ -24,15 +24,15 @@
                 <thead>
                 <tr>
                     <th>#</th>
-                    <th>Date de création</th>
-                    <th>Destinataire</th>
-                    <th>Libelle</th>
-                    <th class="text-right">Total HT</th>
-                    <th class="text-right">Total TTC</th>
-                    <th>Date limite</th>
-                    <th>Responsable</th>
-                    <th class="text-right">Probabilité</th>
-                    <th>Statut</th>
+                    <th>{{ __t("Creation date") }}</th>
+                    <th>{{ __t("Recipient") }}</th>
+                    <th>{{ __t("Label") }}</th>
+                    <th class="text-right">{{ __t("Total duty") }}</th>
+                    <th class="text-right">{{ __t("Total All taxes included") }}</th>
+                    <th>{{ __t("Deadline") }}</th>
+                    <th>{{ __t("Manager") }}</th>
+                    <th class="text-right">{{ __t("Probability") }}</th>
+                    <th>{{ __t("Status") }}</th>
                     @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
                         <th></th>
                     @endif
@@ -58,12 +58,12 @@
                     <td ng-click="goTo(quote.id)">@{{ showStatus(quote.status) }}</td>
                     @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
                         <td class="text-right">
-                            <ze-btn fa="edit" color="info" direction="left" hint="Editer"
+                            <ze-btn fa="edit" color="info" direction="left" hint="{{ __t("Edit") }}"
                                     ze-modalform="edit"
                                     data-edit="quote"
-                                    data-title="Editer le devis"
+                                    data-title="{{ __t("Edit quote") }}"
                                     data-template="templateQuote"></ze-btn>
-                            <ze-btn fa="trash" color="danger" hint="Supprimer" direction="left" ng-click="delete(quote)" ze-confirmation></ze-btn>
+                            <ze-btn fa="trash" color="danger" hint="{{ __t("Delete") }}" direction="left" ng-click="delete(quote)" ze-confirmation></ze-btn>
                         </td>
                     @endif
                 </tr>

@@ -1,11 +1,11 @@
-<div id="breadcrumb">Attributs des produits</div>
+<div id="breadcrumb">{{ __t("Product attributes") }}</div>
 <div id="content">
     <div class="row">
         <div class="col-md-12">
             <ze-btn fa="plus" color="success" hint="Attribut" always-on="true"
                     ze-modalform="add"
                     data-template="templateForm"
-                    data-title="Ajouter un attribut"></ze-btn>
+                    data-title="{{ __t("Add attribute") }}"></ze-btn>
         </div>
     </div>
 
@@ -15,13 +15,13 @@
                 <thead>
                 <tr>
                     <th>
-                        Nom
+                        {{ __t("Name") }}
                     </th>
                     <th>
-                        Type
+                        {{ __t("Type") }}
                     </th>
                     <th class="text-center">
-                        Obligatoire
+                        {{ __t("Mandatory") }}
                     </th>
                     <th></th>
                 </tr>
@@ -38,12 +38,12 @@
                         <i class="fa fa-fw" ng-class="attribute.required ? 'fa-check text-success' : 'fa-times text-danger'"></i>
                     </td>
                     <td class="text-right">
-                        <ze-btn fa="edit" color="info" hint="Editer" direction="left"
+                        <ze-btn fa="edit" color="info" hint="{{ __t("Edit") }}" direction="left"
                                 ze-modalform="edit"
                                 data-edit="attribute"
                                 data-template="templateForm"
-                                data-title="Modifier l'attribut"></ze-btn>
-                        <ze-btn fa="trash" color="danger" hint="Supprimer" direction="left" ng-click="delete(attribute)" ze-confirmation></ze-btn>
+                                data-title="{{ __t("Edit attribute") }}"></ze-btn>
+                        <ze-btn fa="trash" color="danger" hint="{{ __t("Delete") }}" direction="left" ng-click="delete(attribute)" ze-confirmation></ze-btn>
                     </td>
 
                 </tr>

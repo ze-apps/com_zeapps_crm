@@ -1,16 +1,16 @@
 <div class="row">
     <div class="col-md-12 text-right">
         <button type="button" class="btn btn-xs" ng-click="changeScaleTo('month')" ng-class="selectedScale === 'month' ? 'btn-success' : 'btn-info';">
-            Année
+            {{ __t("Year") }}
         </button>
         <button type="button" class="btn btn-xs btn-info" ng-click="changeScaleTo('dates')" ng-class="selectedScale === 'dates' ? 'btn-success' : 'btn-info';">
-            3 Mois
+            {{ __t("3 months") }}
         </button>
         <button type="button" class="btn btn-xs btn-info" ng-click="changeScaleTo('date')" ng-class="selectedScale === 'date' ? 'btn-success' : 'btn-info';">
-            1 Mois
+            {{ __t("1 month") }}
         </button>
         <button type="button" class="btn btn-xs btn-info" ng-click="changeScaleTo('days')" ng-class="selectedScale === 'days' ? 'btn-success' : 'btn-info';">
-            Semaine
+            {{ __t("Week") }}
         </button>
     </div>
 </div>

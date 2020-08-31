@@ -5,10 +5,10 @@
                         data-update="loadList"></ze-filters>
 
             @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
-                <ze-btn fa="plus" color="success" hint="Facture" always-on="true"
+                <ze-btn fa="plus" color="success" hint="{{ __t("Invoice") }}" always-on="true"
                         ze-modalform="add"
                         data-template="templateInvoice"
-                        data-title="Créer une nouvelle facture"></ze-btn>
+                        data-title="{{ __t("Create a new invoice") }}"></ze-btn>
             @endif
         </div>
     </div>
@@ -25,15 +25,15 @@
                 <thead>
                 <tr>
                     <th>#</th>
-                    <th>Date de création</th>
-                    <th>Destinataire</th>
-                    <th>Libelle</th>
-                    <th class="text-right">Total HT</th>
-                    <th class="text-right">Total TTC</th>
-                    <th class="text-right">Solde</th>
-                    <th>Date limite</th>
-                    <th>Responsable</th>
-                    <th>Statut</th>
+                    <th>{{ __t("Creation date") }}</th>
+                    <th>{{ __t("Recipient") }}</th>
+                    <th>{{ __t("Label") }}</th>
+                    <th class="text-right">{{ __t("Total duty") }}</th>
+                    <th class="text-right">{{ __t("Total All taxes included") }}</th>
+                    <th class="text-right">{{ __t("Balance") }}</th>
+                    <th>{{ __t("Deadline") }}</th>
+                    <th>{{ __t("Manager") }}</th>
+                    <th>{{ __t("Status") }}</th>
                     @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
                         <th></th>
                     @endif
@@ -64,13 +64,13 @@
 
                     @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
                         <td class="text-right">
-                            <ze-btn fa="edit" color="info" direction="left" hint="Editer"
+                            <ze-btn fa="edit" color="info" direction="left" hint="{{ __t("Edit") }}"
                                     ze-modalform="edit"
                                     data-edit="invoice"
-                                    data-title="Editer la facture"
+                                    data-title="{{ __t("Edit invoice") }}"
                                     data-template="templateInvoice"></ze-btn>
                             <span ng-show="!invoice.finalized">
-                                <ze-btn fa="trash" color="danger" hint="Supprimer" direction="left" ng-click="delete(invoice)"
+                                <ze-btn fa="trash" color="danger" hint="{{ __t("Delete") }}" direction="left" ng-click="delete(invoice)"
                                     ze-confirmation></ze-btn>
                             </span>
                         </td>

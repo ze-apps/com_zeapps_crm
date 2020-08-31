@@ -1,4 +1,4 @@
-<div id="breadcrumb">Produits</div>
+<div id="breadcrumb">{{ __t("Products") }}</div>
 <div id="content">
     <div class="row">
         <div class="col-md-3">
@@ -12,19 +12,19 @@
                 <div class="row">
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label>Reference</label>
+                            <label>{{ __t("Reference") }}</label>
                             <input type="text" ng-model="form.ref" class="form-control">
                         </div>
                     </div>
                     <div class="col-md-5">
                         <div class="form-group">
-                            <label>Nom du produit <span class="required">*</span></label>
+                            <label>{{ __t("Product Name") }} <span class="required">*</span></label>
                             <input type="text" ng-model="form.name" class="form-control" ng-required="true">
                         </div>
                     </div>
                     <div class="col-md-5">
                         <div class="form-group">
-                            <label>Produit stocké</label>
+                            <label>{{ __t("Stored product") }}</label>
                             <div class="input-group">
                                 <input type="text" ng-model="form.name_stock" class="form-control" disabled>
 
@@ -42,19 +42,19 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label>Prix Cumulé TTC <span class="required">*</span></label>
+                            <label>{{ __t("Cumulated price all taxes included") }} <span class="required">*</span></label>
                             <input type="number" ng-model="form.price_ttc" ng-change="updatePrice()" class="form-control">
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label>Compte Comptable</label>
+                            <label>{{ __t("Accounting Account") }}</label>
                             <span   ze-modalsearch="loadAccountingNumber"
                                     data-http="accountingNumberHttp"
                                     data-model="form.accounting_number"
                                     data-fields="accountingNumberFields"
                                     data-template-new="accountingNumberTplNew"
-                                    data-title="Choisir un compte comptable"></span>
+                                    data-title="{{ __t("Choose an accounting account") }}"></span>
                         </div>
                     </div>
                 </div>
@@ -64,7 +64,7 @@
                         <div class="form-group">
                             <label>
                                 <input type="checkbox" ng-model="form.auto">
-                                Mise a jour automatique du prix
+                                {{ __t("Automatic price update") }}
                             </label>
                         </div>
                     </div>
@@ -73,7 +73,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label>Description</label>
+                            <label>{{ __t("Description") }}</label>
                             <input type="text" ng-model="form.description" class="form-control">
                         </div>
                     </div>
@@ -82,13 +82,13 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    <span class="required">*</span> champs obligatoires
+                    <span class="required">*</span> {{ __t("Required fields") }}
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-12">
-                    <button type="button" class="btn btn-sm btn-success pull-right" ng-click="ajouter_ligne()">Ajouter Un Composant</button>
+                    <button type="button" class="btn btn-sm btn-success pull-right" ng-click="ajouter_ligne()">{{ __t("Add item") }}</button>
                     <h4>Liste</h4>
                 </div>
             </div>
@@ -99,11 +99,11 @@
                         <thead>
                             <tr>
                                 <th></th>
-                                <th>Reference</th>
-                                <th>Nom</th>
-                                <th class="text-right">Quantité</th>
-                                <th class="text-right">Prix HT</th>
-                                <th class="text-right">action</th>
+                                <th>{{ __t("Reference") }}</th>
+                                <th>{{ __t("Name") }}</th>
+                                <th class="text-right">{{ __t("Quantity") }}</th>
+                                <th class="text-right">{{ __t("Out of taxes price") }}Prix HT</th>
+                                <th class="text-right"></th>
                             </tr>
                         </thead>
                         <tbody>

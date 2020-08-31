@@ -1,4 +1,4 @@
-<div id="breadcrumb">Produits</div>
+<div id="breadcrumb">{{ __t("Products") }}</div>
 <div id="content">
     <div class="row">
         <div class="col-md-3">
@@ -12,10 +12,10 @@
 
 
             <ul role="tablist" class="nav nav-tabs">
-                <li ng-class="navigationState =='body' ? 'active' : ''"><a href="#" ng-click="setTab('body')">Information</a></li>
-                <li ng-class="navigationState =='tarif' ? 'active' : ''"><a href="#" ng-click="setTab('tarif')">Tarif(s)</a></li>
-                <li ng-class="navigationState =='article_pack' ? 'active' : ''" ng-show="form.type_product=='pack'"><a href="#" ng-click="setTab('article_pack')">Articles du pack</a></li>
-                <li ng-class="navigationState =='achat' ? 'active' : ''"><a href="#" ng-click="setTab('achat')">Achat</a></li>
+                <li ng-class="navigationState =='body' ? 'active' : ''"><a href="#" ng-click="setTab('body')">{{ __t("Information") }}</a></li>
+                <li ng-class="navigationState =='tarif' ? 'active' : ''"><a href="#" ng-click="setTab('tarif')">{{ __t("Prices") }}</a></li>
+                <li ng-class="navigationState =='article_pack' ? 'active' : ''" ng-show="form.type_product=='pack'"><a href="#" ng-click="setTab('article_pack')">{{ __t("Pack items") }}</a></li>
+                <li ng-class="navigationState =='achat' ? 'active' : ''"><a href="#" ng-click="setTab('achat')">{{ __t("Purchase") }}</a></li>
             </ul>
 
 
@@ -25,7 +25,7 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label>Type de produit <span class="required">*</span></label>
+                            <label>{{ __t("Type of product") }} <span class="required">*</span></label>
                             <select ng-model="form.type_product" class="form-control"
                                     ng-required="true">
                                 <option ng-repeat="type_product in type_products" value="@{{type_product.id}}">
@@ -39,7 +39,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label>
-                                 Actif
+                                {{ __t("Active") }}
                             </label>
                             <input type="checkbox" ng-model="form.active"
                                    ng-true-value="1"
@@ -47,7 +47,7 @@
                                    ng-checked="form.active*1">
                             <br>
                             <label>
-                                Remise interdite
+                                {{ __t("Discount prohibited") }}
                             </label>
                             <input type="checkbox" ng-model="form.discount_prohibited"
                                    ng-true-value="1"
@@ -58,7 +58,7 @@
 
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label>Remise max. autorisée <span class="required">*</span></label>
+                            <label>{{ __t("Discount max. authorized") }} <span class="required">*</span></label>
                             <input type="text" ng-model="form.maximum_discount_allowed" class="form-control" ng-required="true">
                         </div>
                     </div>
@@ -70,13 +70,13 @@
                 <div class="row">
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label>Reference <span class="required">*</span></label>
+                            <label>{{ __t("Reference") }} <span class="required">*</span></label>
                             <input type="text" ng-model="form.ref" class="form-control" ng-required="true">
                         </div>
                     </div>
                     <div class="col-md-10">
                         <div class="form-group">
-                            <label>Nom du produit <span class="required">*</span></label>
+                            <label>{{ __t("Product Name") }} <span class="required">*</span></label>
                             <input type="text" ng-model="form.name" class="form-control" ng-required="true">
                         </div>
                     </div>
@@ -86,7 +86,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label>Catégorie <span class="required">*</span></label>
+                            <label>{{ __t("Category") }} <span class="required">*</span></label>
 
                             <select ng-model="form.id_cat" ng-change="" class="form-control">
                                 <option ng-repeat="tree in tree_select" ng-value="@{{tree.id}}"
@@ -97,7 +97,7 @@
 
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label>Poids (en grammes)</label>
+                            <label>{{ __t("Weight (in grams)") }}</label>
                             <input type="text" ng-model="form.weight" class="form-control">
                         </div>
                     </div>
@@ -106,7 +106,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label>Description</label>
+                            <label>{{ __t("Description") }}</label>
                             <textarea type="text" ng-model="form.description" class="form-control" rows="7"></textarea>
                         </div>
                     </div>
@@ -124,7 +124,7 @@
                 <div class="row" ng-show="price_lists.length >= 2">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label>Prix HT <span class="required">*</span></label>
+                            <label>{{ __t("Out of taxes price") }} <span class="required">*</span></label>
                             <div class="input-group">
                                 <input type="text" min="0" step="0.01" ng-model="form.price_ht" class="form-control"
                                        ng-change="updatePrice(-1, 'ttc')" ng-required="true"
@@ -136,7 +136,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label>Prix TTC <span class="required">*</span></label>
+                            <label>{{ __t("Amount including taxes") }} <span class="required">*</span></label>
                             <div class="input-group">
                                 <input type="text" min="0" step="0.01" ng-model="form.price_ttc" class="form-control"
                                        ng-change="updatePrice(-1, 'ht')"
@@ -152,7 +152,7 @@
                 <div class="row" ng-hide="form.type_product=='pack' || price_lists.length >= 2">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label>TVA <span class="required">*</span></label>
+                            <label>{{ __t("VAT") }} <span class="required">*</span></label>
                             <select ng-model="form.id_taxe" ng-change="updateTaxe(-1);updatePrice(-1, 'ttc')"
                                     class="form-control" ng-required="form.type_product!='pack'">
                                 <option ng-repeat="taxe in taxes | filter:{ active : 1 }" ng-value="@{{taxe.id}}">
@@ -163,7 +163,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label>Compte Comptable</label>
+                            <label>{{ __t("Accounting Account") }}</label>
                             <span ze-modalsearch="loadAccountingNumber"
                                   data-onloadmodal="openModalAccountingNumber"
                                   data-onloadmodalparam="-1"
@@ -171,7 +171,7 @@
                                   data-model="form.accounting_number"
                                   data-fields="accountingNumberFields"
                                   data-template-new="accountingNumberTplNew"
-                                  data-title="Choisir un compte comptable"></span>
+                                  data-title="{{ __t("Choose an accounting account") }}"></span>
                         </div>
                     </div>
                 </div>
@@ -187,7 +187,7 @@
                                            ng-true-value="1"
                                            ng-false-value="0"
                                            ng-checked="form.update_price_from_subline*1"
-                                           ng-change="updatePriceSubLine()"> Calculer automatiquement le prix de vente
+                                           ng-change="updatePriceSubLine()"> {{ __t("Automatically calculate the sale price") }}
                                 </label>
                             </div>
 
@@ -196,7 +196,7 @@
                                     <input type="checkbox" ng-model="form.show_subline"
                                            ng-true-value="1"
                                            ng-false-value="0"
-                                           ng-checked="form.show_subline*1"> Afficher le detail dans le document
+                                           ng-checked="form.show_subline*1"> {{ __t("Show detail in document") }}
                                 </label>
                             </div>
                         </div>
@@ -210,13 +210,13 @@
 
 
                 <div ng-show="price_lists.length >= 2" ng-repeat="price_list in price_lists " style="border-bottom: solid 1px #000">
-                    <h3>Tarif : @{{ price_list.label }} <span ng-if="price_list.type_pricelist == 1 && form.priceList[price_list.id].percentage_discount">(Remise @{{ form.priceList[price_list.id].percentage_discount }} %)</span></h3>
+                    <h3>{{ __t("Price") }} : @{{ price_list.label }} <span ng-if="price_list.type_pricelist == 1 && form.priceList[price_list.id].percentage_discount">({{ __t("Discount") }} @{{ form.priceList[price_list.id].percentage_discount }} %)</span></h3>
 
 
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Prix HT <span class="required" ng-if="price_list.type_pricelist == 0">*</span>
+                                <label>{{ __t("Out of taxes price") }} <span class="required" ng-if="price_list.type_pricelist == 0">*</span>
                                     <span ng-if="price_list.type_pricelist == 1"> : @{{ (form.priceList[price_list.id].price_ht * (1-form.priceList[price_list.id].percentage_discount/100)).toFixed(2) }} €</span>
                                 </label>
 
@@ -230,7 +230,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Prix TTC <span class="required" ng-if="price_list.type_pricelist == 0">*</span>
+                                <label>{{ __t("Amount including taxes") }} <span class="required" ng-if="price_list.type_pricelist == 0">*</span>
                                     <span ng-if="price_list.type_pricelist == 1"> : @{{ (form.priceList[price_list.id].price_ttc * (1-form.priceList[price_list.id].percentage_discount/100)).toFixed(2) }} €</span>
                                 </label>
 
@@ -249,7 +249,7 @@
                     <div class="row" ng-hide="form.type_product=='pack'">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>TVA <span class="required" ng-if="price_list.type_pricelist == 0">*</span>
+                                <label>{{ __t("Tax") }} <span class="required" ng-if="price_list.type_pricelist == 0">*</span>
                                     <span ng-if="price_list.type_pricelist == 1"> : @{{ form.priceList[price_list.id].value_taxe }} %</span>
                                 </label>
 
@@ -264,7 +264,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Compte Comptable
+                                <label>{{ __t("Accounting Account") }}
                                     <span ng-if="price_list.type_pricelist == 1"> : @{{ form.priceList[price_list.id].accounting_number }}</span>
                                 </label>
                                 <span ze-modalsearch="loadAccountingNumber"
@@ -274,7 +274,7 @@
                                       data-model="form.priceList[price_list.id].accounting_number"
                                       data-fields="accountingNumberFields"
                                       data-template-new="accountingNumberTplNew"
-                                      data-title="Choisir un compte comptable"
+                                      data-title="{{ __t("Choose an accounting account") }}"
                                       ng-if="price_list.type_pricelist == 0"></span>
                             </div>
                         </div>
@@ -311,7 +311,7 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    <span class="required">*</span> champs obligatoires
+                    <span class="required">*</span> {{ __t("Required fields") }}
                 </div>
             </div>
 
@@ -320,12 +320,12 @@
 
             <!-- Article composant le pack -->
             <div class="well" ng-show="form.type_product=='pack' && navigationState =='article_pack'">
-                <h3>Articles composants le pack</h3>
+                <h3>{{ __t("Pack items") }}</h3>
 
                 <div class="row">
                     <div class="col-md-12 text-right">
                     <span class="form-inline">
-                        <label>Code produit :</label>
+                        <label>{{ __t("Product code") }} :</label>
                         <span class="input-group">
                             <input type="text" class="form-control input-sm inputCodeProduct" ng-model="codeProduct"
                                    ng-keydown="keyEventaddFromCode($event)">
@@ -334,7 +334,7 @@
                             </span>
                         </span>
                     </span>
-                        <ze-btn fa="tags" color="success" hint="produit" always-on="true" ng-click="addLine()"></ze-btn>
+                        <ze-btn fa="tags" color="success" hint="{{ __t("Product") }}" always-on="true" ng-click="addLine()"></ze-btn>
                     </div>
                 </div>
 
@@ -344,13 +344,13 @@
                             <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Désignation</th>
-                                <th class="text-right">Qte</th>
-                                <th class="text-right">P. Unit. HT</th>
-                                <th class="text-right">Taxe</th>
-                                <th class="text-right">Montant HT</th>
-                                <th class="text-right">Montant TTC</th>
-                                <th class="text-right">Type</th>
+                                <th>{{ __t("Designation") }}</th>
+                                <th class="text-right">{{ __t("Qty") }}</th>
+                                <th class="text-right">{{ __t("Unit price excluding taxes") }}</th>
+                                <th class="text-right">{{ __t("Tax") }}</th>
+                                <th class="text-right">{{ __t("Out of taxes price") }}</th>
+                                <th class="text-right">{{ __t("Amount including taxes") }}</th>
+                                <th class="text-right">{{ __t("Type") }}</th>
                                 <th></th>
                             </tr>
                             </thead>
@@ -371,7 +371,7 @@
                                 <td class="text-right">@{{ line.type_product }}</td>
 
                                 <td class="text-right">
-                                    <ze-btn fa="trash" color="danger" direction="left" hint="Supprimer"
+                                    <ze-btn fa="trash" color="danger" direction="left" hint="{{ __t("Delete") }}"
                                             ng-click="deleteLine(line)" ze-confirmation ng-if="line"></ze-btn>
                                 </td>
                             </tr>
@@ -397,13 +397,13 @@
                 <table class="table table-hover table-condensed table-responsive" ng-show="supplierPurchases.length > 0">
                     <thead>
                     <tr>
-                        <th>Date</th>
-                        <th>Fournisseur</th>
-                        <th class="text-right">Quantité</th>
-                        <th class="text-right">Prix HT</th>
-                        <th class="text-right">TVA (%)</th>
-                        <th class="text-right">Prix TTC</th>
-                        <th class="text-right">Actions</th>
+                        <th>{{ __t("Date") }}</th>
+                        <th>{{ __t("Provider") }}</th>
+                        <th class="text-right">{{ __t("Amount") }}</th>
+                        <th class="text-right">{{ __t("Out of taxes price") }}</th>
+                        <th class="text-right">{{ __t("Tax rate") }}</th>
+                        <th class="text-right">{{ __t("Amount including taxes") }}</th>
+                        <th class="text-right">{{ __t("Actions") }}</th>
                     </tr>
                     </thead>
                     <tbody>

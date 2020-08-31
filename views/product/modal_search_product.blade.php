@@ -36,10 +36,10 @@
             <table class="table table-striped table-condensed">
                 <tr>
                     <th></th>
-                    <th>Référence</th>
-                    <th>Nom du produit</th>
-                    <th>Prix HT</th>
-                    <th>Actif</th>
+                    <th>{{ __t("Reference") }}</th>
+                    <th>{{ __t("Product Name") }}</th>
+                    <th>{{ __t("Out of taxes price") }}</th>
+                    <th>{{ __t("Active") }}</th>
                 </tr>
                 <tr class="leaf" ng-repeat="product in products | orderBy: 'name'" ng-click="select_product(product)">
                     <td>
@@ -49,7 +49,7 @@
                     <td>@{{ product.ref }}</td>
                     <td>@{{ product.name }}</td>
                     <td>@{{ product.price_ht | currency }}</td>
-                    <td><span ng-if="product.active">OUI</span><span ng-if="!product.active">NON</span></td>
+                    <td><span ng-if="product.active">{{ __t("YES") }}</span><span ng-if="!product.active">{{ __t("NO") }}</span></td>
                 </tr>
             </table>
 
@@ -67,5 +67,5 @@
 </div>
 
 <div class="modal-footer">
-    <button class="btn btn-danger" type="button" ng-click="cancel()">Annuler</button>
+    <button class="btn btn-danger" type="button" ng-click="cancel()">{{ __t("Cancel") }}</button>
 </div>

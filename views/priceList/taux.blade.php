@@ -1,4 +1,4 @@
-<div id="breadcrumb">Grille de prix : @{{ grille_tarif.label }}</div>
+<div id="breadcrumb">{{ __t("Price list") }} : @{{ grille_tarif.label }}</div>
 
 
 <div id="content">
@@ -10,10 +10,10 @@
             <table class="table table-hover table-condensed table-responsive" ng-show="categories.length">
                 <thead>
                 <tr>
-                    <th>Libelle</th>
-                    <th>% Remise</th>
-                    <th>Compte comptable</th>
-                    <th>Taux TVA</th>
+                    <th>{{ __t("Label") }}</th>
+                    <th>{{ __t("% discount") }}% Remise</th>
+                    <th>{{ __t("Accounting Account") }}</th>
+                    <th>{{ __t("Taxe rate") }}</th>
                     <th> </th>
                 </tr>
                 </thead>
@@ -28,7 +28,7 @@
                                 @{{ taxe.label }}
                             </option>
                         </select></td>
-                    <td><ze-btn fa="save" color="success" hint="Enregistrer" direction="left" ng-click="save(categorie)" ng-if="categorie.id > 0"></ze-btn></td>
+                    <td><ze-btn fa="save" color="success" hint="{{ __t("Save") }}" direction="left" ng-click="save(categorie)" ng-if="categorie.id > 0"></ze-btn></td>
                 </tr>
                 </tbody>
             </table>

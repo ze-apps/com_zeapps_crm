@@ -5,17 +5,17 @@
 <div class="modal-body">
     <div class="row">
         <div class="col-md-12">
-            Date encaissement : @{{ payment.date_payment || "-"  | date:'dd/MM/yyyy' }}
+            {{ __t("Payment date") }} : @{{ payment.date_payment || "-"  | date:'dd/MM/yyyy' }}
         </div>
     </div>
     <div class="row">
         <div class="col-md-12">
-            Montant : @{{ payment.total | currency:'€':2 }}
+            {{ __t("Amount") }} : @{{ payment.total | currency:'€':2 }}
         </div>
     </div>
     <div class="row">
         <div class="col-md-12">
-            Type de paiement : @{{ payment.type_payment_label }}
+            {{ __t("Mode of payment") }} : @{{ payment.type_payment_label }}
         </div>
     </div>
     <div class="row" ng-if="payment_lines.length">
@@ -23,11 +23,11 @@
             <table class="table table-hover table-condensed table-responsive" ng-show="payment_lines.length">
                 <thead>
                 <tr>
-                    <th>Date Facture</th>
-                    <th>N° Facture</th>
-                    <th>Objet</th>
-                    <th class="text-right">Montant Facture</th>
-                    <th class="text-right">Montant Encaissé</th>
+                    <th>{{ __t("Date of invoice") }}</th>
+                    <th>{{ __t("Invoice No.") }}</th>
+                    <th>{{ __t("Object") }}</th>
+                    <th class="text-right">{{ __t("Amount Invoice") }}</th>
+                    <th class="text-right">{{ __t("Amount received") }}</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -45,5 +45,5 @@
 </div>
 
 <div class="modal-footer">
-    <button type="button" class="btn btn-danger" ng-click="cancel()">Fermer</button>
+    <button type="button" class="btn btn-danger" ng-click="cancel()">{{ __t("Close") }}</button>
 </div>

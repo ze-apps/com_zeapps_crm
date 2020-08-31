@@ -4,10 +4,10 @@
             <ze-filters class="pull-right" data-model="filter_model" data-filters="filters" data-update="loadList"></ze-filters>
 
             @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
-                <ze-btn fa="plus" color="success" hint="Encaissement" always-on="true"
+                <ze-btn fa="plus" color="success" hint="{{ __t("Cashing") }}" always-on="true"
                         ze-modalform="add"
                         data-template="templatePayment"
-                        data-title="Ajouter un nouvel encaissement"></ze-btn>
+                        data-title="{{ __t("Add a new payment") }}"></ze-btn>
             @endif
         </div>
     </div>
@@ -23,9 +23,9 @@
             <table class="table table-hover table-condensed table-responsive" ng-show="payments.length">
                 <thead>
                 <tr>
-                    <th>Date</th>
-                    <th class="text-right">Montant</th>
-                    <th>Type encaissement</th>
+                    <th>{{ __t("Date") }}</th>
+                    <th class="text-right">{{ __t("Amount") }}</th>
+                    <th>{{ __t("Mode of payment") }}</th>
                     @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
                     <th></th>
                     @endif
@@ -38,7 +38,7 @@
                     <td ng-click="goTo(payment.id)">@{{ payment.type_payment_label }}</td>
                     @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
                         <td class="text-right">
-                            <ze-btn fa="trash" color="danger" hint="Supprimer" direction="left" ng-click="delete(payment)" ze-confirmation></ze-btn>
+                            <ze-btn fa="trash" color="danger" hint="{{ __t("Delete") }}" direction="left" ng-click="delete(payment)" ze-confirmation></ze-btn>
                         </td>
                     @endif
                 </tr>

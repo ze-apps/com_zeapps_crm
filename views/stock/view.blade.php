@@ -1,4 +1,4 @@
-<div id="breadcrumb">Stocks</div>
+<div id="breadcrumb">{{ __t("Stocks") }}</div>
 <div id="content">
     <div class="row">
         <div class="col-md-3">
@@ -11,9 +11,9 @@
 
                 <div class="row">
                     <div class="col-md-4">
-                        <button type="button" class="btn btn-success btn-sm" ng-click="export()">Exporter</button>
-                        <button type="button" class="btn btn-default btn-sm" ng-click="activerInventaire()" ng-show="modeInventaire==false">Activer l'inventaire</button>
-                        <button type="button" class="btn btn-danger btn-sm" ng-click="desactiverInventaire()" ng-show="modeInventaire">Désactiver l'inventaire</button>
+                        <button type="button" class="btn btn-success btn-sm" ng-click="export()">{{ __t("Export") }}</button>
+                        <button type="button" class="btn btn-default btn-sm" ng-click="activerInventaire()" ng-show="modeInventaire==false">{{ __t("Activate inventory") }}</button>
+                        <button type="button" class="btn btn-danger btn-sm" ng-click="desactiverInventaire()" ng-show="modeInventaire">{{ __t("Deactivate inventory") }}</button>
                     </div>
                     <div class="col-md-8">
                         <ze-filters data-model="filter_model" data-filters="filters"
@@ -34,16 +34,15 @@
                                ng-show="product_stocks.length">
                             <thead>
                             <tr>
-                                <th>Ref</th>
-                                <th>Libellé</th>
-                                <th class="text-right">Qté</th>
-                                <th class="text-right">Valeur Unitaire</th>
-                                <th class="text-right">Valeur du Stock</th>
-                                <th class="text-right">Date Rupture</th>
-                                <th class="text-right" ng-if="filter_model.id_warehouse">Date Réapprovisionnement
-                                    estimée
+                                <th>{{ __t("Ref") }}</th>
+                                <th>{{ __t("Label") }}</th>
+                                <th class="text-right">{{ __t("Qty") }}</th>
+                                <th class="text-right">{{ __t("Unit value") }}</th>
+                                <th class="text-right">{{ __t("Stock Value") }}</th>
+                                <th class="text-right">{{ __t("Date Outage") }}</th>
+                                <th class="text-right" ng-if="filter_model.id_warehouse">{{ __t("Estimated replenishment date") }}
                                 </th>
-                                <th ng-show="modeInventaire">Qte relevée</th>
+                                <th ng-show="modeInventaire">{{ __t("Qty raised") }}</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -81,7 +80,7 @@
                                 <td ng-show="modeInventaire"><input type="text" class="form-control" ng-model="product_stock.qty_inventaire" ng-keyup="keyEventInventaire()"></td>
                             </tr>
                             <tr ng-show="showSaveInventaire">
-                                <td colspan="8" class="text-right"><button type="button" class="btn btn-success btn-sm" ng-click="enregistrer_inventaire()">Enregistrer l'inventaire</button></td>
+                                <td colspan="8" class="text-right"><button type="button" class="btn btn-success btn-sm" ng-click="enregistrer_inventaire()">{{ __t("Save inventory") }}</button></td>
                             </tr>
                             </tbody>
                         </table>

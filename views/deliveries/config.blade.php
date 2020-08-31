@@ -3,7 +3,7 @@
 
     <div class="row">
         <div class="col-md-12">
-            <button type="button" class="btn btn-primary" ng-click="test()">Tester le format</button> @{{ result }}
+            <button type="button" class="btn btn-primary" ng-click="test()">{{ __t("Test the format") }}</button> @{{ result }}
         </div>
     </div>
 

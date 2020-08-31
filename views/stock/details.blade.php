@@ -1,4 +1,4 @@
-<div id="breadcrumb">Stocks</div>
+<div id="breadcrumb">{{ __t("Stocks") }}</div>
 <div id="content">
     <div class="row">
         <div class="col-md-12">
@@ -14,10 +14,10 @@
 
     <ul class="nav nav-tabs">
         <li ng-class="navigationState === 'chart' ? 'active' : ''">
-            <a href="#" ng-click="navigationState = 'chart'">Graphique</a>
+            <a href="#" ng-click="navigationState = 'chart'">{{ __t("Graphic") }}</a>
         </li>
         <li ng-class="navigationState === 'history' ? 'active' : ''">
-            <a href="#" ng-click="navigationState = 'history'">Historique</a>
+            <a href="#" ng-click="navigationState = 'history'">{{ __t("Historical") }}</a>
         </li>
     </ul>
 
