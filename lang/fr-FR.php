@@ -133,7 +133,7 @@ return [
     "Edit the quote line" => "Editer la ligne du devis",
     "Edit command line" => "Editer la ligne de commande",
     "Model name" => "Nom du modèle",
-    "Default recipient (separate addresses with a comma)" => "Destinetaire par défaut (séparer les adresses par une virgule)",
+    "Default recipient (separate addresses with a comma)" => "Destinataire par défaut (séparer les adresses par une virgule)",
     "Email subject" => "Objet de l'email",
     "Email content" => "Contenu de l'email",
     "You can insert the following codes to create the content of the email" => "Vous pouvez insérer les codes suivants pour créer le contenu de l'email",
