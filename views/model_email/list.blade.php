@@ -21,11 +21,14 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="model_email in model_emails" ng-click="edit(model_email)">
-                    <td>@{{ model_email.name }}</td>
-                    <td>@{{ model_email.subject }}</td>
+                <tr ng-repeat="model_email in model_emails">
+                    <td ng-click="edit(model_email)">@{{ model_email.name }}</td>
+                    <td ng-click="edit(model_email)">@{{ model_email.subject }}</td>
 
                     <td class="text-right">
+
+                        <button type="button" class="btn btn-xs btn-success" ng-click="dupliquer(model_email.id)"><i class="fa fa-fw fa-copy"></i></button>
+
                         <a class="btn btn-info btn-xs" ng-href="/ng/com_zeapps_crm/model_email/edit/@{{ model_email.id }}">
                             <i class="fas fa-fw fa-edit"></i>
                         </a>

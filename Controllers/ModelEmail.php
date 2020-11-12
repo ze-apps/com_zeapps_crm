@@ -40,6 +40,42 @@ class ModelEmail extends Controller
         echo json_encode(array('modelEmail' => $modelEmail));
     }
 
+    public function duplicate(Request $request){
+        $id = $request->input('id', 0);
+
+        if($id){
+            $modelEmail = ModelEmailModel::find($id);
+            if ($modelEmail) {
+                $modelEmail->id = 0;
+                $modelEmail->name .= " (copie)";
+                $modelEmail->exists = false ;
+
+
+                // duplique les fichiers
+                $attachments = [];
+                if (trim($modelEmail->attachments) != "") {
+                    $attachments = json_decode($modelEmail->attachments, true);
+
+                    foreach($attachments as &$attachment) {
+                        $attachment["path"] = Storage::copyFile($attachment["path"]);
+                    }
+                }
+
+                $modelEmail->attachments = json_encode($attachments);
+
+
+                $modelEmail->save();
+
+                echo json_encode($modelEmail);
+            }
+        }
+
+        return;
+    }
+
+
+
+
     public function get_all()
     {
         $modelEmails = ModelEmailModel::get();
