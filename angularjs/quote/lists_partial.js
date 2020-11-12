@@ -30,6 +30,56 @@ app.controller("ComZeappsCrmQuoteListsPartialCtrl", ["$scope", "$location", "$ro
                     field: 'name_contact LIKE',
                     type: 'text',
                     label: 'Contact'
+                },
+                {
+                    format: 'select',
+                    field: 'id_user_account_manager',
+                    type: 'text',
+                    label: 'Manager',
+                    options: []
+                },
+                {
+                    format: 'select',
+                    field: 'status',
+                    type: 'text',
+                    label: 'Statut',
+                    options: []
+                },
+                {
+                    format: 'select',
+                    field: 'probability >=',
+                    type: 'text',
+                    label: 'Probabilité >=',
+                    options: [
+                        {id:10, label:"10%"},
+                        {id:20, label:"20%"},
+                        {id:30, label:"30%"},
+                        {id:40, label:"40%"},
+                        {id:50, label:"50%"},
+                        {id:60, label:"60%"},
+                        {id:70, label:"70%"},
+                        {id:80, label:"80%"},
+                        {id:90, label:"90%"},
+                        {id:100, label:"100%"}
+                    ]
+                },
+                {
+                    format: 'select',
+                    field: 'probability <=',
+                    type: 'text',
+                    label: 'Probabilité <=',
+                    options: [
+                        {id:10, label:"10%"},
+                        {id:20, label:"20%"},
+                        {id:30, label:"30%"},
+                        {id:40, label:"40%"},
+                        {id:50, label:"50%"},
+                        {id:60, label:"60%"},
+                        {id:70, label:"70%"},
+                        {id:80, label:"80%"},
+                        {id:90, label:"90%"},
+                        {id:100, label:"100%"}
+                    ]
                 }
             ],
             secondaries: [
@@ -96,6 +146,38 @@ app.controller("ComZeappsCrmQuoteListsPartialCtrl", ["$scope", "$location", "$ro
         $scope.pageSize = 15;
         $scope.total = 0;
         $scope.templateQuote = '/com_zeapps_crm/quotes/form_modal';
+
+
+        // remonte la liste des managers
+        $scope.filters.main[4].options = [];
+        zhttp.app.user.all().then(function (response) {
+            if (response.data && response.data != "false") {
+                angular.forEach(response.data, function (user) {
+                    $scope.filters.main[4].options.push({ id: user.id, label: user.firstname + " " + user.lastname });
+                });
+            }
+        });
+
+        // remonte le statut dans les filtres
+        $scope.filters.main[5].options = [];
+        zhttp.crm.statuts.getAll().then(function (response) {
+            if (response.data && response.data != "false") {
+                angular.forEach(response.data, function (status) {
+                    $scope.filters.main[5].options.push({ id: status.id, label: status.label });
+                });
+            }
+        });
+
+
+        
+
+
+
+
+
+
+
+
 
         var src = "quotes";
         var src_id = 0;
