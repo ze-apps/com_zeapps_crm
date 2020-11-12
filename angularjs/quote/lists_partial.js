@@ -217,8 +217,8 @@ app.controller("ComZeappsCrmQuoteListsPartialCtrl", ["$scope", "$location", "$ro
 
 
         $scope.status = [];
-        zhttp.crm.statuts.getAll().then(function(response){
-            if(response.data && response.data != "false"){
+        zhttp.crm.statuts.getAll().then(function (response) {
+            if (response.data && response.data != "false") {
                 $scope.status = response.data;
             }
         });

@@ -140,11 +140,6 @@ class Quotes extends Controller
                 $key = str_replace(" LIKE", "", $key);
                 $quotes_rs = $quotes_rs->where($key, 'like', '%' . $value . '%');
 
-             } elseif (strpos($key, " ><=")) {
-                $tabKey = explode(" ", $key);
-                $valueKey = explode(" ", $value);
-                $quotes_rs = $quotes_rs->where($tabKey[0], $valueKey[0], $valueKey[1]);
-
             } elseif (strpos($key, " ") !== false) {
                 $tabKey = explode(" ", $key);
                 $quotes_rs = $quotes_rs->where($tabKey[0], $tabKey[1], $value);
