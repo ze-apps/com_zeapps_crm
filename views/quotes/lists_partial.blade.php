@@ -33,6 +33,7 @@
                     <th>{{ __t("Manager") }}</th>
                     <th class="text-right">{{ __t("Probability") }}</th>
                     <th>{{ __t("Status") }}</th>
+                    <th class="text-center">Actions</th>
                     @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
                         <th></th>
                     @endif
@@ -63,6 +64,12 @@
                         <select ng-model="quote.status" ng-change="updateStatus(quote)">
                             <option ng-repeat="status in status_quote" ng-value="@{{status.id}}">@{{ status.label }}</option>
                         </select>
+                    </td>
+                    <td class="text-center">
+                        <span ng-show="quote.activities.length">
+                            <span class="label @{{ quote.activities_color }} label-as-badge">@{{ quote.activities.length }}</span>
+                            <span ng-show="quote.activities_next_date"><br>@{{ quote.activities_next_date | date:'dd/MM/yyyy' }}</span>
+                        </span>
                     </td>
                     @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
                         <td class="text-right">

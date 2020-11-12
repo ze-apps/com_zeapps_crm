@@ -147,6 +147,7 @@ app.config(["$provide",
                         save: save_lineDetail_quote
                     },
                     activity: {
+                        getAll: get_all_activity_quote,
                         save: save_activity_quote,
                         del: del_activity_quote
                     },
@@ -671,6 +672,13 @@ app.config(["$provide",
 
             function save_lineDetail_quote(data) {
                 return zeHttp.post("/com_zeapps_crm/quotes/saveLineDetail", data);
+            }
+
+
+            
+
+            function get_all_activity_quote(id) {
+                return zeHttp.get("com_zeapps_crm/quotes/get_activity/" + id);
             }
 
             function save_activity_quote(data) {

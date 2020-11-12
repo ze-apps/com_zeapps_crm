@@ -112,6 +112,13 @@ class Quotes extends Controller
         ));
     }
 
+    public function getActivite(Request $request) {
+        $id = $request->input('id', 0);
+        
+        $activities = QuoteActivities::where('id_quote', $id)->get();
+        echo json_encode($activities);
+    }
+
 
     public function getAll(Request $request)
     {

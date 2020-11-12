@@ -321,6 +321,34 @@ app.controller("ComZeappsCrmQuoteListsPartialCtrl", ["$scope", "$location", "$ro
                         $scope.quotes[i].date_limit = $scope.quotes[i].date_limit !== "0000-00-00 00:00:00" ? new Date($scope.quotes[i].date_limit) : 0;
                         $scope.quotes[i].global_discount = parseFloat($scope.quotes[i].global_discount);
                         $scope.quotes[i].probability = parseFloat($scope.quotes[i].probability);
+                        $scope.quotes[i].activities = [];
+                        $scope.quotes[i].activities_color = "label-default";
+                        $scope.quotes[i].activities_next_date = "";
+                        zhttp.crm.quote.activity.getAll($scope.quotes[i].id).then(function (responseActivite) {
+                            if (responseActivite.data && responseActivite.data != "false") {
+                                if (responseActivite.data.length >= 1) {
+                                    var idQuoteToUpdate = responseActivite.data[0].id_quote
+                                    for (var iQuote = 0; iQuote < $scope.quotes.length; iQuote++) {
+                                        if ($scope.quotes[iQuote].id == idQuoteToUpdate) {
+                                            $scope.quotes[iQuote].activities = responseActivite.data;
+
+                                            // verifie s'il y a des activités à faire
+                                            angular.forEach(responseActivite.data, function (activiteCheck) {
+                                                console.log(activiteCheck);
+                                                if (activiteCheck.status == "A faire") {
+                                                    $scope.quotes[iQuote].activities_color = "label-success";
+                                                    var dActivite = new Date(Date.parse(activiteCheck.deadline));
+                                                    if ($scope.quotes[iQuote].activities_next_date == "" || $scope.quotes[iQuote].activities_next_date > dActivite) {
+                                                        $scope.quotes[iQuote].activities_next_date = dActivite;
+                                                    }
+                                                }
+                                            });
+                                            
+                                        }
+                                    }
+                                }
+                            }
+                        });
                     }
 
                     $scope.total = response.data.total;

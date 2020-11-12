@@ -25,6 +25,7 @@ Routeur::post("/com_zeapps_crm/quotes/updateLinePosition/", 'App\\com_zeapps_crm
 Routeur::post("/com_zeapps_crm/quotes/deleteLine/{id}", 'App\\com_zeapps_crm\\Controllers\\Quotes@deleteLine');
 Routeur::post("/com_zeapps_crm/quotes/saveLineDetail", 'App\\com_zeapps_crm\\Controllers\\Quotes@saveLineDetail');
 
+Routeur::get("/com_zeapps_crm/quotes/get_activity/{id}", 'App\\com_zeapps_crm\\Controllers\\Quotes@getActivite');
 Routeur::post("/com_zeapps_crm/quotes/activity", 'App\\com_zeapps_crm\\Controllers\\Quotes@activity');
 Routeur::post("/com_zeapps_crm/quotes/del_activity/{id}", 'App\\com_zeapps_crm\\Controllers\\Quotes@del_activity');
 
