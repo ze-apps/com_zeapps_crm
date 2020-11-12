@@ -54,8 +54,16 @@
                     <td ng-click="goTo(quote.id)" class="text-right">@{{quote.total_ttc | currency:'€':2}}</td>
                     <td ng-click="goTo(quote.id)">@{{quote.date_limit || "-" | date:'dd/MM/yyyy'}}</td>
                     <td ng-click="goTo(quote.id)">@{{quote.name_user_account_manager}}</td>
-                    <td ng-click="goTo(quote.id)" class="text-right">@{{quote.probability | number:2}}</td>
-                    <td ng-click="goTo(quote.id)">@{{ showStatus(quote.status) }}</td>
+                    <td class="text-right">
+                        <select ng-model="quote.probability" ng-change="updateProbability(quote)">
+                            <option ng-repeat="proba in [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]" ng-value="@{{proba}}">@{{ proba }} %</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select ng-model="quote.status" ng-change="updateStatus(quote)">
+                            <option ng-repeat="status in status_quote" ng-value="@{{status.id}}">@{{ status.label }}</option>
+                        </select>
+                    </td>
                     @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
                         <td class="text-right">
                             <ze-btn fa="edit" color="info" direction="left" hint="{{ __t("Edit") }}"

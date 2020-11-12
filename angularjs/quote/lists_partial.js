@@ -159,9 +159,11 @@ app.controller("ComZeappsCrmQuoteListsPartialCtrl", ["$scope", "$location", "$ro
         });
 
         // remonte le statut dans les filtres
+        $scope.status_quote = [];
         $scope.filters.main[5].options = [];
         zhttp.crm.statuts.getAll().then(function (response) {
             if (response.data && response.data != "false") {
+                $scope.status_quote = response.data ;
                 angular.forEach(response.data, function (status) {
                     $scope.filters.main[5].options.push({ id: status.id, label: status.label });
                 });
@@ -230,9 +232,43 @@ app.controller("ComZeappsCrmQuoteListsPartialCtrl", ["$scope", "$location", "$ro
                 }
             });
 
-
             return label_statut;
         };
+
+
+
+        $scope.updateProbability = function (quote) {
+            var data = {};
+            data.id = quote.id;
+            data.probability = quote.probability;
+            var formatted_data = angular.toJson(data);
+
+            zhttp.crm.quote.save(formatted_data).then(function (response) {
+                if (response.data && response.data != "false") {
+                    toasts('success', "Le status du devis a bien été mis à jour.");
+                } else {
+                    toasts('danger', "Il y a eu une erreur lors de la mise a jour du status du devis");
+                }
+            });
+        };
+
+
+        $scope.updateStatus = function (quote) {
+            var data = {};
+            data.id = quote.id;
+            data.status = quote.status;
+            var formatted_data = angular.toJson(data);
+
+            zhttp.crm.quote.save(formatted_data).then(function (response) {
+                if (response.data && response.data != "false") {
+                    toasts('success', "Le status du devis a bien été mis à jour.");
+                } else {
+                    toasts('danger', "Il y a eu une erreur lors de la mise a jour du status du devis");
+                }
+            });
+        };
+
+        
 
 
 
