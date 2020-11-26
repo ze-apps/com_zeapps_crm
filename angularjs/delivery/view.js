@@ -833,6 +833,8 @@ app.controller("ComZeappsCrmDeliveryViewCtrl", ["$scope", "$routeParams", "$loca
                 + $scope.user.firstname + " " + $scope.user.lastname
             ;
 
+            options.id_model_email = $scope.delivery.id_model_email;
+
             options.modules = [];
             options.modules.push({module: "com_zeapps_crm", id: "deliveries_" + $scope.delivery.id});
 
@@ -852,6 +854,7 @@ app.controller("ComZeappsCrmDeliveryViewCtrl", ["$scope", "$routeParams", "$loca
             angular.forEach(listeModleEmails, function (template) {
                 if (template.to_delivery) {
                     options.templates.push({
+                        id: template.id,
                         name: template.name,
                         default_to: template.default_to,
                         subject: template.subject,

@@ -944,6 +944,8 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                 + $scope.user.firstname + " " + $scope.user.lastname
             ;
 
+            options.id_model_email = $scope.order.id_model_email;
+
             options.modules = [];
             options.modules.push({module: "com_zeapps_crm", id: "orders_" + $scope.order.id});
 
@@ -963,6 +965,7 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
             angular.forEach(listeModleEmails, function (template) {
                 if (template.to_order) {
                     options.templates.push({
+                        id: template.id,
                         name: template.name,
                         default_to: template.default_to,
                         subject: template.subject,

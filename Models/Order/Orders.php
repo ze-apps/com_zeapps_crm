@@ -33,6 +33,7 @@ class Orders extends Model
         $this->fieldModelInfo = new ModelHelper();
         $this->fieldModelInfo->increments('id');
         $this->fieldModelInfo->integer('id_price_list')->default(0);
+        $this->fieldModelInfo->integer('id_model_email', false, true)->default(0);
         $this->fieldModelInfo->string('libelle', 255)->default("");
         $this->fieldModelInfo->string('numerotation', 255)->default("");
         $this->fieldModelInfo->integer('id_origin', false)->default(0);

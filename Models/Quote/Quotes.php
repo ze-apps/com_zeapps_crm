@@ -34,6 +34,7 @@ class Quotes extends Model
         $this->fieldModelInfo = new ModelHelper();
         $this->fieldModelInfo->increments('id');
         $this->fieldModelInfo->integer('id_price_list')->default(0);
+        $this->fieldModelInfo->integer('id_model_email', false, true)->default(0);
         $this->fieldModelInfo->string('libelle', 255)->default("");
         $this->fieldModelInfo->string('numerotation', 255)->default("");
         $this->fieldModelInfo->integer('id_origin', false)->default(0);
@@ -91,6 +92,7 @@ class Quotes extends Model
         $this->fieldModelInfo->string('reference_client', 255)->default("");
 
         $this->fieldModelInfo->integer('default_template_email', false, true)->default(0);
+        
 
         $this->fieldModelInfo->integer('id_company_delivery')->default(0);
         $this->fieldModelInfo->string('name_company_delivery', 255)->default("");
