@@ -141,18 +141,36 @@ class Quotes extends Controller
         }
 
 
-        $quotes_rs = QuotesModel::orderBy('date_creation', 'DESC')->orderBy('id', 'DESC');
+        $quotes_rs = QuotesModel::select("com_zeapps_crm_quotes.*")
+                ->groupBy('com_zeapps_crm_quotes.id')
+                ->orderBy('com_zeapps_crm_quotes.id', 'DESC')
+                ->orderBy('com_zeapps_crm_quotes.id', 'DESC');
+
+        if (isset($filters["date_activite >="]) || isset($filters["date_activite >="])) {
+            $quotes_rs = $quotes_rs->join('com_zeapps_crm_quote_activities', 'com_zeapps_crm_quote_activities.id_quote', '=', 'com_zeapps_crm_quotes.id');
+            $quotes_rs = $quotes_rs->where("com_zeapps_crm_quote_activities.status", "A faire");
+        }
+        
+
+
+
         foreach ($filters as $key => $value) {
-            if (strpos($key, " LIKE")) {
+            if ($key == "date_activite >=") {
+                $quotes_rs = $quotes_rs->where("com_zeapps_crm_quote_activities.deadline", ">=", $value);
+
+            } elseif ($key == "date_activite <=") {
+                $quotes_rs = $quotes_rs->where("com_zeapps_crm_quote_activities.deadline", "<=", $value);
+
+            } elseif (strpos($key, " LIKE")) {
                 $key = str_replace(" LIKE", "", $key);
-                $quotes_rs = $quotes_rs->where($key, 'like', '%' . $value . '%');
+                $quotes_rs = $quotes_rs->where("com_zeapps_crm_quotes." . $key, 'like', '%' . $value . '%');
 
             } elseif (strpos($key, " ") !== false) {
                 $tabKey = explode(" ", $key);
-                $quotes_rs = $quotes_rs->where($tabKey[0], $tabKey[1], $value);
+                $quotes_rs = $quotes_rs->where("com_zeapps_crm_quotes." . $tabKey[0], $tabKey[1], $value);
 
             } else {
-                $quotes_rs = $quotes_rs->where($key, $value);
+                $quotes_rs = $quotes_rs->where("com_zeapps_crm_quotes." . $key, $value);
             }
         }
 
@@ -169,7 +187,7 @@ class Quotes extends Controller
 
         $ids = [];
         if ($total < 500) {
-            $rows = $quotes_rs_id->select(array("id"))->get();
+            $rows = $quotes_rs_id->select(array("com_zeapps_crm_quotes.id"))->get();
             foreach ($rows as $row) {
                 array_push($ids, $row->id);
             }

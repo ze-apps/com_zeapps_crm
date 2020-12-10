@@ -80,6 +80,20 @@ app.controller("ComZeappsCrmQuoteListsPartialCtrl", ["$scope", "$location", "$ro
                         {id:90, label:"90%"},
                         {id:100, label:"100%"}
                     ]
+                },
+                {
+                    format: 'input',
+                    field: 'date_activite >=',
+                    type: 'date',
+                    label: 'Date prochaine : Début',
+                    size: 3
+                },
+                {
+                    format: 'input',
+                    field: 'date_activite <=',
+                    type: 'date',
+                    label: 'Fin',
+                    size: 3
                 }
             ],
             secondaries: [
