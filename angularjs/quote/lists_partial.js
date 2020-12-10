@@ -345,10 +345,11 @@ app.controller("ComZeappsCrmQuoteListsPartialCtrl", ["$scope", "$location", "$ro
                                     for (var iQuote = 0; iQuote < $scope.quotes.length; iQuote++) {
                                         if ($scope.quotes[iQuote].id == idQuoteToUpdate) {
                                             $scope.quotes[iQuote].activities = responseActivite.data;
+                                            
+                                            var contenuPopover = "" ;
 
                                             // verifie s'il y a des activités à faire
                                             angular.forEach(responseActivite.data, function (activiteCheck) {
-                                                console.log(activiteCheck);
                                                 if (activiteCheck.status == "A faire") {
                                                     $scope.quotes[iQuote].activities_color = "label-success";
                                                     var dActivite = new Date(Date.parse(activiteCheck.deadline));
@@ -356,8 +357,24 @@ app.controller("ComZeappsCrmQuoteListsPartialCtrl", ["$scope", "$location", "$ro
                                                         $scope.quotes[iQuote].activities_next_date = dActivite;
                                                     }
                                                 }
+
+                                                contenuPopover += "<div style='padding:5px 0px;border-bottom:solid 1px #cccccc'>" ;
+                                                if (activiteCheck.status == "A faire") {
+                                                    contenuPopover += "<i class='fas fa-clock text-dark'></i> ";
+                                                } else {
+                                                    contenuPopover += "<i class='fas fa-check-circle text-success'></i> ";
+                                                }
+                                                
+                                                var dActivite = new Date(Date.parse(activiteCheck.deadline));
+                                                var dateFR = new Intl.DateTimeFormat('fr').format(dActivite);
+                                                contenuPopover += dateFR + " : " + activiteCheck.libelle;
+                                                contenuPopover += "</div>";
                                             });
-                                            
+
+                                            $scope.quotes[iQuote].popover = contenuPopover ;
+
+
+                                            $('[data-trigger="hover"]').popover({html:true});
                                         }
                                     }
                                 }

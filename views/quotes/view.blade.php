@@ -450,7 +450,7 @@
                 </div>
             @endif
 
-            <div class="card_document" ng-repeat="activity in activities | orderBy:['-date','-id']">
+            <div class="card_document" ng-repeat="activity in activities | orderBy:['-deadline','-id']">
                 <div class="well">
                     <div class="row">
                         <div class="col-md-12">
@@ -467,7 +467,7 @@
                                                 ze-confirmation></ze-btn>
                                     </div>
                                 @endif
-                                <strong>@{{ activity.label_type ? activity.label_type + " : " : "" }}@{{
+                                <i class='fas fa-clock text-dark' ng-show="activity.status=='A faire'"></i> <i class='fas fa-check-circle text-success' ng-hide="activity.status=='A faire'"></i> <strong>@{{ activity.label_type ? activity.label_type + " : " : "" }}@{{
                                     activity.libelle }}</strong><br>
                                     {{ __t("Deadline") }} : @{{ activity.deadline || "-" | date:'dd/MM/yyyy' }} - @{{ activity.status
                                 }}

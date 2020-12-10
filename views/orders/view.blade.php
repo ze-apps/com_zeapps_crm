@@ -468,7 +468,7 @@
                     </div>
                 </div>
             @endif
-            <div class="card_document" ng-repeat="activity in activities | orderBy:['-date','-id']">
+            <div class="card_document" ng-repeat="activity in activities | orderBy:['-deadline','-id']">
                 <div class="well">
                     <div class="row">
                         <div class="col-md-12">

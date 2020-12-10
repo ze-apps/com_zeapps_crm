@@ -90,8 +90,8 @@ class Quotes extends Controller
 
 
         $documents = QuoteDocuments::where('id_quote', $id)->get();
-        $activities = QuoteActivities::where('id_quote', $id)->get();
-
+        $activities = QuoteActivities::where('id_quote', $id)->orderBy("deadline", "DESC")->get();
+        
         if ($quote->id_company) {
             $credits = CreditBalances::where('id_company', $quote->id_company)
                 ->where('left_to_pay', '>=', 0.01)
@@ -115,7 +115,7 @@ class Quotes extends Controller
     public function getActivite(Request $request) {
         $id = $request->input('id', 0);
         
-        $activities = QuoteActivities::where('id_quote', $id)->get();
+        $activities = QuoteActivities::where('id_quote', $id)->orderBy("deadline", "DESC")->get();
         echo json_encode($activities);
     }
 
@@ -527,7 +527,7 @@ class Quotes extends Controller
             foreach ($data as $key => $value) {
                 $quoteActivities->$key = $value;
             }
-
+            
             $quoteActivities->save();
 
             echo json_encode(QuoteActivities::where("id", $quoteActivities->id)->first());

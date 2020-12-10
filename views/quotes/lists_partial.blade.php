@@ -65,12 +65,18 @@
                             <option ng-repeat="status in status_quote" ng-value="@{{status.id}}">@{{ status.label }}</option>
                         </select>
                     </td>
+
+
+
                     <td class="text-center">
-                        <span ng-show="quote.activities.length">
+                        <div style="cursor:help" ng-show="quote.activities.length" data-trigger="hover"  data-placement="bottom" title="{{ __t("Activity") }}" 
+                            data-content="@{{ quote.popover }}">
                             <span class="label @{{ quote.activities_color }} label-as-badge">@{{ quote.activities.length }}</span>
                             <span ng-show="quote.activities_next_date"><br>@{{ quote.activities_next_date | date:'dd/MM/yyyy' }}</span>
-                        </span>
+                        </div>
                     </td>
+
+
                     @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
                         <td class="text-right">
                             <ze-btn fa="edit" color="info" direction="left" hint="{{ __t("Edit") }}"

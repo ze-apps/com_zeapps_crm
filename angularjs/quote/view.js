@@ -100,7 +100,9 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
 
                     $scope.activities = response.data.activities || [];
                     angular.forEach($scope.activities, function (activity) {
-                        activity.deadline = new Date(activity.deadline);
+                        if (activity.deadline) {
+                            activity.deadline = new Date(activity.deadline);
+                        }
                     });
 
                     $scope.documents = response.data.documents || [];
@@ -116,7 +118,9 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                     var i;
 
                     for (i = 0; i < $scope.activities.length; i++) {
-                        $scope.activities[i].reminder = new Date($scope.activities[i].reminder);
+                        if ($scope.activities[i].reminder) {
+                            $scope.activities[i].reminder = new Date($scope.activities[i].reminder);
+                        }
                     }
 
                     for (i = 0; i < $scope.documents.length; i++) {
