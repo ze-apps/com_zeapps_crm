@@ -178,7 +178,7 @@ class Invoices extends Model
 
 
         if (isset($src->lines) && $src->lines) {
-            self::createFromLine($src->lines, $id, 0, $isCredit);
+            self::createFromLine($src->lines, $id, 0, $isCredit, $typeSource, $dataEvent["id_src"]);
         }
 
         $invoice->save();
@@ -189,7 +189,7 @@ class Invoices extends Model
         );
     }
 
-    private static function createFromLine($lines, $idDocument, $idParent, $isCredit = false)
+    private static function createFromLine($lines, $idDocument, $idParent, $isCredit = false, $typeSource, $src_id)
     {
         if ($lines) {
             foreach ($lines as $line) {
@@ -199,6 +199,13 @@ class Invoices extends Model
                 } else {
                     $sublines = false;
                 }
+
+                $infoTransform = [];
+                $infoTransform["typeSource"] = $typeSource;
+                $infoTransform["src_id"] = $src_id;
+                $infoTransform["src_line_id"] = $line->id;
+                $infoTransform["typeDestination"] = "invoices";
+                $infoTransform["dest_id"] = $idDocument;
 
                 unset($line->id);
                 unset($line->created_at);
@@ -226,6 +233,10 @@ class Invoices extends Model
                 $invoiceLine->id_parent = $idParent;
                 $invoiceLine->save();
 
+                // submit info to duplicate line
+                $infoTransform["dest_line_id"] = $invoiceLine->id;
+                Event::sendAction('com_zeapps_crm_transform', 'line', $infoTransform);
+
 
                 // save price list
                 if (isset($line->priceList)) {
@@ -250,7 +261,7 @@ class Invoices extends Model
                 }
 
                 if ($sublines) {
-                    self::createFromLine($sublines, $idDocument, $invoiceLine->id);
+                    self::createFromLine($sublines, $idDocument, $invoiceLine->id, false, $typeSource, $src_id);
                 }
             }
         }

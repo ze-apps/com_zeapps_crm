@@ -148,7 +148,7 @@ class Orders extends Model
 
 
         if (isset($src->lines)) {
-            self::createFromLine($src->lines, $id, 0);
+            self::createFromLine($src->lines, $id, 0, $typeSource, $dataEvent["id_src"]);
         }
 
         $order->save();
@@ -160,7 +160,7 @@ class Orders extends Model
     }
 
 
-    private static function createFromLine($lines, $idDocument, $idParent)
+    private static function createFromLine($lines, $idDocument, $idParent, $typeSource, $src_id)
     {
         if ($lines) {
             foreach ($lines as $line) {
@@ -169,6 +169,13 @@ class Orders extends Model
                 } else {
                     $sublines = false;
                 }
+
+                $infoTransform = [];
+                $infoTransform["typeSource"] = $typeSource;
+                $infoTransform["src_id"] = $src_id;
+                $infoTransform["src_line_id"] = $line->id;
+                $infoTransform["typeDestination"] = "orders";
+                $infoTransform["dest_id"] = $idDocument;
 
                 unset($line->id);
                 unset($line->created_at);
@@ -185,6 +192,10 @@ class Orders extends Model
                 $orderLine->id_order = $idDocument;
                 $orderLine->id_parent = $idParent;
                 $orderLine->save();
+
+                // submit info to duplicate line
+                $infoTransform["dest_line_id"] = $orderLine->id;
+                Event::sendAction('com_zeapps_crm_transform', 'line', $infoTransform);
 
 
                 // save price list
@@ -210,7 +221,7 @@ class Orders extends Model
                 }
 
                 if ($sublines) {
-                    self::createFromLine($sublines, $idDocument, $orderLine->id);
+                    self::createFromLine($sublines, $idDocument, $orderLine->id, $typeSource, $src_id);
                 }
             }
         }

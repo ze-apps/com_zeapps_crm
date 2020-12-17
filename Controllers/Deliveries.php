@@ -6,6 +6,8 @@ use Zeapps\Core\Controller;
 use Zeapps\Core\Request;
 use Zeapps\Core\Session;
 
+use Zeapps\Core\Event;
+
 use Zeapps\Core\Storage;
 use Mpdf\Mpdf;
 
@@ -322,6 +324,8 @@ class Deliveries extends Controller
                             $objDocumentRelated->type_document_to = $document ;
                             $objDocumentRelated->id_document_to = $idTo ;
                             $objDocumentRelated->save();
+
+                            Event::sendAction('com_zeapps_crm_transform', 'transform', $objDocumentRelated);
                         }
                     }
                 }

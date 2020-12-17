@@ -152,7 +152,7 @@ class Deliveries extends Model
         $new_id_lines = [];
 
         if (isset($src->lines)) {
-            self::createFromLine($src->lines, $id, 0, $src->id_warehouse, $src->numerotation, $src->date_creation);
+            self::createFromLine($src->lines, $id, 0, $src->id_warehouse, $src->numerotation, $src->date_creation, $typeSource, $dataEvent["id_src"]);
         }
 
 
@@ -165,7 +165,7 @@ class Deliveries extends Model
         );
     }
 
-    private static function createFromLine($lines, $idDocument, $idParent, $id_warehouse, $delivery_number, $mvt_date)
+    private static function createFromLine($lines, $idDocument, $idParent, $id_warehouse, $delivery_number, $mvt_date, $typeSource, $src_id)
     {
         if ($lines) {
             foreach ($lines as $line) {
@@ -176,6 +176,13 @@ class Deliveries extends Model
                 } else {
                     $sublines = false;
                 }
+
+                $infoTransform = [];
+                $infoTransform["typeSource"] = $typeSource;
+                $infoTransform["src_id"] = $src_id;
+                $infoTransform["src_line_id"] = $line->id;
+                $infoTransform["typeDestination"] = "deliveries";
+                $infoTransform["dest_id"] = $idDocument;
 
                 unset($line->id);
                 unset($line->created_at);
@@ -192,6 +199,10 @@ class Deliveries extends Model
                 $deliveryLine->id_delivery = $idDocument;
                 $deliveryLine->id_parent = $idParent;
                 $deliveryLine->save();
+
+                // submit info to duplicate line
+                $infoTransform["dest_line_id"] = $deliveryLine->id;
+                Event::sendAction('com_zeapps_crm_transform', 'line', $infoTransform);
 
 
                 $new_id_lines[$old_id] = $deliveryLine->id;
@@ -221,7 +232,7 @@ class Deliveries extends Model
                 }
 
                 if ($sublines) {
-                    self::createFromLine($sublines, $idDocument, $deliveryLine->id, $id_warehouse, $delivery_number, $mvt_date);
+                    self::createFromLine($sublines, $idDocument, $deliveryLine->id, $id_warehouse, $delivery_number, $mvt_date, $typeSource, $src_id);
                 }
             }
         }

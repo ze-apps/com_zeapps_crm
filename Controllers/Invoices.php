@@ -7,6 +7,8 @@ use Zeapps\Core\Controller;
 use Zeapps\Core\Request;
 use Zeapps\Core\Session;
 
+use Zeapps\Core\Event;
+
 
 use App\com_zeapps_crm\Models\Invoice\Invoices as InvoicesModel;
 use App\com_zeapps_crm\Models\Invoice\InvoiceLines;
@@ -353,6 +355,8 @@ class Invoices extends Controller
                             $objDocumentRelated->type_document_to = $document ;
                             $objDocumentRelated->id_document_to = $idTo ;
                             $objDocumentRelated->save();
+
+                            Event::sendAction('com_zeapps_crm_transform', 'transform', $objDocumentRelated);
                         }
                     }
                 }

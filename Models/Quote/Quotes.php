@@ -9,6 +9,8 @@ use App\com_zeapps_crm\Models\Quote\QuoteLines;
 use App\com_zeapps_crm\Models\Quote\QuoteLinePriceList;
 use App\com_zeapps_crm\Models\Taxes;
 
+use Zeapps\Core\Log;
+
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 use Zeapps\Core\Event;
@@ -144,7 +146,7 @@ class Quotes extends Model
         $id = $quotes->id;
 
         if (isset($src->lines)) {
-            self::createFromLine($src->lines, $id, 0);
+            self::createFromLine($src->lines, $id, 0, $typeSource, $dataEvent["id_src"]);
         }
 
         $quotes->save();
@@ -155,7 +157,7 @@ class Quotes extends Model
         );
     }
 
-    private static function createFromLine($lines, $idDocument, $idParent)
+    private static function createFromLine($lines, $idDocument, $idParent, $typeSource, $src_id)
     {
         if ($lines) {
             foreach ($lines as $line) {
@@ -164,6 +166,14 @@ class Quotes extends Model
                 } else {
                     $sublines = false;
                 }
+
+                $infoTransform = [];
+                $infoTransform["typeSource"] = $typeSource;
+                $infoTransform["src_id"] = $src_id;
+                $infoTransform["src_line_id"] = $line->id;
+                $infoTransform["typeDestination"] = "quotes";
+                $infoTransform["dest_id"] = $idDocument;
+                
 
                 unset($line->id);
                 unset($line->created_at);
@@ -180,6 +190,11 @@ class Quotes extends Model
                 $quote_line->id_quote = $idDocument;
                 $quote_line->id_parent = $idParent;
                 $quote_line->save();
+
+
+                // submit info to duplicate line
+                $infoTransform["dest_line_id"] = $quote_line->id;
+                Event::sendAction('com_zeapps_crm_transform', 'line', $infoTransform);
 
 
                 // save price list
@@ -206,7 +221,7 @@ class Quotes extends Model
 
 
                 if ($sublines) {
-                    self::createFromLine($sublines, $idDocument, $quote_line->id);
+                    self::createFromLine($sublines, $idDocument, $quote_line->id, $typeSource, $src_id);
                 }
             }
         }
