@@ -294,20 +294,20 @@
 
                             @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
                                 <td class="text-right">
-                                        <span ng-if="line.type === 'product' || line.type === 'service' || line.type === 'pack'">
-                                            <ze-btn fa="edit" color="info" direction="left" hint="{{ __t("Edit") }}"
-                                                    ze-modalform="editLine"
-                                                    data-edit="line"
-                                                    data-title="{{ __t("Edit the quote line") }}"
-                                                    data-template="quoteLineTplUrl"></ze-btn>
-                                        </span>
+                                    <span ng-if="line.type === 'product' || line.type === 'service' || line.type === 'pack'">
+                                        <ze-btn fa="edit" color="info" direction="left" hint="{{ __t("Edit") }}"
+                                                ze-modalform="editLine"
+                                                data-edit="line"
+                                                data-title="{{ __t("Edit the quote line") }}"
+                                                data-template="quoteLineTplUrl"></ze-btn>
+                                    </span>
                                     <span ng-show="line.type === 'comment'">
-                                            <ze-btn fa="edit" color="info" direction="left" hint="{{ __t("Edit") }}"
-                                                    ze-modalform="editComment"
-                                                    data-edit="line"
-                                                    data-title="{{ __t("Edit a comment") }}"
-                                                    data-template="quoteCommentTplUrl"></ze-btn>
-                                        </span>
+                                        <ze-btn fa="edit" color="info" direction="left" hint="{{ __t("Edit") }}"
+                                                ze-modalform="editComment"
+                                                data-edit="line"
+                                                data-title="{{ __t("Edit a comment") }}"
+                                                data-template="quoteCommentTplUrl"></ze-btn>
+                                    </span>
                                     <ze-btn fa="trash" color="danger" direction="left" hint="{{ __t("Delete") }}"
                                             ng-click="deleteLine(line)" ze-confirmation ng-if="line"></ze-btn>
                                 </td>
