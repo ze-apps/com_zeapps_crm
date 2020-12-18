@@ -17,6 +17,7 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
 
         // to activate hook function
         $scope.hooksComZeappsCRM_OrderBtnTopBodyHook = zeHooks.get("comZeappsCRM_OrderBtnTopBodyHook");
+        $scope.hooksComZeappsCRM_OrderHeaderRightHook = zeHooks.get("comZeappsCRM_OrderHeaderRightHook");
 
 
 

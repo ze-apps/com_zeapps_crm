@@ -5,6 +5,7 @@ namespace App\com_zeapps_crm\Controllers;
 use Zeapps\Core\Controller;
 use Zeapps\Core\Request;
 use Zeapps\Core\Session;
+use Zeapps\Core\Log;
 
 use Zeapps\Core\Event;
 

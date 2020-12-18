@@ -6,6 +6,9 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
         $scope.$on("comZeappsCrm_triggerInvoiceHook", broadcast);
         $scope.hooks = zeHooks.get("comZeappsCrm_InvoiceHook");
 
+        // to activate hook function
+        $scope.hooksComZeappsCRM_InvoiceHeaderRightHook = zeHooks.get("comZeappsCRM_InvoiceHeaderRightHook");
+
         $scope.progress = 0;
         $scope.activities = [];
         $scope.documents = [];
@@ -184,7 +187,7 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
             } else {
                 $rootScope.$broadcast("comZeappsCrm_dataInvoiceHook",
                     {
-                        order: $scope.order
+                        invoice: $scope.invoice
                     }
                 );
             }

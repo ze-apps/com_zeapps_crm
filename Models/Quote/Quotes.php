@@ -111,26 +111,36 @@ class Quotes extends Model
         parent::__construct($attributes);
     }
 
-    public static function createFrom($src, $typeSource)
+    public static function createFrom($srcBase, $typeSource)
     {
+        $src = clone $srcBase ;
+
         $dataEvent = [];
         $dataEvent["id_src"] = $src->id ;
         $dataEvent["numerotation_src"] = $src->numerotation ;
         $dataEvent["src"] = $src ;
         $dataEvent["typeSource"] = $typeSource ;
 
-        unset($src->id);
-        unset($src->numerotation);
-        unset($src->created_at);
-        unset($src->updated_at);
-        unset($src->deleted_at);
-        if (isset($src->final_pdf)) {
-            unset($src->final_pdf);
-        }
+        // unset($src->id);
+        // unset($src->numerotation);
+        // unset($src->created_at);
+        // unset($src->updated_at);
+        // unset($src->deleted_at);
+        // if (isset($src->final_pdf)) {
+        //     unset($src->final_pdf);
+        // }
+
+        $champInterdit = [];
+        $champInterdit[] = "id" ;
+        $champInterdit[] = "numerotation" ;
+        $champInterdit[] = "created_at" ;
+        $champInterdit[] = "updated_at" ;
+        $champInterdit[] = "deleted_at" ;
+        $champInterdit[] = "final_pdf" ;
 
         $quotes = new Quotes();
         foreach (self::getSchema() as $key) {
-            if (isset($src->$key)) {
+            if (isset($src->$key) && !in_array($key, $champInterdit)) {
                 $quotes->$key = $src->$key;
             }
         }
@@ -160,7 +170,9 @@ class Quotes extends Model
     private static function createFromLine($lines, $idDocument, $idParent, $typeSource, $src_id)
     {
         if ($lines) {
-            foreach ($lines as $line) {
+            foreach ($lines as $lineBase) {
+                $line = clone $lineBase ;
+
                 if (isset($line->sublines)) {
                     $sublines = $line->sublines;
                 } else {

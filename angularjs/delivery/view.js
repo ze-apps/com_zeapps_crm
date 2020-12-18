@@ -6,6 +6,9 @@ app.controller("ComZeappsCrmDeliveryViewCtrl", ["$scope", "$routeParams", "$loca
         $scope.$on("comZeappsCrm_triggerDeliveryHook", broadcast);
         $scope.hooks = zeHooks.get("comZeappsCrm_DeliveryHook");
 
+        // to activate hook function
+        $scope.hooksComZeappsCRM_DeliveryHeaderRightHook = zeHooks.get("comZeappsCRM_DeliveryHeaderRightHook");
+
         $scope.progress = 0;
         $scope.activities = [];
         $scope.documents = [];
@@ -186,7 +189,7 @@ app.controller("ComZeappsCrmDeliveryViewCtrl", ["$scope", "$routeParams", "$loca
             } else {
                 $rootScope.$broadcast("comZeappsCrm_dataDeliveryHook",
                     {
-                        order: $scope.order
+                        delivery: $scope.delivery
                     }
                 );
             }

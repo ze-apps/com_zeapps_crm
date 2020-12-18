@@ -140,6 +140,12 @@
                         <div class="col-md-12">
                             <div class="pull-right" style="margin-top: 50px;">{{ __t("Weight") }} : @{{ order.weight | weight }}</div>
                         </div>
+
+                        <div class="col-md-12">
+                            <div ng-include="hook.template" ng-repeat="hook in hooksComZeappsCRM_OrderHeaderRightHook"
+                                 style="display: inline-block" class="pull-right">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

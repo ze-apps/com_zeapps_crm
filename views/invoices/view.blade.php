@@ -142,6 +142,12 @@
                         <div class="col-md-12">
                             <div class="pull-right" style="margin-top: 50px;">{{ __t("Weight") }} : @{{ invoice.weight | weight }}</div>
                         </div>
+
+                        <div class="col-md-12">
+                            <div ng-include="hook.template" ng-repeat="hook in hooksComZeappsCRM_InvoiceHeaderRightHook"
+                                 style="display: inline-block" class="pull-right">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
