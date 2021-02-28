@@ -1,5 +1,5 @@
-app.controller("ComZeappsCrmQuoteListsPartialCtrl", ["$scope", "$location", "$rootScope", "zeHttp", "$timeout", "toasts",
-    function ($scope, $location, $rootScope, zhttp, $timeout, toasts) {
+app.controller("ComZeappsCrmQuoteListsPartialCtrl", ["$scope", "$location", "$rootScope", "zeHttp", "$timeout", "toasts", "zeapps_modal",
+    function ($scope, $location, $rootScope, zhttp, $timeout, toasts, zeapps_modal) {
 
         if (!$rootScope.quotes) {
             $rootScope.quotes = {};
@@ -286,6 +286,20 @@ app.controller("ComZeappsCrmQuoteListsPartialCtrl", ["$scope", "$location", "$ro
 
 
 
+        // pour afficher la modal avec les activités
+        $scope.showActivities = function (quote) {
+            quote.callback = function (objReturn) {
+                if (objReturn) {
+                    updateActivity(objReturn.id);
+                }
+            }
+            zeapps_modal.loadModule("com_zeapps_crm", "quote_activities_list", quote, function (objReturn) {
+                
+            });
+        };
+
+
+
 
 
 
@@ -338,48 +352,7 @@ app.controller("ComZeappsCrmQuoteListsPartialCtrl", ["$scope", "$location", "$ro
                         $scope.quotes[i].activities = [];
                         $scope.quotes[i].activities_color = "label-default";
                         $scope.quotes[i].activities_next_date = "";
-                        zhttp.crm.quote.activity.getAll($scope.quotes[i].id).then(function (responseActivite) {
-                            if (responseActivite.data && responseActivite.data != "false") {
-                                if (responseActivite.data.length >= 1) {
-                                    var idQuoteToUpdate = responseActivite.data[0].id_quote
-                                    for (var iQuote = 0; iQuote < $scope.quotes.length; iQuote++) {
-                                        if ($scope.quotes[iQuote].id == idQuoteToUpdate) {
-                                            $scope.quotes[iQuote].activities = responseActivite.data;
-                                            
-                                            var contenuPopover = "" ;
-
-                                            // verifie s'il y a des activités à faire
-                                            angular.forEach(responseActivite.data, function (activiteCheck) {
-                                                if (activiteCheck.status == "A faire") {
-                                                    $scope.quotes[iQuote].activities_color = "label-success";
-                                                    var dActivite = new Date(Date.parse(activiteCheck.deadline));
-                                                    if ($scope.quotes[iQuote].activities_next_date == "" || $scope.quotes[iQuote].activities_next_date > dActivite) {
-                                                        $scope.quotes[iQuote].activities_next_date = dActivite;
-                                                    }
-                                                }
-
-                                                contenuPopover += "<div style='padding:5px 0px;border-bottom:solid 1px #cccccc'>" ;
-                                                if (activiteCheck.status == "A faire") {
-                                                    contenuPopover += "<i class='fas fa-clock text-dark'></i> ";
-                                                } else {
-                                                    contenuPopover += "<i class='fas fa-check-circle text-success'></i> ";
-                                                }
-                                                
-                                                var dActivite = new Date(Date.parse(activiteCheck.deadline));
-                                                var dateFR = new Intl.DateTimeFormat('fr').format(dActivite);
-                                                contenuPopover += dateFR + " : " + activiteCheck.libelle;
-                                                contenuPopover += "</div>";
-                                            });
-
-                                            $scope.quotes[iQuote].popover = contenuPopover ;
-
-
-                                            $('[data-trigger="hover"]').popover({html:true});
-                                        }
-                                    }
-                                }
-                            }
-                        });
+                        updateActivity($scope.quotes[i].id);
                     }
 
                     $scope.total = response.data.total;
@@ -387,6 +360,52 @@ app.controller("ComZeappsCrmQuoteListsPartialCtrl", ["$scope", "$location", "$ro
                     $rootScope.quotes.ids = response.data.ids;
                     $rootScope.quotes.src_id = src_id;
                     $rootScope.quotes.src = src;
+                }
+            });
+        }
+
+        function updateActivity(idQuote) {
+            zhttp.crm.quote.activity.getAll(idQuote).then(function (responseActivite) {
+                if (responseActivite.data && responseActivite.data != "false") {
+                    if (responseActivite.data.length >= 1) {
+                        var idQuoteToUpdate = responseActivite.data[0].id_quote
+                        for (var iQuote = 0; iQuote < $scope.quotes.length; iQuote++) {
+                            if ($scope.quotes[iQuote].id == idQuoteToUpdate) {
+                                $scope.quotes[iQuote].activities = responseActivite.data;
+                                $scope.quotes[iQuote].activities_next_date = "";
+                                
+                                var contenuPopover = "" ;
+
+                                // verifie s'il y a des activités à faire
+                                angular.forEach(responseActivite.data, function (activiteCheck) {
+                                    if (activiteCheck.status == "A faire") {
+                                        $scope.quotes[iQuote].activities_color = "label-success";
+                                        var dActivite = new Date(Date.parse(activiteCheck.deadline));
+                                        if ($scope.quotes[iQuote].activities_next_date == "" || $scope.quotes[iQuote].activities_next_date > dActivite) {
+                                            $scope.quotes[iQuote].activities_next_date = dActivite;
+                                        }
+                                    }
+
+                                    contenuPopover += "<div style='padding:5px 0px;border-bottom:solid 1px #cccccc'>" ;
+                                    if (activiteCheck.status == "A faire") {
+                                        contenuPopover += "<i class='fas fa-clock text-dark'></i> ";
+                                    } else {
+                                        contenuPopover += "<i class='fas fa-check-circle text-success'></i> ";
+                                    }
+                                    
+                                    var dActivite = new Date(Date.parse(activiteCheck.deadline));
+                                    var dateFR = new Intl.DateTimeFormat('fr').format(dActivite);
+                                    contenuPopover += dateFR + " : " + activiteCheck.libelle;
+                                    contenuPopover += "</div>";
+                                });
+
+                                $scope.quotes[iQuote].popover = contenuPopover ;
+
+
+                                $('[data-trigger="hover"]').popover({html:true});
+                            }
+                        }
+                    }
                 }
             });
         }

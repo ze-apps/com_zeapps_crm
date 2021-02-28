@@ -23,7 +23,6 @@ app.controller("ZeAppsCrmModalFormActivityCtrl", ["$scope", "zeHttp", "$rootScop
         $scope.form.status = "A faire";
         $scope.form.deadline = new Date();
 
-
         $scope.form.id_user = $rootScope.user.id;
         $scope.form.name_user = $rootScope.user.firstname + " " + $rootScope.user.lastname;
     }

@@ -10,6 +10,7 @@ Routeur::get("/com_zeapps_crm/quotes/lists_partial", 'App\\com_zeapps_crm\\Contr
 Routeur::get("/com_zeapps_crm/quotes/form_modal", 'App\\com_zeapps_crm\\Controllers\\Quotes@form_modal');
 Routeur::get("/com_zeapps_crm/quotes/view", 'App\\com_zeapps_crm\\Controllers\\Quotes@view');
 Routeur::get("/com_zeapps_crm/quotes/form_line", 'App\\com_zeapps_crm\\Controllers\\Quotes@form_line');
+Routeur::get("/com_zeapps_crm/quotes/modal_activities_list", 'App\\com_zeapps_crm\\Controllers\\Quotes@modal_activities_list');
 
 
 Routeur::post("/com_zeapps_crm/quotes/testFormat", 'App\\com_zeapps_crm\\Controllers\\Quotes@testFormat');

@@ -63,6 +63,14 @@ class Quotes extends Controller
         return view("quotes/form_modal", $data, BASEPATH . 'App/com_zeapps_crm/views/');
     }
 
+    public function modal_activities_list()
+    {
+        $data = array();
+        return view("quotes/modal_activities_list", $data, BASEPATH . 'App/com_zeapps_crm/views/');
+    }
+
+
+    
 
     public function testFormat()
     {
