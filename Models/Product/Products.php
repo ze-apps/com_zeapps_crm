@@ -158,6 +158,18 @@ class Products extends Model
             $query .= " AND i.delivery_country_id = " . $where['delivery_country_id'] ;
         }
 
+        if (isset($where['billing_country_id IN'])) {
+            if (strpos($where['billing_country_id IN'], "-")!== false) {
+                $query .= " AND i.billing_country_id NOT IN (" . str_replace("-","", $where['billing_country_id IN']) . ")";
+            } else {
+                $query .= " AND i.billing_country_id IN (" . $where['billing_country_id IN'] . ")";
+            }
+        }
+
+        if (isset($where['billing_country_id'])) {
+            $query .= " AND i.billing_country_id = " . $where['billing_country_id'] ;
+        }
+
         $query .= " GROUP BY p.id ORDER BY total_ht DESC" ;
 
         if ($limitAffichage) {
