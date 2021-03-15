@@ -38,9 +38,9 @@ class Commons extends Controller
     public function status()
     {
         $arrStatus = array() ;
-        $arrStatus[] = array("id"=>1, "label" => "En cours") ;
-        $arrStatus[] = array("id"=>2, "label" => "Gagné") ;
-        $arrStatus[] = array("id"=>3, "label" => "Perdu") ;
+        $arrStatus[] = array("id"=>1, "label" => __t("In progress")) ;
+        $arrStatus[] = array("id"=>2, "label" => __t("Won")) ;
+        $arrStatus[] = array("id"=>3, "label" => __t("Lost")) ;
 
         echo json_encode($arrStatus);
     }

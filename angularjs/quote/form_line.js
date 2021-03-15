@@ -13,9 +13,9 @@ app.controller("ComZeappsCrmQuoteFormLineCtrl", ["$scope", "zeHttp", "zeapps_mod
         $scope.accountingNumberHttp = zhttp.crm.accounting_number;
         $scope.accountingNumberTplNew = '/com_zeapps_contact/accounting_numbers/form_modal';
         $scope.accountingNumberFields = [
-            {label: 'Numero', key: 'number'},
-            {label: 'Libelle', key: 'label'},
-            {label: 'Type', key: 'type_label'}
+            {label: __t("Number"), key: 'number'},
+            {label: __t("Label"), key: 'label'},
+            {label: __t("Type"), key: 'type_label'}
         ];
 
 
@@ -147,7 +147,7 @@ app.controller("ComZeappsCrmQuoteFormLineCtrl", ["$scope", "zeHttp", "zeapps_mod
 
                         updatePrice();
                     } else {
-                        toasts("danger", "Ce produit n'est plus actif");
+                        toasts("danger", __t("This product is no longer active"));
                     }
                 }
             });
@@ -265,11 +265,11 @@ app.controller("ComZeappsCrmQuoteFormLineCtrl", ["$scope", "zeHttp", "zeapps_mod
 
                             $scope.codeProduct = "";
                         } else {
-                            toasts("danger", "Ce produit n'est plus actif");
+                            toasts("danger", __t("This product is no longer active"));
                         }
 
                     } else {
-                        toasts("danger", "Aucun produit avec le code " + code + " trouvé dans la base de données.");
+                        toasts("danger", __t("No product with code ") + code + __t(" found in the database."));
                     }
                 });
             }

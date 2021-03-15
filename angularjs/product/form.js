@@ -29,10 +29,10 @@ app.controller("ComZeappsCrmProductFormCtrl", ["$scope", "$routeParams", "$locat
 
         // définit les types de produits
         $scope.type_products = [];
-        $scope.type_products.push({id: "product", label: "Produit"});
-        $scope.type_products.push({id: "service", label: "Service"});
-        $scope.type_products.push({id: "pack", label: "Pack"});
-        $scope.type_products.push({id: "virtual", label: "Virtuel"});
+        $scope.type_products.push({id: "product", label: __t("Product")});
+        $scope.type_products.push({id: "service", label: __t("Service")});
+        $scope.type_products.push({id: "pack", label: __t("Pack")});
+        $scope.type_products.push({id: "virtual", label: __t("Virtual")});
 
 
         $scope.form = {};
@@ -48,9 +48,9 @@ app.controller("ComZeappsCrmProductFormCtrl", ["$scope", "$routeParams", "$locat
         $scope.accountingNumberHttp = zhttp.crm.accounting_number;
         $scope.accountingNumberTplNew = '/com_zeapps_contact/accounting_numbers/form_modal';
         $scope.accountingNumberFields = [
-            {label: 'Numero', key: 'number'},
-            {label: 'Libelle', key: 'label'},
-            {label: 'Type', key: 'type_label'}
+            {label: __t("Number"), key: 'number'},
+            {label: __t("Label"), key: 'label'},
+            {label: __t("Type"), key: 'type_label'}
         ];
 
         $scope.update = update;
@@ -495,7 +495,7 @@ app.controller("ComZeappsCrmProductFormCtrl", ["$scope", "$routeParams", "$locat
                 if (responseCheckref.status == 200) {
                     var data_return = angular.fromJson(responseCheckref.data);
                     if (data_return) {
-                        toasts("danger", "La référence : " + $scope.form.ref + " est déjà attribuée à un autre produit");
+                        toasts("danger", __t("The reference : ") + $scope.form.ref + __t(" is already assigned to another product"));
                     } else {
                         zhttp.crm.product.save(formatted_data).then(function (response) {
                             if (typeof (response.data.error) === "undefined") {
@@ -543,7 +543,7 @@ app.controller("ComZeappsCrmProductFormCtrl", ["$scope", "$routeParams", "$locat
 
                         updatePrice();
                     } else {
-                        toasts("danger", "Les packs ne peuvent pas être ajoutés");
+                        toasts("danger", __t("Packs cannot be added"));
                     }
                 }
             });
@@ -585,10 +585,10 @@ app.controller("ComZeappsCrmProductFormCtrl", ["$scope", "$routeParams", "$locat
                             $scope.codeProduct = "";
 
                         } else {
-                            toasts("danger", "Les packs ne peuvent pas être ajoutés");
+                            toasts("danger", __t("Packs cannot be added"));
                         }
                     } else {
-                        toasts("danger", "Aucun produit avec le code " + code + " trouvé dans la base de données.");
+                        toasts("danger", __t("No product with code ") + code + __t(" found in the database."));
                     }
                 });
             }

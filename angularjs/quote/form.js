@@ -5,36 +5,36 @@ app.controller("ComZeappsCrmQuoteFormCtrl", ["$scope", "$routeParams", "$rootSco
 
         $scope.accountManagerHttp = zhttp.app.user;
         $scope.accountManagerFields = [
-            {label:'Prénom',key:'firstname'},
-            {label:'Nom',key:'lastname'}
+            {label:__t("First name"),key:'firstname'},
+            {label:__t("Last name"),key:'lastname'}
         ];
 
         $scope.companyHttp = zhttp.contact.company;
         $scope.companyTplNew = '/com_zeapps_contact/companies/form_modal';
         $scope.companyFields = [
-            {label:'Nom',key:'company_name'},
-            {label:'Téléphone',key:'phone'},
-            {label:'Ville',key:'billing_city'},
+            {label:__t("Name"),key:'company_name'},
+            {label:__t("Phone"),key:'phone'},
+            {label:__t("City"),key:'billing_city'},
             {label:'Gestionnaire du compte',key:'name_user_account_manager'}
         ];
 
         $scope.contactHttp = zhttp.contact.contact;
         $scope.contactTplNew = '/com_zeapps_contact/contacts/form_modal';
         $scope.contactFields = [
-            {label:'Nom',key:'last_name'},
-            {label:'Prénom',key:'first_name'},
-            {label:'Entreprise',key:'name_company'},
-            {label:'Téléphone',key:'phone'},
-            {label:'Ville',key:'city'},
+            {label:__t("Last name"),key:'last_name'},
+            {label:__t("First name"),key:'first_name'},
+            {label:__t("Compagny"),key:'name_company'},
+            {label:__t("Phone"),key:'phone'},
+            {label:__t("City"),key:'city'},
             {label:'Gestionnaire du compte',key:'name_user_account_manager'}
         ];
 
         $scope.accountingNumberHttp = zhttp.crm.accounting_number;
         $scope.accountingNumberTplNew = '/com_zeapps_contact/accounting_numbers/form_modal';
         $scope.accountingNumberFields = [
-            {label:'Numero',key:'number'},
-            {label:'Libelle',key:'label'},
-            {label:'Type',key:'type_label'}
+            {label:__t("Number"),key:'number'},
+            {label:__t("Label"),key:'label'},
+            {label:__t("Type"),key:'type_label'}
         ];
 
         /******* gestion de la tabs *********/

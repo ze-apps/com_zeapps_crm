@@ -46,9 +46,9 @@ app.controller("ComZeappsCrmPriceListListsCtrl", ["$scope", "$location", "$rootS
 
             zhttp.crm.price_list.save(formatted_data).then(function (response) {
                 if (response.data && response.data != "false") {
-                    toasts('success', "Les informations ont bien été mises a jour");
+                    toasts('success', __t("The information has been updated"));
                 } else {
-                    toasts('danger', "Il y a eu une erreur lors de la mise a jour des informations");
+                    toasts('danger', __t("There was an error updating the information"));
                 }
                 loadList();
             });

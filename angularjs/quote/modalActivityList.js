@@ -7,7 +7,7 @@ listModuleModalFunction.push({
 	size:"lg",
 	resolve:{
 		titre: function () {
-			return "Suivi des activités";
+			return __t("Activity monitoring");
 		}
 	}
 });

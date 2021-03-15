@@ -9,13 +9,13 @@ app.controller("ComZeappsCrmPotentialOrderViewCtrl", ["$scope", "zeHttp", "menu"
                     format: 'input',
                     field: 'ref LIKE',
                     type: 'text',
-                    label: 'Référence'
+                    label: __t("Reference")
                 },
                 {
                     format: 'input',
                     field: 'label LIKE',
                     type: 'text',
-                    label: 'Libellé'
+                    label: __t("Label")
                 }
             ]
         };

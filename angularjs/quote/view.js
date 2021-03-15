@@ -200,7 +200,7 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                 } else {
                     code_exists--;
                     if (code_exists === 0) {
-                        toasts("danger", "Aucun produit avec le code " + code + " trouvé dans la base de données.");
+                        toasts("danger", __t("No product with code ") + code + __t(" found in the database."));
                     }
                 }
             } else {
@@ -269,10 +269,10 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
 
             zhttp.crm.quote.save(formatted_data).then(function (response) {
                 if (response.data && response.data != "false") {
-                    toasts('success', "Le status du devis a bien été mis à jour.");
+                    toasts('success', __t("The status of the quote has been updated."));
                     loadDocument($routeParams.id);
                 } else {
-                    toasts('danger', "Il y a eu une erreur lors de la mise a jour du status du devis");
+                    toasts('danger', __t("There was an error updating the status of the quote"));
                 }
             });
         }
@@ -379,7 +379,7 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                         if ($scope.hooks.length > 0) {
                             broadcast_code($scope.codeProduct);
                         } else {
-                            toasts("danger", "Aucun produit avec le code " + code + " trouvé dans la base de données.");
+                            toasts("danger", __t("No product with code ") + code + __t(" found in the database."));
                         }
                     }
                 });
@@ -448,7 +448,7 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                             }
                         });
                     } else {
-                        toasts("danger", "Ce produit n'est plus actif");
+                        toasts("danger", __t("This product is no longer active"));
                     }
                 }
             });
@@ -616,9 +616,9 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                     var formatted_data = angular.toJson(data);
                     zhttp.crm.quote.save(formatted_data).then(function (response) {
                         if (response.data && response.data != "false") {
-                            toasts('success', "Les informations du devis ont bien été mises a jour");
+                            toasts('success', __t("The information in the quote has been updated"));
                         } else {
-                            toasts('danger', "Il y a eu une erreur lors de la mise a jour des informations du devis");
+                            toasts('danger', __t("There was an error updating the quote information"));
                         }
 
                         // reaload document
@@ -736,9 +736,9 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                         response.data.id_user = $rootScope.user.id;
                         response.data.name_user = $rootScope.user.firstname[0] + '. ' + $rootScope.user.lastname;
                         $scope.documents.push(response.data);
-                        toasts('success', "Les documents ont bien été mis en ligne");
+                        toasts('success', __t("The documents have been uploaded"));
                     } else {
-                        toasts('danger', "Il y a eu une erreur lors de la mise en ligne des documents");
+                        toasts('danger', __t("There was an error uploading the documents"));
                     }
                 }
             );
@@ -753,9 +753,9 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                     $scope.progress = false;
                     if (response.data && response.data != "false") {
                         response.data.date = new Date(response.data.date);
-                        toasts('success', "Les documents ont bien été mis à jour");
+                        toasts('success', __t("The documents have been updated"));
                     } else {
-                        toasts('danger', "Il y a eu une erreur lors de la mise à jour des documents");
+                        toasts('danger', __t("There was an error updating the documents"));
                     }
                 }
             );
@@ -783,13 +783,13 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
             }
             options.to = [emailContact] ;
 
-            options.subject = "Devis : " + $scope.quote.numerotation;
+            options.subject = __t("Quote") + " : " + $scope.quote.numerotation;
 
-            options.content = "Bonjour,\n"
+            options.content = __t("Hello") + ",\n"
                 + "\n"
-                + "veuillez trouver ci-joint notre devis n° " + $scope.quote.numerotation
+                + __t("please find attached our quotation no.") + $scope.quote.numerotation
                 + "\n"
-                + "Cordialement\n"
+                + __t("Cordially") + "\n"
                 + $scope.user.firstname + " " + $scope.user.lastname
             ;
 
@@ -833,7 +833,7 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
             });
 
 
-            options.data_templates.push({tag: "[type_doc]", value: "Devis"});
+            options.data_templates.push({tag: "[type_doc]", value: __t("Quote")});
             options.data_templates.push({tag: "[company]", value: $scope.quote.name_company});
             options.data_templates.push({tag: "[contact]", value: $scope.quote.name_contact});
             options.data_templates.push({tag: "[number_doc]", value: $scope.quote.numerotation});

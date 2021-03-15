@@ -3,10 +3,18 @@ app.controller("ComZeappsCrmTaxeConfigFormModalCtrl", ["$scope", "zeHttp",
 
         $scope.accountingNumberHttp = zhttp.crm.accounting_number;
         $scope.accountingNumberTplNew = '/com_zeapps_contact/accounting_numbers/form_modal';
-        $scope.accountingNumberFields = [
-            {label:'Numero',key:'number'},
-            {label:'Libelle',key:'label'},
-            {label:'Type',key:'type_label'}
+        $scope.accountingNumberFields = [{
+                label: __t("Number"),
+                key: 'number'
+            },
+            {
+                label: __t("Label"),
+                key: 'label'
+            },
+            {
+                label: __t("Type"),
+                key: 'type_label'
+            }
         ];
 
         $scope.loadAccountingNumber = loadAccountingNumber;

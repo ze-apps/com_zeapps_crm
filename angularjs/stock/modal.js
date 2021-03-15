@@ -7,7 +7,7 @@ listModuleModalFunction.push({
 	size:"lg",
 	resolve:{
 		titre: function () {
-			return "Recherche d'un produit stocké";
+			return __t("Search for a stored product");
 		}
 	}
 });

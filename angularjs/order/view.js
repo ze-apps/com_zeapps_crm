@@ -220,7 +220,7 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                 } else {
                     code_exists--;
                     if (code_exists === 0) {
-                        toasts("danger", "Aucun produit avec le code " + code + " trouvé dans la base de données.");
+                        toasts("danger", __t("No product with code ") + code + __t(" found in the database."));
                     }
                 }
             } else {
@@ -310,10 +310,10 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
 
             zhttp.crm.order.save(formatted_data).then(function (response) {
                 if (response.data && response.data != "false") {
-                    toasts('success', "Le status du devis a bien été mis à jour.");
+                    toasts('success', __t("The order status has been updated successfully."));
                     loadDocument($routeParams.id);
                 } else {
-                    toasts('danger', "Il y a eu une erreur lors de la mise a jour du status du devis");
+                    toasts('danger', __t("There was an error updating the order status"));
                 }
             });
         }
@@ -353,19 +353,19 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                         size: "lg",
                         resolve: {
                             titre: function () {
-                                return "Confirmation";
+                                return __t("Confirmation");
                             },
                             msg: function () {
-                                return "Souhaitez-vous clôture cette commande ?";
+                                return __t("Would you like to close this order?");
                             },
                             action_danger: function () {
-                                return "Annuler";
+                                return __t("Cancel");
                             },
                             action_primary: function () {
                                 return false;
                             },
                             action_success: function () {
-                                return "Je confirme la clôture";
+                                return __t("I confirm the closure");
                             }
                         }
                     });
@@ -401,18 +401,18 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                         if (msg_toast != "") {
                             msg_toast += ", ";
                         }
-                        msg_toast += "un moyen de paiement";
+                        msg_toast += __t("a way topay");
                     }
 
                     if ((!$scope.order.id_company || parseInt($scope.order.id_company, 10) == 0) && (!$scope.order.id_contact || parseInt($scope.order.id_contact, 10) == 0)) {
                         if (msg_toast != "") {
                             msg_toast += ", ";
                         }
-                        msg_toast += "une société ou un contact";
+                        msg_toast += __t("a company or a contact");
                     }
 
 
-                    msg_toast = "Vous devez renseigner (" + msg_toast + ") pour pouvoir clôturer une commande";
+                    msg_toast = __t("You must enter (") + msg_toast + __t(") to be able to close an order");
 
 
                     toasts('warning', msg_toast);
@@ -521,7 +521,7 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                                     }
                                 });
                             } else {
-                                toasts("danger", "Ce produit n'est plus actif");
+                                toasts("danger", __t("This product is no longer active"));
                             }
                         }
                     } else {
@@ -529,7 +529,7 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                             broadcast_code($scope.codeProduct);
                         } else {
                             setFocus("comZeappsCrmCodeProduct", true);
-                            toasts("danger", "Aucun produit avec le code " + code + " trouvé dans la base de données.");
+                            toasts("danger", __t("No product with code ") + code + __t(" found in the database."));
                         }
                     }
                 });
@@ -598,7 +598,7 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                             }
                         });
                     } else {
-                        toasts("danger", "Ce produit n'est plus actif");
+                        toasts("danger", __t("This product is no longer active"));
                     }
                 }
             });
@@ -767,10 +767,10 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                         var messageAlert = "";
                         var typeAlert = "";
                         if (response.data && response.data != "false") {
-                            messageAlert = "Les informations de la commande ont bien été mises a jour";
+                            messageAlert = __t("The order information has been updated");
                             typeAlert = "success";
                         } else {
-                            messageAlert = "Il y a eu une erreur lors de la mise a jour des informations de la commande";
+                            messageAlert = __t("There was an error updating the order information");
                             typeAlert = "danger";
                         }
 
@@ -889,9 +889,9 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                         response.data.id_user = $rootScope.user.id;
                         response.data.name_user = $rootScope.user.firstname[0] + '. ' + $rootScope.user.lastname;
                         $scope.documents.push(response.data);
-                        toasts('success', "Les documents ont bien été mis en ligne");
+                        toasts('success', __t("The documents have been uploaded"));
                     } else {
-                        toasts('danger', "Il y a eu une erreur lors de la mise en ligne des documents");
+                        toasts('danger', __t("There was an error uploading the documents"));
                     }
                 }
             );
@@ -906,9 +906,9 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                     $scope.progress = false;
                     if (response.data && response.data != "false") {
                         response.data.date = new Date(response.data.date);
-                        toasts('success', "Les documents ont bien été mis à jour");
+                        toasts('success', __t("The documents have been updated"));
                     } else {
-                        toasts('danger', "Il y a eu une erreur lors de la mise à jour des documents");
+                        toasts('danger', __t("There was an error updating the documents"));
                     }
                 }
             );
@@ -935,13 +935,13 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
             }
             options.to = [emailContact] ;
 
-            options.subject = "Commande : " + $scope.order.numerotation;
+            options.subject = __t("Order") + " : " + $scope.order.numerotation;
 
-            options.content = "Bonjour,\n"
+            options.content = __t("Hello") + ",\n"
                 + "\n"
-                + "veuillez trouver ci-joint notre commande n° " + $scope.order.numerotation
+                + __t("please find enclosed our order no.") + $scope.order.numerotation
                 + "\n"
-                + "Cordialement\n"
+                + __t("Cordially") + "\n"
                 + $scope.user.firstname + " " + $scope.user.lastname
             ;
 
@@ -977,7 +977,7 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
             });
 
 
-            options.data_templates.push({tag: "[type_doc]", value: "Commande"});
+            options.data_templates.push({tag: "[type_doc]", value: __t("Order")});
             options.data_templates.push({tag: "[company]", value: $scope.order.name_company});
             options.data_templates.push({tag: "[contact]", value: $scope.order.name_contact});
             options.data_templates.push({tag: "[number_doc]", value: $scope.order.numerotation});

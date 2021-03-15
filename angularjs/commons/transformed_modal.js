@@ -7,7 +7,7 @@ listModuleModalFunction.push({
     size: "lg",
     resolve: {
         titre: function () {
-            return "Consulter un document";
+            return __t("To consult a document");
         }
     }
 });

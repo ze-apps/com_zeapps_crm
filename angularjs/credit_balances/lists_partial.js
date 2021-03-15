@@ -10,19 +10,19 @@ app.controller("ComZeappsCrmCreditBalanceListsPartialCtrl", ["$scope", "zeHttp",
                     format: 'input',
                     field: 'numerotation LIKE',
                     type: 'text',
-                    label: 'N° Facture'
+                    label: __t("Invoice No.")
                 },
                 {
                     format: 'input',
                     field: 'name_company LIKE',
                     type: 'text',
-                    label: 'Entreprise'
+                    label: __t("Compagny")
                 },
                 {
                     format: 'input',
                     field: 'name_contact LIKE',
                     type: 'text',
-                    label: 'Contact'
+                    label: __t("Contact")
                 }
             ]
         };

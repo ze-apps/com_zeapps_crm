@@ -6,10 +6,10 @@ app.controller("ComZeappsCrmWarehouseConfigCtrl", ["$scope", "zeHttp", "menu",
         $scope.templateForm = "/com_zeapps_crm/warehouse/form_modal";
 
         $scope.resupply_label = {
-			'days' : 'jours',
-			'weeks' : 'semaines',
-			'months' : 'mois',
-			'hours' : 'heures'
+			'days' : __t("days"),
+			'weeks' : __t("weeks"),
+			'months' : __t("months"),
+			'hours' : __t("hours")
 		};
 
         $scope.add = add;

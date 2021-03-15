@@ -26,19 +26,19 @@ app.controller("ComZeappsCrmModalSearchProductCtrl", ["$scope", "$uibModalInstan
 				format: 'input',
 				field: 'ref LIKE',
 				type: 'text',
-				label: 'Référence'
+				label: __t("Reference")
         	},
             {
                 format: 'input',
                 field: 'name LIKE',
                 type: 'text',
-                label: 'Nom du produit'
+                label: __t("Product Name")
             },
             {
                 format: 'checkbox',
                 field: 'active',
                 type: 'checkbox',
-                label: 'Actif'
+                label: __t("Active")
             }
         ]
     };

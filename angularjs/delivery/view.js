@@ -183,7 +183,7 @@ app.controller("ComZeappsCrmDeliveryViewCtrl", ["$scope", "$routeParams", "$loca
                 } else {
                     code_exists--;
                     if (code_exists === 0) {
-                        toasts("danger", "Aucun produit avec le code " + code + " trouvé dans la base de données.");
+                        toasts("danger", __t("No product with code ") + code + __t(" found in the database."));
                     }
                 }
             } else {
@@ -252,10 +252,10 @@ app.controller("ComZeappsCrmDeliveryViewCtrl", ["$scope", "$routeParams", "$loca
 
             zhttp.crm.delivery.save(formatted_data).then(function (response) {
                 if (response.data && response.data != "false") {
-                    toasts('success', "Le status du devis a bien été mis à jour.");
+                    toasts('success', __t("The status of the delivery note has been updated."));
                     loadDocument($routeParams.id);
                 } else {
-                    toasts('danger', "Il y a eu une erreur lors de la mise a jour du status du devis");
+                    toasts('danger', __t("There was an error updating the delivery slip status"));
                 }
             });
         }
@@ -285,19 +285,19 @@ app.controller("ComZeappsCrmDeliveryViewCtrl", ["$scope", "$routeParams", "$loca
                     size: "lg",
                     resolve: {
                         titre: function () {
-                            return "Confirmation";
+                            return __t("Confirmation");
                         },
                         msg: function () {
-                            return "Souhaitez-vous clôture ce bon de livraison ?";
+                            return __t("Would you like to close this delivery note?");
                         },
                         action_danger: function () {
-                            return "Annuler";
+                            return __t("Cancel");
                         },
                         action_primary: function () {
                             return false;
                         },
                         action_success: function () {
-                            return "Je confirme la clôture";
+                            return __t("I confirm the closure");
                         }
                     }
                 });
@@ -327,10 +327,10 @@ app.controller("ComZeappsCrmDeliveryViewCtrl", ["$scope", "$routeParams", "$loca
                     if (msg_toast != "") {
                         msg_toast += ", ";
                     }
-                    msg_toast += "une société ou un contact";
+                    msg_toast += __t("a company or a contact");
                 }
 
-                msg_toast = "Vous devez renseigner (" + msg_toast + ") pour pouvoir clôturer une facture";
+                msg_toast = __t("You must enter (") + msg_toast + __t(") to be able to close a delivery form");
 
                 toasts('warning', msg_toast);
             }
@@ -419,13 +419,13 @@ app.controller("ComZeappsCrmDeliveryViewCtrl", ["$scope", "$routeParams", "$loca
                                 }
                             });
                         } else {
-                            toasts("danger", "Ce produit n'est plus actif");
+                            toasts("danger", __t("This product is no longer active"));
                         }
                     } else {
                         if ($scope.hooks.length > 0) {
                             broadcast_code($scope.codeProduct);
                         } else {
-                            toasts("danger", "Aucun produit avec le code " + code + " trouvé dans la base de données.");
+                            toasts("danger", __t("No product with code ") + code + __t(" found in the database."));
                         }
                     }
                 });
@@ -494,7 +494,7 @@ app.controller("ComZeappsCrmDeliveryViewCtrl", ["$scope", "$routeParams", "$loca
                             }
                         });
                     } else {
-                        toasts("danger", "Ce produit n'est plus actif");
+                        toasts("danger", __t("This product is no longer active"));
                     }
                 }
             });
@@ -661,9 +661,9 @@ app.controller("ComZeappsCrmDeliveryViewCtrl", ["$scope", "$routeParams", "$loca
                     var formatted_data = angular.toJson(data);
                     zhttp.crm.delivery.save(formatted_data).then(function (response) {
                         if (response.data && response.data != "false") {
-                            toasts('success', "Les informations du bon de livraison ont bien été mises a jour");
+                            toasts('success', __t("The information on the delivery note has been updated"));
                         } else {
-                            toasts('danger', "Il y a eu une erreur lors de la mise a jour des informations du bon de livraison");
+                            toasts('danger', __t("There was an error updating the packing slip information"));
                         }
 
                         // reaload document
@@ -780,9 +780,9 @@ app.controller("ComZeappsCrmDeliveryViewCtrl", ["$scope", "$routeParams", "$loca
                         response.data.id_user = $rootScope.user.id;
                         response.data.name_user = $rootScope.user.firstname[0] + '. ' + $rootScope.user.lastname;
                         $scope.documents.push(response.data);
-                        toasts('success', "Les documents ont bien été mis en ligne");
+                        toasts('success', __t("The documents have been uploaded"));
                     } else {
-                        toasts('danger', "Il y a eu une erreur lors de la mise en ligne des documents");
+                        toasts('danger', __t("There was an error uploading the documents"));
                     }
                 }
             );
@@ -797,9 +797,9 @@ app.controller("ComZeappsCrmDeliveryViewCtrl", ["$scope", "$routeParams", "$loca
                     $scope.progress = false;
                     if (response.data && response.data != "false") {
                         response.data.date = new Date(response.data.date);
-                        toasts('success', "Les documents ont bien été mis à jour");
+                        toasts('success', __t("The documents have been updated"));
                     } else {
-                        toasts('danger', "Il y a eu une erreur lors de la mise à jour des documents");
+                        toasts('danger', __t("There was an error updating the documents"));
                     }
                 }
             );
@@ -826,13 +826,13 @@ app.controller("ComZeappsCrmDeliveryViewCtrl", ["$scope", "$routeParams", "$loca
             }
             options.to = [emailContact] ;
 
-            options.subject = "Bon de livraison : " + $scope.delivery.numerotation;
+            options.subject = __t("Delivery form: ") + $scope.delivery.numerotation;
 
-            options.content = "Bonjour,\n"
+            options.content = __t("Hello") + ",\n"
                 + "\n"
-                + "veuillez trouver ci-joint notre bon de livraison n° " + $scope.delivery.numerotation
+                + __t("please find attached our delivery note no.") + $scope.delivery.numerotation
                 + "\n"
-                + "Cordialement\n"
+                + __t("Cordially") + "\n"
                 + $scope.user.firstname + " " + $scope.user.lastname
             ;
 
@@ -868,7 +868,7 @@ app.controller("ComZeappsCrmDeliveryViewCtrl", ["$scope", "$routeParams", "$loca
             });
 
 
-            options.data_templates.push({tag: "[type_doc]", value: "Bon de livraison"});
+            options.data_templates.push({tag: "[type_doc]", value: __t("Delivery form")});
             options.data_templates.push({tag: "[company]", value: $scope.delivery.name_company});
             options.data_templates.push({tag: "[contact]", value: $scope.delivery.name_contact});
             options.data_templates.push({tag: "[number_doc]", value: $scope.delivery.numerotation});

@@ -10,25 +10,25 @@ app.controller("ComZeappsCrmDeliveryListsPartialCtrl", ["$scope", "$location", "
                     format: 'input',
                     field: 'numerotation LIKE',
                     type: 'text',
-                    label: 'Numéro'
+                    label: __t("Number")
                 },
                 {
                     format: 'input',
                     field: 'libelle LIKE',
                     type: 'text',
-                    label: 'Libellé'
+                    label: __t("Label")
                 },
                 {
                     format: 'input',
                     field: 'name_company LIKE',
                     type: 'text',
-                    label: 'Entreprise'
+                    label: __t("Compagny")
                 },
                 {
                     format: 'input',
                     field: 'name_contact LIKE',
                     type: 'text',
-                    label: 'Contact'
+                    label: __t("Contact")
                 }
             ],
             secondaries: [
@@ -36,42 +36,42 @@ app.controller("ComZeappsCrmDeliveryListsPartialCtrl", ["$scope", "$location", "
                     format: 'input',
                     field: 'date_creation >=',
                     type: 'date',
-                    label: 'Date de création : Début',
+                    label: __t("Creation date: Start"),
                     size: 3
                 },
                 {
                     format: 'input',
                     field: 'date_creation <=',
                     type: 'date',
-                    label: 'Fin',
+                    label: __t("End"),
                     size: 3
                 },
                 {
                     format: 'input',
                     field: 'total_ht >',
                     type: 'text',
-                    label: 'Total HT : Supérieur à',
+                    label: __t("Total HT: Greater than"),
                     size: 3
                 },
                 {
                     format: 'input',
                     field: 'total_ht <',
                     type: 'text',
-                    label: 'Inférieur à',
+                    label: __t("Less than"),
                     size: 3
                 },
                 {
                     format: 'input',
                     field: 'total_ttc >',
                     type: 'text',
-                    label: 'Total TTC : Supérieur à',
+                    label: __t("Total including tax: Greater than"),
                     size: 3
                 },
                 {
                     format: 'input',
                     field: 'total_ttc <',
                     type: 'text',
-                    label: 'Inférieur à',
+                    label: __t("Less than"),
                     size: 3
                 }
             ]
@@ -216,10 +216,10 @@ app.controller("ComZeappsCrmDeliveryListsPartialCtrl", ["$scope", "$location", "
 
             zhttp.crm.delivery.save(formatted_data).then(function(response){
                 if(response.data && response.data != "false"){
-                    toasts('success', "Les informations du devis ont bien été mises a jour");
+                    toasts('success', __t("The information on the delivery note has been updated"));
                 }
                 else{
-                    toasts('danger', "Il y a eu une erreur lors de la mise a jour des informations du devis");
+                    toasts('danger', __t("There was an error updating the packing slip information"));
                 }
             });
         }

@@ -152,7 +152,7 @@ app.controller("ComZeappsCrmOrderFormLineCtrl", ["$scope", "zeHttp", "zeapps_mod
 
                         updatePrice();
                     } else {
-                        toasts("danger", "Ce produit n'est plus actif");
+                        toasts("danger", __t("This product is no longer active"));
                     }
                 }
             });
@@ -267,11 +267,11 @@ app.controller("ComZeappsCrmOrderFormLineCtrl", ["$scope", "zeHttp", "zeapps_mod
 
                             $scope.codeProduct = "";
                         } else {
-                            toasts("danger", "Ce produit n'est plus actif");
+                            toasts("danger", __t("This product is no longer active"));
                         }
 
                     } else {
-                        toasts("danger", "Aucun produit avec le code " + code + " trouvé dans la base de données.");
+                        toasts("danger", __t("No product with code ") + code + __t(" found in the database."));
                     }
                 });
             }

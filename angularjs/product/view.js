@@ -13,13 +13,13 @@ app.controller("ComZeappsCrmProductViewCtrl", ["$scope", "$location", "zeHttp", 
                     format: 'input',
                     field: 'ref LIKE',
                     type: 'text',
-                    label: 'Référence'
+                    label: __t("Reference")
                 },
                 {
                     format: 'input',
                     field: 'name LIKE',
                     type: 'text',
-                    label: 'Nom du produit'
+                    label: __t("Product Name")
                 }
             ]
         };
@@ -95,7 +95,7 @@ app.controller("ComZeappsCrmProductViewCtrl", ["$scope", "$location", "zeHttp", 
             }
             zhttp.crm.category.update_order(data).then(function (response) {
                 if (response.status != 200) {
-                    toasts("danger", "There was an error when trying to access the Server, please try again ! If the problem persists contact the administrator of this website.");
+                    toasts("danger", __t("There was an error when trying to access the Server, please try again ! If the problem persists contact the administrator of this website."));
                 }
             });
         }
@@ -108,19 +108,19 @@ app.controller("ComZeappsCrmProductViewCtrl", ["$scope", "$location", "zeHttp", 
                 size: "lg",
                 resolve: {
                     titre: function () {
-                        return "Attention";
+                        return __t("Warning");
                     },
                     msg: function () {
-                        return "Souhaitez-vous supprimer définitivement ce produit ?";
+                        return __t("Would you like to permanently remove this product?");
                     },
                     action_danger: function () {
-                        return "Annuler";
+                        return __t("Cancel");
                     },
                     action_primary: function () {
                         return false;
                     },
                     action_success: function () {
-                        return "Je confirme la suppression";
+                        return __t("I confirm the deletion");
                     }
                 }
             });
@@ -150,19 +150,19 @@ app.controller("ComZeappsCrmProductViewCtrl", ["$scope", "$location", "zeHttp", 
                 size: "lg",
                 resolve: {
                     titre: function () {
-                        return "Attention";
+                        return __t("Warning");
                     },
                     msg: function () {
-                        return "Souhaitez-vous supprimer définitivement cette catégorie ?";
+                        return __t("Would you like to permanently delete this category?");
                     },
                     action_danger: function () {
-                        return "Annuler";
+                        return __t("Cancel");
                     },
                     action_primary: function () {
                         return false;
                     },
                     action_success: function () {
-                        return "Je confirme la suppression";
+                        return __t("I confirm the deletion");
                     }
                 }
             });
@@ -201,19 +201,19 @@ app.controller("ComZeappsCrmProductViewCtrl", ["$scope", "$location", "zeHttp", 
                 size: "lg",
                 resolve: {
                     titre: function () {
-                        return "Attention";
+                        return __t("Warning");
                     },
                     msg: function () {
-                        return "La catégorie ou l'une de ses sous-catégories possedent toujours des produits. Si vous confirmez la suppresion les produits seront archivés.";
+                        return __t("The category or one of its subcategories always has products. If you confirm the deletion the products will be archived.");
                     },
                     action_danger: function () {
-                        return "Annuler";
+                        return __t("Cancel");
                     },
                     action_primary: function () {
-                        return "Archiver les produits & supprimer la catégorie";
+                        return __t("Archive products & delete category");
                     },
                     action_success: function () {
-                        return "Supprimer les produits & supprimer la catégorie";
+                        return __t("Delete products & delete category");
                     }
                 }
             });

@@ -31,7 +31,7 @@ app.controller("ComZeappsCrmStockViewCtrl", ["$scope", "$location", "$rootScope"
             if ($scope.filter_model.id_warehouse && $scope.filter_model.date_stock) {
                 $scope.modeInventaire = true ;;
             } else {
-                toasts("danger", "Pour activer le mode inventaire, vous devez définir un entrepôt et une date dans les filtres");
+                toasts("danger", __t("To activate inventory mode, you must define a warehouse and a date in the filters"));
             }
         };
 
@@ -51,7 +51,7 @@ app.controller("ComZeappsCrmStockViewCtrl", ["$scope", "$location", "$rootScope"
 
                     if (qtyUpdate != 0) {
                         var stock_mvt = {};
-                        stock_mvt.label = "Mise à jour inventaire : Qte theorique (" + convertFloat(product_stock.qty) + "), Qte relevé (" + convertFloat(product_stock.qty_inventaire) + ")";
+                        stock_mvt.label = __t("Inventory update: Theoretical quantity") + " (" + convertFloat(product_stock.qty) + "), " + __t("Qty read") + " (" + convertFloat(product_stock.qty_inventaire) + ")";
                         stock_mvt.qty = qtyUpdate;
                         stock_mvt.id_warehouse = $scope.filter_model.id_warehouse;
                         stock_mvt.id_product = product_stock.id;
@@ -137,26 +137,26 @@ app.controller("ComZeappsCrmStockViewCtrl", ["$scope", "$location", "$rootScope"
                     format: 'input',
                     field: 'ref LIKE',
                     type: 'text',
-                    label: 'Référence'
+                    label: __t("Reference")
                 },
                 {
                     format: 'input',
                     field: 'name LIKE',
                     type: 'text',
-                    label: 'Libellé'
+                    label: __t("Label")
                 },
                 {
                     format: 'select',
                     field: 'id_warehouse',
                     type: 'text',
-                    label: 'Entrepôt',
+                    label: __t("Warehouse"),
                     options: []
                 },
                 {
                     format: 'input',
                     field: 'date_stock',
                     type: 'date',
-                    label: 'Date analyse',
+                    label: __t("Analysis date"),
                     size: 3
                 }
             ]

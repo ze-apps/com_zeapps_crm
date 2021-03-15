@@ -11,7 +11,7 @@ app.controller("ComZeappsCrmStockDetailsCtrl", ["$scope", "$routeParams", "$root
                     format: 'select',
                     field: 'id_warehouse',
                     type: 'text',
-                    label: 'Entrepôt',
+                    label: __t("Warehouse"),
                     options: []
                 }
             ]
@@ -160,7 +160,7 @@ app.controller("ComZeappsCrmStockDetailsCtrl", ["$scope", "$routeParams", "$root
                     }
                 });
             } else {
-                toasts("warning", "Vous ne pouvez pas faire de transferts vers l'entrepôt de départ");
+                toasts("warning", __t("You cannot make transfers to the departure warehouse"));
             }
         }
 
@@ -195,7 +195,7 @@ app.controller("ComZeappsCrmStockDetailsCtrl", ["$scope", "$routeParams", "$root
                     $scope.product_stock.dateRupture = moment().add(timeleft, "days").format("DD/MM/YYYY");
                     $scope.product_stock.colorRupture = "";
                 } else {
-                    $scope.product_stock.timeleft = "En rupture";
+                    $scope.product_stock.timeleft = __t("Out of order");
                     $scope.product_stock.dateRupture = moment().add(timeleft, "days").format("DD/MM/YYYY");
                     $scope.product_stock.colorRupture = "#cd0000";
                 }
@@ -279,24 +279,24 @@ app.controller("ComZeappsCrmStockDetailsCtrl", ["$scope", "$routeParams", "$root
             $scope.postits = [
                 {
                     value: $scope.product_stock.qty || 0,
-                    legend: 'Stock',
+                    legend: __t("Stock"),
                     filter: 'number'
                 },
                 {
                     value: $scope.product_stock.price_unit_stock,
-                    legend: 'Valeur Unitaire',
+                    legend: __t("Unit value"),
                     filter: 'currency'
                 },
                 {
                     value: $scope.product_stock.price_unit_stock * $scope.product_stock.qty,
-                    legend: 'Valeur totale du stock',
+                    legend: __t("Total stock value"),
                     filter: 'currency'
                 },
                 {
                     value: $scope.product_stock.timeleft +
                         "<small>" + ($scope.product_stock.dateRupture ? ' (' + $scope.product_stock.dateRupture + ')' : '') + "</small>",
                     color: $scope.product_stock.colorRupture,
-                    legend: 'Date prévisionnelle de rupture'
+                    legend: __t("Provisional date of termination")
                 }
             ];
 
@@ -306,7 +306,7 @@ app.controller("ComZeappsCrmStockDetailsCtrl", ["$scope", "$routeParams", "$root
                         value: $scope.product_stock.timeResupply +
                             "<small>" + ($scope.product_stock.dateResupply ? ' (' + $scope.product_stock.dateResupply + ')' : '') + "</small>",
                         color: $scope.product_stock.colorResupply,
-                        legend: 'Commande fournisseur avant'
+                        legend: __t("Supplier order before")
                     }
                 );
             }
