@@ -154,9 +154,8 @@ class Quotes extends Controller
 
         $quotes_rs = QuotesModel::select("com_zeapps_crm_quotes.*")
                 ->groupBy('com_zeapps_crm_quotes.id')
-                ->orderBy('com_zeapps_crm_quotes.id', 'DESC')
                 ->orderBy('com_zeapps_crm_quotes.id', 'DESC');
-
+        
         if (isset($filters["date_activite >="]) || isset($filters["date_activite >="])) {
             $quotes_rs = $quotes_rs->join('com_zeapps_crm_quote_activities', 'com_zeapps_crm_quote_activities.id_quote', '=', 'com_zeapps_crm_quotes.id');
             $quotes_rs = $quotes_rs->where("com_zeapps_crm_quote_activities.status", "A faire");
@@ -185,10 +184,14 @@ class Quotes extends Controller
             }
         }
 
-        $total = $quotes_rs->count();
+        
+        
+        // $total = $quotes_rs->count();
         $quotes_rs_id = $quotes_rs;
 
-        $quotes = $quotes_rs->limit($limit)->offset($offset)->get();;
+        $total = $quotes_rs->get()->count();
+        $quotes = $quotes_rs->limit($limit)->offset($offset)->get();
+
 
 
         if (!$quotes) {
