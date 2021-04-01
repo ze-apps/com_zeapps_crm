@@ -1,6 +1,8 @@
 <div ng-controller="ComZeappsCrmInvoiceListsPartialCtrl">
     <div class="row">
         <div class="col-md-12">
+            <button type="button" class="btn btn-success btn-xs" ng-click="export()" ng-show="total <= 50000">{{ __t("Export") }}</button>
+            <button type="button" class="btn btn-default btn-xs" disabled="disabled" ng-show="total > 50000">{{ __t("Export impossible (+ 50000 results)") }}</button>
             <ze-filters class="pull-right" data-model="filter_model" data-filters="filters"
                         data-update="loadList"></ze-filters>
 
@@ -59,8 +61,8 @@
                     <td ng-click="goTo(invoice.id)">@{{invoice.date_limit || "-" | date:'dd/MM/yyyy'}}</td>
                     <td ng-click="goTo(invoice.id)">@{{invoice.name_user_account_manager}}</td>
                     <td ng-click="goTo(invoice.id)"><span class="text-danger"
-                                                          ng-show="invoice.finalized">Clôturée</span><span
-                                class="text-success" ng-show="!invoice.finalized">Ouvert</span></td>
+                                                          ng-show="invoice.finalized">{{ __t("Closed") }}</span><span
+                                class="text-success" ng-show="!invoice.finalized">{{ __t("Open") }}</span></td>
 
                     @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
                         <td class="text-right">

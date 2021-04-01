@@ -216,6 +216,49 @@ app.controller("ComZeappsCrmInvoiceListsPartialCtrl", ["$scope", "$location", "$
             });
         }
 
+        $scope.export = function() {
+            var context = "";
+            var offset = 0;
+
+
+
+            var filtre = {} ;
+            angular.forEach($scope.filter_model, function (value, key) {
+                filtre[key] = value ;
+            });
+
+
+
+            // convet date JS to YYYY-MM-DD
+            var arrayFieldDate = ["date_creation >=", "date_creation <=", "date_limit >=", "date_limit <="] ;
+            for (var i_arrayFieldDate = 0 ; i_arrayFieldDate < arrayFieldDate.length ; i_arrayFieldDate++) {
+                if (filtre[arrayFieldDate[i_arrayFieldDate]] != undefined) {
+                    filtre[arrayFieldDate[i_arrayFieldDate]] = filtre[arrayFieldDate[i_arrayFieldDate]].getFullYear() + "-" + (filtre[arrayFieldDate[i_arrayFieldDate]].getMonth() + 1) + "-" + filtre[arrayFieldDate[i_arrayFieldDate]].getDate();
+                }
+            }
+
+
+            // convert , to . for numeric
+            var arrayFieldNumeric = ["total_ht >", "total_ht <", "total_ttc >", "total_ttc <", "due >", "due <"] ;
+            for (var i_arrayFieldNumeric = 0 ; i_arrayFieldNumeric < arrayFieldNumeric.length ; i_arrayFieldNumeric++) {
+                if (filtre[arrayFieldNumeric[i_arrayFieldNumeric]] != undefined) {
+                    filtre[arrayFieldNumeric[i_arrayFieldNumeric]] = filtre[arrayFieldNumeric[i_arrayFieldNumeric]].replace(",", ".").replace(" ", "") ;
+                }
+            }
+
+
+
+
+            var formatted_filters = angular.toJson(filtre);
+            zhttp.crm.invoice.export(src_id, src, $scope.pageSize, offset, context, formatted_filters).then(function (response) {
+                if (response.data && response.data != "false") {
+                    if (response.data.link) {
+                        window.document.location.href = response.data.link;
+                    }
+                }
+            });
+        }
+
         function goTo(id){
             $location.url('/ng/com_zeapps_crm/invoice/'+id);
         }

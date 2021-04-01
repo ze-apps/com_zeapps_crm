@@ -15,6 +15,7 @@ Routeur::get("/com_zeapps_crm/invoices/form_line", 'App\\com_zeapps_crm\\Control
 Routeur::post("/com_zeapps_crm/invoices/testFormat", 'App\\com_zeapps_crm\\Controllers\\Invoices@testFormat');
 Routeur::get("/com_zeapps_crm/invoices/get/{id}", 'App\\com_zeapps_crm\\Controllers\\Invoices@get');
 Routeur::post("/com_zeapps_crm/invoices/getAll/{id}/{type}/{limit}/{offset}/{context}", 'App\\com_zeapps_crm\\Controllers\\Invoices@getAll');
+Routeur::post("/com_zeapps_crm/invoices/export/{id}/{type}/{limit}/{offset}/{context}", 'App\\com_zeapps_crm\\Controllers\\Invoices@export');
 Routeur::post("/com_zeapps_crm/invoices/modal/{limit}/{offset}", 'App\\com_zeapps_crm\\Controllers\\Invoices@modal');
 Routeur::post("/com_zeapps_crm/invoices/save", 'App\\com_zeapps_crm\\Controllers\\Invoices@save');
 Routeur::post("/com_zeapps_crm/invoices/delete/{id}", 'App\\com_zeapps_crm\\Controllers\\Invoices@delete');

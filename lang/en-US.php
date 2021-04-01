@@ -321,4 +321,7 @@ return [
     "weeks" => "weeks",
     "months" => "months",
     "hours" => "hours",
+    "Export impossible (+ 5000 results)" => "Export impossible (+ 5000 results)",
+    "Export impossible (+ 50000 results)" => "Export impossible (+ 50000 results)",
+    "Open" => "Open",
 ];

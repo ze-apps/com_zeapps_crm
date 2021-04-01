@@ -6,9 +6,11 @@ use App\com_zeapps_crm\Models\AccountingEntries;
 use Zeapps\Core\Controller;
 use Zeapps\Core\Request;
 use Zeapps\Core\Session;
+use Zeapps\Core\Storage;
 
 use Zeapps\Core\Event;
 
+use Zeapps\libraries\XLSXWriter;
 
 use App\com_zeapps_crm\Models\Invoice\Invoices as InvoicesModel;
 use App\com_zeapps_crm\Models\Invoice\InvoiceLines;
@@ -25,6 +27,9 @@ use App\com_zeapps_crm\Models\Quote\Quotes as QuotesModel;
 use App\com_zeapps_crm\Models\Delivery\Deliveries as DeliveriesModel;
 
 use App\com_zeapps_crm\Models\DocumentRelated;
+
+
+
 
 use Zeapps\Models\Config;
 
@@ -176,6 +181,121 @@ class Invoices extends Controller
             'invoices' => $invoices,
             'total' => $total,
             'ids' => $ids
+        ));
+    }
+
+
+    public function export(Request $request)
+    {
+        $id = $request->input('id', 0);
+        $type = $request->input('type', 'company');
+        $offset = $request->input('offset', 0);
+
+
+        $filters = array();
+
+        if (strcasecmp($_SERVER['REQUEST_METHOD'], 'post') === 0 && stripos($_SERVER['CONTENT_TYPE'], 'application/json') !== FALSE) {
+            // POST is actually in json format, do an internal translation
+            $filters = json_decode(file_get_contents('php://input'), true);
+        }
+
+        if ($id != 0) {
+            $filters['id_' . $type] = $id;
+        }
+
+
+        $invoices_rs = InvoicesModel::orderBy('date_creation', 'DESC')->orderBy('id', 'DESC');
+        foreach ($filters as $key => $value) {
+            if ($key == "unpaid") {
+                if ($value) {
+                    $invoices_rs = $invoices_rs->where("finalized", 1);
+                    $invoices_rs = $invoices_rs->where("due", "!=", 0);
+                    $invoices_rs = $invoices_rs->where("date_limit", "<", date("Y-m-d H:i:s"));
+                }
+            } elseif (strpos($key, " LIKE") !== false) {
+                $key = str_replace(" LIKE", "", $key);
+                $invoices_rs = $invoices_rs->where($key, 'like', '%' . $value . '%');
+            } elseif (strpos($key, " ") !== false) {
+                $tabKey = explode(" ", $key);
+                $invoices_rs = $invoices_rs->where($tabKey[0], $tabKey[1], $value);
+            } else {
+                $invoices_rs = $invoices_rs->where($key, $value);
+            }
+        }
+
+        $total = $invoices_rs->count();
+        $invoices_rs_id = $invoices_rs;
+
+        $invoices = $invoices_rs->get();
+
+
+        if (!$invoices) {
+            $invoices = [];
+        }
+
+
+        
+
+
+        // génération du fichier Excel
+        $header = array("string");
+
+        $row1 = array(
+            __t("#"), 
+            __t("Creation date"), 
+            __t("Recipient"), 
+            __t("Label"), 
+            __t("Total duty"), 
+            __t("Total All taxes included"),
+            __t("Balance"),
+            __t("Deadline"),
+            __t("Manager"),
+            __t("Status")
+        );
+    
+        $writer = new XLSXWriter();
+
+        $this->sheet_name = 'stock';
+
+        $writer->writeSheetHeader($this->sheet_name, $header, $suppress_header_row = true);
+
+        // Formatage
+        $format = array('font' => 'Arial',
+            'font-size' => 10,
+            'font-style' => 'bold,italic',
+            'border' => 'top, right, left, bottom',
+            'color' => '#000',
+            'halign' => 'center');
+
+        $writer->writeSheetRow($this->sheet_name, $row1, $format);
+
+        foreach ($invoices as $invoice) {
+            $row3 = array(
+                $invoice->numerotation,
+                date("d/m/Y", strtotime($invoice->date_creation)),
+                $invoice->name_company . ($invoice->name_company != "" && $invoice->name_contact != "" ? "-":"") . $invoice->name_contact,
+                $invoice->libelle,
+                $invoice->total_ht*1,
+                $invoice->total_ttc*1,
+                $invoice->due,
+                date("d/m/Y", strtotime($invoice->date_limit)),
+                $invoice->name_user_account_manager,
+                $invoice->finalized ? __t("Closed") : __t("Open"),
+            );
+
+            // Formatage
+            $format = array();
+            $writer->writeSheetRow($this->sheet_name, $row3, $format);
+        }
+
+        // Gnérer une url temporaire unique pour le fichier Excel
+        // $link = BASEPATH . 'tmp/invoices_' . Storage::generateRandomString() . '.xlsx';
+        $link = Storage::getTempFolder() . 'invoices_' . Storage::generateRandomString() . '.xlsx';
+        $writer->writeToFile(BASEPATH . $link);
+
+
+        echo json_encode(array(
+            'link' => $link
         ));
     }
 

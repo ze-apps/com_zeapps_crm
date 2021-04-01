@@ -41,6 +41,7 @@ app.config(["$provide",
                 invoice: {
                     get: get_invoice,
                     get_all: getAll_invoice,
+                    export: export_invoice,
                     modal: modal_invoice,
                     save: post_invoice,
                     del: del_invoice,
@@ -407,6 +408,14 @@ app.config(["$provide",
                 type = type || "";
                 return zeHttp.post("/com_zeapps_crm/invoices/getAll/" + id_project + "/" + type + "/" + limit + "/" + offset + "/" + context, filters);
             }
+
+            function export_invoice(id_project, type, limit, offset, context, filters) {
+                id_project = id_project || 0;
+                type = type || "";
+                return zeHttp.post("/com_zeapps_crm/invoices/export/" + id_project + "/" + type + "/" + limit + "/" + offset + "/" + context, filters);
+            }
+
+            
 
             function modal_invoice(limit, offset, filters) {
                 return zeHttp.post("/com_zeapps_crm/invoices/modal/" + limit + "/" + offset, filters);
