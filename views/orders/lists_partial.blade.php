@@ -42,7 +42,7 @@
                 <tbody>
                 <tr ng-repeat="order in orders">
                     <td ng-click="goTo(order.id)">@{{order.numerotation}}</td>
-                    <td ng-click="goTo(order.id)">@{{order.date_creation || "-" | date:'dd/MM/yyyy'}}</td>
+                    <td ng-click="goTo(order.id)">@{{order.date_creation | dateConvert:'date' }}</td>
                     <td ng-click="goTo(order.id)">
 
                         @{{order.name_company}}
@@ -51,9 +51,9 @@
 
                     </td>
                     <td ng-click="goTo(order.id)">@{{order.libelle}}</td>
-                    <td ng-click="goTo(order.id)" class="text-right">@{{order.total_ht | currency:'€':2}}</td>
-                    <td ng-click="goTo(order.id)" class="text-right">@{{order.total_ttc | currency:'€':2}}</td>
-                    <td ng-click="goTo(order.id)">@{{order.date_limit || "-" | date:'dd/MM/yyyy'}}</td>
+                    <td ng-click="goTo(order.id)" class="text-right">@{{order.total_ht | currencyConvert }}</td>
+                    <td ng-click="goTo(order.id)" class="text-right">@{{order.total_ttc | currencyConvert }}</td>
+                    <td ng-click="goTo(order.id)">@{{order.date_limit | dateConvert:'date' }}</td>
                     <td ng-click="goTo(order.id)">@{{order.name_user_account_manager}}</td>
                     <td ng-click="goTo(order.id)" class="text-right">@{{order.probability | number:2}}</td>
                     <td ng-click="goTo(order.id)"><span class="text-danger"

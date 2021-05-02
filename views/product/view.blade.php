@@ -81,9 +81,9 @@
                                 <td ng-click="goTo(product.id)">@{{ product.ref }}</td>
                                 <td ng-click="goTo(product.id)">@{{ product.name }}</td>
                                 <td ng-click="goTo(product.id)"><span ng-if="product.type_product != 'pack'">@{{ product.accounting_number }}</span></td>
-                                <td ng-click="goTo(product.id)" class="text-right">@{{ product.price_ht | currency:'€':2 }}</td>
+                                <td ng-click="goTo(product.id)" class="text-right">@{{ product.price_ht | currencyConvert }}</td>
                                 <td ng-click="goTo(product.id)" class="text-right"><span ng-if="product.type_product != 'pack'">@{{ product.value_taxe | currency:'%':2 }}</span></td>
-                                <td ng-click="goTo(product.id)" class="text-right">@{{ product.price_ttc | currency:'€':2 }}</td>
+                                <td ng-click="goTo(product.id)" class="text-right">@{{ product.price_ttc | currencyConvert }}</td>
                                 <td ng-click="goTo(product.id)" class="text-right"><span ng-show="product.weight != 0">@{{ product.weight | weight }}</span></td>
                                 <td ng-click="goTo(product.id)" class="text-center"><span ng-if="product.active">{{ __t("YES") }}</span><span ng-if="!product.active">{{ __t("NO") }}</span></td>
                                 <td ng-click="goTo(product.id)" class="text-center"><span ng-if="product.discount_prohibited">{{ __t("YES") }}</span></td>

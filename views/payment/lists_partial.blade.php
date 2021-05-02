@@ -33,8 +33,8 @@
                 </thead>
                 <tbody>
                 <tr ng-repeat="payment in payments">
-                    <td ng-click="goTo(payment.id)">@{{ payment.date_payment || "-"  | date:'dd/MM/yyyy' }}</td>
-                    <td ng-click="goTo(payment.id)" class="text-right">@{{ payment.total | currency:'€':2 }}</td>
+                    <td ng-click="goTo(payment.id)">@{{ payment.date_payment | dateConvert:'date' }}</td>
+                    <td ng-click="goTo(payment.id)" class="text-right">@{{ payment.total | currencyConvert }}</td>
                     <td ng-click="goTo(payment.id)">@{{ payment.type_payment_label }}</td>
                     @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
                         <td class="text-right">

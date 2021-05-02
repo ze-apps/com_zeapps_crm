@@ -92,11 +92,11 @@
                     </thead>
                     <tbody>
                     <tr ng-repeat="invoice in form.invoices">
-                        <td>@{{ invoice.date_creation || "-"  | date:'dd/MM/yyyy' }}</td>
+                        <td>@{{ invoice.date_creation | dateConvert:'date' }}</td>
                         <td>@{{ invoice.numerotation }}</td>
                         <td>@{{ invoice.libelle }}</td>
-                        <td class="text-right">@{{ invoice.total_ttc | currency:'€':2 }}</td>
-                        <td class="text-right">@{{ invoice.due | currency:'€':2 }}</td>
+                        <td class="text-right">@{{ invoice.total_ttc | currencyConvert }}</td>
+                        <td class="text-right">@{{ invoice.due | currencyConvert }}</td>
                         <td class="text-right">
                             <input type="text" ng-model="invoice.amount_payment" class="form-control text-right" ng-blur="updateEcart()">
                         </td>
@@ -109,9 +109,9 @@
         <div class="row">
             <div class="col-md-12">
                 {{ __t("Total invoice balance") }}
-                 @{{ total_invoice_due | currency:'€':2 }}
+                 @{{ total_invoice_due | currencyConvert }}
 
-                <span ng-show="ecart != 0" class="text-danger"> {{ __t("Difference between the total") }} : @{{ ecart | currency:'€':2 }}, {{ __t("please change the amounts on the invoices") }}</span>
+                <span ng-show="ecart != 0" class="text-danger"> {{ __t("Difference between the total") }} : @{{ ecart | currencyConvert }}, {{ __t("please change the amounts on the invoices") }}</span>
             </div>
         </div>
 

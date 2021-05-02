@@ -42,7 +42,7 @@
                 <tbody>
                 <tr ng-repeat="quote in quotes track by $index">
                     <td ng-click="goTo(quote.id)">@{{quote.numerotation}}</td>
-                    <td ng-click="goTo(quote.id)">@{{quote.date_creation || "-" | date:'dd/MM/yyyy'}}</td>
+                    <td ng-click="goTo(quote.id)">@{{quote.date_creation | dateConvert:'date'}}</td>
                     <td ng-click="goTo(quote.id)">
 
                         @{{quote.name_company}}
@@ -51,9 +51,9 @@
 
                     </td>
                     <td ng-click="goTo(quote.id)">@{{quote.libelle}}</td>
-                    <td ng-click="goTo(quote.id)" class="text-right">@{{quote.total_ht | currency:'€':2}}</td>
-                    <td ng-click="goTo(quote.id)" class="text-right">@{{quote.total_ttc | currency:'€':2}}</td>
-                    <td ng-click="goTo(quote.id)">@{{quote.date_limit || "-" | date:'dd/MM/yyyy'}}</td>
+                    <td ng-click="goTo(quote.id)" class="text-right">@{{quote.total_ht | currencyConvert}}</td>
+                    <td ng-click="goTo(quote.id)" class="text-right">@{{quote.total_ttc | currencyConvert}}</td>
+                    <td ng-click="goTo(quote.id)">@{{quote.date_limit | dateConvert:'date'}}</td>
                     <td ng-click="goTo(quote.id)">@{{quote.name_user_account_manager}}</td>
                     <td class="text-right">
                         <select ng-model="quote.probability" ng-change="updateProbability(quote)">
@@ -72,7 +72,7 @@
                         <div style="cursor:help" ng-show="quote.activities.length" data-trigger="hover"  data-placement="bottom" title="{{ __t("Activity") }}" 
                             data-content="@{{ quote.popover }}" ng-click="showActivities(quote)">
                             <span class="label @{{ quote.activities_color }} label-as-badge">@{{ quote.activities.length }}</span>
-                            <span ng-show="quote.activities_next_date"><br>@{{ quote.activities_next_date | date:'dd/MM/yyyy' }}</span>
+                            <span ng-show="quote.activities_next_date"><br>@{{ quote.activities_next_date | dateConvert:'date' }}</span>
                         </div>
                     </td>
 

@@ -59,11 +59,11 @@
                                     </span>
                                 </td>
                                 <td class="text-right" ng-click="goTo(product_stock.id)">
-                                    @{{product_stock.price_unit_stock | currency:'€':2}}
+                                    @{{product_stock.price_unit_stock | currencyConvert }}
                                 </td>
                                 <td class="text-right" ng-click="goTo(product_stock.id)">
                                     <span ng-class="(product_stock.price_unit_stock * product_stock.qty) < 0 ? 'text-danger' : (product_stock.qty > 0 ? 'text-success' : 'text-info')" ng-if="(product_stock.price_unit_stock * product_stock.qty) != 0">
-                                        @{{ (product_stock.price_unit_stock * product_stock.qty) | currency:'€':2}}
+                                        @{{ (product_stock.price_unit_stock * product_stock.qty) | currencyConvert }}
                                     </span>
                                 </td>
                                 <td class="text-right" ng-click="goTo(product_stock.id)">

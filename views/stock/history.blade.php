@@ -42,7 +42,7 @@
             <tr ng-repeat="movement in product_stock.movements"
                 ng-class="backgroundOf(movement)"
             >
-                <td>@{{movement.date_mvt | date:'dd/MM/yyyy'}}</td>
+                <td>@{{movement.date_mvt | dateConvert:'date' }}</td>
                 <td>@{{movement.label}}</td>
                 <td class="text-right">@{{movement.qty}}</td>
                 <td class="text-right">

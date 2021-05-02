@@ -45,11 +45,10 @@
                     <label class="text-danger">{{ __t("United Price. all taxes included (cumulative price of composite items)") }}</label>
                     <div class="input-group">
                         <input type="text" class="form-control" ng-model="form.price_unit_ttc_subline" ng-keyup="updatePriceSubLineKeyUp()">
-                        <div class="input-group-addon">€</div>
                     </div>
                 </div>
                 <div>
-                    {{ __t("Out of taxes price") }} : <span>@{{ form.price_unit_ht_indicated }}</span> €
+                    {{ __t("Out of taxes price") }} : <span>@{{ form.price_unit_ht_indicated }}</span>
                 </div>
                 <div class="checkbox">
                     <label>
@@ -70,7 +69,6 @@
                     <label>{{ __t("Unit price excluding taxes") }}</label>
                     <div class="input-group">
                         <input type="number" class="form-control" ng-model="form.price_unit" ng-change="updatePriceUnit('HT')">
-                        <div class="input-group-addon">€</div>
                     </div>
                 </div>
             </div>
@@ -89,7 +87,6 @@
                     <label>{{ __t("Unit price all taxes included") }}</label>
                     <div class="input-group">
                         <input type="number" class="form-control" ng-model="form.price_unit_ttc_calculated" ng-change="updatePriceUnit('TTC')">
-                        <div class="input-group-addon">€</div>
                     </div>
                 </div>
             </div>
@@ -172,8 +169,8 @@
                         <td class="text-right">@{{ line.price_unit | currency }}</td>
                         <td class="text-right">@{{ line.id_taxe != 0 ? (line.value_taxe | currency:'%':2) : '' }}</td>
                         <td class="text-right">@{{ line.discount != 0 ? ((0-line.discount) | currency:'%':2) : ''}}</td>
-                        <td class="text-right">@{{ line.total_ht | currency:'€':2 }}</td>
-                        <td class="text-right">@{{ line.total_ttc | currency:'€':2 }}</td>
+                        <td class="text-right">@{{ line.total_ht | currencyConvert }}</td>
+                        <td class="text-right">@{{ line.total_ttc | currencyConvert }}</td>
 
                         <td class="text-right">
                             <span>

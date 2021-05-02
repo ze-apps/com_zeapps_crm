@@ -40,7 +40,7 @@
                 <tbody>
                 <tr ng-repeat="delivery in deliveries">
                     <td ng-click="goTo(delivery.id)">@{{delivery.numerotation}}</td>
-                    <td ng-click="goTo(delivery.id)">@{{delivery.date_creation || "-" | date:'dd/MM/yyyy'}}</td>
+                    <td ng-click="goTo(delivery.id)">@{{delivery.date_creation | dateConvert:'date' }}</td>
                     <td ng-click="goTo(delivery.id)">
 
                         @{{delivery.name_company}}
@@ -49,8 +49,8 @@
 
                     </td>
                     <td ng-click="goTo(delivery.id)">@{{delivery.libelle}}</td>
-                    <td ng-click="goTo(delivery.id)" class="text-right">@{{delivery.total_ht | currency:'€':2}}</td>
-                    <td ng-click="goTo(delivery.id)" class="text-right">@{{delivery.total_ttc | currency:'€':2}}</td>
+                    <td ng-click="goTo(delivery.id)" class="text-right">@{{delivery.total_ht | currencyConvert}}</td>
+                    <td ng-click="goTo(delivery.id)" class="text-right">@{{delivery.total_ttc | currencyConvert}}</td>
                     <td ng-click="goTo(delivery.id)">@{{delivery.name_user_account_manager}}</td>
                     <td ng-click="goTo(delivery.id)"><span class="text-danger"
                                                            ng-show="delivery.finalized">Clôturée</span><span

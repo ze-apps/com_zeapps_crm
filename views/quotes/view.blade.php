@@ -167,10 +167,10 @@
                                     credit.name_company }}</a></td>
                             <td><a href="/ng/com_zeapps_contact/contacts/@{{credit.id_contact}}">@{{ credit.name_contact
                                     }}</a></td>
-                            <td class="text-right">@{{ credit.total | currency:'€':2 }}</td>
-                            <td class="text-right">@{{ credit.paid | currency:'€':2 }}</td>
-                            <td class="text-right">@{{ credit.left_to_pay | currency:'€':2 }}</td>
-                            <td class="text-right">@{{ credit.due_date | date:'dd/MM/yyyy' }}</td>
+                            <td class="text-right">@{{ credit.total | currencyConvert }}</td>
+                            <td class="text-right">@{{ credit.paid | currencyConvert }}</td>
+                            <td class="text-right">@{{ credit.left_to_pay | currencyConvert }}</td>
+                            <td class="text-right">@{{ credit.due_date | dateConvert:'date' }}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -270,11 +270,11 @@
                             </td>
 
                             <td class="text-right" ng-if="line.type != 'subTotal' && line.type != 'comment'">
-                                @{{ line.total_ht | currency:'€':2 }}
+                                @{{ line.total_ht | currencyConvert }}
                             </td>
 
                             <td class="text-right" ng-if="line.type != 'subTotal' && line.type != 'comment'">
-                                @{{ line.total_ttc | currency:'€':2 }}
+                                @{{ line.total_ttc | currencyConvert }}
                             </td>
 
                             <td colspan="6" class="text-right" ng-if="line.type == 'subTotal'">
@@ -282,10 +282,10 @@
                             </td>
 
                             <td class="text-right" ng-if="line.type == 'subTotal'">
-                                @{{ subtotalHT($index) | currency:'€':2 }}
+                                @{{ subtotalHT($index) | currencyConvert }}
                             </td>
                             <td class="text-right" ng-if="line.type == 'subTotal'">
-                                @{{ subtotalTTC($index) | currency:'€':2 }}
+                                @{{ subtotalTTC($index) | currencyConvert }}
                             </td>
 
                             <td colspan="8" class="text-wrap" ng-if="line.type == 'comment'">@{{ line.designation_desc
@@ -330,9 +330,9 @@
                         </thead>
                         <tbody>
                         <tr ng-repeat="tableTax in tableTaxes">
-                            <td>@{{ tableTax.base_tax | currency:'€':2 }}</td>
+                            <td>@{{ tableTax.base_tax | currencyConvert }}</td>
                             <td class="text-right">@{{ tableTax.rate_tax | currency:'%':2 }}</td>
-                            <td class="text-right">@{{ tableTax.amount_tax | currency:'€':2 }}</td>
+                            <td class="text-right">@{{ tableTax.amount_tax | currencyConvert }}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -345,7 +345,7 @@
                                     {{ __t("Total before tax before discount") }}
                                 </div>
                                 <div class="col-md-6 text-right">
-                                    @{{ quote.total_prediscount_ht | currency:'€':2 }}
+                                    @{{ quote.total_prediscount_ht | currencyConvert }}
                                 </div>
                             </div>
 {{--                            <div class="row">--}}
@@ -353,7 +353,7 @@
 {{--                                    Total TTC av remise--}}
 {{--                                </div>--}}
 {{--                                <div class="col-md-6 text-right">--}}
-{{--                                    @{{ quote.total_prediscount_ttc | currency:'€':2 }}--}}
+{{--                                    @{{ quote.total_prediscount_ttc | currencyConvert }}--}}
 {{--                                </div>--}}
 {{--                            </div>--}}
                             <hr>
@@ -371,7 +371,7 @@
                                     {{ __t("Total discounts (excluding taxes)") }}
                                 </div>
                                 <div class="col-md-6 text-right">
-                                    @{{ quote.total_discount_ht | currency:'€':2 }}
+                                    @{{ quote.total_discount_ht | currencyConvert }}
                                 </div>
                             </div>
 
@@ -380,7 +380,7 @@
                                     {{ __t("Total discounts (all taxes included)") }}
                                 </div>
                                 <div class="col-md-6 text-right">
-                                    @{{ quote.total_discount_ttc | currency:'€':2 }}
+                                    @{{ quote.total_discount_ttc | currencyConvert }}
                                 </div>
                             </div>
 
@@ -392,7 +392,7 @@
                                 {{ __t("Total duty") }}
                             </div>
                             <div class="col-md-6 text-right">
-                                @{{ quote.total_ht | currency:'€':2 }}
+                                @{{ quote.total_ht | currencyConvert }}
                             </div>
                         </div>
 
@@ -401,7 +401,7 @@
                                 {{ __t("Total taxes") }}
                             </div>
                             <div class="col-md-6 text-right">
-                                @{{ quote.total_tva | currency:'€':2 }}
+                                @{{ quote.total_tva | currencyConvert }}
                             </div>
                         </div>
 
@@ -410,7 +410,7 @@
                                 {{ __t("Total All taxes included") }}
                             </div>
                             <div class="col-md-6 text-right">
-                                @{{ quote.total_ttc | currency:'€':2 }}
+                                @{{ quote.total_ttc | currencyConvert }}
                             </div>
                         </div>
                     </div>
@@ -424,10 +424,10 @@
             @{{ quote.reference_client }}
             <br/>
             <strong>{{ __t("Creation date") }} :</strong>
-            @{{ quote.date_creation || "-" | date:'dd/MM/yyyy' }}
+            @{{ quote.date_creation | dateConvert:'date' }}
             <br/>
             <strong>{{ __t("Validity date") }} :</strong>
-            @{{ quote.date_limit || "-" | date:'dd/MM/yyyy' }}
+            @{{ quote.date_limit | dateConvert:'date' }}
             <br/>
         </div>
 
@@ -469,7 +469,7 @@
                                 @endif
                                 <i class='fas fa-clock text-dark' ng-show="activity.status=='A faire'"></i> <i class='fas fa-check-circle text-success' ng-hide="activity.status=='A faire'"></i> <strong>@{{ activity.label_type ? activity.label_type + " : " : "" }}@{{
                                     activity.libelle }}</strong><br>
-                                    {{ __t("Deadline") }} : @{{ activity.deadline || "-" | date:'dd/MM/yyyy' }} - @{{ activity.status
+                                    {{ __t("Deadline") }} : @{{ activity.deadline | dateConvert:'date' }} - @{{ activity.status
                                 }}
                             </div>
                             <div class="card_document-body" ng-if="activity.description">@{{ activity.description }}
@@ -515,9 +515,7 @@
                         </div>
                         <div class="card_document-body" ng-if="document.description">@{{ document.description }}</div>
                         <div class="card_document-footer text-muted">
-                            {{ __t("Sent by") }} <strong>@{{ document.name_user }}</strong> le <strong>@{{ document.date |
-                                date:'dd/MM/yyyy' }}</strong> à <strong>@{{ document.date || "-" | date:'HH:mm'
-                                }}</strong>
+                            {{ __t("Sent by") }} <strong>@{{ document.name_user }}</strong> le <strong>@{{ document.date | dateConvert:'datetime' }}</strong>
                         </div>
                     </div>
                 </div>

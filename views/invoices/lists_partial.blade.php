@@ -44,7 +44,7 @@
                 <tbody>
                 <tr ng-repeat="invoice in invoices">
                     <td ng-click="goTo(invoice.id)">@{{invoice.numerotation}}</td>
-                    <td ng-click="goTo(invoice.id)">@{{invoice.date_creation || "-" | date:'dd/MM/yyyy'}}</td>
+                    <td ng-click="goTo(invoice.id)">@{{invoice.date_creation | dateConvert:'date' }}</td>
                     <td ng-click="goTo(invoice.id)">
 
                         @{{invoice.name_company}}
@@ -53,12 +53,12 @@
 
                     </td>
                     <td ng-click="goTo(invoice.id)">@{{invoice.libelle}}</td>
-                    <td ng-click="goTo(invoice.id)" class="text-right">@{{invoice.total_ht | currency:'€':2}}</td>
-                    <td ng-click="goTo(invoice.id)" class="text-right">@{{invoice.total_ttc | currency:'€':2}}</td>
+                    <td ng-click="goTo(invoice.id)" class="text-right">@{{invoice.total_ht | currencyConvert }}</td>
+                    <td ng-click="goTo(invoice.id)" class="text-right">@{{invoice.total_ttc | currencyConvert }}</td>
                     <td ng-click="goTo(invoice.id)" class="text-right"><span
-                                ng-class="invoice.due > 0 ? 'text-danger':''" ng-if="invoice.due != 0">@{{invoice.due | currency:'€':2}}</span>
+                                ng-class="invoice.due > 0 ? 'text-danger':''" ng-if="invoice.due != 0">@{{invoice.due | currencyConvert}}</span>
                     </td>
-                    <td ng-click="goTo(invoice.id)">@{{invoice.date_limit || "-" | date:'dd/MM/yyyy'}}</td>
+                    <td ng-click="goTo(invoice.id)">@{{invoice.date_limit | dateConvert:'date' }}</td>
                     <td ng-click="goTo(invoice.id)">@{{invoice.name_user_account_manager}}</td>
                     <td ng-click="goTo(invoice.id)"><span class="text-danger"
                                                           ng-show="invoice.finalized">{{ __t("Closed") }}</span><span

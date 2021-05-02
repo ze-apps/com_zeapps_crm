@@ -29,10 +29,10 @@
         </tr>
         <tr class="leaf" ng-repeat="activity in activities | orderBy: '-deadline' track by $index">
             <td></td>
-            <td>@{{ activity.created_at_info | date:'dd/MM/yyyy' }}</td>
+            <td>@{{ activity.created_at_info | dateConvert:'date' }}</td>
             <td>@{{ activity.libelle }}
             <div>@{{ activity.description }}</div></td>
-            <td>@{{ activity.deadline | date:'dd/MM/yyyy' }}</td>
+            <td>@{{ activity.deadline | dateConvert:'date' }}</td>
             <td>@{{ activity.status }}</td>
             <td>@{{ activity.name_user }}</td>
             <td class="text-right">

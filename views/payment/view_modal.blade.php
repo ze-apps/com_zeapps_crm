@@ -5,12 +5,12 @@
 <div class="modal-body">
     <div class="row">
         <div class="col-md-12">
-            {{ __t("Payment date") }} : @{{ payment.date_payment || "-"  | date:'dd/MM/yyyy' }}
+            {{ __t("Payment date") }} : @{{ payment.date_payment | dateConvert:'date' }}
         </div>
     </div>
     <div class="row">
         <div class="col-md-12">
-            {{ __t("Amount") }} : @{{ payment.total | currency:'€':2 }}
+            {{ __t("Amount") }} : @{{ payment.total | currencyConvert }}
         </div>
     </div>
     <div class="row">
@@ -32,11 +32,11 @@
                 </thead>
                 <tbody>
                 <tr ng-repeat="line in payment_lines">
-                    <td>@{{ line.invoice_data.date_creation || "-"  | date:'dd/MM/yyyy' }}</td>
+                    <td>@{{ line.invoice_data.date_creation | dateConvert:'date' }}</td>
                     <td>@{{ line.invoice_data.numerotation }}</td>
                     <td>@{{ line.invoice_data.libelle }}</td>
-                    <td class="text-right">@{{ line.invoice_data.total_ttc | currency:'€':2 }}</td>
-                    <td class="text-right">@{{ line.amount | currency:'€':2 }}</td>
+                    <td class="text-right">@{{ line.invoice_data.total_ttc | currencyConvert }}</td>
+                    <td class="text-right">@{{ line.amount | currencyConvert }}</td>
                 </tr>
                 </tbody>
             </table>

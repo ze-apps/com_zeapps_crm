@@ -130,7 +130,6 @@
                                        ng-change="updatePrice(-1, 'ttc')" ng-required="true"
                                        ng-disabled="form.type_product=='pack' && form.update_price_from_subline"
                                        ng-value="form.price_ht">
-                                <span class="input-group-addon">€</span>
                             </div>
                         </div>
                     </div>
@@ -143,7 +142,6 @@
                                        ng-required="true"
                                        ng-disabled="form.type_product=='pack' && form.update_price_from_subline"
                                        ng-value="form.price_ttc">
-                                <span class="input-group-addon">€</span>
                             </div>
                         </div>
                     </div>
@@ -217,21 +215,20 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>{{ __t("Out of taxes price") }} <span class="required" ng-if="price_list.type_pricelist == 0">*</span>
-                                    <span ng-if="price_list.type_pricelist == 1"> : @{{ (form.priceList[price_list.id].price_ht * (1-form.priceList[price_list.id].percentage_discount/100)).toFixed(2) }} €</span>
+                                    <span ng-if="price_list.type_pricelist == 1"> : @{{ (form.priceList[price_list.id].price_ht * (1-form.priceList[price_list.id].percentage_discount/100)) | currencyConvert }}</span>
                                 </label>
 
                                 <div class="input-group" ng-if="price_list.type_pricelist == 0">
                                     <input type="text" ng-model="form.priceList[price_list.id].price_ht" class="form-control"
                                            ng-change="updatePrice(price_list.id, 'ttc')" ng-required="true"
                                            ng-disabled="form.type_product=='pack' && form.update_price_from_subline">
-                                    <span class="input-group-addon">€</span>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>{{ __t("Amount including taxes") }} <span class="required" ng-if="price_list.type_pricelist == 0">*</span>
-                                    <span ng-if="price_list.type_pricelist == 1"> : @{{ (form.priceList[price_list.id].price_ttc * (1-form.priceList[price_list.id].percentage_discount/100)).toFixed(2) }} €</span>
+                                    <span ng-if="price_list.type_pricelist == 1"> : @{{ (form.priceList[price_list.id].price_ttc * (1-form.priceList[price_list.id].percentage_discount/100)) | currencyConvert }}</span>
                                 </label>
 
                                 <div class="input-group" ng-if="price_list.type_pricelist == 0">
@@ -239,7 +236,6 @@
                                            ng-change="updatePrice(price_list.id, 'ht')"
                                            ng-required="true"
                                            ng-disabled="form.type_product=='pack' && form.update_price_from_subline">
-                                    <span class="input-group-addon">€</span>
                                 </div>
                             </div>
                         </div>
@@ -366,8 +362,8 @@
                                 <td class="text-right">@{{ line.id_taxe != 0 ? (line.value_taxe | currency:'%':2) : ''
                                     }}
                                 </td>
-                                <td class="text-right">@{{ (line.price_ht * line.quantite) | currency:'€':2 }}</td>
-                                <td class="text-right">@{{ (line.price_ht * line.quantite) * (1+(line.value_taxe/100)) | currency:'€':2 }}</td>
+                                <td class="text-right">@{{ (line.price_ht * line.quantite) | currencyConvert }}</td>
+                                <td class="text-right">@{{ (line.price_ht * line.quantite) * (1+(line.value_taxe/100)) | currencyConvert }}</td>
                                 <td class="text-right">@{{ line.type_product }}</td>
 
                                 <td class="text-right">
@@ -411,9 +407,9 @@
                         <td ng-click="goToSupplierPurchase(supplierPurchase.id)">@{{ supplierPurchase.date_purchase }}</td>
                         <td ng-click="goToSupplierPurchase(supplierPurchase.id)">@{{ supplierPurchase.supplier }}</td>
                         <td ng-click="goToSupplierPurchase(supplierPurchase.id)" class="text-right">@{{ supplierPurchase.quantity | currency:'':0 }}</td>
-                        <td ng-click="goToSupplierPurchase(supplierPurchase.id)" class="text-right">@{{ supplierPurchase.price_ht | currency:'€':2 }}</td>
+                        <td ng-click="goToSupplierPurchase(supplierPurchase.id)" class="text-right">@{{ supplierPurchase.price_ht | currencyConvert }}</td>
                         <td ng-click="goToSupplierPurchase(supplierPurchase.id)" class="text-right">@{{ supplierPurchase.value_taxe | currency:'%':2 }}</td>
-                        <td ng-click="goToSupplierPurchase(supplierPurchase.id)" class="text-right">@{{ supplierPurchase.price_ttc | currency:'€':2 }}</td>
+                        <td ng-click="goToSupplierPurchase(supplierPurchase.id)" class="text-right">@{{ supplierPurchase.price_ttc | currencyConvert }}</td>
                         <td class="text-right">
                             <button type="button" class="btn btn-xs btn-danger" ng-click="deleteSupplierPurchase(supplierPurchase)">
                                 <i class="fa fa-trash fa-fw"></i>
