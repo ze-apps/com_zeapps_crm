@@ -154,6 +154,9 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                         line.price_unit = parseFloat(line.price_unit);
                         line.qty = parseFloat(line.qty);
                         line.discount = parseFloat(line.discount);
+
+                        // Recherche la quantité disponible en stock
+                        updateQuantityAvailable(line);
                     });
                     $scope.lines = lines;
 
@@ -233,6 +236,23 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
             }
         }
 
+
+        function updateQuantityAvailable(line) {
+            if ($scope.order.finalized != 1) {
+                zhttp.crm.product_stock.get(line.id_product, $scope.order.id_warehouse).then(function (response) {
+                    for (const key in $scope.lines) {
+                        if (Object.hasOwnProperty.call($scope.lines, key)) {
+                            let element = $scope.lines[key];
+                            if (element.id_product == line.id_product) {
+                                element.qtyInStock = parseFloat(response.data.product_stock.qty);
+                                $scope.lines[key] = element;
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
         function broadcast_code(code) {
             $rootScope.$broadcast("comZeappsCrm_dataOrderHook",
                 {
@@ -254,6 +274,9 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                     if (isNewLine) {
                         line.id = response.data;
                         $scope.lines.push(line);
+
+                        // recherche la quantité disponible en stock
+                        updateQuantityAvailable(line);
                     }
 
                     updateOrder(null, line.id);
@@ -332,8 +355,6 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
         }
 
         function finalize() {
-
-
             var isValid = true;
             angular.forEach(listControlFinalize, function (controlFinalize) {
                 if (controlFinalize($scope.order, toasts) == false) {
@@ -343,9 +364,7 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
 
 
             if (isValid) {
-
                 if (($scope.order.id_modality || parseInt($scope.order.id_modality, 10) != 0) && (($scope.order.id_company && parseInt($scope.order.id_company, 10) != 0) || ($scope.order.id_contact && parseInt($scope.order.id_contact, 10) != 0))) {
-
                     var modalInstance = $uibModal.open({
                         animation: true,
                         templateUrl: "/assets/angular/popupModalDeBase.html",
@@ -518,6 +537,9 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                                         line.id = response.data;
                                         $scope.lines.push(line);
                                         updateOrder(null, line.id);
+
+                                        // recherche la quantité disponible en stock
+                                        updateQuantityAvailable(line);
                                     }
                                 });
                             } else {
@@ -595,6 +617,9 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                                 line.id = response.data;
                                 $scope.lines.push(line);
                                 updateOrder(null, line.id);
+
+                                // recherche la quantité disponible en stock
+                                updateQuantityAvailable(line);
                             }
                         });
                     } else {

@@ -322,4 +322,5 @@ return [
     "Export impossible (+ 5000 results)" => "Export impossible (+ 5000 resultats)",
     "Export impossible (+ 50000 results)" => "Export impossible (+ 50000 resultats)",
     "Open" => "Ouvert",
+    "Insufficient quantity in stock, available:" => "Quantité insufisante en stock, disponible :",
 ];
