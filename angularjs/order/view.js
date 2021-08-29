@@ -245,6 +245,7 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                             let element = $scope.lines[key];
                             if (element.id_product == line.id_product) {
                                 element.qtyInStock = parseFloat(response.data.product_stock.qty);
+                                element.typeProductStock = response.data.product_stock.type_product ;
                                 $scope.lines[key] = element;
                             }
                         }

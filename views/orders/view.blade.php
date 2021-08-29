@@ -276,7 +276,7 @@
 
                             <td class="text-right" ng-if="line.type != 'subTotal' && line.type != 'comment'">
                                 @{{ line.qty | number }}
-                                <div ng-if="!order.finalized && line.qty > 0 && line.qtyInStock < line.qty" style="color:#dd0000;">
+                                <div ng-if="line.typeProductStock == 'product' && !order.finalized && line.qty > 0 && line.qtyInStock < line.qty" style="color:#dd0000;">
                                 {{ __t("Insufficient quantity in stock, available:") }} @{{ line.qtyInStock | number }}
                                 </div>
                             </td>
