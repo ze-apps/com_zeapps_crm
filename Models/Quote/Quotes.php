@@ -94,7 +94,7 @@ class Quotes extends Model
         $this->fieldModelInfo->string('reference_client', 255)->default("");
 
         $this->fieldModelInfo->integer('default_template_email', false, true)->default(0);
-        
+
 
         $this->fieldModelInfo->integer('id_company_delivery')->default(0);
         $this->fieldModelInfo->string('name_company_delivery', 255)->default("");
@@ -113,13 +113,13 @@ class Quotes extends Model
 
     public static function createFrom($srcBase, $typeSource)
     {
-        $src = clone $srcBase ;
+        $src = clone $srcBase;
 
         $dataEvent = [];
-        $dataEvent["id_src"] = $src->id ;
-        $dataEvent["numerotation_src"] = $src->numerotation ;
-        $dataEvent["src"] = $src ;
-        $dataEvent["typeSource"] = $typeSource ;
+        $dataEvent["id_src"] = $src->id;
+        $dataEvent["numerotation_src"] = $src->numerotation;
+        $dataEvent["src"] = $src;
+        $dataEvent["typeSource"] = $typeSource;
 
         // unset($src->id);
         // unset($src->numerotation);
@@ -131,12 +131,12 @@ class Quotes extends Model
         // }
 
         $champInterdit = [];
-        $champInterdit[] = "id" ;
-        $champInterdit[] = "numerotation" ;
-        $champInterdit[] = "created_at" ;
-        $champInterdit[] = "updated_at" ;
-        $champInterdit[] = "deleted_at" ;
-        $champInterdit[] = "final_pdf" ;
+        $champInterdit[] = "id";
+        $champInterdit[] = "numerotation";
+        $champInterdit[] = "created_at";
+        $champInterdit[] = "updated_at";
+        $champInterdit[] = "deleted_at";
+        $champInterdit[] = "final_pdf";
 
         $quotes = new Quotes();
         foreach (self::getSchema() as $key) {
@@ -147,9 +147,9 @@ class Quotes extends Model
         $quotes->date_creation = date('Y-m-d');
         $quotes->date_limit = date("Y-m-d", strtotime("+1 month", time()));
 
-        $dataEvent["quote"] = $quotes ;
+        $dataEvent["quote"] = $quotes;
         Event::sendAction('com_zeapps_crm_quote', 'create_from_before_save', $quotes);
-        $quotes = $dataEvent["quote"] ;
+        $quotes = $dataEvent["quote"];
         $quotes->save();
         Event::sendAction('com_zeapps_crm_quote', 'create_from_after_save', $quotes);
 
@@ -171,7 +171,7 @@ class Quotes extends Model
     {
         if ($lines) {
             foreach ($lines as $lineBase) {
-                $line = clone $lineBase ;
+                $line = clone $lineBase;
 
                 if (isset($line->sublines)) {
                     $sublines = $line->sublines;
@@ -185,7 +185,7 @@ class Quotes extends Model
                 $infoTransform["src_line_id"] = $line->id;
                 $infoTransform["typeDestination"] = "quotes";
                 $infoTransform["dest_id"] = $idDocument;
-                
+
 
                 unset($line->id);
                 unset($line->created_at);
@@ -263,13 +263,16 @@ class Quotes extends Model
     public static function parseFormat($result = null, $num = null)
     {
         if ($result && $num) {
-            $result = preg_replace_callback('/[[dDjzmMnyYgGhH\-_]*(x+)[dDjzmMnyYgGhH\-_]*]/',
+            $result = preg_replace_callback(
+                '/[[dDjzmMnyYgGhH\-_]*(x+)[dDjzmMnyYgGhH\-_]*]/',
                 function ($matches) use ($num) {
                     return str_replace($matches[1], substr($num, -strlen($matches[1])), $matches[0]);
                 },
-                $result);
+                $result
+            );
 
-            $result = preg_replace_callback('/[[dDjzmMnyYgGhH\-_]*(X+)[dDjzmMnyYgGhH\-_]*]/',
+            $result = preg_replace_callback(
+                '/[[dDjzmMnyYgGhH\-_]*(X+)[dDjzmMnyYgGhH\-_]*]/',
                 function ($matches) use ($num) {
                     if (strlen($matches[1]) > strlen($num)) {
                         return str_replace($matches[1], str_pad($num, strlen($matches[1]), '0', STR_PAD_LEFT), $matches[0]);
@@ -277,18 +280,21 @@ class Quotes extends Model
                         return str_replace($matches[1], substr($num, -strlen($matches[1])), $matches[0]);
                     }
                 },
-                $result);
+                $result
+            );
 
             $timestamp = time();
 
-            $result = preg_replace_callback('/[[xX0-9\-_]*([dDjzmMnyYgGhH]+)[xX0-9\-_]*[]\/\-_]/',
+            $result = preg_replace_callback(
+                '/[[xX0-9\-_]*([dDjzmMnyYgGhH]+)[xX0-9\-_]*[]\/\-_]/',
                 function ($matches) use ($timestamp) {
                     foreach ($matches as $match) {
                         return date($match, $timestamp);
                     }
                     return true;
                 },
-                $result);
+                $result
+            );
 
             $result = str_replace(array('[', ']'), '', $result);
 
@@ -307,15 +313,16 @@ class Quotes extends Model
 
 
 
-    private function getWeight($lines) {
-        $weight = 0 ;
+    private function getWeight($lines)
+    {
+        $weight = 0;
         foreach ($lines as $line) {
-            $weight += $line->weight * $line->qty ;
+            $weight += $line->weight * $line->qty;
             if (isset($line->sublines) && count($line->sublines)) {
-                $weight += $this->getWeight($line->sublines) * $line->qty ;
+                $weight += $this->getWeight($line->sublines) * $line->qty;
             }
         }
-        return $weight ;
+        return $weight;
     }
 
     private function updatePrice($quote)
@@ -331,13 +338,13 @@ class Quotes extends Model
             }
 
 
-            $total_ht = 0 ;
-            $total_tva = 0 ;
-            $total_ttc = 0 ;
-            $total_weight = $this->getWeight($lines) ;
+            $total_ht = 0;
+            $total_tva = 0;
+            $total_ttc = 0;
+            $total_weight = $this->getWeight($lines);
 
-            $total_ht_before_discount = 0 ;
-            $total_ttc_before_discount = 0 ;
+            $total_ht_before_discount = 0;
+            $total_ttc_before_discount = 0;
 
 
 
@@ -347,21 +354,21 @@ class Quotes extends Model
             foreach ($ecritureComptable as $ecriture) {
                 $objQuoteTaxes = new QuoteTaxes();
                 $objQuoteTaxes->id_quote = $quote->id;
-                $objQuoteTaxes->base_tax = $ecriture["total_ht"] ;
-                $objQuoteTaxes->id_taxe = $ecriture["id_taxe"] ;
-                $objQuoteTaxes->value_rate_tax = $ecriture["value_taxe"] ;
-                $objQuoteTaxes->amount_tax = $ecriture["amount_tva"] ;
-                $objQuoteTaxes->accounting_number = $ecriture["accounting_number"] ;
-                $objQuoteTaxes->accounting_number_taxe = $ecriture["accounting_number_taxe"] ;
-                $objQuoteTaxes->total_ttc = $ecriture["total_ttc"] ;
+                $objQuoteTaxes->base_tax = $ecriture["total_ht"];
+                $objQuoteTaxes->id_taxe = $ecriture["id_taxe"];
+                $objQuoteTaxes->value_rate_tax = $ecriture["value_taxe"];
+                $objQuoteTaxes->amount_tax = $ecriture["amount_tva"];
+                $objQuoteTaxes->accounting_number = $ecriture["accounting_number"];
+                $objQuoteTaxes->accounting_number_taxe = $ecriture["accounting_number_taxe"];
+                $objQuoteTaxes->total_ttc = $ecriture["total_ttc"];
                 $objQuoteTaxes->save();
 
-                $total_ht += $objQuoteTaxes->base_tax * 1 ;
-                $total_tva += $objQuoteTaxes->amount_tax * 1 ;
-                $total_ttc += $objQuoteTaxes->base_tax * 1 + $objQuoteTaxes->amount_tax * 1 ;
+                $total_ht += $objQuoteTaxes->base_tax * 1;
+                $total_tva += $objQuoteTaxes->amount_tax * 1;
+                $total_ttc += $objQuoteTaxes->base_tax * 1 + $objQuoteTaxes->amount_tax * 1;
 
-                $total_ht_before_discount += $ecriture["total_ht_before_discount"] ;
-                $total_ttc_before_discount += $ecriture["total_ttc_before_discount"] ;
+                $total_ht_before_discount += $ecriture["total_ht_before_discount"];
+                $total_ttc_before_discount += $ecriture["total_ttc_before_discount"];
             }
 
 
@@ -377,12 +384,14 @@ class Quotes extends Model
                     'total_prediscount_ttc' => $total_ttc_before_discount,
                     'total_discount_ht' => $total_ht_before_discount - $total_ht,
                     'total_discount_ttc' => $total_ttc_before_discount - $total_ttc
-                ]);
+                ]
+            );
         }
     }
 
-    private function updateLine($quote, $line, $taxes, $discount_prohibited = 0) {
-        $ecritureComptable = [] ;
+    private function updateLine($quote, $line, $taxes, $discount_prohibited = 0)
+    {
+        $ecritureComptable = [];
 
 
         // si c'est une ligne composée
@@ -393,12 +402,12 @@ class Quotes extends Model
 
             // recalcul le tableau en fonction du montant souhaité sur la ligne
             if ($line->update_price_from_subline == 0) {
-                $total_ttc = 0 ;
+                $total_ttc = 0;
                 foreach ($ecritureComptable as $ecriture) {
-                    $total_ttc += $ecriture["total_ttc"] * 1 ;
+                    $total_ttc += $ecriture["total_ttc"] * 1;
                 }
 
-                $ecritureComptable = $this->appliqueCoef($ecritureComptable, $line->price_unit_ttc_subline / $total_ttc);
+                $ecritureComptable = $this->appliqueCoef($ecritureComptable, $total_ttc != 0 ? $line->price_unit_ttc_subline / $total_ttc : 0);
             }
 
 
@@ -406,9 +415,9 @@ class Quotes extends Model
             $ecritureComptable = $this->appliqueRemise($ecritureComptable, $line->discount, $discount_prohibited || $line->discount_prohibited);
 
 
-        // si c'est une ligne simple
+            // si c'est une ligne simple
         } else {
-            $ecritureComptable[] = $this->getEcritureLigne($line, $taxes) ;
+            $ecritureComptable[] = $this->getEcritureLigne($line, $taxes);
 
             // applique la remise de la ligne
             if ($line->discount != 0) {
@@ -422,11 +431,11 @@ class Quotes extends Model
 
 
         // Calcul le prix unitaire
-        $price_unit = $line->price_unit ;
+        $price_unit = $line->price_unit;
         if (isset($line->sublines) && count($line->sublines)) {
-            $price_unit = 0 ;
+            $price_unit = 0;
             foreach ($ecritureComptable as &$ecriture) {
-                $price_unit += $ecriture["total_ht"] * 1 ;
+                $price_unit += $ecriture["total_ht"] * 1;
             }
         }
 
@@ -449,29 +458,29 @@ class Quotes extends Model
 
 
         // calcul le prix total de la ligne
-        $total_ht = 0 ;
-        $total_ttc = 0 ;
+        $total_ht = 0;
+        $total_ttc = 0;
         foreach ($ecritureComptable as &$ecriture) {
-            $total_ht += $ecriture["total_ht"] * 1 ;
-            $total_ttc += $ecriture["total_ttc"] * 1 ;
+            $total_ht += $ecriture["total_ht"] * 1;
+            $total_ttc += $ecriture["total_ttc"] * 1;
         }
 
 
         // Sauvergarder le prix unitaire
-        $line = QuoteLines::find($line->id) ;
+        $line = QuoteLines::find($line->id);
         if ($line) {
-            $miseAJour = false ;
+            $miseAJour = false;
 
             if ($line->price_unit != $price_unit) {
-                $miseAJour = true ;
+                $miseAJour = true;
             }
 
             if ($line->total_ht != $total_ht) {
-                $miseAJour = true ;
+                $miseAJour = true;
             }
 
             if ($line->total_ttc != $total_ttc) {
-                $miseAJour = true ;
+                $miseAJour = true;
             }
 
             if ($miseAJour) {
@@ -482,108 +491,112 @@ class Quotes extends Model
             }
         }
 
-        return $ecritureComptable ;
+        return $ecritureComptable;
     }
 
 
-    private function appliqueCoef($ecritureComptable = [], $coef = 0) {
+    private function appliqueCoef($ecritureComptable = [], $coef = 0)
+    {
         foreach ($ecritureComptable as &$ecriture) {
             $ecriture["total_ht"] = round($ecriture["total_ht"] * 1 * $coef, 2);
-            $ecriture["amount_tva"] = round($ecriture["total_ht"] * (($ecriture["value_taxe"]*1) / 100), 2) ;
-            $ecriture["total_ttc"] = $ecriture["total_ht"] + $ecriture["amount_tva"] ;
+            $ecriture["amount_tva"] = round($ecriture["total_ht"] * (($ecriture["value_taxe"] * 1) / 100), 2);
+            $ecriture["total_ttc"] = $ecriture["total_ht"] + $ecriture["amount_tva"];
 
-            $ecriture["total_ht_before_discount"] = $ecriture["total_ht"] ;
-            $ecriture["total_ttc_before_discount"] = $ecriture["total_ht"] + $ecriture["amount_tva"] ;
-
+            $ecriture["total_ht_before_discount"] = $ecriture["total_ht"];
+            $ecriture["total_ttc_before_discount"] = $ecriture["total_ht"] + $ecriture["amount_tva"];
         }
 
-        return $ecritureComptable ;
+        return $ecritureComptable;
     }
 
-    private function appliqueRemise($ecritureComptable = [], $remise = 0, $discount_prohibited = 0) {
+    private function appliqueRemise($ecritureComptable = [], $remise = 0, $discount_prohibited = 0)
+    {
         if ($discount_prohibited) {
-            $remise = 0 ;
+            $remise = 0;
         }
 
         foreach ($ecritureComptable as &$ecriture) {
             $ecriture["total_ht"] = round($ecriture["total_ht"] * 1 * (1 - $remise / 100), 2);
-            $ecriture["amount_tva"] = round($ecriture["total_ht"] * (($ecriture["value_taxe"]*1) / 100), 2) ;
-            $ecriture["total_ttc"] = $ecriture["total_ht"] + $ecriture["amount_tva"] ;
+            $ecriture["amount_tva"] = round($ecriture["total_ht"] * (($ecriture["value_taxe"] * 1) / 100), 2);
+            $ecriture["total_ttc"] = $ecriture["total_ht"] + $ecriture["amount_tva"];
         }
 
-        return $ecritureComptable ;
+        return $ecritureComptable;
     }
 
-    private function getEcritureLigne($line, $taxes) {
+    private function getEcritureLigne($line, $taxes)
+    {
         // recherche le taux de TVA
-        $accounting_number_taxe = "" ;
-        $value_taxe = $line->value_taxe * 1 ;
+        $accounting_number_taxe = "";
+        $value_taxe = $line->value_taxe * 1;
         foreach ($taxes as $taxe) {
             if ($taxe->id == $line->id_taxe) {
-                $accounting_number_taxe = $taxe->accounting_number ;
-                $value_taxe = $taxe->value * 1 ;
+                $accounting_number_taxe = $taxe->accounting_number;
+                $value_taxe = $taxe->value * 1;
                 break;
             }
         }
 
-        $dataLine = [] ;
-        $dataLine["accounting_number"] = $line->accounting_number ;
-        $dataLine["accounting_number_taxe"] = $accounting_number_taxe ;
-        $dataLine["id_taxe"] = $line->id_taxe ;
-        $dataLine["value_taxe"] = $value_taxe ;
-        $dataLine["total_ht"] = $line->price_unit * 1 ;
-        $dataLine["amount_tva"] = round($dataLine["total_ht"] * 1 * ($value_taxe / 100), 2) ;
-        $dataLine["total_ttc"] = $dataLine["total_ht"] + $dataLine["amount_tva"] ;
+        $dataLine = [];
+        $dataLine["accounting_number"] = $line->accounting_number;
+        $dataLine["accounting_number_taxe"] = $accounting_number_taxe;
+        $dataLine["id_taxe"] = $line->id_taxe;
+        $dataLine["value_taxe"] = $value_taxe;
+        $dataLine["total_ht"] = $line->price_unit * 1;
+        $dataLine["amount_tva"] = round($dataLine["total_ht"] * 1 * ($value_taxe / 100), 2);
+        $dataLine["total_ttc"] = $dataLine["total_ht"] + $dataLine["amount_tva"];
 
-        $dataLine["total_ht_before_discount"] = $dataLine["total_ht"] ;
-        $dataLine["total_ttc_before_discount"] = $dataLine["total_ttc"] ;
+        $dataLine["total_ht_before_discount"] = $dataLine["total_ht"];
+        $dataLine["total_ttc_before_discount"] = $dataLine["total_ttc"];
 
-        return $dataLine ;
+        return $dataLine;
     }
 
-    private function fuisionTableTaxe($source, $ajout) {
+    private function fuisionTableTaxe($source, $ajout)
+    {
         foreach ($ajout as $lineAdd) {
             $addToTable = true;
 
             foreach ($source as &$line) {
-                if ($line["accounting_number"] == $lineAdd["accounting_number"]
+                if (
+                    $line["accounting_number"] == $lineAdd["accounting_number"]
                     && $line["accounting_number_taxe"] == $lineAdd["accounting_number_taxe"]
                     && $line["id_taxe"] == $lineAdd["id_taxe"]
                     && $line["value_taxe"] == $lineAdd["value_taxe"]
                 ) {
-                    $addToTable = false ;
+                    $addToTable = false;
 
-                    $line["total_ht"] += $lineAdd["total_ht"] * 1 ;
+                    $line["total_ht"] += $lineAdd["total_ht"] * 1;
 
                     // calcul du montant de la TVA
-                    $line["amount_tva"] = round($line["total_ht"] * ($line["value_taxe"] / 100), 2) ;
-                    $line["total_ttc"] = $line["total_ht"] + $line["amount_tva"] ;
+                    $line["amount_tva"] = round($line["total_ht"] * ($line["value_taxe"] / 100), 2);
+                    $line["total_ttc"] = $line["total_ht"] + $line["amount_tva"];
 
-                    $line["total_ht_before_discount"] += $lineAdd["total_ht_before_discount"] ;
-                    $line["total_ttc_before_discount"] += $lineAdd["total_ttc_before_discount"] ;
+                    $line["total_ht_before_discount"] += $lineAdd["total_ht_before_discount"];
+                    $line["total_ttc_before_discount"] += $lineAdd["total_ttc_before_discount"];
 
                     break;
                 }
             }
 
             if ($addToTable) {
-                $dataLine = [] ;
-                $dataLine["accounting_number"] = $lineAdd["accounting_number"] ;
-                $dataLine["accounting_number_taxe"] = $lineAdd["accounting_number_taxe"] ;
-                $dataLine["id_taxe"] = $lineAdd["id_taxe"] ;
-                $dataLine["value_taxe"] = $lineAdd["value_taxe"] * 1 ;
-                $dataLine["total_ht"] = $lineAdd["total_ht"] * 1 ;
-                $dataLine["amount_tva"] = round($dataLine["total_ht"] * ($dataLine["value_taxe"] / 100), 2) ;
-                $dataLine["total_ttc"] = $dataLine["total_ht"] + $dataLine["amount_tva"] ;
+                $dataLine = [];
+                $dataLine["accounting_number"] = $lineAdd["accounting_number"];
+                $dataLine["accounting_number_taxe"] = $lineAdd["accounting_number_taxe"];
+                $dataLine["id_taxe"] = $lineAdd["id_taxe"];
+                $dataLine["value_taxe"] = $lineAdd["value_taxe"] * 1;
+                $dataLine["total_ht"] = $lineAdd["total_ht"] * 1;
+                $dataLine["amount_tva"] = round($dataLine["total_ht"] * ($dataLine["value_taxe"] / 100), 2);
+                $dataLine["total_ttc"] = $dataLine["total_ht"] + $dataLine["amount_tva"];
 
-                $dataLine["total_ht_before_discount"] = $lineAdd["total_ht_before_discount"] ;
-                $dataLine["total_ttc_before_discount"] = $lineAdd["total_ttc_before_discount"] ;
+                $dataLine["total_ht_before_discount"] = $lineAdd["total_ht_before_discount"];
+                $dataLine["total_ttc_before_discount"] = $lineAdd["total_ttc_before_discount"];
 
-                $source[] = $dataLine ;
+                $source[] = $dataLine;
             }
         }
 
-        return $source ;
+        return $source;
     }
 
 
