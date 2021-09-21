@@ -848,6 +848,22 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                     var url_file = angular.fromJson(response.data);
                     options.attachments.push({file: url_file, url: "/" + url_file, name: "quote.pdf"});
 
+                    // récupère les fichiers à ajouter par les autres modules
+                    let dataSendEmailAttachment = {
+                        idQuote: $scope.quote.id,
+                        zehttp: zhttp
+                    };
+                    zeappsBroadcast.emit(
+                        "ComZeappsCrmQuoteGetAttachments", 
+                        dataSendEmailAttachment
+                    );
+
+                    if (dataSendEmailAttachment.attachments) {
+                        dataSendEmailAttachment.attachments.forEach(element=>{
+                            options.attachments.push(element);
+                        });
+                    }
+
                     zeapps_modal.loadModule("zeapps", "email_writer", options, function (objReturn) {
                         if (objReturn) {
                         }
