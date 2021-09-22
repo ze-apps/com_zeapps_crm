@@ -1013,12 +1013,30 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
             options.data_templates.push({tag: "[label_doc]", value: $scope.order.libelle});
             options.data_templates.push({tag: "[doc_manager]", value: $scope.order.name_user_account_manager});
 
-            console.log(options);
-
             zhttp.crm.order.pdf.make($scope.order.id).then(function (response) {
                 if (response.data && response.data != "false") {
                     var url_file = angular.fromJson(response.data);
                     options.attachments.push({file: url_file, url: "/" + url_file, name: "order.pdf"});
+
+
+
+                    // récupère les fichiers à ajouter par les autres modules
+                    let dataSendEmailAttachment = {
+                        idOrder: $scope.order.id,
+                        zehttp: zhttp
+                    };
+                    zeappsBroadcast.emit(
+                        "ComZeappsCrmOrderGetAttachments", 
+                        dataSendEmailAttachment
+                    );
+
+                    if (dataSendEmailAttachment.attachments) {
+                        dataSendEmailAttachment.attachments.forEach(element=>{
+                            options.attachments.push(element);
+                        });
+                    }
+
+
 
                     zeapps_modal.loadModule("zeapps", "email_writer", options, function (objReturn) {
                         if (objReturn) {
