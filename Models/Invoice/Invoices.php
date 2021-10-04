@@ -532,6 +532,7 @@ class Invoices extends Model
 
             //set the PDF header
             $mpdf = new Mpdf();
+            $mpdf->curlAllowUnsafeSslRequests = true;
 
             //generate the PDF from the given html
             $mpdf->WriteHTML($html);

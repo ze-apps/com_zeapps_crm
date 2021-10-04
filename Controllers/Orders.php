@@ -577,6 +577,7 @@ class Orders extends Controller
 
         //set the PDF
         $mpdf = new Mpdf();
+        $mpdf->curlAllowUnsafeSslRequests = true;
 
         //generate the PDF from the given html
         $mpdf->WriteHTML($html);
