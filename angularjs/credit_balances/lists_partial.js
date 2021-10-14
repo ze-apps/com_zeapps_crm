@@ -1,0 +1,114 @@
+app.controller("ComZeappsCrmCreditBalanceListsPartialCtrl", ["$scope", "zeHttp", "$location", "$timeout",
+	function ($scope, zhttp, $location, $timeout) {
+
+        $scope.templateForm = '/com_zeapps_crm/credit_balances/form_multiple_modal';
+
+        $scope.id_company = 0;
+        $scope.filters = {
+            main: [
+                {
+                    format: 'input',
+                    field: 'numerotation LIKE',
+                    type: 'text',
+                    label: __t("Invoice No.")
+                },
+                {
+                    format: 'input',
+                    field: 'name_company LIKE',
+                    type: 'text',
+                    label: __t("Compagny")
+                },
+                {
+                    format: 'input',
+                    field: 'name_contact LIKE',
+                    type: 'text',
+                    label: __t("Contact")
+                }
+            ]
+        };
+        $scope.filter_model = {};
+        $scope.page = 1;
+        $scope.pageSize = 15;
+        $scope.total = 0;
+
+        var src = "credits";
+        var src_id = 0;
+
+        $scope.loadList = loadList;
+        $scope.addPaiements = addPaiements;
+        $scope.goTo = goTo;
+        $scope.isOverdue = isOverdue;
+
+        $scope.$on("comZeappsContact_dataEntrepriseHook", function(event, data) {
+            if ($scope.id_company !== data.id_company){
+                src = "company";
+                src_id = data.id_company;
+
+                loadList() ;
+            }
+        });
+        $scope.$emit("comZeappsContact_triggerEntrepriseHook", {});
+
+        $scope.$on("comZeappsContact_dataContactHook", function(event, data) {
+            if ($scope.id_contact !== data.id_contact){
+                src = "contact";
+                src_id = data.id_contact;
+
+                loadList() ;
+            }
+        });
+        $scope.$emit("comZeappsContact_triggerContactHook", {});
+
+        $timeout(function(){ // Making sure the default call is only triggered after the potential broadcast from a hook
+            if(src_id === 0) {
+                loadList();
+            }
+        }, 0);
+
+        function loadList() {
+            var offset = ($scope.page - 1) * $scope.pageSize;
+            var formatted_filters = angular.toJson($scope.filter_model);
+
+            zhttp.crm.credit_balance.get_all(src_id, src, $scope.pageSize, offset, formatted_filters).then(function (response) {
+                if (response.data && response.data !== "false") {
+                    $scope.credits = response.data.credits;
+                    $scope.total = response.data.total;
+
+                    angular.forEach($scope.credits, function (credit) {
+                        credit.due_date = new Date(credit.due_date);
+                    });
+                }
+            });
+        }
+
+		function goTo(id){
+		    $location.url('/ng/com_zeapps_crm/credit_balances/' + id);
+        }
+
+        function isOverdue(credit){
+		    return credit.due_date < new Date() ? 'bg-danger' : '';
+        }
+
+        function addPaiements(detail) {
+            console.log(detail);
+            var data = detail;
+
+            if(data.date_payment) {
+                var y = data.date_payment.getFullYear();
+                var M = data.date_payment.getMonth();
+                var d = data.date_payment.getDate();
+
+                data.date_payment = new Date(Date.UTC(y, M, d));
+            }
+            else{
+                data.date_payment = 0;
+            }
+
+            var formatted_data = angular.toJson(data);
+            zhttp.crm.credit_balance.save_multiples(formatted_data).then(function(response){
+                if(response.data && response.data !== "false"){
+                    loadList();
+                }
+            });
+        }
+	}]);

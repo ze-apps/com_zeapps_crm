@@ -1,0 +1,22 @@
+[
+  {
+    "id": "1",
+    "label": "Vente par correspondance",
+    "default_value": "1"
+  },
+  {
+    "id": "2",
+    "label": "Web",
+    "default_value": "0"
+  },
+  {
+    "id": "3",
+    "label": "Salons",
+    "default_value": "0"
+  },
+  {
+    "id": "4",
+    "label": "Distributeur",
+    "default_value": "0"
+  }
+]
