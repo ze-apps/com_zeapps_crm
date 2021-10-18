@@ -328,4 +328,5 @@ return [
     "In progress" => "In progress",
     "Won" => "Won",
     "Lost" => "Lost",
+    "If you do not want the default contacts for the document, please include in the list of emails:" => "If you do not want the default contacts for the document, please include in the list of emails:",
 ];
