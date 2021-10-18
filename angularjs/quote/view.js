@@ -67,8 +67,13 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
         $scope.sendByMail = sendByMail;
 
 
-        $scope.status = zhttp.crm.statuts.getAll();
-
+        $scope.status = [];
+        zhttp.crm.statuts.getAll().then(function(response){
+            if(response.data && response.data != "false"){
+                $scope.status = response.data;
+            }
+        });
+        console.log($scope.status);
 
         //////////////////// INIT ////////////////////
         if ($rootScope.quotes === undefined || $rootScope.quotes.ids === undefined) {
