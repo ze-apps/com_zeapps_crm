@@ -13,6 +13,12 @@ $tabRight["label"] = __t("Write") ;
 $rightZeapps[] = $tabRight ;
 
 $tabRight = array () ;
+$tabRight["id"] = "com_zeapps_crm_close_order" ;
+$tabRight["module"] = "com_zeapps_crm" ;
+$tabRight["label"] = __t("Closing of orders") ;
+$rightZeapps[] = $tabRight ;
+
+$tabRight = array () ;
 $tabRight["id"] = "com_zeapps_crm_sendemail" ;
 $tabRight["module"] = "com_zeapps_crm" ;
 $tabRight["label"] = __t("Send email") ;

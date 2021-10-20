@@ -332,4 +332,5 @@ return [
     "order" => "order",
     "delivery" => "delivery",
     "invoice" => "invoice",
+    "Closing of orders" => "Closing of orders",
 ];

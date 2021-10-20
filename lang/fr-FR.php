@@ -330,4 +330,5 @@ return [
     "order" => "commande",
     "delivery" => "bon-livraison",
     "invoice" => "facture",
+    "Closing of orders" => "Clôture des commandes",
 ];
