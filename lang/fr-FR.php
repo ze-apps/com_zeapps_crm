@@ -323,4 +323,12 @@ return [
     "Export impossible (+ 50000 results)" => "Export impossible (+ 50000 resultats)",
     "Open" => "Ouvert",
     "Insufficient quantity in stock, available:" => "Quantité insufisante en stock, disponible :",
+    "In progress" => "En cours",
+    "Won" => "Gagné",
+    "Lost" => "Perdu",
+    "If you do not want the default contacts for the document, please include in the list of emails:" => "Si vous ne souhaitez pas les contacts par defaut du document, veuillez inclure dans la liste des emails :",
+    "order" => "commande",
+    "delivery" => "bon-livraison",
+    "invoice" => "facture",
+    "Closing of orders" => "Clôture des commandes",
 ];

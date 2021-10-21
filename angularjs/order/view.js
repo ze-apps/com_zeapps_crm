@@ -1015,10 +1015,9 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
 
             zhttp.crm.order.pdf.make($scope.order.id).then(function (response) {
                 if (response.data && response.data != "false") {
-                    var url_file = angular.fromJson(response.data);
-                    options.attachments.push({file: url_file, url: "/" + url_file, name: "order.pdf"});
-
-
+                    let url_file = angular.fromJson(response.data);
+                    let fileNamePdf = __t("order") + "-" + $scope.order.numerotation + ".pdf" ;
+                    options.attachments.push({file: url_file, url: "/" + url_file, name: fileNamePdf});
 
                     // récupère les fichiers à ajouter par les autres modules
                     let dataSendEmailAttachment = {

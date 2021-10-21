@@ -911,8 +911,9 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
 
             zhttp.crm.invoice.pdf.make($scope.invoice.id).then(function (response) {
                 if (response.data && response.data != "false") {
-                    var url_file = angular.fromJson(response.data);
-                    options.attachments.push({file: url_file, url: "/" + url_file, name: "invoice.pdf"});
+                    let url_file = angular.fromJson(response.data);
+                    let fileNamePdf = __t("invoice") + "-" + $scope.invoice.numerotation + ".pdf" ;
+                    options.attachments.push({file: url_file, url: "/" + url_file, name: fileNamePdf});
 
                     zeapps_modal.loadModule("zeapps", "email_writer", options, function (objReturn) {
                         if (objReturn) {

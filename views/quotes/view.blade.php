@@ -15,9 +15,7 @@
                     <p>
                         <span class="form-group form-inline">
                             <select class="form-control input-sm" ng-model="quote.status" ng-change="updateStatus()">
-                                <option ng-repeat="stat in status" ng-value="@{{stat.id}}">
-                            @{{ stat.label }}
-                        </option>
+                                <option ng-repeat="stat in status" ng-value="@{{stat.id}}">@{{ stat.label }}</option>
                             </select>
                         </span>
                         (@{{ quote.probability | number:2 }}%)

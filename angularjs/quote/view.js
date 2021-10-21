@@ -67,8 +67,13 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
         $scope.sendByMail = sendByMail;
 
 
-        $scope.status = zhttp.crm.statuts.getAll();
-
+        $scope.status = [];
+        zhttp.crm.statuts.getAll().then(function(response){
+            if(response.data && response.data != "false"){
+                $scope.status = response.data;
+            }
+        });
+        console.log($scope.status);
 
         //////////////////// INIT ////////////////////
         if ($rootScope.quotes === undefined || $rootScope.quotes.ids === undefined) {
@@ -845,8 +850,9 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
 
             zhttp.crm.quote.pdf.make($scope.quote.id).then(function (response) {
                 if (response.data && response.data != "false") {
-                    var url_file = angular.fromJson(response.data);
-                    options.attachments.push({file: url_file, url: "/" + url_file, name: "quote.pdf"});
+                    let url_file = angular.fromJson(response.data);
+                    let fileNamePdf = __t("quote") + "-" + $scope.quote.numerotation + ".pdf" ;
+                    options.attachments.push({file: url_file, url: "/" + url_file, name: fileNamePdf});
 
                     // récupère les fichiers à ajouter par les autres modules
                     let dataSendEmailAttachment = {

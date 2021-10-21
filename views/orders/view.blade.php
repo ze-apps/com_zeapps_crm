@@ -106,9 +106,11 @@
                                 @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
                                     <ze-btn fa="copy" color="success" hint="{{ __t("Duplicate") }}" direction="left"
                                             ng-click="transform()"></ze-btn>
-                                    <ze-btn fa="lock" color="danger" hint="{{ __t("Close") }}" direction="left"
-                                            ng-click="finalize()"
-                                            ng-hide="order.finalized"></ze-btn>
+                                    @if (in_array("com_zeapps_crm_close_order", $zeapps_right_current_user))
+                                        <ze-btn fa="lock" color="danger" hint="{{ __t("Close") }}" direction="left"
+                                                ng-click="finalize()"
+                                                ng-hide="order.finalized"></ze-btn>
+                                    @endif
                                 @endif
 
                                 <div class="btn-group btn-group-xs" role="group" ng-if="nb_orders > 0">

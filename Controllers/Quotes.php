@@ -585,7 +585,7 @@ class Quotes extends Controller
         //load the view and saved it into $html variable
         $html = view("quotes/PDF", $data, BASEPATH . 'App/com_zeapps_crm/views/')->getContent();
 
-        $nomPDF = $data['quote']->name_company . '_' . $data['quote']->numerotation . '_' . $data['quote']->libelle;
+        $nomPDF = __t("quote") . '_' . $data['quote']->numerotation . '_' . $data['quote']->libelle;
         $nomPDF = preg_replace('/\W+/', '_', $nomPDF);
         $nomPDF = trim($nomPDF, '_');
 

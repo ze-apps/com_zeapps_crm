@@ -19,7 +19,10 @@
                 <div class="form-group">
                     <label>{{ __t("Default recipient (separate addresses with a comma)") }}</label>
                     <input type="text" class="form-control" ng-model="form.default_to">
+                    {{ __t("If you do not want the default contacts for the document, please include in the list of emails:") }}<br>
+                [excludeOrigin]
                 </div>
+                
             </div>
         </div>
 
