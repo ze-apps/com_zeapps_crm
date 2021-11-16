@@ -137,7 +137,6 @@ app.controller("ComZeappsCrmProductViewCtrl", ["$scope", "$location", "zeHttp", 
                 }
 
             }, function () {
-                //console.log("rien");
             });
 
         }
@@ -188,7 +187,6 @@ app.controller("ComZeappsCrmProductViewCtrl", ["$scope", "$location", "zeHttp", 
                 }
 
             }, function () {
-                //console.log("rien");
             });
 
         }
@@ -238,7 +236,6 @@ app.controller("ComZeappsCrmProductViewCtrl", ["$scope", "$location", "zeHttp", 
                 }
 
             }, function () {
-                //console.log("rien");
             });
 
         }

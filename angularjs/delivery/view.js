@@ -317,7 +317,6 @@ app.controller("ComZeappsCrmDeliveryViewCtrl", ["$scope", "$routeParams", "$loca
                         });
                     }
                 }, function () {
-                    //console.log("rien");
                 });
 
             } else {

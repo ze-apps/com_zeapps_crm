@@ -90,7 +90,6 @@ app.controller("ComZeappsCrmCreditBalanceListsPartialCtrl", ["$scope", "zeHttp",
         }
 
         function addPaiements(detail) {
-            console.log(detail);
             var data = detail;
 
             if(data.date_payment) {

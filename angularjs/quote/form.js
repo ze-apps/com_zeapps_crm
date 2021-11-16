@@ -249,7 +249,6 @@ app.controller("ComZeappsCrmQuoteFormCtrl", ["$scope", "$routeParams", "$rootSco
             if (resetAddress == undefined) {
                 resetAddress = true ;
             }
-            console.log(resetAddress);
 
             if (resetAddress && $scope.form.id_company == 0) {
                 $scope.form.id_company_address_billing = 0;

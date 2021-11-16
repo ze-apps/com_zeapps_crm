@@ -144,7 +144,6 @@ app.controller("ComZeappsCrmProductComposeFormCtrl", ["$scope", "$routeParams", 
 		function ajouter_ligne() {
 			// charge la modal de la liste de produit
 			zeapps_modal.loadModule("com_zeapps_crm", "search_product", {}, function(objReturn) {
-				//console.log(objReturn);
 				if (objReturn) {
 					var data = {};
 					data.id = 0;
