@@ -108,10 +108,10 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                             activity.deadline = new Date(activity.deadline);
                         }
                     });
-
+                    
                     $scope.documents = response.data.documents || [];
                     angular.forEach($scope.documents, function (document) {
-                        document.date = new Date(document.date);
+                        document.created_at = new Date(document.created_at);
                     });
 
                     $scope.quote.global_discount = parseFloat($scope.quote.global_discount);
@@ -729,6 +729,7 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
         }
 
         function addDocument(document) {
+            document.file = document.files[0];
             Upload.upload({
                 url: zhttp.crm.quote.document.upload() + $scope.quote.id,
                 data: document
@@ -736,7 +737,7 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                 function (response) {
                     $scope.progress = false;
                     if (response.data && response.data != "false") {
-                        response.data.date = new Date(response.data.date);
+                        response.data.created_at = new Date(response.data.created_at);
                         response.data.id_user = $rootScope.user.id;
                         response.data.name_user = $rootScope.user.firstname[0] + '. ' + $rootScope.user.lastname;
                         $scope.documents.push(response.data);
@@ -756,7 +757,7 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                 function (response) {
                     $scope.progress = false;
                     if (response.data && response.data != "false") {
-                        response.data.date = new Date(response.data.date);
+                        response.data.created_at = new Date(response.data.created_at);
                         toasts('success', __t("The documents have been updated"));
                     } else {
                         toasts('danger', __t("There was an error updating the documents"));

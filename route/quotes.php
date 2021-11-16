@@ -41,7 +41,8 @@ Routeur::post("/com_zeapps_crm/quotes/makePDF/{id}", 'App\\com_zeapps_crm\\Contr
 // TODO : implémenter le methode ci-dessous
 // TODO : implémenter le methode ci-dessous
 // TODO : implémenter le methode ci-dessous
-Routeur::get("/com_zeapps_crm/quotes/uploadDocuments/", 'App\\com_zeapps_crm\\Controllers\\Quotes@uploadDocuments');
+//Routeur::get("/com_zeapps_crm/quotes/uploadDocuments/", 'App\\com_zeapps_crm\\Controllers\\Quotes@uploadDocuments');
+Routeur::post("/com_zeapps_crm/quotes/uploadDocuments/{idQuote}", 'App\\com_zeapps_crm\\Controllers\\Quotes@uploadDocuments');
 Routeur::post("/com_zeapps_crm/quotes/del_document/{id}", 'App\\com_zeapps_crm\\Controllers\\Quotes@del_document');
 
 Routeur::get("/com_zeapps_crm/quotes/getPDF/", 'App\\com_zeapps_crm\\Controllers\\Quotes@getPDF');

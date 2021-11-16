@@ -26,7 +26,7 @@ use App\com_zeapps_crm\Models\Order\Orders as OrdersModel;
 use App\com_zeapps_crm\Models\Delivery\Deliveries as DeliveriesModel;
 
 use App\com_zeapps_crm\Models\DocumentRelated;
-
+use Symfony\Component\Translation\Dumper\DumperInterface;
 use Zeapps\Models\Config;
 
 use Zeapps\Core\Mail;
@@ -555,6 +555,34 @@ class Quotes extends Controller
         $id = $request->input('id', 0);
 
         echo json_encode(QuoteActivities::where("id", $id)->delete());
+    }
+
+    public function uploadDocuments(Request $request)
+    {
+        $id = $request->input('id', 0);
+
+        $objQuoteDocuments = new QuoteDocuments();
+
+        if ($id) {
+            $objQuoteDocuments = QuoteDocuments::where('id', $id)->first();
+
+            if (isset($_FILES["file"])) {
+                // TODO : supprimer l'ancien fichier
+                // TODO : supprimer l'ancien fichier
+                // TODO : supprimer l'ancien fichier
+                // TODO : supprimer l'ancien fichier
+            }
+        } else {
+            $objQuoteDocuments->id_quote = $request->input('idQuote', 0);
+        }
+        
+        $objQuoteDocuments->name = $request->input("name");
+        if (isset($_FILES["file"])) {
+            $objQuoteDocuments->path = Storage::uploadFile($_FILES["file"]);
+        }
+        $objQuoteDocuments->save();
+
+        echo json_encode($objQuoteDocuments);
     }
 
 
