@@ -303,7 +303,6 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
                         });
                     }
                 }, function () {
-                    //console.log("rien");
                 });
 
 

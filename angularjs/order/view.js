@@ -412,7 +412,6 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                             });
                         }
                     }, function () {
-                        //console.log("rien");
                     });
                 } else {
                     var msg_toast = "";

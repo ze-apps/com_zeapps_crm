@@ -26,7 +26,6 @@ app.controller("ComZeappsCrmModalActivitiesListCtrl", ["$scope", "$uibModalInsta
     $scope.quoteActivityTplUrl = "/com_zeapps_crm/crm_commons/form_activity";
 
     $scope.quote = option ;
-    console.log(option);
 
     function loadList() {
         $scope.activities = [];
