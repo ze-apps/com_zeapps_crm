@@ -27,6 +27,7 @@ class OrderDocuments extends Model {
         $this->fieldModelInfo->increments('id');
         $this->fieldModelInfo->integer('id_order')->default(0);
         $this->fieldModelInfo->string('name', 255)->default("");
+        $this->fieldModelInfo->text('description')->default("");
         $this->fieldModelInfo->string('path', 255)->default("");
         $this->fieldModelInfo->timestamps();
         $this->fieldModelInfo->softDeletes();

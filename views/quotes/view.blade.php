@@ -444,7 +444,7 @@
                     @endif
 
 
-                    <table class="table table-responsive table-condensed">
+                    <table class="table table-responsive table-condensed" ng-show="documents.length">
                         <thead>
                             <tr>
                                 <th>{{ __t("Name") }}</th>

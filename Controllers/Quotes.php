@@ -27,6 +27,7 @@ use App\com_zeapps_crm\Models\Delivery\Deliveries as DeliveriesModel;
 
 use App\com_zeapps_crm\Models\DocumentRelated;
 use Symfony\Component\Translation\Dumper\DumperInterface;
+use Zeapps\Controllers\User;
 use Zeapps\Models\Config;
 
 use Zeapps\Core\Mail;
@@ -101,6 +102,7 @@ class Quotes extends Controller
 
 
         $documents = QuoteDocuments::where('id_quote', $id)->get();
+
         $activities = QuoteActivities::where('id_quote', $id)->orderBy("deadline", "DESC")->get();
         
         if ($quote->id_company) {
@@ -566,23 +568,43 @@ class Quotes extends Controller
         if ($id) {
             $objQuoteDocuments = QuoteDocuments::where('id', $id)->first();
 
-            if (isset($_FILES["file"])) {
-                // TODO : supprimer l'ancien fichier
-                // TODO : supprimer l'ancien fichier
-                // TODO : supprimer l'ancien fichier
-                // TODO : supprimer l'ancien fichier
+            // Suppression de l'ancien fichier
+            if ($objQuoteDocuments && isset($_FILES["file"])) {
+                Storage::deleteFile($objQuoteDocuments->path);
             }
         } else {
             $objQuoteDocuments->id_quote = $request->input('idQuote', 0);
         }
         
         $objQuoteDocuments->name = $request->input("name");
+        $objQuoteDocuments->description = $request->input("description");
         if (isset($_FILES["file"])) {
             $objQuoteDocuments->path = Storage::uploadFile($_FILES["file"]);
         }
         $objQuoteDocuments->save();
 
         echo json_encode($objQuoteDocuments);
+    }
+
+    public function del_document(Request $request)
+    {
+        $id = $request->input('id', 0);
+
+        $objQuoteDocuments = new QuoteDocuments();
+
+        if ($id) {
+            $objQuoteDocuments = QuoteDocuments::where('id', $id)->first();
+            if ($objQuoteDocuments) {
+                Storage::deleteFile($objQuoteDocuments->path);
+
+                $objQuoteDocuments->delete();
+
+                echo "ok" ;
+                exit();
+            }
+        }
+
+        echo "false";
     }
 
 
