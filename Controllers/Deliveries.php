@@ -541,6 +541,57 @@ class Deliveries extends Controller
         echo json_encode(DeliveryActivities::where("id", $id)->delete());
     }
 
+    public function uploadDocuments(Request $request)
+    {
+        $id = $request->input('id', 0);
+
+        $objDeliveryDocuments = new DeliveryDocuments();
+
+        if ($id) {
+            $objDeliveryDocuments = DeliveryDocuments::where('id', $id)->first();
+
+            // Suppression de l'ancien fichier
+            if ($objDeliveryDocuments && isset($_FILES["file"])) {
+                Storage::deleteFile($objDeliveryDocuments->path);
+            }
+        } else {
+            $objDeliveryDocuments->id_delivery = $request->input('idDelivery', 0);
+        }
+        
+        $objDeliveryDocuments->name = $request->input("name");
+        $objDeliveryDocuments->description = $request->input("description");
+        $objDeliveryDocuments->id_user = $request->input("id_user");
+        $objDeliveryDocuments->user_name = $request->input("user_name");
+
+        if (isset($_FILES["file"])) {
+            $objDeliveryDocuments->path = Storage::uploadFile($_FILES["file"]);
+        }
+        $objDeliveryDocuments->save();
+
+        echo json_encode($objDeliveryDocuments);
+    }
+
+    public function del_document(Request $request)
+    {
+        $id = $request->input('id', 0);
+
+        $objDeliveryDocuments = new DeliveryDocuments();
+
+        if ($id) {
+            $objDeliveryDocuments = DeliveryDocuments::where('id', $id)->first();
+            if ($objDeliveryDocuments) {
+                Storage::deleteFile($objDeliveryDocuments->path);
+
+                $objDeliveryDocuments->delete();
+
+                echo "ok" ;
+                exit();
+            }
+        }
+
+        echo "false";
+    }
+
     public function makePDF(Request $request)
     {
         $id = $request->input('id', 0);

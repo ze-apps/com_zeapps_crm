@@ -701,6 +701,57 @@ class Invoices extends Controller
         echo json_encode(InvoiceActivities::where("id", $id)->delete());
     }
 
+    public function uploadDocuments(Request $request)
+    {
+        $id = $request->input('id', 0);
+
+        $objInvoiceDocuments = new InvoiceDocuments();
+
+        if ($id) {
+            $objInvoiceDocuments = InvoiceDocuments::where('id', $id)->first();
+
+            // Suppression de l'ancien fichier
+            if ($objInvoiceDocuments && isset($_FILES["file"])) {
+                Storage::deleteFile($objInvoiceDocuments->path);
+            }
+        } else {
+            $objInvoiceDocuments->id_invoice = $request->input('idInvoice', 0);
+        }
+        
+        $objInvoiceDocuments->name = $request->input("name");
+        $objInvoiceDocuments->description = $request->input("description");
+        $objInvoiceDocuments->id_user = $request->input("id_user");
+        $objInvoiceDocuments->user_name = $request->input("user_name");
+
+        if (isset($_FILES["file"])) {
+            $objInvoiceDocuments->path = Storage::uploadFile($_FILES["file"]);
+        }
+        $objInvoiceDocuments->save();
+
+        echo json_encode($objInvoiceDocuments);
+    }
+
+    public function del_document(Request $request)
+    {
+        $id = $request->input('id', 0);
+
+        $objInvoiceDocuments = new InvoiceDocuments();
+
+        if ($id) {
+            $objInvoiceDocuments = InvoiceDocuments::where('id', $id)->first();
+            if ($objInvoiceDocuments) {
+                Storage::deleteFile($objInvoiceDocuments->path);
+
+                $objInvoiceDocuments->delete();
+
+                echo "ok" ;
+                exit();
+            }
+        }
+
+        echo "false";
+    }
+
 
     public function makePDF(Request $request)
     {

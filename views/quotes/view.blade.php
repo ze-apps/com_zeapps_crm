@@ -465,7 +465,7 @@
                                     @{{ document.description }}
                                 </td>
                                 <td>
-                                    @{{ document.name_user }}
+                                    @{{ document.user_name }}
                                 </td>
                                 <td>
                                     @{{ document.created_at | dateConvert:'datetime' }}

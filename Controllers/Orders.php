@@ -82,7 +82,6 @@ class Orders extends Controller
 
     public function get(Request $request)
     {
-
         $id = $request->input('id', 0);
 
         $order = OrdersModel::where('id', $id)->first();
@@ -540,6 +539,58 @@ class Orders extends Controller
         $id = $request->input('id', 0);
 
         echo json_encode(OrderActivities::where("id", $id)->delete());
+    }
+
+
+    public function uploadDocuments(Request $request)
+    {
+        $id = $request->input('id', 0);
+
+        $objOrderDocuments = new OrderDocuments();
+
+        if ($id) {
+            $objOrderDocuments = OrderDocuments::where('id', $id)->first();
+
+            // Suppression de l'ancien fichier
+            if ($objOrderDocuments && isset($_FILES["file"])) {
+                Storage::deleteFile($objOrderDocuments->path);
+            }
+        } else {
+            $objOrderDocuments->id_order = $request->input('idOrder', 0);
+        }
+        
+        $objOrderDocuments->name = $request->input("name");
+        $objOrderDocuments->description = $request->input("description");
+        $objOrderDocuments->id_user = $request->input("id_user");
+        $objOrderDocuments->user_name = $request->input("user_name");
+
+        if (isset($_FILES["file"])) {
+            $objOrderDocuments->path = Storage::uploadFile($_FILES["file"]);
+        }
+        $objOrderDocuments->save();
+
+        echo json_encode($objOrderDocuments);
+    }
+
+    public function del_document(Request $request)
+    {
+        $id = $request->input('id', 0);
+
+        $objOrderDocuments = new OrderDocuments();
+
+        if ($id) {
+            $objOrderDocuments = OrderDocuments::where('id', $id)->first();
+            if ($objOrderDocuments) {
+                Storage::deleteFile($objOrderDocuments->path);
+
+                $objOrderDocuments->delete();
+
+                echo "ok" ;
+                exit();
+            }
+        }
+
+        echo "false";
     }
 
 

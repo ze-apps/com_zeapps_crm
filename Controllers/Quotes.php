@@ -578,6 +578,9 @@ class Quotes extends Controller
         
         $objQuoteDocuments->name = $request->input("name");
         $objQuoteDocuments->description = $request->input("description");
+        $objQuoteDocuments->id_user = $request->input("id_user");
+        $objQuoteDocuments->user_name = $request->input("user_name");
+
         if (isset($_FILES["file"])) {
             $objQuoteDocuments->path = Storage::uploadFile($_FILES["file"]);
         }
