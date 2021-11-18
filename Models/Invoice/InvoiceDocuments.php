@@ -27,6 +27,9 @@ class InvoiceDocuments extends Model {
         $this->fieldModelInfo->increments('id');
         $this->fieldModelInfo->integer('id_invoice')->default(0);
         $this->fieldModelInfo->string('name', 255)->default("");
+        $this->fieldModelInfo->text('description')->default("");
+        $this->fieldModelInfo->integer('id_user', false, true)->default(0);
+        $this->fieldModelInfo->string('user_name', 255)->default("");
         $this->fieldModelInfo->string('path', 255)->default("");
         $this->fieldModelInfo->timestamps();
         $this->fieldModelInfo->softDeletes();

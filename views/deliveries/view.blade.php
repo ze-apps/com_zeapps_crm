@@ -498,29 +498,42 @@
                                     data-title="{{ __t("Add document") }}"></ze-btn>
                         </div>
                     @endif
-                    <div class="card_document" ng-repeat="document in documents | orderBy:['-date','-id']">
-                        <div class="card_document-head clearfix">
-                            <div class="pull-right">
-                                @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
-                                    <ze-btn data-fa="edit" data-hint="{{ __t("Edit") }}" data-direction="left" data-color="info"
-                                            ze-modalform="editDocument"
-                                            data-edit="document"
-                                            data-template="deliveryDocumentTplUrl"
-                                            data-title="{{ __t("Edit document") }}"></ze-btn>
-                                    <ze-btn data-fa="trash" data-hint="{{ __t("Delete") }}" data-direction="left" data-color="danger"
-                                            ng-click="deleteDocument(document)" ze-confirmation></ze-btn>
-                                @endif
-                            </div>
-                            <i class="fa fa-fw fa-file"></i>
-                            <a ng-href="@{{ document.path }}" class="text-primary" target="_blank">
-                                <strong>@{{ document.label }}</strong>
-                            </a>
-                        </div>
-                        <div class="card_document-body" ng-if="document.description">@{{ document.description }}</div>
-                        <div class="card_document-footer text-muted">
-                            {{ __t("Sent by") }} <strong>@{{ document.name_user }}</strong> le <strong>@{{ document.date | dateConvert:'datetime' }}</strong>
-                        </div>
-                    </div>
+
+                    <table class="table table-responsive table-condensed" ng-show="documents.length">
+                        <thead>
+                            <tr>
+                                <th>{{ __t("Name") }}</th>
+                                <th>{{ __t("description") }}</th>
+                                <th>{{ __t("Sent by") }}</th>
+                                <th>{{ __t("date") }}</th>
+                                <th class="text-right"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="document in documents | orderBy:['-date','-id']">
+                                <td>
+                                    <a ng-href="@{{ document.path }}" class="text-primary" target="_blank">
+                                        <strong>@{{ document.name }}</strong>
+                                    </a>
+                                </td>
+                                <td>
+                                    @{{ document.description }}
+                                </td>
+                                <td>
+                                    @{{ document.user_name }}
+                                </td>
+                                <td>
+                                    @{{ document.created_at | dateConvert:'datetime' }}
+                                </td>
+                                <td class="text-right">
+                                    @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
+                                    <ze-btn data-fa="edit" data-hint="{{ __t("Edit") }}" data-direction="left" data-color="info" ze-modalform="editDocument" data-edit="document" data-template="deliveryDocumentTplUrl" data-title="{{ __t("Edit document") }}"></ze-btn>
+                                    <ze-btn data-fa="trash" data-hint="{{ __t("Delete") }}" data-direction="left" data-color="danger" ng-click="deleteDocument(document)" ze-confirmation></ze-btn>
+                                    @endif
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

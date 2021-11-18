@@ -37,16 +37,8 @@ Routeur::post("/com_zeapps_crm/orders/del_activity/{id}", 'App\\com_zeapps_crm\\
 
 Routeur::post("/com_zeapps_crm/orders/makePDF/{id}", 'App\\com_zeapps_crm\\Controllers\\Orders@makePDF');
 
-// TODO : implémenter le methode ci-dessous
-// TODO : implémenter le methode ci-dessous
-// TODO : implémenter le methode ci-dessous
-// TODO : implémenter le methode ci-dessous
-// TODO : implémenter le methode ci-dessous
-// TODO : implémenter le methode ci-dessous
-// TODO : implémenter le methode ci-dessous
-// TODO : implémenter le methode ci-dessous
-Routeur::get("/com_zeapps_crm/orders/uploadDocuments/", 'App\\com_zeapps_crm\\Controllers\\Orders@uploadDocuments');
-Routeur::post("/com_zeapps_crm/orders/del_document/{id}", 'App\\com_zeapps_crm\\Controllers\\Orders@del_document');
+Routeur::post("/com_zeapps_crm/orders/uploadDocuments/{idOrder}", 'App\\com_zeapps_crm\\Controllers\\Orders@uploadDocuments');
+Routeur::get("/com_zeapps_crm/orders/del_document/{id}", 'App\\com_zeapps_crm\\Controllers\\Orders@del_document');
 
 Routeur::get("/com_zeapps_crm/orders/getPDF/", 'App\\com_zeapps_crm\\Controllers\\Orders@getPDF');
 

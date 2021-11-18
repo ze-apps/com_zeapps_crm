@@ -466,7 +466,7 @@ app.config(["$provide",
             }
 
             function del_document_invoice(id) {
-                return zeHttp.post("/com_zeapps_crm/invoices/del_document/" + id);
+                return zeHttp.get("/com_zeapps_crm/invoices/del_document/" + id);
             }
 
             function get_pdf_invoice() {
@@ -542,7 +542,7 @@ app.config(["$provide",
             }
 
             function del_document_order(id) {
-                return zeHttp.post("/com_zeapps_crm/orders/del_document/" + id);
+                return zeHttp.get("/com_zeapps_crm/orders/del_document/" + id);
             }
 
             function get_pdf_order() {
@@ -619,7 +619,7 @@ app.config(["$provide",
             }
 
             function del_document_delivery(id) {
-                return zeHttp.post("/com_zeapps_crm/deliveries/del_document/" + id);
+                return zeHttp.get("/com_zeapps_crm/deliveries/del_document/" + id);
             }
 
             function get_pdf_delivery() {
@@ -703,7 +703,7 @@ app.config(["$provide",
             }
 
             function del_document_quote(id) {
-                return zeHttp.post("/com_zeapps_crm/quotes/del_document/" + id);
+                return zeHttp.get("/com_zeapps_crm/quotes/del_document/" + id);
             }
 
             function get_pdf_quote() {

@@ -99,7 +99,7 @@ app.controller("ComZeappsCrmDeliveryViewCtrl", ["$scope", "$routeParams", "$loca
 
                     $scope.documents = response.data.documents || [];
                     angular.forEach($scope.documents, function (document) {
-                        document.date = new Date(document.date);
+                        document.created_at = new Date(document.created_at);
                     });
 
 
@@ -768,6 +768,9 @@ app.controller("ComZeappsCrmDeliveryViewCtrl", ["$scope", "$routeParams", "$loca
         }
 
         function addDocument(document) {
+            document.file = document.files[0];
+            document.id_user = $rootScope.user.id ;
+            document.user_name = $rootScope.user.firstname[0] + '. ' + $rootScope.user.lastname ;
             Upload.upload({
                 url: zhttp.crm.delivery.document.upload() + $scope.delivery.id,
                 data: document
@@ -775,9 +778,9 @@ app.controller("ComZeappsCrmDeliveryViewCtrl", ["$scope", "$routeParams", "$loca
                 function (response) {
                     $scope.progress = false;
                     if (response.data && response.data != "false") {
-                        response.data.date = new Date(response.data.date);
+                        response.data.created_at = new Date(response.data.created_at);
                         response.data.id_user = $rootScope.user.id;
-                        response.data.name_user = $rootScope.user.firstname[0] + '. ' + $rootScope.user.lastname;
+                        response.data.user_name = $rootScope.user.firstname[0] + '. ' + $rootScope.user.lastname;
                         $scope.documents.push(response.data);
                         toasts('success', __t("The documents have been uploaded"));
                     } else {
@@ -788,6 +791,9 @@ app.controller("ComZeappsCrmDeliveryViewCtrl", ["$scope", "$routeParams", "$loca
         }
 
         function editDocument(document) {
+            if (document.files) {
+                document.file = document.files[0];
+            }
             Upload.upload({
                 url: zhttp.crm.delivery.document.upload() + $scope.delivery.id,
                 data: document
@@ -795,7 +801,15 @@ app.controller("ComZeappsCrmDeliveryViewCtrl", ["$scope", "$routeParams", "$loca
                 function (response) {
                     $scope.progress = false;
                     if (response.data && response.data != "false") {
-                        response.data.date = new Date(response.data.date);
+
+                        // remplace le contenu dans le tableau
+                        for (let index = 0; index < $scope.documents.length; index++) {
+                            let documentLoop = $scope.documents[index];
+                            if (documentLoop.id == response.data.id) {
+                                $scope.documents[index] = response.data ;
+                            }
+                        }
+
                         toasts('success', __t("The documents have been updated"));
                     } else {
                         toasts('danger', __t("There was an error updating the documents"));
