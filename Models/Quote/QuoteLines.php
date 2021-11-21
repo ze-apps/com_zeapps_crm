@@ -2,6 +2,8 @@
 
 namespace App\com_zeapps_crm\Models\Quote;
 
+use Zeapps\Core\Event;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -183,6 +185,14 @@ class QuoteLines extends Model
     public static function updateNewTable($id_quote, $sort)
     {
         Capsule::statement('UPDATE com_zeapps_crm_quote_lines SET sort = (sort+1) WHERE id_quote = ' . $id_quote . ' AND sort >= ' . $sort);
+    }
+
+    public function delete() {
+        $idToDelete = $this->id ;
+
+        parent::delete();
+
+        Event::sendAction('com_zeapps_crm', 'QuoteLinesDelete', $idToDelete);
     }
 
 
