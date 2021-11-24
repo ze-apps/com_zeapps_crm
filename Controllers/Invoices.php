@@ -139,22 +139,29 @@ class Invoices extends Controller
         }
 
 
-        $invoices_rs = InvoicesModel::orderBy('date_creation', 'DESC')->orderBy('id', 'DESC');
+        $invoices_rs = InvoicesModel::select("com_zeapps_crm_invoices.*")
+            ->groupBy('com_zeapps_crm_invoices.id')
+            ->orderBy('com_zeapps_crm_invoices.date_creation', 'DESC')
+            ->orderBy('com_zeapps_crm_invoices.id', 'DESC');
         foreach ($filters as $key => $value) {
-            if ($key == "unpaid") {
+            if ($key == "id_account_family") {
+                $invoices_rs = $invoices_rs->join('com_zeapps_contact_companies', 'com_zeapps_contact_companies.id', '=', 'com_zeapps_crm_invoices.id_company');
+                $invoices_rs = $invoices_rs->where("com_zeapps_contact_companies.id_account_family", $value);
+
+            } elseif ($key == "unpaid") {
                 if ($value) {
-                    $invoices_rs = $invoices_rs->where("finalized", 1);
-                    $invoices_rs = $invoices_rs->where("due", "!=", 0);
-                    $invoices_rs = $invoices_rs->where("date_limit", "<", date("Y-m-d H:i:s"));
+                    $invoices_rs = $invoices_rs->where("com_zeapps_crm_invoices.finalized", 1);
+                    $invoices_rs = $invoices_rs->where("com_zeapps_crm_invoices.due", "!=", 0);
+                    $invoices_rs = $invoices_rs->where("com_zeapps_crm_invoices.date_limit", "<", date("Y-m-d H:i:s"));
                 }
             } elseif (strpos($key, " LIKE") !== false) {
                 $key = str_replace(" LIKE", "", $key);
-                $invoices_rs = $invoices_rs->where($key, 'like', '%' . $value . '%');
+                $invoices_rs = $invoices_rs->where("com_zeapps_crm_invoices." . $key, 'like', '%' . $value . '%');
             } elseif (strpos($key, " ") !== false) {
                 $tabKey = explode(" ", $key);
-                $invoices_rs = $invoices_rs->where($tabKey[0], $tabKey[1], $value);
+                $invoices_rs = $invoices_rs->where("com_zeapps_crm_invoices." . $tabKey[0], $tabKey[1], $value);
             } else {
-                $invoices_rs = $invoices_rs->where($key, $value);
+                $invoices_rs = $invoices_rs->where("com_zeapps_crm_invoices." . $key, $value);
             }
         }
 
@@ -171,7 +178,7 @@ class Invoices extends Controller
 
         $ids = [];
         if ($total < 500) {
-            $rows = $invoices_rs_id->select(array("id"))->get();
+            $rows = $invoices_rs_id->select(array("com_zeapps_crm_invoices.id"))->get();
             foreach ($rows as $row) {
                 array_push($ids, $row->id);
             }

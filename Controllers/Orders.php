@@ -133,16 +133,23 @@ class Orders extends Controller
         }
 
 
-        $orders_rs = OrdersModel::orderBy('date_creation', 'DESC')->orderBy('id', 'DESC');
+        $orders_rs = OrdersModel::select("com_zeapps_crm_orders.*")
+            ->groupBy('com_zeapps_crm_orders.id')
+            ->orderBy('com_zeapps_crm_orders.date_creation', 'DESC')
+            ->orderBy('com_zeapps_crm_orders.id', 'DESC');
         foreach ($filters as $key => $value) {
-            if (strpos($key, " LIKE")) {
+            if ($key == "id_account_family") {
+                $orders_rs = $orders_rs->join('com_zeapps_contact_companies', 'com_zeapps_contact_companies.id', '=', 'com_zeapps_crm_orders.id_company');
+                $orders_rs = $orders_rs->where("com_zeapps_contact_companies.id_account_family", $value);
+
+            } elseif (strpos($key, " LIKE")) {
                 $key = str_replace(" LIKE", "", $key);
-                $orders_rs = $orders_rs->where($key, 'like', '%' . $value . '%');
+                $orders_rs = $orders_rs->where("com_zeapps_crm_orders." . $key, 'like', '%' . $value . '%');
             } elseif (strpos($key, " ") !== false) {
                 $tabKey = explode(" ", $key);
-                $orders_rs = $orders_rs->where($tabKey[0], $tabKey[1], $value);
+                $orders_rs = $orders_rs->where("com_zeapps_crm_orders." . $tabKey[0], $tabKey[1], $value);
             } else {
-                $orders_rs = $orders_rs->where($key, $value);
+                $orders_rs = $orders_rs->where("com_zeapps_crm_orders." . $key, $value);
             }
         }
 
@@ -159,7 +166,7 @@ class Orders extends Controller
 
         $ids = [];
         if ($total < 500) {
-            $rows = $orders_rs_id->select(array("id"))->get();
+            $rows = $orders_rs_id->select(array("com_zeapps_crm_orders.id"))->get();
             foreach ($rows as $row) {
                 array_push($ids, $row->id);
             }
