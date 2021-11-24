@@ -135,16 +135,23 @@ class Deliveries extends Controller
         }
 
 
-        $deliveries_rs = DeliveriesModel::orderBy('date_creation', 'DESC')->orderBy('id', 'DESC');
+        $deliveries_rs = DeliveriesModel::select("com_zeapps_crm_deliveries.*")
+            ->groupBy('com_zeapps_crm_deliveries.id')
+            ->orderBy('com_zeapps_crm_deliveries.date_creation', 'DESC')
+            ->orderBy('com_zeapps_crm_deliveries.id', 'DESC');
         foreach ($filters as $key => $value) {
-            if (strpos($key, " LIKE")) {
+            if ($key == "id_account_family") {
+                $deliveries_rs = $deliveries_rs->join('com_zeapps_contact_companies', 'com_zeapps_contact_companies.id', '=', 'com_zeapps_crm_deliveries.id_company');
+                $deliveries_rs = $deliveries_rs->where("com_zeapps_contact_companies.id_account_family", $value);
+
+            } elseif (strpos($key, " LIKE")) {
                 $key = str_replace(" LIKE", "", $key);
-                $deliveries_rs = $deliveries_rs->where($key, 'like', '%' . $value . '%');
+                $deliveries_rs = $deliveries_rs->where("com_zeapps_crm_deliveries." . $key, 'like', '%' . $value . '%');
             } elseif (strpos($key, " ") !== false) {
                 $tabKey = explode(" ", $key);
-                $deliveries_rs = $deliveries_rs->where($tabKey[0], $tabKey[1], $value);
+                $deliveries_rs = $deliveries_rs->where("com_zeapps_crm_deliveries." . $tabKey[0], $tabKey[1], $value);
             } else {
-                $deliveries_rs = $deliveries_rs->where($key, $value);
+                $deliveries_rs = $deliveries_rs->where("com_zeapps_crm_deliveries." . $key, $value);
             }
         }
 
@@ -161,7 +168,7 @@ class Deliveries extends Controller
 
         $ids = [];
         if ($total < 500) {
-            $rows = $deliveries_rs_id->select(array("id"))->get();
+            $rows = $deliveries_rs_id->select(array("com_zeapps_crm_deliveries.id"))->get();
             foreach ($rows as $row) {
                 array_push($ids, $row->id);
             }

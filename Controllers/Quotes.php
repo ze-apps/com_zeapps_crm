@@ -167,7 +167,11 @@ class Quotes extends Controller
 
 
         foreach ($filters as $key => $value) {
-            if ($key == "date_activite >=") {
+            if ($key == "id_account_family") {
+                $quotes_rs = $quotes_rs->join('com_zeapps_contact_companies', 'com_zeapps_contact_companies.id', '=', 'com_zeapps_crm_quotes.id_company');
+                $quotes_rs = $quotes_rs->where("com_zeapps_contact_companies.id_account_family", $value);
+
+            } elseif ($key == "date_activite >=") {
                 $quotes_rs = $quotes_rs->where("com_zeapps_crm_quote_activities.deadline", ">=", $value);
 
             } elseif ($key == "date_activite <=") {

@@ -152,6 +152,14 @@ app.controller("ComZeappsCrmQuoteListsPartialCtrl", ["$scope", "$location", "$ro
                     type: 'text',
                     label: __t("Less than"),
                     size: 3
+                },
+                {
+                    format: 'select',
+                    field: 'id_account_family',
+                    type: 'text',
+                    label: __t("Type of account"),
+                    options: [],
+                    size: 3
                 }
             ]
         };
@@ -160,6 +168,14 @@ app.controller("ComZeappsCrmQuoteListsPartialCtrl", ["$scope", "$location", "$ro
         $scope.pageSize = 15;
         $scope.total = 0;
         $scope.templateQuote = '/com_zeapps_crm/quotes/form_modal';
+
+
+        // charge les familles de compte pour le filtre
+        zhttp.contact.company.context().then(function (response) {
+            if (response.status == 200) {
+                $scope.filters.secondaries[8].options = response.data.account_families ;
+            }
+        });
 
 
         // remonte la liste des managers
