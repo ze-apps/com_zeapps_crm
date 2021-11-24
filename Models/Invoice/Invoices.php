@@ -514,8 +514,12 @@ class Invoices extends Model
                 }
             }
 
+            dump($data);
+
             //load the view and saved it into $html variable
             $html = view("invoices/PDF", $data, BASEPATH . 'App/com_zeapps_crm/views/')->getContent();
+
+            dump($html);
 
             $nomPDF = $data['invoice']->name_company . '_' . $data['invoice']->numerotation . '_' . $data['invoice']->libelle;
             $nomPDF = preg_replace('/\W+/', '_', $nomPDF);
@@ -529,9 +533,11 @@ class Invoices extends Model
                 $pdfFilePath = Storage::getTempFolder() . $nomPDF . '.pdf';
             }
 
+            dump($pdfFilePath);
 
             //set the PDF header
             $mpdf = new Mpdf();
+            dump($mpdf);
             $mpdf->curlAllowUnsafeSslRequests = true;
 
             //generate the PDF from the given html
