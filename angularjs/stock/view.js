@@ -127,9 +127,11 @@ app.controller("ComZeappsCrmStockViewCtrl", ["$scope", "$location", "$rootScope"
         }
 
 
-
-
-		$rootScope.current_warehouse = $rootScope.current_warehouse || $rootScope.user.id_warehouse;
+        if (!$rootScope.current_warehouse && $rootScope.user && $rootScope.user.id_warehouse) {
+            $rootScope.current_warehouse = $rootScope.user.id_warehouse;
+        } else if (!$rootScope.current_warehouse) {
+            $rootScope.current_warehouse = 1;
+        }
 
         $scope.filters = {
             main: [
@@ -196,33 +198,47 @@ app.controller("ComZeappsCrmStockViewCtrl", ["$scope", "$location", "$rootScope"
 		$scope.goTo = goTo;
 
         function loadList(context){
-            $scope.showSaveInventaire = false ;
+            if ($scope.filter_model) {
+                $scope.showSaveInventaire = false ;
 
-            context = context || "";
-            var id = $scope.currentBranch ? $scope.currentBranch.id : 0;
-            var offset = ($scope.page - 1) * $scope.pageSize;
-            var formatted_filters = angular.toJson($scope.filter_model);
+                context = context || "";
+                let id = $scope.currentBranch ? $scope.currentBranch.id : 0;
+                let offset = ($scope.page - 1) * $scope.pageSize;
+                let formatted_filters = angular.toJson($scope.filter_model);
 
+                // insert la date au bon format
+                if ($scope.filter_model && $scope.filter_model.date_stock) {
+                    let anneeFiltre = $scope.filter_model.date_stock.getFullYear();
+                    let moisFiltre = $scope.filter_model.date_stock.getMonth() + 1;
+                    let joursFiltre = $scope.filter_model.date_stock.getDay();
 
-            // désactive le mode inventaire si l'entrepot et la date ne sont pas définis
-            if (!$scope.filter_model.id_warehouse || !$scope.filter_model.date_stock) {
-                $scope.modeInventaire = false ;
-            }
-
-            $rootScope.current_warehouse = $scope.filter_model.id_warehouse;
-
-            zhttp.crm.product_stock.get_all(id, $scope.pageSize, offset, context, formatted_filters).then(function (response) {
-                if (response.data && response.data != "false") {
-                    $scope.product_stocks = response.data.product_stocks;
-                    angular.forEach($scope.product_stocks, function (product_stock) {
-                        product_stock.qty_inventaire = product_stock.qty ;
-                        product_stock.value_ht = parseFloat(product_stock.value_ht);
-                        calcTimeLeft(product_stock);
-                    });
-
-                    $scope.total = response.data.total;
+                    formatted_filters = JSON.parse(formatted_filters);
+                    formatted_filters.date_stock = anneeFiltre + "-" + moisFiltre + "-" + joursFiltre;
+                    formatted_filters = JSON.stringify(formatted_filters);
                 }
-            });
+
+
+                // désactive le mode inventaire si l'entrepot et la date ne sont pas définis
+                if (!$scope.filter_model.id_warehouse || !$scope.filter_model.date_stock) {
+                    $scope.modeInventaire = false ;
+                }
+
+                $rootScope.current_warehouse = $scope.filter_model.id_warehouse;
+
+
+                zhttp.crm.product_stock.get_all(id, $scope.pageSize, offset, context, formatted_filters).then(function (response) {
+                    if (response.data && response.data != "false") {
+                        $scope.product_stocks = response.data.product_stocks;
+                        angular.forEach($scope.product_stocks, function (product_stock) {
+                            product_stock.qty_inventaire = product_stock.qty ;
+                            product_stock.value_ht = parseFloat(product_stock.value_ht);
+                            calcTimeLeft(product_stock);
+                        });
+
+                        $scope.total = response.data.total;
+                    }
+                });
+            }
         }
 
         function goTo(id){
