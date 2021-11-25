@@ -210,7 +210,7 @@ app.controller("ComZeappsCrmStockViewCtrl", ["$scope", "$location", "$rootScope"
                 if ($scope.filter_model && $scope.filter_model.date_stock) {
                     let anneeFiltre = $scope.filter_model.date_stock.getFullYear();
                     let moisFiltre = $scope.filter_model.date_stock.getMonth() + 1;
-                    let joursFiltre = $scope.filter_model.date_stock.getDay();
+                    let joursFiltre = $scope.filter_model.date_stock.getDate();
 
                     formatted_filters = JSON.parse(formatted_filters);
                     formatted_filters.date_stock = anneeFiltre + "-" + moisFiltre + "-" + joursFiltre;
