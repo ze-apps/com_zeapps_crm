@@ -95,6 +95,17 @@ app.controller("ComZeappsCrmStockViewCtrl", ["$scope", "$location", "$rootScope"
             var offset = ($scope.page - 1) * $scope.pageSize;
             var formatted_filters = angular.toJson($scope.filter_model);
 
+            // insert la date au bon format
+            if ($scope.filter_model && $scope.filter_model.date_stock) {
+                let anneeFiltre = $scope.filter_model.date_stock.getFullYear();
+                let moisFiltre = $scope.filter_model.date_stock.getMonth() + 1;
+                let joursFiltre = $scope.filter_model.date_stock.getDate();
+
+                formatted_filters = JSON.parse(formatted_filters);
+                formatted_filters.date_stock = anneeFiltre + "-" + moisFiltre + "-" + joursFiltre;
+                formatted_filters = JSON.stringify(formatted_filters);
+            }
+
             $rootScope.current_warehouse = $scope.filter_model.id_warehouse;
 
             zhttp.crm.product_stock.export(id, $scope.pageSize, offset, "", formatted_filters).then(function(response){
