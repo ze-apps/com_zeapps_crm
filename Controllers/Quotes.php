@@ -195,7 +195,7 @@ class Quotes extends Controller
         // $total = $quotes_rs->count();
         $quotes_rs_id = $quotes_rs;
 
-        $total = $quotes_rs->get()->count();
+        $total = $quotes_rs->get()->count(); // attention, on peut avoir un bug sur une grosse quantité de résultats
         $quotes = $quotes_rs->limit($limit)->offset($offset)->get();
 
 
