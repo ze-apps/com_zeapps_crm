@@ -134,7 +134,7 @@ class Orders extends Controller
 
 
         $orders_rs = OrdersModel::select("com_zeapps_crm_orders.*")
-            ->groupBy('com_zeapps_crm_orders.id')
+            /*->groupBy('com_zeapps_crm_orders.id') // Attention si on active ça, bug avec le count pour le total*/
             ->orderBy('com_zeapps_crm_orders.date_creation', 'DESC')
             ->orderBy('com_zeapps_crm_orders.id', 'DESC');
         foreach ($filters as $key => $value) {

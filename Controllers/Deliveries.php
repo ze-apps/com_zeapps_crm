@@ -136,7 +136,7 @@ class Deliveries extends Controller
 
 
         $deliveries_rs = DeliveriesModel::select("com_zeapps_crm_deliveries.*")
-            ->groupBy('com_zeapps_crm_deliveries.id')
+            /*->groupBy('com_zeapps_crm_deliveries.id') // Attention si on active ça, bug avec le count pour le total*/
             ->orderBy('com_zeapps_crm_deliveries.date_creation', 'DESC')
             ->orderBy('com_zeapps_crm_deliveries.id', 'DESC');
         foreach ($filters as $key => $value) {
