@@ -153,7 +153,7 @@ class Orders extends Controller
             }
         }
 
-        $total = $orders_rs->get()->count();
+        $total = $orders_rs->count();
         $orders_rs_id = $orders_rs;
 
         $orders = $orders_rs->limit($limit)->offset($offset)->get();;
