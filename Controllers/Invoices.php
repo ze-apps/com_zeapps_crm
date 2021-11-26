@@ -165,10 +165,10 @@ class Invoices extends Controller
             }
         }
 
-        $total = $invoices_rs->count();
+        $total = $invoices_rs->get()->count();
         $invoices_rs_id = $invoices_rs;
 
-        $invoices = $invoices_rs->limit($limit)->offset($offset)->get();;
+        $invoices = $invoices_rs->limit($limit)->offset($offset)->get();
 
 
         if (!$invoices) {

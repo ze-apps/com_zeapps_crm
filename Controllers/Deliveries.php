@@ -155,7 +155,7 @@ class Deliveries extends Controller
             }
         }
 
-        $total = $deliveries_rs->count();
+        $total = $deliveries_rs->get()->count();
         $deliveries_rs_id = $deliveries_rs;
 
         $deliveries = $deliveries_rs->limit($limit)->offset($offset)->get();;
