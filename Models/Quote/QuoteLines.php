@@ -190,9 +190,11 @@ class QuoteLines extends Model
     public function delete() {
         $idToDelete = $this->id ;
 
-        parent::delete();
+        $retour = parent::delete();
 
         Event::sendAction('com_zeapps_crm', 'QuoteLinesDelete', $idToDelete);
+
+        return $retour;
     }
 
 

@@ -88,6 +88,12 @@ app.controller("ComZeappsCrmDeliveryViewCtrl", ["$scope", "$routeParams", "$loca
                     $scope.delivery = response.data.delivery;
                     _id_price_list_before_update = $scope.delivery.id_price_list;
 
+                    $rootScope.$broadcast("comZeappsCrm_dataDeliveryHook",
+                        {
+                            delivery: $scope.delivery
+                        }
+                    );
+
                     $scope.credits = response.data.credits;
 
                     $scope.tableTaxes = response.data.tableTaxes;
@@ -621,6 +627,12 @@ app.controller("ComZeappsCrmDeliveryViewCtrl", ["$scope", "$routeParams", "$loca
                         $rootScope.$broadcast("comZeappsCrm_deliveryDeleteTrigger",
                             {
                                 id_line: line.id
+                            }
+                        );
+
+                        $rootScope.$broadcast("comZeappsCrm_dataDeliveryHook",
+                            {
+                                delivery: $scope.delivery
                             }
                         );
 

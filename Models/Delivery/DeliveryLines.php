@@ -2,6 +2,8 @@
 
 namespace App\com_zeapps_crm\Models\Delivery;
 
+use Zeapps\Core\Event;
+
 use Illuminate\Database\Eloquent\Model ;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -180,6 +182,16 @@ class DeliveryLines extends Model {
     public static function updateNewTable($id_delivery, $sort)
     {
         Capsule::statement('UPDATE com_zeapps_crm_delivery_lines SET sort = (sort+1) WHERE id_delivery = ' . $id_delivery . ' AND sort >= ' . $sort);
+    }
+
+    public function delete() {
+        $idToDelete = $this->id ;
+
+        $retour = parent::delete();
+
+        Event::sendAction('com_zeapps_crm', 'DeliveryLinesDelete', $idToDelete);
+
+        return $retour;
     }
 
     public static function deleteLine($id) {

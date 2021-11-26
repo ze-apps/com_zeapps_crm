@@ -87,6 +87,12 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
                     $scope.invoice = response.data.invoice;
                     _id_price_list_before_update = $scope.invoice.id_price_list;
 
+                    $rootScope.$broadcast("comZeappsCrm_dataInvoiceHook",
+                        {
+                            invoice: $scope.invoice
+                        }
+                    );
+
                     $scope.credits = response.data.credits;
 
                     $scope.tableTaxes = response.data.tableTaxes;
@@ -638,6 +644,12 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
                             $rootScope.$broadcast("comZeappsCrm_invoiceDeleteTrigger",
                                 {
                                     id_line: line.id
+                                }
+                            );
+
+                            $rootScope.$broadcast("comZeappsCrm_dataInvoiceHook",
+                                {
+                                    invoice: $scope.invoice
                                 }
                             );
 

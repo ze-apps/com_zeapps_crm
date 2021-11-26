@@ -2,6 +2,8 @@
 
 namespace App\com_zeapps_crm\Models\Order;
 
+use Zeapps\Core\Event;
+
 use Illuminate\Database\Eloquent\Model ;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -178,6 +180,16 @@ class OrderLines extends Model {
     public static function updateNewTable($id_order, $sort)
     {
         Capsule::statement('UPDATE com_zeapps_crm_order_lines SET sort = (sort+1) WHERE id_order = ' . $id_order . ' AND sort >= ' . $sort);
+    }
+
+    public function delete() {
+        $idToDelete = $this->id ;
+
+        $retour = parent::delete();
+
+        Event::sendAction('com_zeapps_crm', 'OrderLinesDelete', $idToDelete);
+
+        return $retour;
     }
 
     public static function deleteLine($id) {

@@ -161,6 +161,14 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                     $scope.lines = lines;
 
 
+                    $rootScope.$broadcast("comZeappsCrm_dataOrderHook",
+                        {
+                            order: $scope.order,
+                            lines: $scope.lines,
+                        }
+                    );
+
+
                     // charge l'entreprise associée à la commande
                     $scope.company = null;
                     if ($scope.order.id_company) {
@@ -751,6 +759,13 @@ app.controller("ComZeappsCrmOrderViewCtrl", ["$scope", "$routeParams", "$locatio
                         $rootScope.$broadcast("comZeappsCrm_orderDeleteTrigger",
                             {
                                 id_line: line.id
+                            }
+                        );
+
+                        $rootScope.$broadcast("comZeappsCrm_dataOrderHook",
+                            {
+                                order: $scope.order,
+                                lines: $scope.lines,
                             }
                         );
 

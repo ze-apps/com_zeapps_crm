@@ -2,6 +2,8 @@
 
 namespace App\com_zeapps_crm\Models\Invoice;
 
+use Zeapps\Core\Event;
+
 use Illuminate\Database\Eloquent\Model ;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -177,6 +179,16 @@ class InvoiceLines extends Model {
     public static function updateNewTable($id_invoice, $sort)
     {
         Capsule::statement('UPDATE com_zeapps_crm_invoice_lines SET sort = (sort+1) WHERE id_invoice = ' . $id_invoice . ' AND sort >= ' . $sort);
+    }
+
+    public function delete() {
+        $idToDelete = $this->id ;
+
+        $retour = parent::delete();
+
+        Event::sendAction('com_zeapps_crm', 'InvoiceLinesDelete', $idToDelete);
+
+        return $retour;
     }
 
     public static function deleteLine($id) {

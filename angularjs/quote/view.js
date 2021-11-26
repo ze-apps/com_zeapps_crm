@@ -142,6 +142,13 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                     });
                     $scope.lines = lines;
 
+                    $rootScope.$broadcast("comZeappsCrm_dataQuoteHook",
+                        {
+                            quote: $scope.quote,
+                            lines: $scope.lines,
+                        }
+                    );
+
 
                     // charge l'entreprise associée à la commande
                     $scope.company = null;
@@ -581,6 +588,13 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                         $rootScope.$broadcast("comZeappsCrm_quoteDeleteTrigger",
                             {
                                 id_line: line.id
+                            }
+                        );
+
+                        $rootScope.$broadcast("comZeappsCrm_dataQuoteHook",
+                            {
+                                quote: $scope.quote,
+                                lines: $scope.lines,
                             }
                         );
 
