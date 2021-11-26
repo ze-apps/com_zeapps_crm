@@ -140,7 +140,7 @@ class Invoices extends Controller
 
 
         $invoices_rs = InvoicesModel::select("com_zeapps_crm_invoices.*")
-            ->groupBy('com_zeapps_crm_invoices.id')
+            /*->groupBy('com_zeapps_crm_invoices.id') // Attention si on active ça, bug avec le count pour le total*/
             ->orderBy('com_zeapps_crm_invoices.date_creation', 'DESC')
             ->orderBy('com_zeapps_crm_invoices.id', 'DESC');
         foreach ($filters as $key => $value) {
@@ -166,6 +166,7 @@ class Invoices extends Controller
         }
 
         $total = $invoices_rs->count();
+
         $invoices_rs_id = $invoices_rs;
 
         $invoices = $invoices_rs->limit($limit)->offset($offset)->get();;
