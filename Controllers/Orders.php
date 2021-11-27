@@ -11,6 +11,10 @@ use Zeapps\Core\Event;
 use Zeapps\Core\Storage;
 use Mpdf\Mpdf;
 
+use App\com_zeapps_crm\Models\Delivery\DeliveryActivities;
+use App\com_zeapps_crm\Models\Invoice\InvoiceActivities;
+use App\com_zeapps_crm\Models\Quote\QuoteActivities;
+
 use App\com_zeapps_crm\Models\Order\Orders as OrdersModel;
 use App\com_zeapps_crm\Models\Order\OrderLines;
 use App\com_zeapps_crm\Models\Order\OrderDocuments;
@@ -32,6 +36,27 @@ class Orders extends Controller
 {
     public function lists()
     {
+        $orderActivities = OrderActivities::get();
+        $deliveryActivities = DeliveryActivities::get();
+        $invoiceActivities = InvoiceActivities::get();
+        $quoteActivities = QuoteActivities::get();
+
+        foreach ($orderActivities as $orderActivity) {
+            $orderActivity->save();
+        }
+
+        foreach ($deliveryActivities as $deliveryActivity) {
+            $deliveryActivity->save();
+        }
+
+        foreach ($invoiceActivities as $invoiceActivity) {
+            $invoiceActivity->save();
+        }
+
+        foreach ($quoteActivities as $quoteActivity) {
+            $quoteActivity->save();
+        }
+
         $data = array();
         return view("orders/lists", $data, BASEPATH . 'App/com_zeapps_crm/views/');
     }
