@@ -2,6 +2,9 @@
 
 namespace App\com_zeapps_crm\Models\Quote;
 
+use App\com_zeapps_crm\Models\Activity\IActivityConnection;
+use App\com_zeapps_crm\Models\Activity\ActivityConnection;
+
 use Illuminate\Database\Eloquent\Model ;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -9,7 +12,7 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 
 use Zeapps\Core\ModelHelper;
 
-class QuoteActivities extends Model {
+class QuoteActivities extends Model implements IActivityConnection {
     use SoftDeletes;
 
     static protected $_table = 'com_zeapps_crm_quote_activities';
@@ -56,6 +59,42 @@ class QuoteActivities extends Model {
         /**** to delete unwanted field ****/
         $this->fieldModelInfo->removeFieldUnwanted($this) ;
 
-        return parent::save($options);
+        $retour = parent::save($options);
+
+        /***** sauvegarde de l'activité parent *****/
+        $this->saveToActivityConnection();
+
+        return $retour;
+    }
+
+    public function delete() {
+        $objActivityConnection = $this->getParent();
+        if ($objActivityConnection) {
+            $objActivityConnection->delete();
+        }
+
+        return parent::delete();
+    }
+
+    public function getParent(): ?ActivityConnection {
+        return ActivityConnection::getFromChild($this->table, $this->id);
+    }
+
+    public function saveToActivityConnection() {
+        $objActivityConnection = $this->getParent() ?? new ActivityConnection();
+        $objActivityConnection->table = $this->table;
+        $objActivityConnection->id_table = $this->id;
+        $objActivityConnection->id_user = $this->id_user;
+        $objActivityConnection->name_user = $this->name_user;
+        $objActivityConnection->libelle = $this->libelle;
+        $objActivityConnection->description = $this->description;
+        $objActivityConnection->status = $this->status;
+        $objActivityConnection->id_type = $this->id_type;
+        $objActivityConnection->label_type = $this->label_type;
+        $objActivityConnection->date = $this->date;
+        $objActivityConnection->deadline = $this->deadline;
+        $objActivityConnection->reminder = $this->reminder;
+        $objActivityConnection->validation = $this->validation;
+        $objActivityConnection->save();
     }
 }
