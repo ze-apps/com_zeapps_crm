@@ -36,27 +36,6 @@ class Orders extends Controller
 {
     public function lists()
     {
-        $orderActivities = OrderActivities::get();
-        $deliveryActivities = DeliveryActivities::get();
-        $invoiceActivities = InvoiceActivities::get();
-        $quoteActivities = QuoteActivities::get();
-
-        foreach ($orderActivities as $orderActivity) {
-            $orderActivity->save();
-        }
-
-        foreach ($deliveryActivities as $deliveryActivity) {
-            $deliveryActivity->save();
-        }
-
-        foreach ($invoiceActivities as $invoiceActivity) {
-            $invoiceActivity->save();
-        }
-
-        foreach ($quoteActivities as $quoteActivity) {
-            $quoteActivity->save();
-        }
-
         $data = array();
         return view("orders/lists", $data, BASEPATH . 'App/com_zeapps_crm/views/');
     }
