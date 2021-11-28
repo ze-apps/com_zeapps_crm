@@ -4,6 +4,9 @@ app.config(["$provide",
             var zeHttp = $delegate;
 
             zeHttp.crm = {
+                activities: {
+                    get_all : getAll_activities,
+                },
                 model_email : {
                     get : get_model_email,
                     get_all : getAll_model_email,
@@ -267,6 +270,12 @@ app.config(["$provide",
             });
 
             return zeHttp;
+
+
+
+            function getAll_activities(limit, offset, filters) {
+                return zeHttp.post("/com_zeapps_crm/activities/getAll/" + limit + "/" + offset, filters);
+            }
 
 
 

@@ -41,3 +41,15 @@ $tabRight["id"] = "com_zeapps_crm_produit_stock" ;
 $tabRight["module"] = "com_zeapps_crm" ;
 $tabRight["label"] = __t("Product (stock)") ;
 $rightZeapps[] = $tabRight ;
+
+$tabRight = array () ;
+$tabRight["id"] = "com_zeapps_crm_activities" ;
+$tabRight["module"] = "com_zeapps_crm" ;
+$tabRight["label"] = __t("Activities") ;
+$rightZeapps[] = $tabRight ;
+
+$tabRight = array () ;
+$tabRight["id"] = "com_zeapps_crm_activities_view_all" ;
+$tabRight["module"] = "com_zeapps_crm" ;
+$tabRight["label"] = __t("Viewing the activity of all users") ;
+$rightZeapps[] = $tabRight ;

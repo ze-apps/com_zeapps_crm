@@ -100,8 +100,6 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
 
 
                     $scope.tableTaxes = response.data.tableTaxes;
-
-
                     $scope.activities = response.data.activities || [];
                     angular.forEach($scope.activities, function (activity) {
                         if (activity.deadline) {
@@ -111,7 +109,9 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                     
                     $scope.documents = response.data.documents || [];
                     angular.forEach($scope.documents, function (document) {
-                        document.created_at = new Date(document.created_at);
+                        if (document.created_at) {
+                            document.created_at = new Date(document.created_at);
+                        }
                     });
 
                     $scope.quote.global_discount = parseFloat($scope.quote.global_discount);
@@ -128,7 +128,9 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
                     }
 
                     for (i = 0; i < $scope.documents.length; i++) {
-                        $scope.documents[i].created_at = new Date($scope.documents[i].created_at);
+                        if ($scope.documents[i].created_at) {
+                            $scope.documents[i].created_at = new Date($scope.documents[i].created_at);
+                        }
                     }
 
                     var lines = response.data.lines ;

@@ -333,4 +333,11 @@ return [
     "delivery" => "delivery",
     "invoice" => "invoice",
     "Closing of orders" => "Closing of orders",
+    "description" => "description",
+    "date" => "date",
+    "Activities" => "Activities",
+    "Viewing the activity of all users" => "Viewing the activity of all users",
+    "Source" => "Source",
+    "Deadline: before" => "Deadline: before",
+    "Deadline: after" => "Deadline: after",
 ];

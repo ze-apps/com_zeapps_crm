@@ -1,5 +1,17 @@
 <?php
 
+
+/********* insert in essential menu *********/
+$tabMenu = array () ;
+$tabMenu["label"] = __t("Activities") ;
+$tabMenu["url"] = "/ng/com_zeapps/activities" ;
+$tabMenu["access"] = "com_zeapps_crm_activities" ;
+$tabMenu["order"] = 100 ;
+$menuEssential[] = $tabMenu ;
+
+
+
+
 /********** insert in left menu ************/
 //$tabMenu = array () ;
 //$tabMenu["id"] = "com_ze_apps_taxes" ;
@@ -169,6 +181,17 @@ $tabMenu["fa-icon"] = "cubes" ;
 $tabMenu["url"] = "/ng/com_zeapps_crm/stock" ;
 $tabMenu["access"] = "com_zeapps_crm_produit_stock" ;
 $tabMenu["order"] = 11 ;
+$menuLeft[] = $tabMenu ;
+
+
+$tabMenu = array () ;
+$tabMenu["id"] = "com_zeapps_crm_activities" ;
+$tabMenu["space"] = "com_ze_apps_sales" ;
+$tabMenu["label"] = __t("Activities") ;
+$tabMenu["fa-icon"] = "cubes" ;
+$tabMenu["url"] = "/ng/com_zeapps/activities" ;
+$tabMenu["access"] = "com_zeapps_crm_activities" ;
+$tabMenu["order"] = 100 ;
 $menuLeft[] = $tabMenu ;
 
 /*$tabMenu = array () ;
