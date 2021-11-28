@@ -100,12 +100,16 @@ app.controller("ComZeappsCrmDeliveryViewCtrl", ["$scope", "$routeParams", "$loca
 
                     $scope.activities = response.data.activities || [];
                     angular.forEach($scope.activities, function (activity) {
-                        activity.deadline = new Date(activity.deadline);
+                        if (activity.deadline) {
+                            activity.deadline = new Date(activity.deadline);
+                        }
                     });
 
                     $scope.documents = response.data.documents || [];
                     angular.forEach($scope.documents, function (document) {
-                        document.created_at = new Date(document.created_at);
+                        if (document.created_at) {
+                            document.created_at = new Date(document.created_at);
+                        }
                     });
 
 
@@ -117,11 +121,15 @@ app.controller("ComZeappsCrmDeliveryViewCtrl", ["$scope", "$routeParams", "$loca
                     var i;
 
                     for (i = 0; i < $scope.activities.length; i++) {
-                        $scope.activities[i].reminder = new Date($scope.activities[i].reminder);
+                        if ($scope.activities[i].reminder) {
+                            $scope.activities[i].reminder = new Date($scope.activities[i].reminder);
+                        }
                     }
 
                     for (i = 0; i < $scope.documents.length; i++) {
-                        $scope.documents[i].created_at = new Date($scope.documents[i].created_at);
+                        if ($scope.documents[i].created_at) {
+                            $scope.documents[i].created_at = new Date($scope.documents[i].created_at);
+                        }
                     }
 
                     var lines = response.data.lines ;

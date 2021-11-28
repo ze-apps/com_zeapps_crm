@@ -331,4 +331,11 @@ return [
     "delivery" => "bon-livraison",
     "invoice" => "facture",
     "Closing of orders" => "Clôture des commandes",
+    "description" => "description",
+    "date" => "date",
+    "Activities" => "Activités",
+    "Viewing the activity of all users" => "Consultation de l'activité de tous les utilisateurs",
+    "Source" => "Source",
+    "Deadline: before" => "Deadline: before",
+    "Deadline: after" => "Deadline: after",
 ];

@@ -3,6 +3,7 @@
 namespace App\com_zeapps_crm\Models\Order;
 
 use App\com_zeapps_crm\Models\Activity\IActivityConnection;
+use App\com_zeapps_crm\Models\Activity\ActivityConnection;
 
 use Illuminate\Database\Eloquent\Model ;
 use Illuminate\Database\Eloquent\SoftDeletes;

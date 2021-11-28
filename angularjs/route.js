@@ -29,7 +29,11 @@ app.config(["$routeProvider",
 			})
 
 
-
+            // Activities
+            .when("/ng/com_zeapps/activities", {
+                templateUrl: "/com_zeapps_crm/activities/lists",
+                controller: "ComZeappsCrmActivitiesListsCtrl"
+            })
 
 
             // QUOTE
