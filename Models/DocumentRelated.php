@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model ;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
-
+use Illuminate\Support\Str;
+use Mpdf\Tag\S;
 use Zeapps\Core\ModelHelper;
 
 class DocumentRelated extends Model {
@@ -37,6 +38,24 @@ class DocumentRelated extends Model {
         $this->fieldModelInfo->softDeletes();
 
         parent::__construct($attributes);
+    }
+
+    public Static function getInvoicesRelatedTo($typeDocumentFrom, $idDocumentFrom) {
+        $documents = self::where("type_document_from", $typeDocumentFrom)
+            ->where("id_document_from", $idDocumentFrom)
+            ->get();
+
+        $invoices = [];
+        foreach($documents as $document) {
+            if ($document->type_document_to == "invoices") {
+                $invoices[] = $document->id_document_to ;
+            }
+
+            // appel récursive pour récupère toutes les factures files 
+            $invoices = array_merge($invoices, self::getInvoicesRelatedTo($document->type_document_to, $document->id_document_to));
+        }
+
+        return $invoices;
     }
 
     public static function getSchema() {
