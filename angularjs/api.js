@@ -4,6 +4,9 @@ app.config(["$provide",
             var zeHttp = $delegate;
 
             zeHttp.crm = {
+                commons: {
+                    getInvoicesRelated: getInvoicesRelated,
+                },
                 activities: {
                     get_all : getAll_activities,
                 },
@@ -276,6 +279,13 @@ app.config(["$provide",
             function getAll_activities(limit, offset, filters) {
                 return zeHttp.post("/com_zeapps_crm/activities/getAll/" + limit + "/" + offset, filters);
             }
+
+
+            function getInvoicesRelated(data) {
+                return zeHttp.post("/com_zeapps_crm/crm_commons/getInvoicesRelated", data);
+            }
+
+            
 
 
 

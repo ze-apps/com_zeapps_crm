@@ -338,4 +338,9 @@ return [
     "Source" => "Source",
     "Deadline: before" => "Deadline: before",
     "Deadline: after" => "Deadline: after",
+    "Deposit invoice" => "Facture d'acompte",
+    "Invoice with down payment deduction" => "Facture avec déduction d'acompte",
+    "Info" => "Info",
+    "Value" => "Valeur",
+    "Choose which invoices to deduct" => "Choisir les factures à déduire",
 ];

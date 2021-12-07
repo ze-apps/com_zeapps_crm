@@ -275,7 +275,10 @@ app.controller("ComZeappsCrmDeliveryViewCtrl", ["$scope", "$routeParams", "$loca
         }
 
         function transform() {
-            zeapps_modal.loadModule("com_zeapps_crm", "transform_document", {}, function (objReturn) {
+            zeapps_modal.loadModule("com_zeapps_crm", "transform_document", {
+                type_document: 'deliveries',
+                id: $scope.delivery.id
+            }, function (objReturn) {
                 if (objReturn) {
                     var formatted_data = angular.toJson(objReturn);
                     zhttp.crm.delivery.transform($scope.delivery.id, formatted_data).then(function (response) {

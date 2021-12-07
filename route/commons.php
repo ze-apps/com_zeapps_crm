@@ -1,4 +1,6 @@
 <?php
+
+use Illuminate\Support\Facades\Route;
 use Zeapps\Core\Routeur ;
 
 
@@ -10,4 +12,4 @@ Routeur::get("/com_zeapps_crm/crm_commons/form_activity", 'App\\com_zeapps_crm\\
 
 Routeur::get("/com_zeapps_crm/crm_commons/status", 'App\\com_zeapps_crm\\Controllers\\Commons@status');
 
-
+Routeur::post("/com_zeapps_crm/crm_commons/getInvoicesRelated", 'App\\com_zeapps_crm\\Controllers\\Commons@getInvoicesRelated');

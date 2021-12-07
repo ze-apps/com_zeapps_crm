@@ -350,6 +350,19 @@ class Quotes extends Controller
                                 $return->invoices = InvoicesModel::createFrom($src, QuotesModel::class);
                                 $idTo = $return->invoices["id"];
 
+                            } elseif ($document == "deposit_invoices") {
+                                dd($data);
+                                //$return->invoices = InvoicesModel::createFrom($src, QuotesModel::class);
+                                //$idTo = $return->invoices["id"];
+
+                            } elseif ($document == "invoice_with_down_payment_deduction") {
+                                dd($data);
+                                //$return->invoices = InvoicesModel::createFrom($src, QuotesModel::class);
+                                //$idTo = $return->invoices["id"];
+                                
+
+                                
+
                             } elseif ($document == "deliveries") {
                                 $return->deliveries = DeliveriesModel::createFrom($src, QuotesModel::class);
                                 $idTo = $return->deliveries["id"];
