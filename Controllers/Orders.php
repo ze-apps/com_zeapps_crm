@@ -317,9 +317,43 @@ class Orders extends Controller
                                 $return->invoices = InvoicesModel::createFrom($src, OrdersModel::class);
                                 $idTo = $return->invoices["id"];
 
+                            } elseif ($document == "deposit_invoices") {
+                                $ordersModel = new OrdersModel();
+                                $ecritures = $ordersModel->getEcritureComptableSimulate($src);
+                                
+
+                                $return->invoices = InvoicesModel::createFrom($src, OrdersModel::class, false, $data, $ecritures);
+                                $idTo = $return->invoices["id"];
+                                
+
+                            } elseif ($document == "invoice_with_down_payment_deduction") {
+                                $ecritures = [];
+                                $data["numero_factures_deduites"] = [] ;
+                                // recherche les infos sur l'ensemble des factures
+                                if (isset($data["invoicesSelected"])) {
+                                    foreach ($data["invoicesSelected"] as $idInvoice) {
+                                        $invoice = InvoicesModel::find($idInvoice);
+                                        if ($invoice) {
+                                            $data["numero_factures_deduites"][] = $invoice->numerotation;
+
+                                            $ecrituresInvoice = $invoice->getEcritureComptableSimulate($invoice);
+
+                                            $ecritures = $invoice->fuisionTableTaxe($ecritures, $ecrituresInvoice);
+                                        }
+                                    }
+                                }
+
+                                $return->invoices = InvoicesModel::createFrom($src, OrdersModel::class, false, $data, $ecritures);
+                                $idTo = $return->invoices["id"];
+
                             } elseif ($document == "deliveries") {
                                 $return->deliveries = DeliveriesModel::createFrom($src, OrdersModel::class);
                                 $idTo = $return->deliveries["id"];
+                            }
+
+                            // les acomptes et factures avec déduction d'acompte sont des factures
+                            if ($document == "deposit_invoices" || $document == "invoice_with_down_payment_deduction") {
+                                $document = "invoices";
                             }
 
                             $objDocumentRelated = new DocumentRelated() ;

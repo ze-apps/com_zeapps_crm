@@ -59,7 +59,9 @@ class Commons extends Controller
         $return = [];
         foreach ($invoices as $idInvoice) {
             $invoice = Invoices::find($idInvoice);
-            $return[] = $invoice;
+            if ($invoice) {
+                $return[] = $invoice;
+            }
         }
 
         echo json_encode($return);

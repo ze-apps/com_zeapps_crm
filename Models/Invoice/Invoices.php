@@ -123,8 +123,15 @@ class Invoices extends Model
     }
 
 
-    public static function createFrom($srcBase, $typeSource, $isCredit = false)
+    public static function createFrom($srcBase, $typeSource, $isCredit = false, $infoTransform = [], $entries = [])
     {
+        $removePrice = false;
+
+        // les prix seront supprimés pour les lignes dans le cas d'une facture d'acompte
+        if (is_array($infoTransform) && isset($infoTransform["deposit_invoices"]) && $infoTransform["deposit_invoices"]) {
+            $removePrice = true;
+        }
+        
         $src = clone $srcBase ;
 
         $dataEvent = [];
@@ -133,14 +140,7 @@ class Invoices extends Model
         $dataEvent["src"] = $src ;
         $dataEvent["typeSource"] = $typeSource ;
 
-        // unset($src->id);
-        // unset($src->numerotation);
-        // unset($src->created_at);
-        // unset($src->updated_at);
-        // unset($src->deleted_at);
-        // if (isset($src->final_pdf)) {
-        //     unset($src->final_pdf);
-        // }
+        
 
         $champInterdit = [];
         $champInterdit[] = "id" ;
@@ -188,7 +188,150 @@ class Invoices extends Model
 
 
         if (isset($src->lines) && $src->lines) {
-            self::createFromLine($src->lines, $id, 0, $isCredit, $typeSource, $dataEvent["id_src"]);
+            self::createFromLine($src->lines, $id, 0, $isCredit, $typeSource, $dataEvent["id_src"], $removePrice);
+        }
+
+        // recupère le dernier ordre des lines
+        $lastOrder = 0 ;
+        foreach ($src->lines as $line) {
+            if ($line->sort > $lastOrder) {
+                $lastOrder = $line->sort;
+            }
+        }
+
+        // ajoute les lignes spécifiques pour une facture d'acompte
+        if (is_array($infoTransform) && isset($infoTransform["deposit_invoices"]) && $infoTransform["deposit_invoices"]) {
+            $total_ht = 0;
+            $total_ttc = 0;
+            foreach ($entries as $entry) {
+                $total_ht += $entry["total_ht"];
+                $total_ttc += $entry["total_ttc"];
+            }
+
+            if ($infoTransform["type_deposit"] == "deposit_ht") {
+                $coef = $infoTransform["deposit_invoices_value"] / $total_ht;
+            } elseif ($infoTransform["type_deposit"] == "deposit_ttc") {
+                $coef = $infoTransform["deposit_invoices_value"] / $total_ttc;
+            } else {
+                $coef = $infoTransform["deposit_invoices_value"] / 100 ;
+            }
+
+
+            $line = new InvoiceLines();
+            $line->id_invoice = $id;
+            $line->id_parent = 0;
+            $line->type = 'pack';
+            $line->designation_title = 'Acompte';
+            $line->designation_desc = '';
+            $line->qty = 1;
+            $line->update_price_from_subline = 1;
+            $line->price_unit_ttc_subline = $total_ttc * $coef;
+            $line->sort = $lastOrder + 1;
+            $line->discount_prohibited = 1;
+            $line->save();
+
+
+            $sortSubline = 0;
+            foreach ($entries as $entry) {
+                $sortSubline++;
+                $subline = new InvoiceLines();
+                $subline->id_invoice = $id;
+                $subline->id_parent = $line->id;
+                $subline->type = 'product';
+                $subline->designation_title = 'ecriture comptable : ' . $entry["accounting_number"];
+                $subline->designation_desc = '';
+                $subline->qty = 1;
+                $subline->update_price_from_subline = 1;
+                $subline->price_unit_ttc_subline = 0;
+                $subline->sort = $sortSubline;
+                $subline->discount_prohibited = 1;
+                $subline->discount = 0;
+                $subline->price_unit = $entry["total_ht"] * $coef;
+                $subline->id_taxe = $entry["id_taxe"];
+                $subline->value_taxe = $entry["value_taxe"];
+                $subline->accounting_number = $entry["accounting_number"];
+                $subline->total_ht = $entry["total_ht"] * $coef;
+                $subline->total_ttc = $entry["total_ttc"] * $coef;
+                $subline->save();
+            }
+
+            /**
+             * "type_deposit" => "deposit_ht"
+             *  "invoicesSelected" => []
+             *  "deposit_invoices" => true
+             *  "deposit_invoices_value" => "200"
+             *  ]
+             */
+        }
+
+        // ajoute les lignes spécifiques pour une facture avec déduction d'acompte
+        if (is_array($infoTransform) && isset($infoTransform["invoice_with_down_payment_deduction"]) && $infoTransform["invoice_with_down_payment_deduction"]) {
+            $total_ht = 0;
+            $total_ttc = 0;
+            foreach ($entries as $entry) {
+                $total_ht += $entry["total_ht"];
+                $total_ttc += $entry["total_ttc"];
+            }
+
+            $line = new InvoiceLines();
+            $line->id_invoice = $id;
+            $line->id_parent = 0;
+            $line->type = 'pack';
+            if (count($infoTransform["numero_factures_deduites"]) > 1) {
+                $line->designation_title = 'Déduction des factures d\'acompte';
+            } else {
+                $line->designation_title = 'Déduction de la facture d\'acompte';
+            }
+            $line->designation_desc = '';
+            foreach ($infoTransform["numero_factures_deduites"] as $numerotationFacture) {
+                if ($line->designation_desc != '') {
+                    $line->designation_desc .= "\n";
+                }
+                $line->designation_desc .= 'Facture #' . $numerotationFacture;
+            }
+            $line->qty = 1;
+            $line->update_price_from_subline = 1;
+            $line->price_unit_ttc_subline = $total_ttc * -1;
+            $line->sort = $lastOrder + 1;
+            $line->discount_prohibited = 1;
+            $line->save();
+
+
+            $sortSubline = 0;
+            foreach ($entries as $entry) {
+                $sortSubline++;
+                $subline = new InvoiceLines();
+                $subline->id_invoice = $id;
+                $subline->id_parent = $line->id;
+                $subline->type = 'product';
+                $subline->designation_title = 'ecriture comptable : ' . $entry["accounting_number"];
+                $subline->designation_desc = '';
+                $subline->qty = 1;
+                $subline->update_price_from_subline = 1;
+                $subline->price_unit_ttc_subline = 0;
+                $subline->sort = $sortSubline;
+                $subline->discount_prohibited = 1;
+                $subline->discount = 0;
+                $subline->price_unit = $entry["total_ht"] * -1;
+                $subline->id_taxe = $entry["id_taxe"];
+                $subline->value_taxe = $entry["value_taxe"];
+                $subline->accounting_number = $entry["accounting_number"];
+                $subline->total_ht = $entry["total_ht"] * -1;
+                $subline->total_ttc = $entry["total_ttc"] * -1;
+                $subline->save();
+            }
+
+            // ATTENTION : il faut inverser les montants pour les déduires
+            /**
+             * [
+             *   "invoicesSelected" => array:2 [
+             *     0 => 56473
+             *     1 => 56474
+             *   ]
+             *   "numero_factures_deduites" => []
+             *   "invoice_with_down_payment_deduction" => true
+             * ]
+            */
         }
 
         $invoice->save();
@@ -199,7 +342,7 @@ class Invoices extends Model
         );
     }
 
-    private static function createFromLine($lines, $idDocument, $idParent, $isCredit = false, $typeSource, $src_id)
+    private static function createFromLine($lines, $idDocument, $idParent, $isCredit = false, $typeSource, $src_id, $removePrice = false)
     {
         if ($lines) {
             foreach ($lines as $lineBase) {
@@ -241,6 +384,14 @@ class Invoices extends Model
                     $invoiceLine->qty *= -1 ;
                 }
 
+                // Met le tarif à zero
+                if ($removePrice) {
+                    $invoiceLine->price_unit = 0 ;
+                    $invoiceLine->total_ht = 0 ;
+                    $invoiceLine->total_ttc = 0 ;
+                    $invoiceLine->price_unit_ttc_subline = 0 ;
+                }
+
                 $invoiceLine->id_invoice = $idDocument;
                 $invoiceLine->id_parent = $idParent;
                 $invoiceLine->save();
@@ -267,13 +418,19 @@ class Invoices extends Model
                             }
                         }
 
+                        // Met le tarif à zero
+                        if ($removePrice) {
+                            $objInvoiceLinePriceList->price_ht = 0;
+                            $objInvoiceLinePriceList->price_ttc = 0;
+                        }
+
                         $objInvoiceLinePriceList->id_invoice_line = $invoiceLine->id ;
                         $objInvoiceLinePriceList->save() ;
                     }
                 }
 
                 if ($sublines) {
-                    self::createFromLine($sublines, $idDocument, $invoiceLine->id, false, $typeSource, $src_id);
+                    self::createFromLine($sublines, $idDocument, $invoiceLine->id, false, $typeSource, $src_id, $removePrice);
                 }
             }
         }
@@ -862,7 +1019,7 @@ class Invoices extends Model
                     $total_ttc += $ecriture["total_ttc"] * 1 ;
                 }
 
-                $ecritureComptable = $this->appliqueCoef($ecritureComptable, $line->price_unit_ttc_subline / $total_ttc);
+                $ecritureComptable = $this->appliqueCoef($ecritureComptable, $total_ttc == 0 ? 0 : $line->price_unit_ttc_subline / $total_ttc);
             }
 
 

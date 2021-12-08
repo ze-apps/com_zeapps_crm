@@ -389,7 +389,7 @@ class Quotes extends Model
         }
     }
 
-    private function updateLine($quote, $line, $taxes, $discount_prohibited = 0)
+    private function updateLine($quote, $line, $taxes, $discount_prohibited = 0, $saveLine = true)
     {
         $ecritureComptable = [];
 
@@ -397,7 +397,7 @@ class Quotes extends Model
         // si c'est une ligne composée
         if (isset($line->sublines) && count($line->sublines)) {
             foreach ($line->sublines as $subline) {
-                $ecritureComptable = $this->fuisionTableTaxe($ecritureComptable, $this->updateLine($quote, $subline, $taxes, $discount_prohibited || $line->discount_prohibited));
+                $ecritureComptable = $this->fuisionTableTaxe($ecritureComptable, $this->updateLine($quote, $subline, $taxes, $discount_prohibited || $line->discount_prohibited, $saveLine));
             }
 
             // recalcul le tableau en fonction du montant souhaité sur la ligne
@@ -467,27 +467,29 @@ class Quotes extends Model
 
 
         // Sauvergarder le prix unitaire
-        $line = QuoteLines::find($line->id);
-        if ($line) {
-            $miseAJour = false;
+        if ($saveLine) {
+            $line = QuoteLines::find($line->id);
+            if ($line) {
+                $miseAJour = false;
 
-            if ($line->price_unit != $price_unit) {
-                $miseAJour = true;
-            }
+                if ($line->price_unit != $price_unit) {
+                    $miseAJour = true;
+                }
 
-            if ($line->total_ht != $total_ht) {
-                $miseAJour = true;
-            }
+                if ($line->total_ht != $total_ht) {
+                    $miseAJour = true;
+                }
 
-            if ($line->total_ttc != $total_ttc) {
-                $miseAJour = true;
-            }
+                if ($line->total_ttc != $total_ttc) {
+                    $miseAJour = true;
+                }
 
-            if ($miseAJour) {
-                $line->price_unit = $price_unit;
-                $line->total_ht = $total_ht;
-                $line->total_ttc = $total_ttc;
-                $line->save();
+                if ($miseAJour) {
+                    $line->price_unit = $price_unit;
+                    $line->total_ht = $total_ht;
+                    $line->total_ttc = $total_ttc;
+                    $line->save();
+                }
             }
         }
 
@@ -600,6 +602,20 @@ class Quotes extends Model
     }
 
 
+    public function getEcritureComptableSimulate($quote) {
+        $ecritureComptable = [];
+        if ($quote && $quote->id) {
+            $lines = QuoteLines::getFromQuote($quote->id);
+            $taxes = Taxes::all();
+
+            foreach ($lines as $line) {
+                $ecritureComptaRetour = $this->updateLine($quote, $line, $taxes, 0, false);
+                $ecritureComptable = $this->fuisionTableTaxe($ecritureComptable, $ecritureComptaRetour);
+            }
+        }
+
+        return $ecritureComptable ;
+    }
 
 
 
