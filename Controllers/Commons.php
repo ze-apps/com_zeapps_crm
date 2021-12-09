@@ -54,7 +54,9 @@ class Commons extends Controller
             $data = json_decode(file_get_contents('php://input'), true);
         }
 
-        $invoices = DocumentRelated::getInvoicesRelatedTo($data["type_document"], $data["id"]);
+        $documentSource = DocumentRelated::getDocumentSource($data["type_document"], $data["id"]);
+
+        $invoices = DocumentRelated::getInvoicesRelatedTo($documentSource["typeDocumentFrom"], $documentSource["idDocumentFrom"]);
 
         $return = [];
         foreach ($invoices as $idInvoice) {

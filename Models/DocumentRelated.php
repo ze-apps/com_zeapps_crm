@@ -40,7 +40,24 @@ class DocumentRelated extends Model {
         parent::__construct($attributes);
     }
 
-    public Static function getInvoicesRelatedTo($typeDocumentFrom, $idDocumentFrom) {
+    public static function getDocumentSource($typeDocumentFrom, $idDocumentFrom) {
+        $return = [
+            "typeDocumentFrom" => $typeDocumentFrom,
+            "idDocumentFrom" => $idDocumentFrom
+        ];
+
+        $document = self::where("type_document_to", $typeDocumentFrom)
+            ->where("id_document_to", $idDocumentFrom)
+            ->first();
+
+        if ($document) {
+            $return = self::getDocumentSource($document->type_document_from, $document->id_document_from);
+        }
+
+        return $return ;
+    }
+
+    public static function getInvoicesRelatedTo($typeDocumentFrom, $idDocumentFrom) {
         $documents = self::where("type_document_from", $typeDocumentFrom)
             ->where("id_document_from", $idDocumentFrom)
             ->get();
