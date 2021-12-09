@@ -340,4 +340,9 @@ return [
     "Source" => "Source",
     "Deadline: before" => "Deadline: before",
     "Deadline: after" => "Deadline: after",
+    "Deposit invoice" => "Deposit invoice",
+    "Invoice with down payment deduction" => "Invoice with down payment deduction",
+    "Info" => "Info",
+    "Value" => "Value",
+    "Choose which invoices to deduct" => "Choose which invoices to deduct",
 ];

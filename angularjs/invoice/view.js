@@ -259,7 +259,10 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
         }
 
         function transform() {
-            zeapps_modal.loadModule("com_zeapps_crm", "transform_document", {}, function (objReturn) {
+            zeapps_modal.loadModule("com_zeapps_crm", "transform_document", {
+                type_document: 'invoices',
+                id: $scope.invoice.id
+            }, function (objReturn) {
                 if (objReturn) {
                     var formatted_data = angular.toJson(objReturn);
                     zhttp.crm.invoice.transform($scope.invoice.id, formatted_data).then(function (response) {

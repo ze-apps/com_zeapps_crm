@@ -458,14 +458,14 @@ class Deliveries extends Model
         }
     }
 
-    private function updateLine($delivery, $line, $taxes, $discount_prohibited = 0) {
+    private function updateLine($delivery, $line, $taxes, $discount_prohibited = 0, $saveLine = true) {
         $ecritureComptable = [] ;
 
 
         // si c'est une ligne composée
         if (isset($line->sublines) && count($line->sublines)) {
             foreach ($line->sublines as $subline) {
-                $ecritureComptable = $this->fuisionTableTaxe($ecritureComptable, $this->updateLine($delivery, $subline, $taxes, $discount_prohibited || $line->discount_prohibited));
+                $ecritureComptable = $this->fuisionTableTaxe($ecritureComptable, $this->updateLine($delivery, $subline, $taxes, $discount_prohibited || $line->discount_prohibited, $saveLine));
             }
 
             // recalcul le tableau en fonction du montant souhaité sur la ligne
@@ -535,27 +535,29 @@ class Deliveries extends Model
 
 
         // Sauvergarder le prix unitaire
-        $line = DeliveryLines::find($line->id) ;
-        if ($line) {
-            $miseAJour = false ;
+        if ($saveLine) {
+            $line = DeliveryLines::find($line->id) ;
+            if ($line) {
+                $miseAJour = false ;
 
-            if ($line->price_unit != $price_unit) {
-                $miseAJour = true ;
-            }
+                if ($line->price_unit != $price_unit) {
+                    $miseAJour = true ;
+                }
 
-            if ($line->total_ht != $total_ht) {
-                $miseAJour = true ;
-            }
+                if ($line->total_ht != $total_ht) {
+                    $miseAJour = true ;
+                }
 
-            if ($line->total_ttc != $total_ttc) {
-                $miseAJour = true ;
-            }
+                if ($line->total_ttc != $total_ttc) {
+                    $miseAJour = true ;
+                }
 
-            if ($miseAJour) {
-                $line->price_unit = $price_unit;
-                $line->total_ht = $total_ht;
-                $line->total_ttc = $total_ttc;
-                $line->save();
+                if ($miseAJour) {
+                    $line->price_unit = $price_unit;
+                    $line->total_ht = $total_ht;
+                    $line->total_ttc = $total_ttc;
+                    $line->save();
+                }
             }
         }
 
@@ -661,5 +663,20 @@ class Deliveries extends Model
         }
 
         return $source ;
+    }
+
+    public function getEcritureComptableSimulate($delivery) {
+        $ecritureComptable = [];
+        if ($delivery && $delivery->id) {
+            $lines = DeliveryLines::getFromDelivery($delivery->id);
+            $taxes = Taxes::all();
+
+            foreach ($lines as $line) {
+                $ecritureComptaRetour = $this->updateLine($delivery, $line, $taxes, 0, false);
+                $ecritureComptable = $this->fuisionTableTaxe($ecritureComptable, $ecritureComptaRetour);
+            }
+        }
+
+        return $ecritureComptable ;
     }
 }

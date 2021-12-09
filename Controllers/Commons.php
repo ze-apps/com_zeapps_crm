@@ -6,6 +6,9 @@ use Zeapps\Core\Controller;
 use Zeapps\Core\Request;
 use Zeapps\Core\Session;
 
+use App\com_zeapps_crm\Models\DocumentRelated;
+use App\com_zeapps_crm\Models\Invoice\Invoices;
+
 
 class Commons extends Controller
 {
@@ -45,4 +48,24 @@ class Commons extends Controller
         echo json_encode($arrStatus);
     }
 
+    public function getInvoicesRelated() {
+        if (strcasecmp($_SERVER['REQUEST_METHOD'], 'post') === 0 && stripos($_SERVER['CONTENT_TYPE'], 'application/json') !== FALSE) {
+            // POST is actually in json format, do an internal translation
+            $data = json_decode(file_get_contents('php://input'), true);
+        }
+
+        $documentSource = DocumentRelated::getDocumentSource($data["type_document"], $data["id"]);
+
+        $invoices = DocumentRelated::getInvoicesRelatedTo($documentSource["typeDocumentFrom"], $documentSource["idDocumentFrom"]);
+
+        $return = [];
+        foreach ($invoices as $idInvoice) {
+            $invoice = Invoices::find($idInvoice);
+            if ($invoice) {
+                $return[] = $invoice;
+            }
+        }
+
+        echo json_encode($return);
+    }
 }
