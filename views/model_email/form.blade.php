@@ -52,6 +52,7 @@
                     [reference] : {{ __t("Document reference") }}<br>
                     [label_doc] : {{ __t("Wording of the document") }}<br>
                     [doc_manager] : {{ __t("Document manager") }}<br>
+                    [signature] : {{ __t("Signature") }}<br>
                 </div>
             </div>
         </div>
