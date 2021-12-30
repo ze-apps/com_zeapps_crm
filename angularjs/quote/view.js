@@ -708,6 +708,10 @@ app.controller("ComZeappsCrmQuoteViewCtrl", ["$scope", "$routeParams", "$locatio
 
                 // to save price list state
                 _id_price_list_before_update = $scope.quote.id_price_list;
+
+                if (miseAjourImmediateQuote) {
+                    updateOrderExecute();
+                }
             }
         }
 
