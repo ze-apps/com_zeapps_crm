@@ -781,6 +781,10 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
 
                     // to save price list state
                     _id_price_list_before_update = $scope.invoice.id_price_list;
+
+                    if (miseAjourImmediateInvoice) {
+                        updateOrderExecute();
+                    }
                 }
             }
         }

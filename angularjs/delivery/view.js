@@ -751,6 +751,10 @@ app.controller("ComZeappsCrmDeliveryViewCtrl", ["$scope", "$routeParams", "$loca
 
                 // to save price list state
                 _id_price_list_before_update = $scope.delivery.id_price_list;
+
+                if (miseAjourImmediateDelivery) {
+                    updateOrderExecute();
+                }
             }
         }
 
