@@ -29,6 +29,13 @@ app.controller("ComZeappsCrmDeliveryListsPartialCtrl", ["$scope", "$location", "
                     field: 'name_contact LIKE',
                     type: 'text',
                     label: __t("Contact")
+                },
+                {
+                    format: 'select',
+                    field: 'finalized',
+                    type: 'text',
+                    label: __t("Clôturé"),
+                    options: []
                 }
             ],
             secondaries: [
@@ -90,6 +97,14 @@ app.controller("ComZeappsCrmDeliveryListsPartialCtrl", ["$scope", "$location", "
         $scope.total = 0;
         $scope.templateDelivery = '/com_zeapps_crm/deliveries/form_modal';
 
+
+        // remonte le statut dans les filtres
+        $scope.status_quote = [];
+        $scope.filters.main[4].options = [];
+        $scope.filters.main[4].options.push({ id: 1, label: 'Oui' });
+        $scope.filters.main[4].options.push({ id: 0, label: 'Non' });
+        $scope.filter_model.finalized = "0";
+
         // charge les familles de compte pour le filtre
         zhttp.contact.company.context().then(function (response) {
             if (response.status == 200) {
@@ -138,8 +153,6 @@ app.controller("ComZeappsCrmDeliveryListsPartialCtrl", ["$scope", "$location", "
         function loadList(context) {
             context = context || "";
             var offset = ($scope.page - 1) * $scope.pageSize;
-
-
 
 
             var filtre = {} ;
