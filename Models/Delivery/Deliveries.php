@@ -347,6 +347,13 @@ class Deliveries extends Model
         if ($updateStock) {
             if ($this->finalized == 1 && $finalized_orignal != 1 && $finalized_orignal !== null) {
                 $this->makeStockMovements($this, 0, 1) ;
+
+                // envoi une notification de clôture de BL
+                $dataEvent = [
+                    'id_delivery' => $this->id,
+                    'id_company' => $this->id_company
+                ];
+                Event::sendAction('com_zeapps_crm_delivery', 'finalized', $dataEvent);
             }
         }
 
