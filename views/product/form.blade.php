@@ -15,7 +15,7 @@
                 <li ng-class="navigationState =='body' ? 'active' : ''"><a href="#" ng-click="setTab('body')">{{ __t("Information") }}</a></li>
                 <li ng-class="navigationState =='tarif' ? 'active' : ''"><a href="#" ng-click="setTab('tarif')">{{ __t("Prices") }}</a></li>
                 <li ng-class="navigationState =='article_pack' ? 'active' : ''" ng-show="form.type_product=='pack'"><a href="#" ng-click="setTab('article_pack')">{{ __t("Pack items") }}</a></li>
-                <li ng-class="navigationState =='achat' ? 'active' : ''"><a href="#" ng-click="setTab('achat')">{{ __t("Purchase") }}</a></li>
+                <!--<li ng-class="navigationState =='achat' ? 'active' : ''"><a href="#" ng-click="setTab('achat')">{{ __t("Purchase") }}</a></li>-->
             </ul>
 
 
