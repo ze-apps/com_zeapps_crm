@@ -267,7 +267,7 @@
                             </td>
 
                             <td class="text-right" ng-if="line.type != 'subTotal' && line.type != 'comment'">
-                                @{{ line.price_unit | currency }}
+                                @{{ line.price_unit | currencyConvert }}
                             </td>
 
                             <td class="text-right" ng-if="line.type != 'subTotal' && line.type != 'comment'">
