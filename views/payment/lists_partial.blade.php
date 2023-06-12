@@ -26,6 +26,7 @@
                     <th>{{ __t("Date") }}</th>
                     <th class="text-right">{{ __t("Amount") }}</th>
                     <th>{{ __t("Mode of payment") }}</th>
+                    <th>{{ __t("Cheque number") }}</th>
                     @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
                     <th></th>
                     @endif
@@ -36,6 +37,7 @@
                     <td ng-click="goTo(payment.id)">@{{ payment.date_payment | dateConvert:'date' }}</td>
                     <td ng-click="goTo(payment.id)" class="text-right">@{{ payment.total | currencyConvert }}</td>
                     <td ng-click="goTo(payment.id)">@{{ payment.type_payment_label }}</td>
+                    <td ng-click="goTo(payment.id)">@{{ payment.bank_check_number }}</td>
                     @if (in_array("com_zeapps_crm_write", $zeapps_right_current_user))
                         <td class="text-right">
                             <ze-btn fa="trash" color="danger" hint="{{ __t("Delete") }}" direction="left" ng-click="delete(payment)" ze-confirmation></ze-btn>
