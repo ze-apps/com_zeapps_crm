@@ -897,15 +897,46 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
             }
             options.to = [emailContact] ;
 
-            options.subject = __t("Bill: ") + $scope.invoice.numerotation;
 
-            options.content = __t("Hello") + ",\n"
+            if (window.location.hostname == 'localhost' || window.location.hostname == 'quiltmania-fr-crm.ze-apps.com' || window.location.hostname == 'quiltmania-inc-crm.ze-apps.com') {
+                options.subject = "Invoice / Facture / Factuur " + $scope.invoice.numerotation;
+
+                options.content = "Bonjour,\n"
+                + "Vous trouverez en annexe la facture de votre achat ou abonnement.\n"
+                + "Nous restons à votre disposition pour tout renseignement supplémentaire\n"
                 + "\n"
-                + __t("please find attached our invoice no.") + $scope.invoice.numerotation
+                + "Bien cordialement,\n"
+                + $scope.user.firstname + " " + $scope.user.lastname + "\n"
                 + "\n"
-                + __t("Cordially") + "\n"
+                + "**************************************************\n"
+                + "\n"
+                + "Hello,\n"
+                + "You will find attached your invoice for your purchase or subscription.\n"
+                + "We remain at your disposal for any further information\n"
+                + "\n"
+                + "Regards\n"
+                + $scope.user.firstname + " " + $scope.user.lastname + "\n"
+                + "\n"
+                + "**************************************************\n"
+                + "\n"
+                + "Hallo,\n"
+                + "In bijlage vindt u uw factuur voor uw aankoop of abonnement.\n"
+                + "Wij blijven tot uw beschikking voor verdere informatie\n"
+                + "\n"
+                + "Met vriendelijke groeten\n"
                 + $scope.user.firstname + " " + $scope.user.lastname
-            ;
+                ;
+            } else {
+                options.subject = __t("Bill: ") + $scope.invoice.numerotation;
+
+                options.content = __t("Hello") + ",\n"
+                    + "\n"
+                    + __t("please find attached our invoice no.") + $scope.invoice.numerotation
+                    + "\n"
+                    + __t("Cordially") + "\n"
+                    + $scope.user.firstname + " " + $scope.user.lastname
+                ;
+            }
 
             options.id_model_email = $scope.invoice.id_model_email;
 
