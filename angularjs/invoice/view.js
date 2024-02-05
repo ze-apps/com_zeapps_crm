@@ -898,7 +898,7 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
             options.to = [emailContact] ;
 
 
-            if (window.location.hostname == 'localhost' || window.location.hostname == 'quiltmania-fr-crm.ze-apps.com' || window.location.hostname == 'quiltmania-inc-crm.ze-apps.com') {
+            if (window.location.hostname == 'quiltmania-fr-crm.ze-apps.com') {
                 options.subject = "Invoice / Facture / Factuur " + $scope.invoice.numerotation;
 
                 options.content = "Bonjour,\n"
@@ -925,6 +925,16 @@ app.controller("ComZeappsCrmInvoiceViewCtrl", ["$scope", "$routeParams", "$locat
                 + "\n"
                 + "Met vriendelijke groeten\n"
                 + $scope.user.firstname + " " + $scope.user.lastname
+                ;
+            } else if (window.location.hostname == 'quiltmania-inc-crm.ze-apps.com') {
+                options.subject = "Invoice " + $scope.invoice.numerotation;
+
+                options.content = "Hello,\n"
+                + "You will find attached your invoice for your purchase or subscription.\n"
+                + "We remain at your disposal for any further information\n"
+                + "\n"
+                + "Regards\n"
+                + $scope.user.firstname + " " + $scope.user.lastname + "\n"
                 ;
             } else {
                 options.subject = __t("Bill: ") + $scope.invoice.numerotation;
