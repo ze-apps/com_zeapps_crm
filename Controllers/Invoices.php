@@ -258,7 +258,8 @@ class Invoices extends Controller
             __t("Balance"),
             __t("Deadline"),
             __t("Manager"),
-            __t("Status")
+            __t("Status"),
+            __t("Terms of Payment")
         );
     
         $writer = new XLSXWriter();
@@ -289,6 +290,7 @@ class Invoices extends Controller
                 date("d/m/Y", strtotime($invoice->date_limit)),
                 $invoice->name_user_account_manager,
                 $invoice->finalized ? __t("Closed") : __t("Open"),
+                $invoice->label_modality,
             );
 
             // Formatage
